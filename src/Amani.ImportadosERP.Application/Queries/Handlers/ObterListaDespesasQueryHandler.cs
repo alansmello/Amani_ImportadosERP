@@ -31,7 +31,8 @@ public sealed class ObterListaDespesasQueryHandler : IRequestHandler<ObterListaD
             Id = d.Id,
             Data = d.Data,
             Valor = d.Valor,
-            Descricao = d.Descricao
+            Descricao = d.Descricao,
+            CategoriaId = d.CategoriaDespesaId
         }).ToList();
     }
 }
