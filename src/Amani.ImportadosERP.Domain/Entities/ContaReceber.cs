@@ -27,4 +27,14 @@ public sealed class ContaReceber : BaseEntity
         DataVencimento = dataVencimento;
         Pagamentos = new List<PagamentoRecebido>();
     }
+
+    public void Atualizar(decimal valor, DateTime dataVencimento)
+    {
+        if (valor <= 0) throw new Exception("Valor inválido");
+        if (dataVencimento == default) throw new Exception("Data de vencimento inválida");
+
+        Valor = valor;
+        DataVencimento = dataVencimento;
+        Touch();
+    }
 }

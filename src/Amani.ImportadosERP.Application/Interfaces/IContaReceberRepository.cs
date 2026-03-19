@@ -9,6 +9,7 @@ namespace Amani.ImportadosERP.Application.Interfaces;
 public interface IContaReceberRepository
 {
     Task AdicionarAsync(ContaReceber conta);
+    Task RemoverAsync(ContaReceber conta);
     Task<ContaReceber?> ObterPorIdAsync(Guid id);
     Task<List<ContaReceber>> ObterTodasAsync();
     Task<List<ContaReceberPorClienteDto>> ObterEmAbertoPorClienteAsync();

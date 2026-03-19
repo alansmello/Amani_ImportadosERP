@@ -77,4 +77,38 @@ public class ContasReceberController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _mediator.Send(new ExcluirContaReceberCommand
+        {
+            Id = id
+        });
+
+        return Ok();
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] AtualizarContaReceberDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var command = new AtualizarContaReceberCommand
+        {
+            Id = id,
+            Valor = dto.Valor,
+            DataVencimento = new DateTime(
+                dto.DataVencimento.Year,
+                dto.DataVencimento.Month,
+                dto.DataVencimento.Day,
+                0, 0, 0,
+                DateTimeKind.Utc
+            )
+        };
+
+        await _mediator.Send(command);
+
+        return Ok();
+    }
 }

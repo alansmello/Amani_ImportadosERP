@@ -27,6 +27,13 @@ public class ContaReceberRepository : IContaReceberRepository
         await _context.SaveChangesAsync();
     }
 
+    public Task RemoverAsync(ContaReceber conta)
+    {
+        if (conta == null) throw new ArgumentNullException(nameof(conta));
+        _context.ContasReceber.Remove(conta);
+        return Task.CompletedTask;
+    }
+
     public async Task<ContaReceber?> ObterPorIdAsync(Guid id)
     {
         if (id == Guid.Empty) return null;
