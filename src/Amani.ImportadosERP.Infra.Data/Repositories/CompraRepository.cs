@@ -31,6 +31,14 @@ public class CompraRepository : ICompraRepository
         return await _db.Compras.AsNoTracking().Include(c => c.Items).FirstOrDefaultAsync(c => c.Id == id);
     }
 
+    public async Task<List<Compra>> ObterTodasAsync()
+    {
+        return await _db.Compras
+            .AsNoTracking()
+            .Include(c => c.Items)
+            .ToListAsync();
+    }
+
     public async Task<List<Compra>> ObterComFiltrosAsync(DateTime? dataInicio, DateTime? dataFim, Guid? fornecedorId)
     {
         var query = _db.Compras.AsNoTracking().AsQueryable();

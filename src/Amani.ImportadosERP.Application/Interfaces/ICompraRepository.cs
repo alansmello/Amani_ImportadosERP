@@ -9,5 +9,6 @@ public interface ICompraRepository
 {
     Task AdicionarAsync(Compra compra);
     Task<Compra?> ObterPorIdAsync(Guid id);
+    Task<List<Compra>> ObterTodasAsync();
     Task<List<Compra>> ObterComFiltrosAsync(DateTime? dataInicio, DateTime? dataFim, Guid? fornecedorId);
 }
