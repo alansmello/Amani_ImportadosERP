@@ -1,50 +1,153 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+Version change: template -> 1.0.0
+Modified principles:
+- Template principle 1 -> I. Arquitetura e Separacao de Responsabilidades
+- Template principle 2 -> II. Estoque por Movimentacoes
+- Template principle 3 -> III. Compras, Vendas, Custos e Lucro
+- Template principle 4 -> IV. Contratos de API e DTOs
+- Template principle 5 -> V. Persistencia, Historico e Mapeamentos
+Added sections:
+- Stack Oficial
+- Fluxo de Desenvolvimento
+- VI. Backend como Fonte das Regras de Negocio
+- VII. Simplicidade Antes de Sofisticacao
+Removed sections:
+- Placeholder section 2
+- Placeholder section 3
+Templates requiring updates:
+- pending: .specify/templates/plan-template.md (Constitution Check remains generic)
+- pending: .specify/templates/spec-template.md (does not yet require ERP-specific constraints)
+- pending: .specify/templates/tasks-template.md (does not yet enforce ERP-specific task categories)
+- not present: .specify/templates/commands/*.md
+Hook status:
+- pending: before_constitution speckit.git.initialize blocked by Git dubious ownership
+Follow-up TODOs:
+- None
+-->
+
+# Amani ERP Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Arquitetura e Separacao de Responsabilidades
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+O Amani ERP MUST seguir Clean Architecture com separacao clara entre API,
+Application, Domain, Infra.Data e Infra.IoC. Controllers MUST NOT conter regra de
+negocio; eles apenas recebem requisicoes, validam contratos basicos, delegam para
+a camada Application e retornam respostas. Regras de negocio MUST ficar no
+Backend, principalmente nas camadas Application e Domain.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+Rationale: o ERP precisa crescer sem acoplamento entre interface, persistencia e
+regras operacionais.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. Estoque por Movimentacoes
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+Estoque MUST ser controlado exclusivamente por movimentacoes. O sistema MUST NOT
+ter campo fixo de saldo de estoque em Produto ou em qualquer outra entidade de
+cadastro. O saldo disponivel MUST ser calculado por entradas menos saidas, usando
+o historico de EstoqueMovimentacao.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Rationale: estoque por historico preserva rastreabilidade, auditoria e evita
+ajustes silenciosos de saldo.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. Compras, Vendas, Custos e Lucro
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Toda compra registrada MUST gerar entrada de estoque para cada item comprado.
+Toda venda registrada MUST gerar saida de estoque para cada item vendido. Vendas
+MUST validar estoque disponivel antes da confirmacao. Lucro MUST ser calculado
+com custo medio do produto, derivado das entradas historicas, e nao por valor
+manual isolado.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+Rationale: compras e vendas sao os eventos operacionais que alteram estoque,
+custo e lucratividade.
+
+### IV. Contratos de API e DTOs
+
+DTOs MUST ser usados para entrada e saida de dados em APIs e casos de uso.
+Entidades de dominio MUST NOT ser expostas como contrato externo quando houver
+risco de acoplamento ou vazamento de invariantes. AutoMapper MUST NOT ser usado;
+mapeamentos MUST ser explicitos para manter clareza e controle sobre os dados.
+
+Rationale: contratos explicitos reduzem ambiguidade e tornam as regras de
+entrada e saida verificaveis.
+
+### V. Persistencia, Historico e Mapeamentos
+
+Entity Framework Core MUST usar Fluent API para mapeamentos. Repository Pattern
+MUST mediar o acesso a dados entre Application e Infra.Data. Historico
+operacional MUST NOT ser perdido: compras, vendas, movimentacoes de estoque,
+despesas, pagamentos e eventos relevantes MUST ser preservados ou compensados
+por novos registros, nunca apagados como forma de corrigir estado operacional.
+
+Rationale: o ERP depende de trilha historica para auditoria, custo medio,
+financeiro e dashboards confiaveis.
+
+### VI. Backend como Fonte das Regras de Negocio
+
+O backend MUST centralizar todas as regras de negocio, validacoes operacionais,
+calculos de estoque, custo medio, lucro e consistencia financeira. Frontend
+React/Next.js MAY validar formularios para melhorar a experiencia do usuario,
+mas MUST NOT ser a fonte de verdade para regras do ERP.
+
+Rationale: regras no backend mantem consistencia entre API, frontend e futuras
+integracoes com marketplaces.
+
+### VII. Simplicidade Antes de Sofisticacao
+
+Solucoes MUST priorizar simplicidade, legibilidade e manutencao antes de
+sofisticacao tecnica. Novas abstracoes, padroes ou dependencias MUST existir
+apenas quando resolverem complexidade real ou protegerem uma regra importante do
+ERP. Funcionalidades futuras MUST NOT antecipar complexidade que nao seja
+necessaria para o fluxo atual.
+
+Rationale: o projeto deve evoluir para ERP completo sem perder clareza nem
+velocidade de entrega.
+
+## Stack Oficial
+
+O backend oficial MUST usar .NET 8, ASP.NET Core, Entity Framework Core e
+PostgreSQL. O frontend oficial MUST usar React e Next.js. A arquitetura oficial
+MUST seguir Clean Architecture, DDD Lite e Repository Pattern.
+
+Qualquer tecnologia adicional MUST ser justificada no plano da funcionalidade,
+incluindo o problema resolvido, alternativas consideradas e impacto sobre
+manutencao.
+
+## Fluxo de Desenvolvimento
+
+Toda nova especificacao MUST declarar como preserva os principios desta
+Constituicao. Planos de implementacao MUST incluir uma verificacao explicita para
+estoque por movimentacoes, DTOs, ausencia de regra de negocio em controllers,
+Fluent API, Repository Pattern e preservacao de historico operacional.
+
+Tarefas futuras MUST separar trabalho de Domain, Application, Infra.Data, API e
+Frontend quando a funcionalidade atravessar essas camadas. Mudancas que afetem
+compras, vendas, estoque, custo medio, lucro ou financeiro MUST incluir cenarios
+de validacao para os fluxos operacionais afetados.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+Esta Constituicao prevalece sobre especificacoes, planos, tarefas e decisoes
+tecnicas conflitantes. Em caso de conflito, a especificacao ou plano MUST ser
+ajustado antes da implementacao.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Alteracoes nesta Constituicao MUST ser documentadas com:
+
+- motivo da alteracao;
+- impacto nos principios existentes;
+- impacto nos templates Spec Kit;
+- versao nova conforme semver;
+- data de alteracao em formato ISO 8601.
+
+Versionamento:
+
+- MAJOR: remocao ou redefinicao incompatavel de principio obrigatorio;
+- MINOR: novo principio, nova secao obrigatoria ou expansao material de regra;
+- PATCH: ajustes de texto, clarificacoes ou correcoes sem mudanca semantica.
+
+Toda revisao de funcionalidade MUST verificar conformidade com esta Constituicao.
+Violacoes so podem ser aceitas quando documentadas no plano com justificativa,
+alternativa mais simples rejeitada e risco operacional conhecido.
+
+**Version**: 1.0.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-04
