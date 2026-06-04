@@ -267,3 +267,4 @@ these tasks.
 - Story labels map to the specification user stories.
 - This task list intentionally avoids frontend work and new external libraries.
 - This task list intentionally avoids automated test tasks because tests were not requested and the current solution has no test project.
+- Future pending: decide whether new sales should reject inactive clientes; do not implement this in the Clientes MVP.
