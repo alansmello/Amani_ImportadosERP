@@ -19,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<IProdutoRepository, Amani.ImportadosERP.Infra.Data.Repositories.ProdutoRepository>();
         services.AddScoped<IClienteRepository, Amani.ImportadosERP.Infra.Data.Repositories.ClienteRepository>();
         services.AddScoped<IFornecedorRepository, Amani.ImportadosERP.Infra.Data.Repositories.FornecedorRepository>();
+        services.AddScoped<ICategoriaRepository, Amani.ImportadosERP.Infra.Data.Repositories.CategoriaRepository>();
         services.AddScoped<ICompraRepository, Amani.ImportadosERP.Infra.Data.Repositories.CompraRepository>();
         services.AddScoped<IVendaRepository, Amani.ImportadosERP.Infra.Data.Repositories.VendaRepository>();
         services.AddScoped<IDespesaRepository, Amani.ImportadosERP.Infra.Data.Repositories.DespesaRepository>();
@@ -29,6 +30,8 @@ public static class DependencyInjection
 
         // Services
         services.AddScoped<Amani.ImportadosERP.Application.Services.ClienteService>();
+        services.AddScoped<Amani.ImportadosERP.Application.Services.FornecedorService>();
+        services.AddScoped<Amani.ImportadosERP.Application.Services.CategoriaService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.CompraService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.VendaService>();
 

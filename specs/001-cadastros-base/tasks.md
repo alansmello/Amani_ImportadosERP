@@ -100,30 +100,30 @@
 
 ### Domain
 
-- [ ] T031 [P] [US2] Review `src/Amani.ImportadosERP.Domain/Entities/Fornecedor.cs` and confirm existing update behavior satisfies fornecedor contract
-- [ ] T032 [P] [US2] Review `src/Amani.ImportadosERP.Domain/Entities/Categoria.cs` and confirm existing update behavior satisfies categoria contract
+- [X] T031 [P] [US2] Review `src/Amani.ImportadosERP.Domain/Entities/Fornecedor.cs` and confirm existing update behavior satisfies fornecedor contract
+- [X] T032 [P] [US2] Review `src/Amani.ImportadosERP.Domain/Entities/Categoria.cs` and confirm existing update behavior satisfies categoria contract
 
 ### Application
 
-- [ ] T033 [US2] Extend `src/Amani.ImportadosERP.Application/Services/FornecedorService.cs` with create returning `FornecedorDto`, list, get by id, and update operations
-- [ ] T034 [US2] Create `src/Amani.ImportadosERP.Application/Services/CategoriaService.cs` with create returning `CategoriaDto`, list, get by id, and update operations
-- [ ] T035 [US2] Ensure `FornecedorService` and `CategoriaService` map entities to DTOs explicitly without AutoMapper
+- [X] T033 [US2] Extend `src/Amani.ImportadosERP.Application/Services/FornecedorService.cs` with create returning `FornecedorDto`, list, get by id, and update operations
+- [X] T034 [US2] Create `src/Amani.ImportadosERP.Application/Services/CategoriaService.cs` with create returning `CategoriaDto`, list, get by id, and update operations
+- [X] T035 [US2] Ensure `FornecedorService` and `CategoriaService` map entities to DTOs explicitly without AutoMapper
 
 ### Infra.Data
 
-- [ ] T036 [US2] Verify `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/FornecedorMapping.cs` remains sufficient for fornecedor create/list/get/update
-- [ ] T037 [US2] Verify `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CategoriaMapping.cs` remains sufficient for categoria create/list/get/update
+- [X] T036 [US2] Verify `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/FornecedorMapping.cs` remains sufficient for fornecedor create/list/get/update
+- [X] T037 [US2] Verify `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CategoriaMapping.cs` remains sufficient for categoria create/list/get/update
 
 ### Infra.IoC
 
-- [ ] T038 [US2] Register `FornecedorService`, `CategoriaService`, and `ICategoriaRepository` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T038 [US2] Register `FornecedorService`, `CategoriaService`, and `ICategoriaRepository` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
 
 ### API
 
-- [ ] T039 [US2] Create `src/Amani.ImportadosERP.Api/Controllers/FornecedoresController.cs` with `POST /api/fornecedores`, `GET /api/fornecedores`, `GET /api/fornecedores/{id}`, and `PUT /api/fornecedores/{id}`
-- [ ] T040 [US2] Create `src/Amani.ImportadosERP.Api/Controllers/CategoriasController.cs` with `POST /api/categorias`, `GET /api/categorias`, `GET /api/categorias/{id}`, and `PUT /api/categorias/{id}`
-- [ ] T041 [US2] Ensure fornecedor and categoria controllers delegate all business decisions to Application services and contain no business rules
-- [ ] T042 [US2] Validate fornecedor and categoria flows manually using `specs/001-cadastros-base/quickstart.md`
+- [X] T039 [US2] Create `src/Amani.ImportadosERP.Api/Controllers/FornecedoresController.cs` with `POST /api/fornecedores`, `GET /api/fornecedores`, `GET /api/fornecedores/{id}`, and `PUT /api/fornecedores/{id}`
+- [X] T040 [US2] Create `src/Amani.ImportadosERP.Api/Controllers/CategoriasController.cs` with `POST /api/categorias`, `GET /api/categorias`, `GET /api/categorias/{id}`, and `PUT /api/categorias/{id}`
+- [X] T041 [US2] Ensure fornecedor and categoria controllers delegate all business decisions to Application services and contain no business rules
+- [X] T042 [US2] Validate fornecedor and categoria flows manually using `specs/001-cadastros-base/quickstart.md`
 
 **Checkpoint**: US2 is complete when fornecedor and categoria endpoints work independently.
 
