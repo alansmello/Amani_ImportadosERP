@@ -43,6 +43,16 @@ public class ContaReceberRepository : IContaReceberRepository
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
+    public async Task<List<ContaReceber>> ObterPorVendaIdAsync(Guid vendaId)
+    {
+        if (vendaId == Guid.Empty) return new List<ContaReceber>();
+
+        return await _context.ContasReceber
+            .Include(c => c.Pagamentos)
+            .Where(c => c.VendaId == vendaId)
+            .ToListAsync();
+    }
+
     public async Task<List<ContaReceber>> ObterTodasAsync()
     {
         return await _context.ContasReceber

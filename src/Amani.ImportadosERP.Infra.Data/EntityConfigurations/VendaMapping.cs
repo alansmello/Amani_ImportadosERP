@@ -14,6 +14,8 @@ public class VendaMapping : IEntityTypeConfiguration<Venda>
         builder.Property(v => v.DataVenda).IsRequired();
         builder.Property(v => v.Desconto).IsRequired().HasPrecision(18,2).HasDefaultValue(0m);
         builder.Property(v => v.Acrescimo).IsRequired().HasPrecision(18,2).HasDefaultValue(0m);
+        builder.Property(v => v.Cancelada).IsRequired().HasDefaultValue(false);
+        builder.Property(v => v.DataCancelamento).IsRequired(false);
 
         builder.HasMany(v => v.Items)
                .WithOne(vi => vi.Venda)

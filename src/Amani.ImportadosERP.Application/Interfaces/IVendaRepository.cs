@@ -9,6 +9,8 @@ public interface IVendaRepository
 {
     Task AdicionarAsync(Venda venda);
     Task<Venda?> ObterPorIdAsync(Guid id);
+    Task<Venda?> ObterPorIdParaAtualizarAsync(Guid id);
     Task<List<Venda>> ObterTodasAsync();
     Task<List<Venda>> ObterComFiltrosAsync(DateTime? dataInicio, DateTime? dataFim, Guid? clienteId);
+    Task SalvarAsync();
 }

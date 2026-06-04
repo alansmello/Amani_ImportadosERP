@@ -46,7 +46,7 @@ public sealed class ObterDashboardQueryHandler : IRequestHandler<ObterDashboardQ
         foreach (var venda in vendas)
         {
             // Calcular total dos itens
-            decimal totalItens = venda.Items.Sum(i => i.PrecoUnitario * i.Quantidade);
+            decimal totalItens = venda.Items.Sum(i => (i.PrecoUnitario * i.Quantidade) + i.Acrescimo - i.Desconto);
 
             // Aplicar desconto e acrescimo geral da venda
             decimal totalVenda = totalItens + venda.Acrescimo - venda.Desconto;

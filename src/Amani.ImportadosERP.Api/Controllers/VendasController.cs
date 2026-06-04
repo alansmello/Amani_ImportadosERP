@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Amani.ImportadosERP.Application.Commands;
 using Amani.ImportadosERP.Application.DTOs;
 using Amani.ImportadosERP.Application.DTOs.Response;
 using Amani.ImportadosERP.Application.Services;
@@ -111,5 +112,16 @@ public class VendasController : ControllerBase
 
         var dashboard = await _mediator.Send(query);
         return Ok(dashboard);
+    }
+
+    [HttpPost("{id:guid}/cancelar")]
+    public async Task<IActionResult> Cancelar(Guid id)
+    {
+        await _mediator.Send(new CancelarVendaCommand
+        {
+            VendaId = id
+        });
+
+        return Ok();
     }
 }

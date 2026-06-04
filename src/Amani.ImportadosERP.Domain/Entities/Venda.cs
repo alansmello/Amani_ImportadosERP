@@ -11,6 +11,8 @@ public sealed class Venda : BaseEntity
     public DateTime DataVenda { get; private set; }
     public decimal Desconto { get; private set; }
     public decimal Acrescimo { get; private set; }
+    public bool Cancelada { get; private set; }
+    public DateTime? DataCancelamento { get; private set; }
 
     private readonly List<VendaItem> _items = new();
     public IReadOnlyCollection<VendaItem> Items => _items.AsReadOnly();
@@ -24,6 +26,7 @@ public sealed class Venda : BaseEntity
         if (acrescimo < 0) throw new ArgumentException("Acrescimo não pode ser negativo", nameof(acrescimo));
         Desconto = desconto;
         Acrescimo = acrescimo;
+        Cancelada = false;
     }
 
     protected Venda() { }
@@ -46,4 +49,13 @@ public sealed class Venda : BaseEntity
     }
 
     public decimal Total() => _items.Sum(i => i.ValorTotal()) - Desconto + Acrescimo;
+
+    public void Cancelar()
+    {
+        if (Cancelada) throw new Exception("Venda já está cancelada");
+
+        Cancelada = true;
+        DataCancelamento = DateTime.UtcNow;
+        Touch();
+    }
 }

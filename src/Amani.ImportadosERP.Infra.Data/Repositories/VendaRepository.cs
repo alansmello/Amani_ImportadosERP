@@ -32,6 +32,12 @@ public class VendaRepository : IVendaRepository
         return await _db.Vendas.AsNoTracking().Include(v => v.Items).FirstOrDefaultAsync(v => v.Id == id);
     }
 
+    public async Task<Venda?> ObterPorIdParaAtualizarAsync(Guid id)
+    {
+        if (id == Guid.Empty) return null;
+        return await _db.Vendas.Include(v => v.Items).FirstOrDefaultAsync(v => v.Id == id);
+    }
+
     public async Task<List<Venda>> ObterTodasAsync()
     {
         return await _db.Vendas.AsNoTracking().Include(v => v.Items).ToListAsync();
@@ -53,5 +59,10 @@ public class VendaRepository : IVendaRepository
         query = query.Include(v => v.Items);
 
         return await query.ToListAsync();
+    }
+
+    public async Task SalvarAsync()
+    {
+        await _db.SaveChangesAsync();
     }
 }
