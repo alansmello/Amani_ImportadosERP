@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Amani.ImportadosERP.Application.DTOs;
 using Amani.ImportadosERP.Application.Interfaces;
@@ -15,15 +17,54 @@ public class ClienteService
         _clienteRepository = clienteRepository;
     }
 
-    public async Task<Guid> CreateAsync(CriarClienteDto dto)
+    public async Task<ClienteDto> CreateAsync(CriarClienteDto dto)
     {
         var cliente = new Cliente(dto.Nome, dto.Email, dto.Telefone);
         await _clienteRepository.AdicionarAsync(cliente);
-        return cliente.Id;
+        return ToDto(cliente);
     }
 
-    public async Task<Cliente?> ObterPorIdAsync(Guid id)
+    public async Task<ClienteDto?> ObterPorIdAsync(Guid id)
     {
-        return await _clienteRepository.ObterPorIdAsync(id);
+        var cliente = await _clienteRepository.ObterPorIdAsync(id);
+        return cliente == null ? null : ToDto(cliente);
+    }
+
+    public async Task<List<ClienteDto>> ListarAsync(bool? ativo = null)
+    {
+        var clientes = await _clienteRepository.ListarAsync(ativo);
+        return clientes.Select(ToDto).ToList();
+    }
+
+    public async Task<bool> AtualizarAsync(Guid id, AtualizarClienteDto dto)
+    {
+        var cliente = await _clienteRepository.ObterPorIdParaAtualizarAsync(id);
+        if (cliente == null) return false;
+
+        cliente.Atualizar(dto.Nome, dto.Email, dto.Telefone);
+        await _clienteRepository.SalvarAsync();
+        return true;
+    }
+
+    public async Task<bool> InativarAsync(Guid id)
+    {
+        var cliente = await _clienteRepository.ObterPorIdParaAtualizarAsync(id);
+        if (cliente == null) return false;
+
+        cliente.Inativar();
+        await _clienteRepository.SalvarAsync();
+        return true;
+    }
+
+    private static ClienteDto ToDto(Cliente cliente)
+    {
+        return new ClienteDto
+        {
+            Id = cliente.Id,
+            Nome = cliente.Nome,
+            Email = cliente.Email,
+            Telefone = cliente.Telefone,
+            Ativo = cliente.Ativo
+        };
     }
 }

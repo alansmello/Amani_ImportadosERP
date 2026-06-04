@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<IContaReceberRepository, Amani.ImportadosERP.Infra.Data.Repositories.ContaReceberRepository>();
 
         // Services
+        services.AddScoped<Amani.ImportadosERP.Application.Services.ClienteService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.CompraService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.VendaService>();
 

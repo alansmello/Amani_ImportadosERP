@@ -18,9 +18,9 @@
 
 **Purpose**: Confirm current context and avoid touching excluded modules.
 
-- [ ] T001 Review `specs/001-cadastros-base/spec.md`, `specs/001-cadastros-base/plan.md`, `specs/001-cadastros-base/data-model.md`, and `specs/001-cadastros-base/contracts/cadastros-base-api.md`
-- [ ] T002 Inspect existing cadastro code in `src/Amani.ImportadosERP.Domain/Entities`, `src/Amani.ImportadosERP.Application/Services`, `src/Amani.ImportadosERP.Application/Interfaces`, `src/Amani.ImportadosERP.Infra.Data/Repositories`, and `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations`
-- [ ] T003 Confirm no implementation work will modify `src/Amani.ImportadosERP.Application/Services/CompraService.cs`, `src/Amani.ImportadosERP.Application/Services/VendaService.cs`, stock repositories, cost repositories, sales controllers, purchase controllers, or frontend files
+- [X] T001 Review `specs/001-cadastros-base/spec.md`, `specs/001-cadastros-base/plan.md`, `specs/001-cadastros-base/data-model.md`, and `specs/001-cadastros-base/contracts/cadastros-base-api.md`
+- [X] T002 Inspect existing cadastro code in `src/Amani.ImportadosERP.Domain/Entities`, `src/Amani.ImportadosERP.Application/Services`, `src/Amani.ImportadosERP.Application/Interfaces`, `src/Amani.ImportadosERP.Infra.Data/Repositories`, and `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations`
+- [X] T003 Confirm no implementation work will modify `src/Amani.ImportadosERP.Application/Services/CompraService.cs`, `src/Amani.ImportadosERP.Application/Services/VendaService.cs`, stock repositories, cost repositories, sales controllers, purchase controllers, or frontend files
 
 ---
 
@@ -32,8 +32,8 @@
 
 ### Application
 
-- [ ] T004 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarClienteDto.cs` with cliente update input fields
-- [ ] T005 [P] Create `src/Amani.ImportadosERP.Application/DTOs/ClienteDto.cs` with cliente output fields including active state
+- [X] T004 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarClienteDto.cs` with cliente update input fields
+- [X] T005 [P] Create `src/Amani.ImportadosERP.Application/DTOs/ClienteDto.cs` with cliente output fields including active state
 - [ ] T006 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarFornecedorDto.cs` with fornecedor update input fields
 - [ ] T007 [P] Create `src/Amani.ImportadosERP.Application/DTOs/FornecedorDto.cs` with fornecedor output fields
 - [ ] T008 [P] Create `src/Amani.ImportadosERP.Application/DTOs/CriarCategoriaDto.cs` with categoria create input fields
@@ -41,14 +41,14 @@
 - [ ] T010 [P] Create `src/Amani.ImportadosERP.Application/DTOs/CategoriaDto.cs` with categoria output fields
 - [ ] T011 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarProdutoDto.cs` with produto update input fields
 - [ ] T012 Update `src/Amani.ImportadosERP.Application/DTOs/ProdutoDto.cs` only if needed so product output matches `contracts/cadastros-base-api.md`
-- [ ] T013 Extend `src/Amani.ImportadosERP.Application/Interfaces/IClienteRepository.cs` with list, tracked get, save, and active-filter read operations
+- [X] T013 Extend `src/Amani.ImportadosERP.Application/Interfaces/IClienteRepository.cs` with list, tracked get, save, and active-filter read operations
 - [ ] T014 Extend `src/Amani.ImportadosERP.Application/Interfaces/IFornecedorRepository.cs` with list, tracked get, and save operations
 - [ ] T015 Extend `src/Amani.ImportadosERP.Application/Interfaces/IProdutoRepository.cs` with list, tracked get, and save operations
 - [ ] T016 Create `src/Amani.ImportadosERP.Application/Interfaces/ICategoriaRepository.cs` with add, list, get by id, tracked get, and save operations
 
 ### Infra.Data
 
-- [ ] T017 Extend `src/Amani.ImportadosERP.Infra.Data/Repositories/ClienteRepository.cs` to implement the new `IClienteRepository` methods without deleting cliente records
+- [X] T017 Extend `src/Amani.ImportadosERP.Infra.Data/Repositories/ClienteRepository.cs` to implement the new `IClienteRepository` methods without deleting cliente records
 - [ ] T018 Extend `src/Amani.ImportadosERP.Infra.Data/Repositories/FornecedorRepository.cs` to implement the new `IFornecedorRepository` methods
 - [ ] T019 Extend `src/Amani.ImportadosERP.Infra.Data/Repositories/ProdutoRepository.cs` to implement the new `IProdutoRepository` methods without stock fields or stock movement changes
 - [ ] T020 Create `src/Amani.ImportadosERP.Infra.Data/Repositories/CategoriaRepository.cs` implementing `ICategoriaRepository`
@@ -65,28 +65,28 @@
 
 ### Domain
 
-- [ ] T021 [US1] Add `Ativo` state and default active initialization to `src/Amani.ImportadosERP.Domain/Entities/Cliente.cs`
-- [ ] T022 [US1] Add cliente name update and inactivation behavior to `src/Amani.ImportadosERP.Domain/Entities/Cliente.cs`
+- [X] T021 [US1] Add `Ativo` state and default active initialization to `src/Amani.ImportadosERP.Domain/Entities/Cliente.cs`
+- [X] T022 [US1] Add cliente name update and inactivation behavior to `src/Amani.ImportadosERP.Domain/Entities/Cliente.cs`
 
 ### Application
 
-- [ ] T023 [US1] Extend `src/Amani.ImportadosERP.Application/Services/ClienteService.cs` with create returning `ClienteDto`, list with optional active filter, get by id, update, and inactivate operations
-- [ ] T024 [US1] Ensure `src/Amani.ImportadosERP.Application/Services/ClienteService.cs` maps Cliente to DTOs explicitly without AutoMapper and does not return domain entities
+- [X] T023 [US1] Extend `src/Amani.ImportadosERP.Application/Services/ClienteService.cs` with create returning `ClienteDto`, list with optional active filter, get by id, update, and inactivate operations
+- [X] T024 [US1] Ensure `src/Amani.ImportadosERP.Application/Services/ClienteService.cs` maps Cliente to DTOs explicitly without AutoMapper and does not return domain entities
 
 ### Infra.Data
 
-- [ ] T025 [US1] Update `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ClienteMapping.cs` to map the `Ativo` property with default active value
-- [ ] T026 [US1] Add an EF migration in `src/Amani.ImportadosERP.Infra.Data/Migrations` for the cliente active state only
+- [X] T025 [US1] Update `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ClienteMapping.cs` to map the `Ativo` property with default active value
+- [X] T026 [US1] Add an EF migration in `src/Amani.ImportadosERP.Infra.Data/Migrations` for the cliente active state only
 
 ### Infra.IoC
 
-- [ ] T027 [US1] Register `ClienteService` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T027 [US1] Register `ClienteService` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
 
 ### API
 
-- [ ] T028 [US1] Create `src/Amani.ImportadosERP.Api/Controllers/ClientesController.cs` with `POST /api/clientes`, `GET /api/clientes`, `GET /api/clientes/{id}`, `PUT /api/clientes/{id}`, and `POST /api/clientes/{id}/inativar`
-- [ ] T029 [US1] Ensure `src/Amani.ImportadosERP.Api/Controllers/ClientesController.cs` delegates all business decisions to `ClienteService` and contains no business rules
-- [ ] T030 [US1] Validate the cliente lifecycle manually using `specs/001-cadastros-base/quickstart.md`
+- [X] T028 [US1] Create `src/Amani.ImportadosERP.Api/Controllers/ClientesController.cs` with `POST /api/clientes`, `GET /api/clientes`, `GET /api/clientes/{id}`, `PUT /api/clientes/{id}`, and `POST /api/clientes/{id}/inativar`
+- [X] T029 [US1] Ensure `src/Amani.ImportadosERP.Api/Controllers/ClientesController.cs` delegates all business decisions to `ClienteService` and contains no business rules
+- [X] T030 [US1] Validate the cliente lifecycle manually using `specs/001-cadastros-base/quickstart.md`
 
 **Checkpoint**: US1 is complete when cliente endpoints work independently and client inactivation preserves history.
 
