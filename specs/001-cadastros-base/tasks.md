@@ -171,13 +171,13 @@
 
 **Purpose**: Validate the complete feature and protect constitution constraints.
 
-- [ ] T056 Run `dotnet build Amani_ImportadosERP.sln` from repository root
-- [ ] T057 Validate all public endpoint contracts from `specs/001-cadastros-base/contracts/cadastros-base-api.md`
-- [ ] T058 Validate regression checks from `specs/001-cadastros-base/quickstart.md` for compras, vendas, estoque, custo medio and lucro
-- [ ] T059 Inspect controllers in `src/Amani.ImportadosERP.Api/Controllers` and confirm they contain no business rules
-- [ ] T060 Inspect DTO usage in `src/Amani.ImportadosERP.Application/DTOs` and confirm cadastro endpoints do not expose domain entities as contracts
-- [ ] T061 Inspect `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations` and confirm all new persisted fields are mapped with Fluent API
-- [ ] T062 Inspect the solution for `AutoMapper` references and confirm none were introduced
+- [X] T056 Run `dotnet build Amani_ImportadosERP.sln` from repository root
+- [X] T057 Validate all public endpoint contracts from `specs/001-cadastros-base/contracts/cadastros-base-api.md`
+- [X] T058 Validate regression checks from `specs/001-cadastros-base/quickstart.md` for compras, vendas, estoque, custo medio and lucro
+- [X] T059 Inspect controllers in `src/Amani.ImportadosERP.Api/Controllers` and confirm they contain no business rules
+- [X] T060 Inspect DTO usage in `src/Amani.ImportadosERP.Application/DTOs` and confirm cadastro endpoints do not expose domain entities as contracts
+- [X] T061 Inspect `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations` and confirm all new persisted fields are mapped with Fluent API
+- [X] T062 Inspect the solution for `AutoMapper` references and confirm none were introduced
 
 ---
 
