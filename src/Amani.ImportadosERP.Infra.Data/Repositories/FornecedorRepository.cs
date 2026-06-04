@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Amani.ImportadosERP.Application.Interfaces;
@@ -27,5 +29,24 @@ public class FornecedorRepository : IFornecedorRepository
     {
         if (id == Guid.Empty) return null;
         return await _db.Fornecedores.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
+    }
+
+    public async Task<Fornecedor?> ObterPorIdParaAtualizarAsync(Guid id)
+    {
+        if (id == Guid.Empty) return null;
+        return await _db.Fornecedores.FirstOrDefaultAsync(f => f.Id == id);
+    }
+
+    public async Task<List<Fornecedor>> ListarAsync()
+    {
+        return await _db.Fornecedores
+            .AsNoTracking()
+            .OrderBy(f => f.Nome)
+            .ToListAsync();
+    }
+
+    public async Task SalvarAsync()
+    {
+        await _db.SaveChangesAsync();
     }
 }

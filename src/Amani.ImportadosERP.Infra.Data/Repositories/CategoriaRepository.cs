@@ -9,39 +9,39 @@ using Amani.ImportadosERP.Infra.Data.Context;
 
 namespace Amani.ImportadosERP.Infra.Data.Repositories;
 
-public class ProdutoRepository : IProdutoRepository
+public class CategoriaRepository : ICategoriaRepository
 {
     private readonly AmaniDbContext _db;
 
-    public ProdutoRepository(AmaniDbContext db)
+    public CategoriaRepository(AmaniDbContext db)
     {
         _db = db;
     }
 
-    public async Task AdicionarAsync(Produto produto)
+    public async Task AdicionarAsync(Categoria categoria)
     {
-        if (produto == null) throw new ArgumentNullException(nameof(produto));
-        await _db.Produtos.AddAsync(produto);
+        if (categoria == null) throw new ArgumentNullException(nameof(categoria));
+        await _db.Categorias.AddAsync(categoria);
         await _db.SaveChangesAsync();
     }
 
-    public async Task<Produto?> ObterPorIdAsync(Guid id)
+    public async Task<Categoria?> ObterPorIdAsync(Guid id)
     {
         if (id == Guid.Empty) return null;
-        return await _db.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+        return await _db.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task<Produto?> ObterPorIdParaAtualizarAsync(Guid id)
+    public async Task<Categoria?> ObterPorIdParaAtualizarAsync(Guid id)
     {
         if (id == Guid.Empty) return null;
-        return await _db.Produtos.FirstOrDefaultAsync(p => p.Id == id);
+        return await _db.Categorias.FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task<List<Produto>> ListarAsync()
+    public async Task<List<Categoria>> ListarAsync()
     {
-        return await _db.Produtos
+        return await _db.Categorias
             .AsNoTracking()
-            .OrderBy(p => p.Nome)
+            .OrderBy(c => c.Nome)
             .ToListAsync();
     }
 

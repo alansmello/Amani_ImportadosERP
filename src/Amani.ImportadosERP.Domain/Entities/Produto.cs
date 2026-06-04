@@ -27,6 +27,22 @@ public sealed class Produto : BaseEntity
 
     protected Produto() { }
 
+    public void Atualizar(string nome, decimal precoVenda, decimal custo, Guid categoriaId, Guid? fornecedorId)
+    {
+        if (string.IsNullOrWhiteSpace(nome)) throw new ArgumentException("Nome é obrigatório", nameof(nome));
+        if (precoVenda < 0) throw new ArgumentException("PrecoVenda não pode ser negativo", nameof(precoVenda));
+        if (custo < 0) throw new ArgumentException("Custo não pode ser negativo", nameof(custo));
+        if (categoriaId == Guid.Empty) throw new ArgumentException("CategoriaId é obrigatório", nameof(categoriaId));
+        if (fornecedorId.HasValue && fornecedorId.Value == Guid.Empty) throw new ArgumentException("FornecedorId inválido", nameof(fornecedorId));
+
+        Nome = nome.Trim();
+        PrecoVenda = precoVenda;
+        Custo = custo;
+        CategoriaId = categoriaId;
+        FornecedorId = fornecedorId;
+        Touch();
+    }
+
     public void AtualizarPrecoVenda(decimal novoPreco)
     {
         if (novoPreco < 0) throw new ArgumentException("PrecoVenda não pode ser negativo", nameof(novoPreco));

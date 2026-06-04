@@ -13,5 +13,6 @@ public class ClienteMapping : IEntityTypeConfiguration<Cliente>
         builder.Property(c => c.Nome).IsRequired().HasMaxLength(150);
         builder.Property(c => c.Email).HasMaxLength(200);
         builder.Property(c => c.Telefone).HasMaxLength(50);
+        builder.Property(c => c.Ativo).IsRequired().HasDefaultValue(true);
     }
 }
