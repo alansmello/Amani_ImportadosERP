@@ -137,31 +137,31 @@
 
 ### Domain
 
-- [ ] T043 [US3] Add product name update behavior to `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` if current methods cannot update all contract fields
-- [ ] T044 [US3] Add optional supplier clearing behavior to `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` if needed for `fornecedorId: null` updates
-- [ ] T045 [US3] Confirm `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` still has no fixed stock balance field
+- [X] T043 [US3] Add product name update behavior to `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` if current methods cannot update all contract fields
+- [X] T044 [US3] Add optional supplier clearing behavior to `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` if needed for `fornecedorId: null` updates
+- [X] T045 [US3] Confirm `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` still has no fixed stock balance field
 
 ### Application
 
-- [ ] T046 [US3] Extend `src/Amani.ImportadosERP.Application/Services/ProdutoService.cs` with create returning `ProdutoDto`, list, get by id, and update operations
-- [ ] T047 [US3] Add category existence validation in `src/Amani.ImportadosERP.Application/Services/ProdutoService.cs` using `ICategoriaRepository`
-- [ ] T048 [US3] Add optional supplier existence validation in `src/Amani.ImportadosERP.Application/Services/ProdutoService.cs` using `IFornecedorRepository`
-- [ ] T049 [US3] Ensure `src/Amani.ImportadosERP.Application/Services/ProdutoService.cs` maps Produto to DTOs explicitly without AutoMapper
+- [X] T046 [US3] Extend `src/Amani.ImportadosERP.Application/Services/ProdutoService.cs` with create returning `ProdutoDto`, list, get by id, and update operations
+- [X] T047 [US3] Add category existence validation in `src/Amani.ImportadosERP.Application/Services/ProdutoService.cs` using `ICategoriaRepository`
+- [X] T048 [US3] Add optional supplier existence validation in `src/Amani.ImportadosERP.Application/Services/ProdutoService.cs` using `IFornecedorRepository`
+- [X] T049 [US3] Ensure `src/Amani.ImportadosERP.Application/Services/ProdutoService.cs` maps Produto to DTOs explicitly without AutoMapper
 
 ### Infra.Data
 
-- [ ] T050 [US3] Verify `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ProdutoMapping.cs` remains sufficient and does not add stock fields
-- [ ] T051 [US3] Verify `src/Amani.ImportadosERP.Infra.Data/Repositories/ProdutoRepository.cs` list/get/update operations do not create, remove, or query stock movements
+- [X] T050 [US3] Verify `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ProdutoMapping.cs` remains sufficient and does not add stock fields
+- [X] T051 [US3] Verify `src/Amani.ImportadosERP.Infra.Data/Repositories/ProdutoRepository.cs` list/get/update operations do not create, remove, or query stock movements
 
 ### Infra.IoC
 
-- [ ] T052 [US3] Register `ProdutoService` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T052 [US3] Register `ProdutoService` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
 
 ### API
 
-- [ ] T053 [US3] Create `src/Amani.ImportadosERP.Api/Controllers/ProdutosController.cs` with `POST /api/produtos`, `GET /api/produtos`, `GET /api/produtos/{id}`, and `PUT /api/produtos/{id}`
-- [ ] T054 [US3] Ensure `src/Amani.ImportadosERP.Api/Controllers/ProdutosController.cs` delegates reference validation and update rules to `ProdutoService`
-- [ ] T055 [US3] Validate produto flows and invalid reference cases manually using `specs/001-cadastros-base/quickstart.md`
+- [X] T053 [US3] Create `src/Amani.ImportadosERP.Api/Controllers/ProdutosController.cs` with `POST /api/produtos`, `GET /api/produtos`, `GET /api/produtos/{id}`, and `PUT /api/produtos/{id}`
+- [X] T054 [US3] Ensure `src/Amani.ImportadosERP.Api/Controllers/ProdutosController.cs` delegates reference validation and update rules to `ProdutoService`
+- [X] T055 [US3] Validate produto flows and invalid reference cases manually using `specs/001-cadastros-base/quickstart.md`
 
 **Checkpoint**: US3 is complete when product endpoints work and no stock, purchase, sale, cost-average or profit behavior changes.
 
