@@ -30,6 +30,8 @@ public sealed class ObterListaContasReceberQueryHandler : IRequestHandler<ObterL
             {
                 Id = c.Id,
                 VendaId = c.VendaId,
+                ClienteId = c.ClienteId,
+                Origem = c.Origem,
                 ValorTotal = c.Valor,
                 TotalPago = totalPago,
                 Saldo = saldo,

@@ -1,43 +1,48 @@
-# Amani ERP - Especificação Oficial
+# Amani ERP - Especificacao Oficial
 
-## Visão Geral
+## Visao Geral
 
-O Amani ERP é um sistema de gestão comercial e operacional desenvolvido para a Amani Importados.
+O Amani ERP e um sistema de gestao comercial e operacional desenvolvido para a
+Amani Importados.
 
-O objetivo é controlar todo o ciclo operacional da empresa, desde a compra de produtos até a venda ao cliente final, mantendo rastreabilidade completa de estoque, custos e lucratividade.
+O objetivo e controlar o ciclo operacional da empresa, desde a compra de
+produtos ate a venda ao cliente final, mantendo rastreabilidade de estoque,
+custos e lucratividade.
 
-O sistema foi projetado utilizando Clean Architecture e DDD Lite, permitindo crescimento futuro para um ERP completo ou SaaS.
+O sistema usa Clean Architecture e DDD Lite, permitindo crescimento futuro para
+um ERP completo ou SaaS.
 
 ---
 
-# Objetivos
+## Objetivos
 
+* Gerenciar cadastros base de clientes, fornecedores, categorias e produtos
 * Gerenciar compras de fornecedores
-* Controlar estoque através de movimentações
+* Controlar estoque por movimentacoes
 * Gerenciar vendas para clientes
-* Calcular custo médio dos produtos
+* Calcular custo medio dos produtos
 * Calcular lucro das vendas
-* Controlar despesas operacionais
+* Controlar despesas operacionais e contas a receber
 * Disponibilizar dashboards gerenciais
-* Servir como base para futuras integrações com marketplaces
+* Servir como base para futuras integracoes com marketplaces
 
 ---
 
-# Arquitetura
+## Arquitetura
 
-## Backend
+### Backend
 
 * .NET 8
 * ASP.NET Core
 * Entity Framework Core
 * PostgreSQL
 
-## Frontend
+### Frontend
 
 * React
 * Next.js
 
-## Padrões Arquiteturais
+### Padroes Arquiteturais
 
 * Clean Architecture
 * DDD Lite
@@ -47,371 +52,319 @@ O sistema foi projetado utilizando Clean Architecture e DDD Lite, permitindo cre
 
 ---
 
-# Estrutura da Solução
+## Estrutura da Solucao
 
-* Amani.Api
-* Amani.Application
-* Amani.Domain
-* Amani.Infra.Data
-* Amani.Infra.IoC
+* Amani.ImportadosERP.Api
+* Amani.ImportadosERP.Application
+* Amani.ImportadosERP.Domain
+* Amani.ImportadosERP.Infra.Data
+* Amani.ImportadosERP.Infra.IoC
 
 ---
 
-# Módulo 1 - Cadastros
+## Modulo 1 - Cadastros Base
 
-## Clientes
+Status: concluido na Feature 001 - Cadastros Base.
+
+### Clientes
 
 Responsabilidades:
 
 * Cadastro de clientes
 * Consulta de clientes
-* Atualização de clientes
-* Inativação de clientes
+* Atualizacao de clientes
+* Inativacao de clientes sem excluir historico
 
 Entidade:
 
 * Cliente
 
----
-
-## Fornecedores
+### Fornecedores
 
 Responsabilidades:
 
 * Cadastro de fornecedores
 * Consulta de fornecedores
-* Atualização de fornecedores
+* Atualizacao de fornecedores
 
 Entidade:
 
 * Fornecedor
 
----
-
-## Categorias
+### Categorias
 
 Responsabilidades:
 
-* Organização dos produtos
+* Cadastro de categorias
+* Consulta de categorias
+* Atualizacao de categorias
+* Organizacao dos produtos
 
 Entidade:
 
 * Categoria
 
----
-
-## Produtos
+### Produtos
 
 Responsabilidades:
 
 * Cadastro de produtos
-* Associação com categoria
-* Associação com fornecedor
-* Definição de preço de venda
+* Consulta de produtos
+* Atualizacao de produtos
+* Associacao com categoria
+* Associacao opcional com fornecedor
+* Definicao de preco de venda
 
 Entidade:
 
 * Produto
 
+Observacao pendente:
+
+* Decidir em feature futura se novas vendas devem rejeitar clientes inativos.
+
 ---
 
-# Módulo 2 - Compras
+## Modulo 2 - Compras
 
 Responsabilidades:
 
 * Registro de compras
 * Entrada de produtos no estoque
-* Histórico de compras
-* Consulta por período
+* Historico de compras
+* Consulta por periodo
 * Consulta por fornecedor
 
 Entidades:
 
-## Compra
-
-Campos principais:
-
-* Id
-* FornecedorId
-* DataCompra
-* Desconto
-* Acrescimo
-
-## CompraItem
-
-Campos principais:
-
-* CompraId
-* ProdutoId
-* Quantidade
-* CustoUnitario
+* Compra
+* CompraItem
 
 Regras:
 
 * Quantidade deve ser maior que zero
-* CustoUnitario não pode ser negativo
-* Toda compra gera movimentação de entrada no estoque
+* Custo unitario nao pode ser negativo
+* Toda compra gera movimentacao de entrada no estoque
 
 ---
 
-# Módulo 3 - Estoque
+## Modulo 3 - Estoque
 
-## Conceito Principal
+O sistema nao possui campo fixo de estoque em produto.
 
-O sistema NÃO possui campo fixo de estoque.
+O saldo de estoque e calculado por movimentacoes:
 
-O saldo de estoque é calculado através das movimentações registradas.
+```text
+Entradas - Saidas
+```
 
-Saldo:
+Entidade:
 
-Entradas - Saídas
+* EstoqueMovimentacao
 
----
-
-## EstoqueMovimentacao
-
-Campos principais:
-
-* Id
-* ProdutoId
-* Quantidade
-* TipoMovimentacao
-* ValorUnitario
-* DataMovimentacao
-
-Tipos:
-
-* Entrada
-* Saída
-
----
-
-## Regras
+Regras:
 
 * Toda compra gera entrada
-* Toda venda gera saída
-* Nenhuma alteração manual de saldo
-* Todo histórico deve ser preservado
+* Toda venda gera saida
+* Nenhuma alteracao manual de saldo
+* Todo historico deve ser preservado
 
 ---
 
-# Módulo 4 - Vendas
+## Modulo 4 - Vendas
 
 Responsabilidades:
 
 * Registro de vendas
-* Saída automática do estoque
-* Validação de estoque disponível
-* Cálculo de lucro
+* Saida automatica do estoque
+* Validacao de estoque disponivel
+* Calculo de lucro
 
 Entidades:
 
-## Venda
-
-Campos principais:
-
-* Id
-* ClienteId
-* DataVenda
-* Desconto
-* Acrescimo
-
-## VendaItem
-
-Campos principais:
-
-* VendaId
-* ProdutoId
-* Quantidade
-* PrecoUnitario
-* Desconto
-* Acrescimo
+* Venda
+* VendaItem
 
 Regras:
 
-* Não permitir venda sem estoque
+* Nao permitir venda sem estoque
 * Quantidade deve ser maior que zero
-* Preço deve ser válido
-* Toda venda gera saída de estoque
+* Preco deve ser valido
+* Toda venda gera saida de estoque
 
 ---
 
-# Módulo 5 - Custos e Lucro
+## Modulo 5 - Custos e Lucro
 
-## Cálculo de Custo Médio
+Calculo de custo medio:
 
-Fórmula:
+```text
+Custo medio = soma(valor x quantidade) / soma(quantidade)
+```
 
-Custo Médio = Σ(Valor × Quantidade) ÷ Σ Quantidade
+Calculo de lucro:
 
-Objetivo:
-
-* Determinar custo atual do produto
-* Base para cálculo de lucro
-
----
-
-## Cálculo de Lucro
-
-Fórmula:
-
-Lucro = (PreçoVenda - CustoMédio) × Quantidade
-
-Objetivo:
-
-* Medir rentabilidade por venda
-* Alimentar dashboards financeiros
+```text
+Lucro = (preco de venda - custo medio) x quantidade
+```
 
 ---
 
-# Módulo 6 - Financeiro
-
-## Despesas
+## Modulo 6 - Financeiro
 
 Responsabilidades:
 
-* Registro de gastos operacionais
+* Registro de despesas operacionais
 * Controle de despesas por categoria
-* Relatórios financeiros
+* Controle de contas a receber
+* Registro de pagamentos recebidos
+* Relatorios financeiros
 
-Exemplos:
-
-* Frete
-* Taxas
-* Embalagens
-* Marketing
-* Combustível
-
-Entidade:
+Entidades:
 
 * Despesa
-
-Campos principais:
-
-* Id
-* Descricao
-* Valor
-* CategoriaDespesaId
-* DataDespesa
+* CategoriaDespesa
+* ContaReceber
+* PagamentoRecebido
 
 ---
 
-## CategoriaDespesa
-
-Campos principais:
-
-* Id
-* Nome
-* Descricao
-
----
-
-# Módulo 7 - Dashboard
+## Modulo 7 - Dashboard
 
 Responsabilidades:
 
 * Indicadores financeiros
 * Indicadores operacionais
 
-Métricas:
+Metricas:
 
-* Receita por período
-* Lucro por período
-* Compras por período
-* Despesas por período
+* Receita por periodo
+* Lucro por periodo
+* Compras por periodo
+* Despesas por periodo
 * Produtos mais vendidos
 * Produtos com baixo estoque
 * Produtos mais lucrativos
 
 ---
 
-# Endpoints Esperados
+## Endpoints Disponiveis
 
-## Compras
-
-* POST /api/compras
-* GET /api/compras/{id}
-* GET /api/compras
-
-## Vendas
-
-* POST /api/vendas
-* GET /api/vendas/{id}
-* GET /api/vendas
-
-## Produtos
-
-* POST /api/produtos
-* GET /api/produtos
-* GET /api/produtos/{id}
-
-## Clientes
+### Clientes
 
 * POST /api/clientes
 * GET /api/clientes
 * GET /api/clientes/{id}
+* PUT /api/clientes/{id}
+* POST /api/clientes/{id}/inativar
 
-## Fornecedores
+### Fornecedores
 
 * POST /api/fornecedores
 * GET /api/fornecedores
 * GET /api/fornecedores/{id}
+* PUT /api/fornecedores/{id}
 
-## Despesas
+### Categorias
 
-* POST /api/despesas
-* GET /api/despesas
-* GET /api/despesas/{id}
+* POST /api/categorias
+* GET /api/categorias
+* GET /api/categorias/{id}
+* PUT /api/categorias/{id}
 
-## Dashboard
+### Produtos
 
-* GET /api/dashboard
+* POST /api/produtos
+* GET /api/produtos
+* GET /api/produtos/{id}
+* PUT /api/produtos/{id}
+
+### Compras
+
+* POST /api/Compra
+* GET /api/Compra
+* GET /api/Compra/{id}
+
+### Vendas
+
+* POST /api/Vendas
+* GET /api/Vendas
+* GET /api/Vendas/{id}
+* GET /api/Vendas/dashboard
+* POST /api/Vendas/{id}/cancelar
+
+### Despesas
+
+* POST /api/Despesas
+* GET /api/Despesas
+
+### Contas a Receber
+
+* POST /api/contas-receber
+* GET /api/contas-receber
+* GET /api/contas-receber/por-cliente
+* GET /api/contas-receber/cliente/{clienteId}
+* PUT /api/contas-receber/{id}
+* DELETE /api/contas-receber/{id}
+* POST /api/contas-receber/{id}/pagamentos
+
+### Dashboard
+
+* GET /api/dashboard-financeiro
 
 ---
 
-# Diretrizes Obrigatórias
+## Diretrizes Obrigatorias
 
-* Não utilizar AutoMapper
-* Utilizar DTOs para entrada e saída
-* Controllers sem regras de negócio
+* Nao utilizar AutoMapper
+* Utilizar DTOs para entrada e saida
+* Controllers sem regras de negocio
 * Regras concentradas na camada Application e Domain
 * Utilizar Fluent API para mapeamentos EF
 * Utilizar Repository Pattern
-* Preservar histórico operacional
-* Evitar acoplamento entre módulos
+* Preservar historico operacional
+* Evitar acoplamento entre modulos
 
 ---
 
-# Evoluções Futuras
-
-* Contas a Receber
-* Fluxo de Caixa
-* Contas a Pagar
-* Autenticação e Autorização
-* Multiusuário
-* Integração Mercado Livre
-* Integração Shopee
-* Integração TikTok Shop
-* Emissão de NF-e
-* Aplicativo Mobile
-* Plataforma SaaS
-
----
-
-# Status Atual
+## Status Atual
 
 Implementado:
 
+* Cadastros base de clientes, fornecedores, categorias e produtos
 * Compras
 * Vendas
-* Estoque por movimentação
-* Cálculo de custo médio
-* Cálculo de lucro
-* Validação de estoque
+* Estoque por movimentacao
+* Calculo de custo medio
+* Calculo de lucro
+* Validacao de estoque
+* Despesas
+* Contas a receber e pagamentos recebidos
+* Dashboard operacional e dashboard financeiro
 
-Próximos focos:
+Feature concluida mais recente:
 
-* Dashboard
-* Financeiro
-* Frontend React/Next.js
-* Integrações futuras
+* 001-cadastros-base
+
+Proxima prioridade:
+
+* 002-implantacao-inicial
+
+Observacao:
+
+* A specification da Feature 002 ainda nao foi iniciada.
+
+---
+
+## Evolucoes Futuras
+
+* Fluxo de caixa
+* Contas a pagar
+* Autenticacao e autorizacao
+* Multiusuario
+* Integracao Mercado Livre
+* Integracao Shopee
+* Integracao TikTok Shop
+* Emissao de NF-e
+* Aplicativo mobile
+* Plataforma SaaS

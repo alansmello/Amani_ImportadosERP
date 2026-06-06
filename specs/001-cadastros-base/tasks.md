@@ -34,24 +34,24 @@
 
 - [X] T004 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarClienteDto.cs` with cliente update input fields
 - [X] T005 [P] Create `src/Amani.ImportadosERP.Application/DTOs/ClienteDto.cs` with cliente output fields including active state
-- [ ] T006 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarFornecedorDto.cs` with fornecedor update input fields
-- [ ] T007 [P] Create `src/Amani.ImportadosERP.Application/DTOs/FornecedorDto.cs` with fornecedor output fields
-- [ ] T008 [P] Create `src/Amani.ImportadosERP.Application/DTOs/CriarCategoriaDto.cs` with categoria create input fields
-- [ ] T009 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarCategoriaDto.cs` with categoria update input fields
-- [ ] T010 [P] Create `src/Amani.ImportadosERP.Application/DTOs/CategoriaDto.cs` with categoria output fields
-- [ ] T011 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarProdutoDto.cs` with produto update input fields
-- [ ] T012 Update `src/Amani.ImportadosERP.Application/DTOs/ProdutoDto.cs` only if needed so product output matches `contracts/cadastros-base-api.md`
+- [X] T006 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarFornecedorDto.cs` with fornecedor update input fields
+- [X] T007 [P] Create `src/Amani.ImportadosERP.Application/DTOs/FornecedorDto.cs` with fornecedor output fields
+- [X] T008 [P] Create `src/Amani.ImportadosERP.Application/DTOs/CriarCategoriaDto.cs` with categoria create input fields
+- [X] T009 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarCategoriaDto.cs` with categoria update input fields
+- [X] T010 [P] Create `src/Amani.ImportadosERP.Application/DTOs/CategoriaDto.cs` with categoria output fields
+- [X] T011 [P] Create `src/Amani.ImportadosERP.Application/DTOs/AtualizarProdutoDto.cs` with produto update input fields
+- [X] T012 Update `src/Amani.ImportadosERP.Application/DTOs/ProdutoDto.cs` only if needed so product output matches `contracts/cadastros-base-api.md`
 - [X] T013 Extend `src/Amani.ImportadosERP.Application/Interfaces/IClienteRepository.cs` with list, tracked get, save, and active-filter read operations
-- [ ] T014 Extend `src/Amani.ImportadosERP.Application/Interfaces/IFornecedorRepository.cs` with list, tracked get, and save operations
-- [ ] T015 Extend `src/Amani.ImportadosERP.Application/Interfaces/IProdutoRepository.cs` with list, tracked get, and save operations
-- [ ] T016 Create `src/Amani.ImportadosERP.Application/Interfaces/ICategoriaRepository.cs` with add, list, get by id, tracked get, and save operations
+- [X] T014 Extend `src/Amani.ImportadosERP.Application/Interfaces/IFornecedorRepository.cs` with list, tracked get, and save operations
+- [X] T015 Extend `src/Amani.ImportadosERP.Application/Interfaces/IProdutoRepository.cs` with list, tracked get, and save operations
+- [X] T016 Create `src/Amani.ImportadosERP.Application/Interfaces/ICategoriaRepository.cs` with add, list, get by id, tracked get, and save operations
 
 ### Infra.Data
 
 - [X] T017 Extend `src/Amani.ImportadosERP.Infra.Data/Repositories/ClienteRepository.cs` to implement the new `IClienteRepository` methods without deleting cliente records
-- [ ] T018 Extend `src/Amani.ImportadosERP.Infra.Data/Repositories/FornecedorRepository.cs` to implement the new `IFornecedorRepository` methods
-- [ ] T019 Extend `src/Amani.ImportadosERP.Infra.Data/Repositories/ProdutoRepository.cs` to implement the new `IProdutoRepository` methods without stock fields or stock movement changes
-- [ ] T020 Create `src/Amani.ImportadosERP.Infra.Data/Repositories/CategoriaRepository.cs` implementing `ICategoriaRepository`
+- [X] T018 Extend `src/Amani.ImportadosERP.Infra.Data/Repositories/FornecedorRepository.cs` to implement the new `IFornecedorRepository` methods
+- [X] T019 Extend `src/Amani.ImportadosERP.Infra.Data/Repositories/ProdutoRepository.cs` to implement the new `IProdutoRepository` methods without stock fields or stock movement changes
+- [X] T020 Create `src/Amani.ImportadosERP.Infra.Data/Repositories/CategoriaRepository.cs` implementing `ICategoriaRepository`
 
 **Checkpoint**: Shared DTOs and repository interfaces are ready for story-specific implementation.
 
