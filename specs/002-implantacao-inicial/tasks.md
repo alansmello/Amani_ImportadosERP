@@ -195,18 +195,18 @@
 
 **Purpose**: Validate complete feature, migrations, contracts, regressions and architectural constraints.
 
-- [ ] T077 Run `dotnet build Amani_ImportadosERP.sln` from repository root
-- [ ] T078 Validate all endpoints in `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
-- [ ] T079 Validate all scenarios in `specs/002-implantacao-inicial/quickstart.md`
-- [ ] T080 Inspect `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` and confirm it contains no business rules
-- [ ] T081 Inspect `src/Amani.ImportadosERP.Application/DTOs` and confirm implantacao endpoints use explicit DTOs and no domain entities as contracts
-- [ ] T082 Inspect `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs` and confirm no AutoMapper usage was introduced
-- [ ] T083 Inspect `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations` and confirm all new persisted fields/types use Fluent API
-- [ ] T084 Inspect `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` and confirm no fixed stock field was introduced
-- [ ] T085 Inspect `src/Amani.ImportadosERP.Application/Services/CompraService.cs` and `src/Amani.ImportadosERP.Application/Services/VendaService.cs` and confirm purchase/sale rules were not changed
-- [ ] T086 Inspect dashboard handlers in `src/Amani.ImportadosERP.Application/Queries/Handlers` and confirm dashboard financeiro was not changed
-- [ ] T087 Inspect generated migrations in `src/Amani.ImportadosERP.Infra.Data/Migrations` and confirm they only cover Feature 002 persistence changes
-- [ ] T088 Run `git status --short` and confirm only intended Feature 002 files changed
+- [X] T077 Run `dotnet build Amani_ImportadosERP.sln` from repository root
+- [X] T078 Validate all endpoints in `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
+- [X] T079 Validate all scenarios in `specs/002-implantacao-inicial/quickstart.md`
+- [X] T080 Inspect `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` and confirm it contains no business rules
+- [X] T081 Inspect `src/Amani.ImportadosERP.Application/DTOs` and confirm implantacao endpoints use explicit DTOs and no domain entities as contracts
+- [X] T082 Inspect `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs` and confirm no AutoMapper usage was introduced
+- [X] T083 Inspect `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations` and confirm all new persisted fields/types use Fluent API
+- [X] T084 Inspect `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` and confirm no fixed stock field was introduced
+- [X] T085 Inspect `src/Amani.ImportadosERP.Application/Services/CompraService.cs` and `src/Amani.ImportadosERP.Application/Services/VendaService.cs` and confirm purchase/sale rules were not changed
+- [X] T086 Inspect dashboard handlers in `src/Amani.ImportadosERP.Application/Queries/Handlers` and confirm dashboard financeiro was not changed
+- [X] T087 Inspect generated migrations in `src/Amani.ImportadosERP.Infra.Data/Migrations` and confirm they only cover Feature 002 persistence changes
+- [X] T088 Run `git status --short` and confirm only intended Feature 002 files changed
 
 ---
 
