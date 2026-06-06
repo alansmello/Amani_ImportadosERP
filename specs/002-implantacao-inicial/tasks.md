@@ -105,41 +105,41 @@
 
 ### Reuse Decision
 
-- [ ] T036 [US2] Document the chosen reuse/new-entity decision for cash opening balance in `specs/002-implantacao-inicial/research.md` after inspecting existing financial structures
-- [ ] T037 [US2] If an existing financial structure is reusable, identify required changes in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs` before creating any new domain entity
-- [ ] T038 [US2] If no existing structure is sufficient, create `src/Amani.ImportadosERP.Domain/Entities/EventoFinanceiro.cs` for traceable opening cash events
+- [X] T036 [US2] Document the chosen reuse/new-entity decision for cash opening balance in `specs/002-implantacao-inicial/research.md` after inspecting existing financial structures
+- [X] T037 [US2] If an existing financial structure is reusable, identify required changes in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs` before creating any new domain entity
+- [X] T038 [US2] If no existing structure is sufficient, create `src/Amani.ImportadosERP.Domain/Entities/EventoFinanceiro.cs` for traceable opening cash events
 
 ### Domain
 
-- [ ] T039 [US2] If `EventoFinanceiro` is created, add event type support for `SaldoInicialCaixa` in `src/Amani.ImportadosERP.Domain/Entities/EventoFinanceiro.cs`
-- [ ] T040 [US2] If `EventoFinanceiro` is created, implement value, date, origem, and descricao validation in `src/Amani.ImportadosERP.Domain/Entities/EventoFinanceiro.cs`
+- [X] T039 [US2] If `EventoFinanceiro` is created, add event type support for `SaldoInicialCaixa` in `src/Amani.ImportadosERP.Domain/Entities/EventoFinanceiro.cs`
+- [X] T040 [US2] If `EventoFinanceiro` is created, implement value, date, origem, and descricao validation in `src/Amani.ImportadosERP.Domain/Entities/EventoFinanceiro.cs`
 
 ### Application and Repositories
 
-- [ ] T041 [US2] Create `src/Amani.ImportadosERP.Application/Interfaces/IEventoFinanceiroRepository.cs` only if a new financial event entity is technically necessary
-- [ ] T042 [US2] Implement saldo inicial de caixa validation in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T043 [US2] Implement saldo inicial de caixa creation using the reused financial structure or `IEventoFinanceiroRepository` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T044 [US2] Map saldo inicial de caixa result to `SaldoInicialCaixaResultadoDto` explicitly in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T041 [US2] Create `src/Amani.ImportadosERP.Application/Interfaces/IEventoFinanceiroRepository.cs` only if a new financial event entity is technically necessary
+- [X] T042 [US2] Implement saldo inicial de caixa validation in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T043 [US2] Implement saldo inicial de caixa creation using the reused financial structure or `IEventoFinanceiroRepository` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T044 [US2] Map saldo inicial de caixa result to `SaldoInicialCaixaResultadoDto` explicitly in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
 
 ### Infra.Data
 
-- [ ] T045 [US2] Create `src/Amani.ImportadosERP.Infra.Data/Repositories/EventoFinanceiroRepository.cs` only if `IEventoFinanceiroRepository` is created
-- [ ] T046 [US2] Create `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/EventoFinanceiroMapping.cs` only if `EventoFinanceiro` is created
-- [ ] T047 [US2] Add `DbSet<EventoFinanceiro>` to `src/Amani.ImportadosERP.Infra.Data/Context/AmaniDbContext.cs` only if `EventoFinanceiro` is created
-- [ ] T048 [US2] Register `IEventoFinanceiroRepository` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs` only if the repository is created
-- [ ] T049 [US2] Create EF migration in `src/Amani.ImportadosERP.Infra.Data/Migrations` for saldo inicial de caixa persistence changes only after reuse/new-entity decision is complete
+- [X] T045 [US2] Create `src/Amani.ImportadosERP.Infra.Data/Repositories/EventoFinanceiroRepository.cs` only if `IEventoFinanceiroRepository` is created
+- [X] T046 [US2] Create `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/EventoFinanceiroMapping.cs` only if `EventoFinanceiro` is created
+- [X] T047 [US2] Add `DbSet<EventoFinanceiro>` to `src/Amani.ImportadosERP.Infra.Data/Context/AmaniDbContext.cs` only if `EventoFinanceiro` is created
+- [X] T048 [US2] Register `IEventoFinanceiroRepository` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs` only if the repository is created
+- [X] T049 [US2] Create EF migration in `src/Amani.ImportadosERP.Infra.Data/Migrations` for saldo inicial de caixa persistence changes only after reuse/new-entity decision is complete
 
 ### API
 
-- [ ] T050 [US2] Add `POST /api/implantacao/saldo-inicial-caixa` endpoint to `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs`
-- [ ] T051 [US2] Ensure `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` returns the saldo inicial de caixa response DTO and delegates validation to `ImplantacaoService`
-- [ ] T052 [US2] Ensure saldo inicial de caixa endpoint responses match `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
+- [X] T050 [US2] Add `POST /api/implantacao/saldo-inicial-caixa` endpoint to `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs`
+- [X] T051 [US2] Ensure `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` returns the saldo inicial de caixa response DTO and delegates validation to `ImplantacaoService`
+- [X] T052 [US2] Ensure saldo inicial de caixa endpoint responses match `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
 
 ### Manual Validation
 
-- [ ] T053 [US2] Validate saldo inicial de caixa scenario from `specs/002-implantacao-inicial/quickstart.md`
-- [ ] T054 [US2] Confirm saldo inicial de caixa is not treated as sale revenue by inspecting `src/Amani.ImportadosERP.Application/Services/VendaService.cs` and dashboard query handlers in `src/Amani.ImportadosERP.Application/Queries/Handlers`
-- [ ] T055 [US2] Confirm dashboard financeiro files were not changed for this story
+- [X] T053 [US2] Validate saldo inicial de caixa scenario from `specs/002-implantacao-inicial/quickstart.md`
+- [X] T054 [US2] Confirm saldo inicial de caixa is not treated as sale revenue by inspecting `src/Amani.ImportadosERP.Application/Services/VendaService.cs` and dashboard query handlers in `src/Amani.ImportadosERP.Application/Queries/Handlers`
+- [X] T055 [US2] Confirm dashboard financeiro files were not changed for this story
 
 **Checkpoint**: US2 is complete when opening cash is recorded with traceable origin and no sale/dashboard behavior changes.
 

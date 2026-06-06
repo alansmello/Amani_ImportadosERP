@@ -32,4 +32,20 @@ public class ImplantacaoController : ControllerBase
             return BadRequest(new { error = ex.Message });
         }
     }
+
+    [HttpPost("saldo-inicial-caixa")]
+    public async Task<IActionResult> RegistrarSaldoInicialCaixa([FromBody] RegistrarSaldoInicialCaixaDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        try
+        {
+            var resultado = await _service.RegistrarSaldoInicialCaixaAsync(dto);
+            return Ok(resultado);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
 }

@@ -14,13 +14,16 @@ public class ImplantacaoService
 
     private readonly IProdutoRepository _produtoRepository;
     private readonly IEstoqueMovimentacaoRepository _estoqueMovimentacaoRepository;
+    private readonly IEventoFinanceiroRepository _eventoFinanceiroRepository;
 
     public ImplantacaoService(
         IProdutoRepository produtoRepository,
-        IEstoqueMovimentacaoRepository estoqueMovimentacaoRepository)
+        IEstoqueMovimentacaoRepository estoqueMovimentacaoRepository,
+        IEventoFinanceiroRepository eventoFinanceiroRepository)
     {
         _produtoRepository = produtoRepository;
         _estoqueMovimentacaoRepository = estoqueMovimentacaoRepository;
+        _eventoFinanceiroRepository = eventoFinanceiroRepository;
     }
 
     public async Task<InventarioInicialResultadoDto> RegistrarInventarioInicialAsync(RegistrarInventarioInicialDto dto)
@@ -56,6 +59,27 @@ public class ImplantacaoService
             Origem = OrigemImplantacaoInicial,
             QuantidadeItens = movimentacoes.Count,
             MovimentacoesIds = movimentacoes.Select(m => m.Id).ToList()
+        };
+    }
+
+    public async Task<SaldoInicialCaixaResultadoDto> RegistrarSaldoInicialCaixaAsync(RegistrarSaldoInicialCaixaDto dto)
+    {
+        if (dto == null) throw new ArgumentNullException(nameof(dto));
+
+        var eventoFinanceiro = EventoFinanceiro.CriarSaldoInicialCaixa(
+            dto.Valor,
+            dto.Data,
+            dto.Origem,
+            dto.Descricao);
+
+        await _eventoFinanceiroRepository.AdicionarAsync(eventoFinanceiro);
+
+        return new SaldoInicialCaixaResultadoDto
+        {
+            EventoFinanceiroId = eventoFinanceiro.Id,
+            Valor = eventoFinanceiro.Valor,
+            Data = eventoFinanceiro.Data,
+            Origem = eventoFinanceiro.Origem
         };
     }
 

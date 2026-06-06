@@ -60,6 +60,16 @@ valor, data e origem de implantacao, separado de venda, despesa e dashboard.
 **Rationale**: O saldo preexistente nao e receita nova nem venda registrada. Um
 evento historico evita valor manual sem origem e permite consulta/auditoria.
 
+**Implementation reuse review (T036)**: As estruturas financeiras existentes
+foram inspecionadas antes da implementacao do saldo inicial de caixa.
+`Despesa` representa gasto e afetaria relatorios de despesa; `ContaReceber` e
+`PagamentoRecebido` pertencem ao fluxo de recebiveis/vendas; o dashboard
+financeiro calcula caixa a partir desses fluxos operacionais. Nenhuma dessas
+estruturas registra saldo de caixa inicial sem distorcer receita, despesa ou
+venda. Portanto, a decisao de implementacao e criar `EventoFinanceiro` como
+registro historico simples e rastreavel, sem conectar esse evento ao dashboard
+financeiro nesta story.
+
 **Alternatives considered**:
 
 - Registrar como venda ou receita operacional: rejeitado por distorcer resultado.
