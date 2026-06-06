@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<Amani.ImportadosERP.Application.Services.FornecedorService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.CategoriaService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.ProdutoService>();
+        services.AddScoped<Amani.ImportadosERP.Application.Services.ImplantacaoService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.CompraService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.VendaService>();
 

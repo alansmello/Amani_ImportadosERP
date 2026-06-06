@@ -18,11 +18,11 @@
 
 **Purpose**: Confirm context, avoid out-of-scope changes and preserve Feature 001 behavior.
 
-- [ ] T001 Review `specs/002-implantacao-inicial/spec.md`, `specs/002-implantacao-inicial/plan.md`, `specs/002-implantacao-inicial/data-model.md`, and `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
-- [ ] T002 Inspect existing stock flow in `src/Amani.ImportadosERP.Domain/Entities/EstoqueMovimentacao.cs`, `src/Amani.ImportadosERP.Application/Interfaces/IEstoqueMovimentacaoRepository.cs`, and `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueMovimentacaoRepository.cs`
-- [ ] T003 Inspect existing financial structures in `src/Amani.ImportadosERP.Domain/Entities`, `src/Amani.ImportadosERP.Application/Services`, `src/Amani.ImportadosERP.Application/Interfaces`, and `src/Amani.ImportadosERP.Infra.Data/Repositories` before deciding whether a new financial event entity is needed
-- [ ] T004 Inspect existing accounts receivable flow in `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs`, `src/Amani.ImportadosERP.Application/Interfaces/IContaReceberRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs`, and `src/Amani.ImportadosERP.Api/Controllers/ContasReceberController.cs`
-- [ ] T005 Confirm implementation will not modify dashboard financeiro, frontend, mobile, authentication, spreadsheet import, purchase/sale rules, average cost, profit, or inactive customer sale behavior
+- [X] T001 Review `specs/002-implantacao-inicial/spec.md`, `specs/002-implantacao-inicial/plan.md`, `specs/002-implantacao-inicial/data-model.md`, and `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
+- [X] T002 Inspect existing stock flow in `src/Amani.ImportadosERP.Domain/Entities/EstoqueMovimentacao.cs`, `src/Amani.ImportadosERP.Application/Interfaces/IEstoqueMovimentacaoRepository.cs`, and `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueMovimentacaoRepository.cs`
+- [X] T003 Inspect existing financial structures in `src/Amani.ImportadosERP.Domain/Entities`, `src/Amani.ImportadosERP.Application/Services`, `src/Amani.ImportadosERP.Application/Interfaces`, and `src/Amani.ImportadosERP.Infra.Data/Repositories` before deciding whether a new financial event entity is needed
+- [X] T004 Inspect existing accounts receivable flow in `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs`, `src/Amani.ImportadosERP.Application/Interfaces/IContaReceberRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs`, and `src/Amani.ImportadosERP.Api/Controllers/ContasReceberController.cs`
+- [X] T005 Confirm implementation will not modify dashboard financeiro, frontend, mobile, authentication, spreadsheet import, purchase/sale rules, average cost, profit, or inactive customer sale behavior
 
 ---
 
@@ -34,19 +34,19 @@
 
 ### Application DTOs
 
-- [ ] T006 [P] Create `src/Amani.ImportadosERP.Application/DTOs/RegistrarInventarioInicialDto.cs` with data, origem, and itens fields
-- [ ] T007 [P] Create `src/Amani.ImportadosERP.Application/DTOs/RegistrarInventarioInicialItemDto.cs` with produtoId, quantidade, and valorUnitario fields
-- [ ] T008 [P] Create `src/Amani.ImportadosERP.Application/DTOs/InventarioInicialResultadoDto.cs` with data, origem, quantidadeItens, and movimentacoesIds fields
-- [ ] T009 [P] Create `src/Amani.ImportadosERP.Application/DTOs/RegistrarSaldoInicialCaixaDto.cs` with valor, data, origem, and descricao fields
-- [ ] T010 [P] Create `src/Amani.ImportadosERP.Application/DTOs/SaldoInicialCaixaResultadoDto.cs` with eventoFinanceiroId, valor, data, and origem fields
-- [ ] T011 [P] Create `src/Amani.ImportadosERP.Application/DTOs/RegistrarContaReceberInicialDto.cs` with clienteId, valor, dataVencimento, origem, and descricao fields
-- [ ] T012 [P] Create `src/Amani.ImportadosERP.Application/DTOs/ContaReceberInicialResultadoDto.cs` with contaReceberId, clienteId, valor, dataVencimento, and origem fields
+- [X] T006 [P] Create `src/Amani.ImportadosERP.Application/DTOs/RegistrarInventarioInicialDto.cs` with data, origem, and itens fields
+- [X] T007 [P] Create `src/Amani.ImportadosERP.Application/DTOs/RegistrarInventarioInicialItemDto.cs` with produtoId, quantidade, and valorUnitario fields
+- [X] T008 [P] Create `src/Amani.ImportadosERP.Application/DTOs/InventarioInicialResultadoDto.cs` with data, origem, quantidadeItens, and movimentacoesIds fields
+- [X] T009 [P] Create `src/Amani.ImportadosERP.Application/DTOs/RegistrarSaldoInicialCaixaDto.cs` with valor, data, origem, and descricao fields
+- [X] T010 [P] Create `src/Amani.ImportadosERP.Application/DTOs/SaldoInicialCaixaResultadoDto.cs` with eventoFinanceiroId, valor, data, and origem fields
+- [X] T011 [P] Create `src/Amani.ImportadosERP.Application/DTOs/RegistrarContaReceberInicialDto.cs` with clienteId, valor, dataVencimento, origem, and descricao fields
+- [X] T012 [P] Create `src/Amani.ImportadosERP.Application/DTOs/ContaReceberInicialResultadoDto.cs` with contaReceberId, clienteId, valor, dataVencimento, and origem fields
 
 ### Application Service and API Shell
 
-- [ ] T013 Create `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs` with constructor dependencies only and no business methods implemented yet
-- [ ] T014 Register `Amani.ImportadosERP.Application.Services.ImplantacaoService` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
-- [ ] T015 Create `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` with route `api/implantacao`, injected `ImplantacaoService`, and no endpoints yet
+- [X] T013 Create `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs` with constructor dependencies only and no business methods implemented yet
+- [X] T014 Register `Amani.ImportadosERP.Application.Services.ImplantacaoService` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T015 Create `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` with route `api/implantacao`, injected `ImplantacaoService`, and no endpoints yet
 
 **Checkpoint**: Shared DTOs and service/controller shell exist before story-specific implementation.
 
@@ -60,38 +60,38 @@
 
 ### Domain
 
-- [ ] T016 [US1] Add `InventarioInicial` to `TipoMovimentacao` in `src/Amani.ImportadosERP.Domain/Entities/EstoqueMovimentacao.cs`
-- [ ] T017 [US1] Update `src/Amani.ImportadosERP.Domain/Entities/EstoqueMovimentacao.cs` constructor rules to allow `InventarioInicial` with null `CompraId` and null `VendaId`
-- [ ] T018 [US1] Add date input support for inventory movements in `src/Amani.ImportadosERP.Domain/Entities/EstoqueMovimentacao.cs` without changing purchase or sale movement behavior
-- [ ] T019 [US1] Ensure `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` still has no fixed stock balance field after inventory changes
+- [X] T016 [US1] Add `InventarioInicial` to `TipoMovimentacao` in `src/Amani.ImportadosERP.Domain/Entities/EstoqueMovimentacao.cs`
+- [X] T017 [US1] Update `src/Amani.ImportadosERP.Domain/Entities/EstoqueMovimentacao.cs` constructor rules to allow `InventarioInicial` with null `CompraId` and null `VendaId`
+- [X] T018 [US1] Add date input support for inventory movements in `src/Amani.ImportadosERP.Domain/Entities/EstoqueMovimentacao.cs` without changing purchase or sale movement behavior
+- [X] T019 [US1] Ensure `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` still has no fixed stock balance field after inventory changes
 
 ### Application
 
-- [ ] T020 [US1] Implement empty-item validation in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T021 [US1] Implement duplicated produtoId validation for inventory items in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T022 [US1] Implement positive quantity validation for inventory items in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T023 [US1] Implement non-negative valorUnitario validation for inventory items in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T024 [US1] Implement product existence validation using `IProdutoRepository` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T025 [US1] Implement inventory movement creation using `IEstoqueMovimentacaoRepository.AdicionarRangeAsync` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T026 [US1] Map generated inventory movements to `InventarioInicialResultadoDto` explicitly in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T020 [US1] Implement empty-item validation in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T021 [US1] Implement duplicated produtoId validation for inventory items in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T022 [US1] Implement positive quantity validation for inventory items in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T023 [US1] Implement non-negative valorUnitario validation for inventory items in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T024 [US1] Implement product existence validation using `IProdutoRepository` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T025 [US1] Implement inventory movement creation using `IEstoqueMovimentacaoRepository.AdicionarRangeAsync` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T026 [US1] Map generated inventory movements to `InventarioInicialResultadoDto` explicitly in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
 
 ### Infra.Data
 
-- [ ] T027 [US1] Verify `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueMovimentacaoRepository.cs` persists range inserts without creating purchases, sales, or product stock fields
-- [ ] T028 [US1] Update `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/EstoqueMovimentacaoMapping.cs` if needed to persist `TipoMovimentacao.InventarioInicial` and inventory date correctly
-- [ ] T029 [US1] Create EF migration in `src/Amani.ImportadosERP.Infra.Data/Migrations` for `TipoMovimentacao.InventarioInicial` persistence changes only if model changes require it
+- [X] T027 [US1] Verify `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueMovimentacaoRepository.cs` persists range inserts without creating purchases, sales, or product stock fields
+- [X] T028 [US1] Update `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/EstoqueMovimentacaoMapping.cs` if needed to persist `TipoMovimentacao.InventarioInicial` and inventory date correctly
+- [X] T029 [US1] Create EF migration in `src/Amani.ImportadosERP.Infra.Data/Migrations` for `TipoMovimentacao.InventarioInicial` persistence changes only if model changes require it
 
 ### API
 
-- [ ] T030 [US1] Add `POST /api/implantacao/inventario-inicial` endpoint to `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs`
-- [ ] T031 [US1] Ensure `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` returns the inventory response DTO and delegates all inventory validation to `ImplantacaoService`
-- [ ] T032 [US1] Ensure inventory endpoint responses match `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
+- [X] T030 [US1] Add `POST /api/implantacao/inventario-inicial` endpoint to `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs`
+- [X] T031 [US1] Ensure `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` returns the inventory response DTO and delegates all inventory validation to `ImplantacaoService`
+- [X] T032 [US1] Ensure inventory endpoint responses match `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
 
 ### Manual Validation
 
-- [ ] T033 [US1] Validate successful inventory scenario from `specs/002-implantacao-inicial/quickstart.md`
-- [ ] T034 [US1] Validate inventory rejection scenarios from `specs/002-implantacao-inicial/quickstart.md`
-- [ ] T035 [US1] Confirm no product stock balance field was added by inspecting `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` and `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ProdutoMapping.cs`
+- [X] T033 [US1] Validate successful inventory scenario from `specs/002-implantacao-inicial/quickstart.md`
+- [X] T034 [US1] Validate inventory rejection scenarios from `specs/002-implantacao-inicial/quickstart.md`
+- [X] T035 [US1] Confirm no product stock balance field was added by inspecting `src/Amani.ImportadosERP.Domain/Entities/Produto.cs` and `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ProdutoMapping.cs`
 
 **Checkpoint**: US1 is complete when initial inventory works independently and stock is still derived only from movements.
 
