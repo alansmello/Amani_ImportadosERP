@@ -72,8 +72,7 @@ public class ContaReceberRepository : IContaReceberRepository
 
         var vendas = await _context.Vendas
             .AsNoTracking()
-            .Select(v => new { v.Id, v.ClienteId })
-            .ToDictionaryAsync(v => v.Id);
+            .ToDictionaryAsync(v => v.Id, v => v.ClienteId);
 
         var clientes = await _context.Clientes
             .AsNoTracking()
@@ -84,14 +83,16 @@ public class ContaReceberRepository : IContaReceberRepository
             .Select(c =>
             {
                 var saldo = c.Valor - c.Pagamentos.Sum(p => p.Valor);
-                if (!vendas.TryGetValue(c.VendaId, out var venda)) return null;
-                var nomeCliente = clientes.TryGetValue(venda.ClienteId, out var cliente)
+                var clienteId = ResolverClienteId(c, vendas);
+                if (!clienteId.HasValue) return null;
+
+                var nomeCliente = clientes.TryGetValue(clienteId.Value, out var cliente)
                     ? cliente.Nome
-                    : "Cliente não informado";
+                    : "Cliente nao informado";
 
                 return new
                 {
-                    venda.ClienteId,
+                    ClienteId = clienteId.Value,
                     NomeCliente = nomeCliente,
                     Saldo = saldo
                 };
@@ -118,12 +119,10 @@ public class ContaReceberRepository : IContaReceberRepository
             .Select(v => v.Id)
             .ToListAsync();
 
-        if (!vendaIds.Any()) return new List<ContaReceberDetalheDto>();
-
         var contas = await _context.ContasReceber
             .AsNoTracking()
             .Include(c => c.Pagamentos)
-            .Where(c => vendaIds.Contains(c.VendaId))
+            .Where(c => c.ClienteId == clienteId || (c.VendaId.HasValue && vendaIds.Contains(c.VendaId.Value)))
             .ToListAsync();
 
         return contas
@@ -136,6 +135,8 @@ public class ContaReceberRepository : IContaReceberRepository
                 {
                     ContaId = c.Id,
                     VendaId = c.VendaId,
+                    ClienteId = c.ClienteId,
+                    Origem = c.Origem,
                     ValorTotal = c.Valor,
                     TotalPago = totalPago,
                     Saldo = saldo,
@@ -158,5 +159,13 @@ public class ContaReceberRepository : IContaReceberRepository
         await _context.SaveChangesAsync();
     }
 
+    private static Guid? ResolverClienteId(ContaReceber conta, IReadOnlyDictionary<Guid, Guid> vendas)
+    {
+        if (conta.ClienteId.HasValue) return conta.ClienteId.Value;
+        if (!conta.VendaId.HasValue) return null;
 
+        return vendas.TryGetValue(conta.VendaId.Value, out var venda)
+            ? venda
+            : null;
+    }
 }

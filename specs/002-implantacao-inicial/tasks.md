@@ -153,39 +153,39 @@
 
 ### Domain
 
-- [ ] T056 [US3] Add traceable origin support to `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs`
-- [ ] T057 [US3] Allow nullable `VendaId` in `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs` only for `SaldoInicial` or `ImplantacaoInicial` origin
-- [ ] T058 [US3] Add `ClienteId` support to `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs` for initial receivables
-- [ ] T059 [US3] Add factory or constructor path for initial receivables in `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs`
-- [ ] T060 [US3] Ensure existing sale-created receivable behavior in `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs` still requires `VendaId`
+- [X] T056 [US3] Add traceable origin support to `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs`
+- [X] T057 [US3] Allow nullable `VendaId` in `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs` only for `SaldoInicial` or `ImplantacaoInicial` origin
+- [X] T058 [US3] Add `ClienteId` support to `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs` for initial receivables
+- [X] T059 [US3] Add factory or constructor path for initial receivables in `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs`
+- [X] T060 [US3] Ensure existing sale-created receivable behavior in `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs` still requires `VendaId`
 
 ### Application DTOs and Services
 
-- [ ] T061 [US3] Implement cliente existence validation using `IClienteRepository` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T062 [US3] Implement positive valor validation for initial receivables in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T063 [US3] Implement dataVencimento validation for initial receivables in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T064 [US3] Implement origem validation for `SaldoInicial` or `ImplantacaoInicial` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T065 [US3] Implement initial receivable creation using `IContaReceberRepository` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
-- [ ] T066 [US3] Map initial receivable result to `ContaReceberInicialResultadoDto` explicitly in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T061 [US3] Implement cliente existence validation using `IClienteRepository` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T062 [US3] Implement positive valor validation for initial receivables in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T063 [US3] Implement dataVencimento validation for initial receivables in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T064 [US3] Implement origem validation for `SaldoInicial` or `ImplantacaoInicial` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T065 [US3] Implement initial receivable creation using `IContaReceberRepository` in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
+- [X] T066 [US3] Map initial receivable result to `ContaReceberInicialResultadoDto` explicitly in `src/Amani.ImportadosERP.Application/Services/ImplantacaoService.cs`
 
 ### Infra.Data
 
-- [ ] T067 [US3] Update `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ContaReceberMapping.cs` to persist nullable `VendaId`, required origin, and customer relation for initial receivables
-- [ ] T068 [US3] Update `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs` only if existing add/query methods cannot support initial receivables
-- [ ] T069 [US3] Create EF migration in `src/Amani.ImportadosERP.Infra.Data/Migrations` for ContaReceber origin, nullable VendaId, and ClienteId changes
+- [X] T067 [US3] Update `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ContaReceberMapping.cs` to persist nullable `VendaId`, required origin, and customer relation for initial receivables
+- [X] T068 [US3] Update `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs` only if existing add/query methods cannot support initial receivables
+- [X] T069 [US3] Create EF migration in `src/Amani.ImportadosERP.Infra.Data/Migrations` for ContaReceber origin, nullable VendaId, and ClienteId changes
 
 ### API
 
-- [ ] T070 [US3] Add `POST /api/implantacao/contas-receber-iniciais` endpoint to `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs`
-- [ ] T071 [US3] Ensure `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` returns the conta receber inicial response DTO and delegates validation to `ImplantacaoService`
-- [ ] T072 [US3] Ensure contas a receber iniciais endpoint responses match `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
+- [X] T070 [US3] Add `POST /api/implantacao/contas-receber-iniciais` endpoint to `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs`
+- [X] T071 [US3] Ensure `src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs` returns the conta receber inicial response DTO and delegates validation to `ImplantacaoService`
+- [X] T072 [US3] Ensure contas a receber iniciais endpoint responses match `specs/002-implantacao-inicial/contracts/implantacao-inicial-api.md`
 
 ### Manual Validation
 
-- [ ] T073 [US3] Validate contas a receber iniciais scenario from `specs/002-implantacao-inicial/quickstart.md`
-- [ ] T074 [US3] Validate existing payment flow against an initial receivable through `src/Amani.ImportadosERP.Api/Controllers/ContasReceberController.cs`
-- [ ] T075 [US3] Confirm no artificial sale is created by inspecting `src/Amani.ImportadosERP.Application/Services/VendaService.cs` and `src/Amani.ImportadosERP.Infra.Data/Repositories/VendaRepository.cs`
-- [ ] T076 [US3] Confirm sale behavior for inactive cliente remains unchanged in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T073 [US3] Validate contas a receber iniciais scenario from `specs/002-implantacao-inicial/quickstart.md`
+- [X] T074 [US3] Validate existing payment flow against an initial receivable through `src/Amani.ImportadosERP.Api/Controllers/ContasReceberController.cs`
+- [X] T075 [US3] Confirm no artificial sale is created by inspecting `src/Amani.ImportadosERP.Application/Services/VendaService.cs` and `src/Amani.ImportadosERP.Infra.Data/Repositories/VendaRepository.cs`
+- [X] T076 [US3] Confirm sale behavior for inactive cliente remains unchanged in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
 
 **Checkpoint**: US3 is complete when initial receivables are payable through the existing flow and origin remains traceable.
 

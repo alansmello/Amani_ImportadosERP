@@ -48,4 +48,20 @@ public class ImplantacaoController : ControllerBase
             return BadRequest(new { error = ex.Message });
         }
     }
+
+    [HttpPost("contas-receber-iniciais")]
+    public async Task<IActionResult> RegistrarContaReceberInicial([FromBody] RegistrarContaReceberInicialDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        try
+        {
+            var resultado = await _service.RegistrarContaReceberInicialAsync(dto);
+            return Ok(resultado);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
 }

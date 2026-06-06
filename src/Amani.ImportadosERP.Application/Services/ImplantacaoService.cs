@@ -11,19 +11,26 @@ namespace Amani.ImportadosERP.Application.Services;
 public class ImplantacaoService
 {
     private const string OrigemImplantacaoInicial = "ImplantacaoInicial";
+    private const string OrigemSaldoInicial = "SaldoInicial";
 
     private readonly IProdutoRepository _produtoRepository;
     private readonly IEstoqueMovimentacaoRepository _estoqueMovimentacaoRepository;
     private readonly IEventoFinanceiroRepository _eventoFinanceiroRepository;
+    private readonly IClienteRepository _clienteRepository;
+    private readonly IContaReceberRepository _contaReceberRepository;
 
     public ImplantacaoService(
         IProdutoRepository produtoRepository,
         IEstoqueMovimentacaoRepository estoqueMovimentacaoRepository,
-        IEventoFinanceiroRepository eventoFinanceiroRepository)
+        IEventoFinanceiroRepository eventoFinanceiroRepository,
+        IClienteRepository clienteRepository,
+        IContaReceberRepository contaReceberRepository)
     {
         _produtoRepository = produtoRepository;
         _estoqueMovimentacaoRepository = estoqueMovimentacaoRepository;
         _eventoFinanceiroRepository = eventoFinanceiroRepository;
+        _clienteRepository = clienteRepository;
+        _contaReceberRepository = contaReceberRepository;
     }
 
     public async Task<InventarioInicialResultadoDto> RegistrarInventarioInicialAsync(RegistrarInventarioInicialDto dto)
@@ -83,6 +90,41 @@ public class ImplantacaoService
         };
     }
 
+    public async Task<ContaReceberInicialResultadoDto> RegistrarContaReceberInicialAsync(RegistrarContaReceberInicialDto dto)
+    {
+        if (dto == null) throw new ArgumentNullException(nameof(dto));
+        if (dto.ClienteId == Guid.Empty) throw new ArgumentException("ClienteId e obrigatorio.", nameof(dto));
+        if (dto.Valor <= 0) throw new ArgumentException("Valor deve ser maior que zero.", nameof(dto));
+        if (dto.DataVencimento == default) throw new ArgumentException("DataVencimento e obrigatoria.", nameof(dto));
+        if (!OrigemContaReceberInicialValida(dto.Origem))
+        {
+            throw new ArgumentException("Origem da conta a receber inicial deve ser SaldoInicial ou ImplantacaoInicial.", nameof(dto));
+        }
+
+        var cliente = await _clienteRepository.ObterPorIdAsync(dto.ClienteId);
+        if (cliente == null)
+        {
+            throw new ArgumentException($"Cliente informado nao existe: {dto.ClienteId}.");
+        }
+
+        var conta = ContaReceber.CriarInicial(
+            dto.ClienteId,
+            dto.Valor,
+            dto.DataVencimento,
+            dto.Origem);
+
+        await _contaReceberRepository.AdicionarAsync(conta);
+
+        return new ContaReceberInicialResultadoDto
+        {
+            ContaReceberId = conta.Id,
+            ClienteId = conta.ClienteId!.Value,
+            Valor = conta.Valor,
+            DataVencimento = conta.DataVencimento,
+            Origem = conta.Origem
+        };
+    }
+
     private static void ValidarItensDuplicados(IEnumerable<RegistrarInventarioInicialItemDto> itens)
     {
         var produtoDuplicado = itens
@@ -107,5 +149,11 @@ public class ImplantacaoService
         {
             throw new ArgumentException($"Produto informado nao existe: {item.ProdutoId}.");
         }
+    }
+
+    private static bool OrigemContaReceberInicialValida(string origem)
+    {
+        return string.Equals(origem, OrigemSaldoInicial, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(origem, OrigemImplantacaoInicial, StringComparison.OrdinalIgnoreCase);
     }
 }
