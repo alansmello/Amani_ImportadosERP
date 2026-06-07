@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Amani.ImportadosERP.Domain.Common;
 
 namespace Amani.ImportadosERP.Domain.Entities;
@@ -14,6 +16,16 @@ public sealed class CompraItem : BaseEntity
     public decimal Acrescimo { get; private set; }
 
     public Compra Compra { get; private set; }
+
+    private readonly List<CompraItemRecebimento> _recebimentos = new();
+    public IReadOnlyCollection<CompraItemRecebimento> Recebimentos => _recebimentos.AsReadOnly();
+
+    private readonly List<CompraItemPerda> _perdas = new();
+    public IReadOnlyCollection<CompraItemPerda> Perdas => _perdas.AsReadOnly();
+
+    public int QuantidadeRecebida => _recebimentos.Sum(r => r.Quantidade);
+    public int QuantidadePerdida => _perdas.Sum(p => p.Quantidade);
+    public int QuantidadePendente => Quantidade - QuantidadeRecebida - QuantidadePerdida;
 
     public CompraItem(Guid produtoId, int quantidade, decimal custoUnitario, decimal desconto = 0m, decimal acrescimo = 0m)
     {

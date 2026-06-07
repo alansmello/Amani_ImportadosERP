@@ -11,9 +11,16 @@ public sealed class Compra : BaseEntity
     public DateTime DataCompra { get; private set; }
     public decimal Desconto { get; private set; }
     public decimal Acrescimo { get; private set; }
+    public CompraStatus Status { get; private set; }
 
     private readonly List<CompraItem> _items = new();
     public IReadOnlyCollection<CompraItem> Items => _items.AsReadOnly();
+
+    private readonly List<CompraItemRecebimento> _recebimentos = new();
+    public IReadOnlyCollection<CompraItemRecebimento> Recebimentos => _recebimentos.AsReadOnly();
+
+    private readonly List<CompraItemPerda> _perdas = new();
+    public IReadOnlyCollection<CompraItemPerda> Perdas => _perdas.AsReadOnly();
 
     public Compra(Guid fornecedorId, DateTime dataCompra, decimal desconto = 0m, decimal acrescimo = 0m)
     {
@@ -26,6 +33,7 @@ public sealed class Compra : BaseEntity
         DataCompra = dataCompra == default ? DateTime.UtcNow : dataCompra;
         Desconto = desconto;
         Acrescimo = acrescimo;
+        Status = CompraStatus.Criada;
     }
 
     protected Compra() { }
@@ -46,4 +54,14 @@ public sealed class Compra : BaseEntity
     }
 
     public decimal Total() => _items.Sum(i => i.ValorTotal());
+}
+
+public enum CompraStatus
+{
+    Criada,
+    EmTransito,
+    ParcialmenteRecebida,
+    Recebida,
+    Finalizada,
+    Cancelada
 }

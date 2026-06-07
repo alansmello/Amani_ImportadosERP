@@ -18,17 +18,19 @@ entrada fisica automatica de estoque.
 **Status values**:
 
 - `Criada`: compra registrada, ainda sem evento logistico.
-- `EmTransito`: compra com itens pendentes de recebimento ou perda.
+- `EmTransito`: compra criada e ainda sem recebimento fisico total, podendo ter
+  pendencias e perdas.
 - `ParcialmenteRecebida`: compra com algum recebimento e ainda alguma pendencia.
-- `Recebida`: todos os itens foram recebidos.
-- `Finalizada`: compra encerrada operacionalmente sem aceitar novos eventos.
+- `Recebida`: 100% dos itens foram recebidos fisicamente, sem perdas.
+- `Finalizada`: todos os itens foram resolvidos e houve ao menos uma perda,
+  extravio ou avaria.
 - `Cancelada`: compra cancelada sem aceitar novos eventos.
 
 **Rules**:
 
 - Criacao de compra nao gera `EstoqueMovimentacao`.
 - Compra com qualquer item pendente aparece em mercadorias em transito, exceto se
-  estiver cancelada ou finalizada.
+  estiver `Recebida`, `Finalizada` ou `Cancelada`.
 - Compra cancelada ou finalizada nao aceita recebimentos nem perdas.
 - Status e atualizado pelo backend apos criacao, recebimento, perda,
   finalizacao ou cancelamento.
@@ -75,20 +77,28 @@ item de compra.
 - `ValorUnitario`: custo unitario aplicado na entrada.
 - `DataRecebimento`: data do recebimento.
 - `EstoqueMovimentacaoId`: movimentacao de entrada criada pelo recebimento.
+- `Origem`: `Operacional` para recebimentos novos ou `Legado/Migrado` para
+  recebimentos criados na migracao de compatibilidade.
 - `Observacao`: texto opcional.
 
 **Relationships**:
 
 - Pertence a uma `Compra`.
 - Pertence a um `CompraItem`.
-- Cria uma `EstoqueMovimentacao` do tipo `Entrada`.
+- Cria uma `EstoqueMovimentacao` do tipo `Entrada` quando `Origem` for
+  `Operacional`.
+- Nao cria nova movimentacao quando `Origem` for `Legado/Migrado`.
 
 **Rules**:
 
 - Quantidade deve ser maior que zero.
 - Quantidade nao pode exceder a pendencia do item.
 - Nao pode ser criado para compra cancelada ou finalizada.
-- Deve criar entrada de estoque com mesma quantidade e produto.
+- Recebimento operacional deve criar entrada de estoque com mesma quantidade e
+  produto.
+- Recebimento `Legado/Migrado` deve existir apenas para compras anteriores a
+  Feature 003, com quantidade igual a quantidade comprada do item e pendencia
+  zero, sem duplicar movimentacao de estoque antiga.
 
 ## CompraItemPerda
 
@@ -128,8 +138,7 @@ compra sem gerar estoque.
 
 - `CompraId`: continua apontando para compra em entradas geradas por
   recebimento.
-- `CompraItemId`: campo opcional recomendado para rastrear entrada ate o item de
-  compra.
+- `CompraItemId`: campo opcional para rastrear entrada ate o item de compra.
 - `Tipo`: `Entrada`, `Saida` ou `InventarioInicial`.
 - `ValorUnitario`: usado no custo medio quando a movimentacao for entrada real.
 
@@ -137,6 +146,9 @@ compra sem gerar estoque.
 
 - Criacao de compra nao cria movimentacao.
 - Recebimento confirmado cria `Entrada`.
+- Movimentacao nova de recebimento deve preencher `CompraItemId`.
+- Movimentacoes antigas permanecem com `CompraItemId` nulo e seguem
+  rastreaveis por `CompraId + ProdutoId`.
 - Perda nao cria movimentacao.
 - Venda continua criando `Saida`.
 - Inventario inicial continua criando `InventarioInicial`.
@@ -160,8 +172,8 @@ compra sem gerar estoque.
 
 **Rules**:
 
-- Listar apenas itens com `QuantidadePendente > 0` em compras nao canceladas e
-  nao finalizadas.
+- Listar apenas itens com `QuantidadePendente > 0` em compras que nao estejam
+  `Recebida`, `Finalizada` ou `Cancelada`.
 
 ## State Transitions
 
@@ -169,6 +181,7 @@ compra sem gerar estoque.
 Criada -> EmTransito
 Criada -> ParcialmenteRecebida
 Criada -> Recebida
+Criada -> Finalizada
 EmTransito -> ParcialmenteRecebida
 EmTransito -> Recebida
 EmTransito -> Finalizada
@@ -180,9 +193,22 @@ Criada/EmTransito/ParcialmenteRecebida -> Cancelada
 **Resolution rule**:
 
 - Se todos os itens possuem `QuantidadePendente == 0` e nenhuma quantidade foi
-  perdida, status pode ser `Recebida`.
-- Se todos os itens possuem `QuantidadePendente == 0` por combinacao de
-  recebimentos e perdas, a compra sai de transito e pode ser `Finalizada` ou
-  estado resolvido equivalente definido no service.
+  perdida, status deve ser `Recebida`.
+- Se todos os itens possuem `QuantidadePendente == 0` e houve qualquer perda,
+  extravio ou avaria, status deve ser `Finalizada`.
 - Se qualquer item possui pendencia, a compra permanece em transito ou
   parcialmente recebida.
+
+## Legacy Compatibility
+
+Compras criadas antes da Feature 003 devem ser migradas para compatibilidade:
+
+- status da compra: `Recebida`;
+- um recebimento `Legado/Migrado` por item;
+- quantidade recebida legada igual a quantidade comprada do item;
+- `EstoqueMovimentacaoId` nulo no recebimento legado;
+- nenhuma nova movimentacao de estoque;
+- quantidade pendente calculada igual a zero;
+- entradas antigas continuam rastreaveis por `CompraId + ProdutoId`.
+
+Recebimentos `Legado/Migrado` nao podem ser criados por endpoint operacional.

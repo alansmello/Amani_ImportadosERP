@@ -46,6 +46,10 @@ Registra recebimento fisico de quantidade de um item.
 - `itemId` deve pertencer a `compraId`.
 - Compra cancelada ou finalizada deve rejeitar recebimento.
 - Deve gerar `EstoqueMovimentacao` `Entrada` para a quantidade recebida.
+- Deve executar recebimento, movimentacao de estoque e atualizacao de status na
+  mesma transacao.
+- Recebimentos operacionais retornados por este endpoint possuem origem
+  `Operacional`.
 
 **Response 201**: `RecebimentoCompraItemDto`
 
@@ -56,6 +60,7 @@ Registra recebimento fisico de quantidade de um item.
   "itemId": "00000000-0000-0000-0000-000000000000",
   "produtoId": "00000000-0000-0000-0000-000000000000",
   "quantidade": 3,
+  "origem": "Operacional",
   "dataRecebimento": "2026-06-07T00:00:00Z",
   "estoqueMovimentacaoId": "00000000-0000-0000-0000-000000000000"
 }
@@ -89,6 +94,8 @@ Registra perda, extravio ou avaria de quantidade pendente.
 - `motivo` deve ser `Perda`, `Extravio` ou `Avaria`.
 - Nao gera `EstoqueMovimentacao`.
 - Deve ser rastreavel como prejuizo operacional.
+- Deve executar perda, rastreabilidade de prejuizo e atualizacao de status na
+  mesma transacao.
 
 **Response 201**: `PerdaCompraItemDto`
 
@@ -112,7 +119,8 @@ Registra perda, extravio ou avaria de quantidade pendente.
 
 ## GET /api/compras/em-transito
 
-Lista compras com qualquer item pendente.
+Lista compras com qualquer item pendente, excluindo compras `Recebida`,
+`Finalizada` e `Cancelada`.
 
 **Response 200**: `CompraEmTransitoDto[]`
 
@@ -164,6 +172,10 @@ Retorna historico de recebimentos da compra.
 
 **Response 200**: `RecebimentoCompraItemDto[]`
 
+Recebimentos `Legado/Migrado` podem aparecer nesta consulta para compras
+existentes antes da Feature 003. Eles nao possuem `estoqueMovimentacaoId` e nao
+podem ser criados pelos endpoints operacionais.
+
 ## GET /api/compras/{compraId}/perdas
 
 Retorna historico de perdas, extravios e avarias da compra.
@@ -186,3 +198,7 @@ calculadas por item:
   colateral: nao gera entrada de estoque.
 - Fluxos de venda nao ganham endpoints novos nesta feature.
 - Dashboard financeiro nao ganha contrato novo nesta feature.
+- Dashboard financeiro continua considerando compra registrada como impacto
+  financeiro imediato; estoque fisico considera apenas recebimento confirmado.
+- Movimentacoes antigas continuam rastreaveis por `CompraId + ProdutoId`; novas
+  entradas por recebimento devem preencher `CompraItemId`.

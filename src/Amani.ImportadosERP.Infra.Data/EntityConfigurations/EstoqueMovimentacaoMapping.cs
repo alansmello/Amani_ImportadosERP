@@ -13,10 +13,12 @@ public class EstoqueMovimentacaoMapping : IEntityTypeConfiguration<EstoqueMovime
         builder.Property(e => e.ProdutoId).IsRequired();
         builder.Property(e => e.Quantidade).IsRequired();
         builder.Property(e => e.Tipo).IsRequired();
+        builder.Property(e => e.CompraItemId).IsRequired(false);
         builder.Property(e => e.Data).IsRequired();
         builder.Property(e => e.ValorUnitario).HasPrecision(18,2).IsRequired(false);
 
         builder.HasOne<Compra>().WithMany().HasForeignKey(e => e.CompraId).OnDelete(DeleteBehavior.SetNull);
+        builder.HasOne(e => e.CompraItem).WithMany().HasForeignKey(e => e.CompraItemId).OnDelete(DeleteBehavior.SetNull);
         builder.HasOne<Venda>().WithMany().HasForeignKey(e => e.VendaId).OnDelete(DeleteBehavior.SetNull);
     }
 }

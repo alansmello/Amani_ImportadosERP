@@ -13,6 +13,8 @@ public class AmaniDbContext : DbContext
     public DbSet<Produto> Produtos { get; set; } = null!;
     public DbSet<Compra> Compras { get; set; } = null!;
     public DbSet<CompraItem> CompraItems { get; set; } = null!;
+    public DbSet<CompraItemRecebimento> CompraItemRecebimentos { get; set; } = null!;
+    public DbSet<CompraItemPerda> CompraItemPerdas { get; set; } = null!;
     public DbSet<Venda> Vendas { get; set; } = null!;
     public DbSet<VendaItem> VendaItems { get; set; } = null!;
     public DbSet<EstoqueMovimentacao> EstoqueMovimentacoes { get; set; } = null!;

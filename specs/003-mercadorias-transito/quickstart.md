@@ -25,7 +25,8 @@ dotnet ef database update --project src/Amani.ImportadosERP.Infra.Data --startup
 ```
 
 Expected outcome: banco contem status de compra, recebimentos e perdas por item,
-sem campo fixo de estoque.
+recebimentos legados para compras anteriores a Feature 003, e nenhum campo fixo
+de estoque.
 
 ## Run API
 
@@ -63,6 +64,8 @@ Expected outcome:
 - Item mostra quantidade recebida e pendente corretas.
 - Historico exibe o recebimento.
 - Compra continua em transito se ainda houver pendencia.
+- Recebimento, movimentacao de estoque e status da compra sao persistidos de
+  forma atomica.
 
 ### 3. Registrar segundo recebimento do mesmo item
 
@@ -87,6 +90,8 @@ Expected outcome:
 - Saldo fisico nao muda.
 - Quantidade perdida reduz pendencia.
 - Historico exibe perda com motivo e data.
+- Perda, rastreabilidade de prejuizo e status da compra sao persistidos de forma
+  atomica.
 
 ### 5. Rejeitar quantidade acima da pendencia
 
@@ -108,6 +113,9 @@ Expected outcome:
 Expected outcome:
 
 - Compra nao aparece mais em mercadorias em transito.
+- Compra fica `Recebida` quando 100% foi recebido fisicamente.
+- Compra fica `Finalizada` quando toda a quantidade foi resolvida e houve pelo
+  menos uma perda, extravio ou avaria.
 - Historicos permanecem consultaveis.
 
 ### 7. Regressao de venda
@@ -137,6 +145,9 @@ Expected outcome:
 - Inventario inicial continua gerando entrada valida.
 - Compra nao recebida nao altera custo medio.
 - Recebimento confirmado passa a compor custo medio.
+- Produtos com inventario inicial valorizado podem ter lucro/custo medio
+  alterado porque o inventario inicial passa a ser entrada real considerada.
+- Perda, extravio e avaria nao entram no custo medio.
 
 ### 9. Regressao de dashboard financeiro
 
@@ -148,6 +159,26 @@ Expected outcome:
 
 - Dashboard financeiro existente nao muda por causa desta feature, salvo
   comportamentos financeiros ja existentes fora do escopo.
+- Dashboard financeiro continua considerando compra registrada como impacto
+  financeiro imediato, mesmo que estoque fisico dependa de recebimento.
+
+### 10. Regressao de compras legadas
+
+1. Aplicar migration em base com compras existentes do modelo antigo.
+2. Consultar compra antiga por ID.
+3. Consultar historico de recebimentos da compra antiga.
+4. Consultar `GET /api/compras/em-transito`.
+5. Consultar saldo fisico do produto.
+
+Expected outcome:
+
+- Compra antiga fica com status `Recebida`.
+- Cada item antigo possui recebimento `Legado/Migrado` com quantidade igual a
+  quantidade comprada.
+- Recebimento legado nao possui movimentacao nova de estoque.
+- Quantidade pendente da compra antiga e zero.
+- Compra antiga nao aparece em mercadorias em transito.
+- Saldo fisico nao e duplicado pela migracao.
 
 ## References
 
