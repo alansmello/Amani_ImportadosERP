@@ -33,3 +33,4 @@
 
 - Validation iteration 1 passed on 2026-06-07.
 - Technical constraints requested by the user are captured as project guardrails in business-readable terms: dedicated contracts, explicit persistence configuration, no automatic object mapping, backend-owned rules, and stock by movements only.
+- Governance consistency resolved: Constitution 2.0.0 now defines that purchases create goods in transit and only confirmed physical receipts create stock entry.

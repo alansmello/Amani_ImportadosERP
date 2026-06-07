@@ -8,6 +8,10 @@
 
 **Input**: User description: "Criar a Feature 003 - Mercadorias em Transito e Recebimento Parcial de Compras para o Amani ERP. Compras nao devem mais gerar entrada automatica no estoque; itens comprados ficam em transito ate recebimento; recebimento e perdas devem ser registrados por item, com suporte a recebimentos parciais e multiplos eventos; somente quantidade recebida gera entrada de estoque; perdas nao geram estoque e devem ser rastreaveis como prejuizo operacional; saldo continua calculado exclusivamente por movimentacoes; preservar historico; backend centraliza regras; usar contratos dedicados, mapeamentos explicitos e sem AutoMapper."
 
+## Governance Note
+
+Esta feature altera uma regra operacional central do ERP: compra registrada deixa de significar entrada fisica imediata em estoque. A Constituicao 2.0.0 substitui a regra anterior pelo novo entendimento: compra cria mercadoria em transito, e somente recebimento fisico confirmado cria entrada de estoque.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Registrar compra como mercadoria em transito (Priority: P1)

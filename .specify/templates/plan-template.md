@@ -40,7 +40,15 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- **Arquitetura e responsabilidades**: [PASS/FAIL - controllers sem regra de negocio; regras em Application/Domain]
+- **Estoque por movimentacoes**: [PASS/FAIL - sem campo fixo de estoque; saldo por movimentacoes historicas]
+- **Compras e mercadorias em transito**: [PASS/FAIL - compra nao gera entrada automatica; somente recebimento fisico confirmado gera entrada]
+- **Recebimentos, perdas e rastreabilidade**: [PASS/FAIL - recebimento por item; perdas/extravios/avarias sem estoque e com prejuizo rastreavel]
+- **Vendas, custo medio e inventario inicial**: [PASS/FAIL - vendas validam estoque fisico; custo medio usa entradas reais; inventario inicial permanece movimentacao valida]
+- **Contratos de API e DTOs**: [PASS/FAIL - DTOs explicitos; entidades internas nao expostas indevidamente; sem AutoMapper]
+- **Persistencia e mapeamentos**: [PASS/FAIL - Fluent API; Repository Pattern; historico preservado]
+- **Backend como fonte das regras**: [PASS/FAIL - validacoes operacionais e calculos centralizados no backend]
+- **Simplicidade antes de sofisticacao**: [PASS/FAIL - novas abstracoes/dependencias apenas quando justificadas]
 
 ## Project Structure
 

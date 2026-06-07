@@ -1,27 +1,22 @@
 <!--
 Sync Impact Report
-Version change: template -> 1.0.0
+Version change: 1.0.0 -> 2.0.0
 Modified principles:
-- Template principle 1 -> I. Arquitetura e Separacao de Responsabilidades
-- Template principle 2 -> II. Estoque por Movimentacoes
-- Template principle 3 -> III. Compras, Vendas, Custos e Lucro
-- Template principle 4 -> IV. Contratos de API e DTOs
-- Template principle 5 -> V. Persistencia, Historico e Mapeamentos
+- III. Compras, Vendas, Custos e Lucro -> III. Compras, Recebimentos, Vendas, Custos e Lucro
 Added sections:
-- Stack Oficial
-- Fluxo de Desenvolvimento
-- VI. Backend como Fonte das Regras de Negocio
-- VII. Simplicidade Antes de Sofisticacao
+- None
 Removed sections:
-- Placeholder section 2
-- Placeholder section 3
+- None
 Templates requiring updates:
-- pending: .specify/templates/plan-template.md (Constitution Check remains generic)
-- pending: .specify/templates/spec-template.md (does not yet require ERP-specific constraints)
-- pending: .specify/templates/tasks-template.md (does not yet enforce ERP-specific task categories)
+- updated: .specify/templates/plan-template.md (Constitution Check now lists ERP-specific gates, including purchases in transit)
+- reviewed: .specify/templates/spec-template.md (no change required; requirements/scenarios already capture feature-specific constraints)
+- updated: .specify/templates/tasks-template.md (tasks now require constitution-driven validation tasks)
 - not present: .specify/templates/commands/*.md
-Hook status:
-- pending: before_constitution speckit.git.initialize blocked by Git dubious ownership
+Runtime guidance requiring updates:
+- reviewed: README.md (no outdated purchase/stock rule found)
+- reviewed: AGENTS.md (points to current Spec Kit plan only; no constitutional rule duplicated)
+Governance change:
+- Feature 003 changes the previous purchase rule: purchase registration no longer creates stock entry automatically.
 Follow-up TODOs:
 - None
 -->
@@ -43,24 +38,40 @@ regras operacionais.
 
 ### II. Estoque por Movimentacoes
 
-Estoque MUST ser controlado exclusivamente por movimentacoes. O sistema MUST NOT
-ter campo fixo de saldo de estoque em Produto ou em qualquer outra entidade de
-cadastro. O saldo disponivel MUST ser calculado por entradas menos saidas, usando
-o historico de EstoqueMovimentacao.
+Estoque MUST ser controlado exclusivamente por movimentacoes historicas. O
+sistema MUST NOT ter campo fixo de saldo de estoque em Produto, Item de Compra
+ou qualquer outra entidade de cadastro ou operacao. O saldo disponivel MUST ser
+calculado por entradas menos saidas, usando o historico de movimentacoes de
+estoque.
+
+Inventario inicial MUST ser registrado como movimentacao valida de entrada com
+origem rastreavel. Recebimentos fisicos confirmados de compras MUST gerar
+movimentacoes de entrada. Vendas confirmadas MUST gerar movimentacoes de saida.
+Perdas, extravios e avarias MUST NOT gerar entrada de estoque.
 
 Rationale: estoque por historico preserva rastreabilidade, auditoria e evita
 ajustes silenciosos de saldo.
 
-### III. Compras, Vendas, Custos e Lucro
+### III. Compras, Recebimentos, Vendas, Custos e Lucro
 
-Toda compra registrada MUST gerar entrada de estoque para cada item comprado.
+Compra registrada MUST NOT gerar entrada automatica de estoque. Compra registra a
+intencao ou aquisicao comercial de produtos, e seus itens MUST permanecer como
+mercadorias em transito ate que haja confirmacao de recebimento fisico.
+
+Recebimento de compra MUST ser registrado por item de compra e MAY ser parcial.
+Somente a quantidade fisicamente recebida e confirmada MUST gerar movimentacao de
+entrada de estoque. Perdas, extravios e avarias de itens comprados MUST ser
+rastreaveis como prejuizo operacional e MUST NOT gerar estoque.
+
 Toda venda registrada MUST gerar saida de estoque para cada item vendido. Vendas
-MUST validar estoque disponivel antes da confirmacao. Lucro MUST ser calculado
-com custo medio do produto, derivado das entradas historicas, e nao por valor
-manual isolado.
+MUST validar estoque fisicamente disponivel antes da confirmacao. Lucro MUST ser
+calculado com custo medio do produto, derivado apenas de entradas reais em
+estoque, incluindo inventario inicial e recebimentos fisicos confirmados, e nao
+por valor manual isolado.
 
-Rationale: compras e vendas sao os eventos operacionais que alteram estoque,
-custo e lucratividade.
+Rationale: compras representam aquisicao comercial, recebimentos representam
+entrada fisica, vendas representam saida fisica, e custo medio so e confiavel
+quando deriva de entradas reais e rastreaveis.
 
 ### IV. Contratos de API e DTOs
 
@@ -76,9 +87,10 @@ entrada e saida verificaveis.
 
 Entity Framework Core MUST usar Fluent API para mapeamentos. Repository Pattern
 MUST mediar o acesso a dados entre Application e Infra.Data. Historico
-operacional MUST NOT ser perdido: compras, vendas, movimentacoes de estoque,
-despesas, pagamentos e eventos relevantes MUST ser preservados ou compensados
-por novos registros, nunca apagados como forma de corrigir estado operacional.
+operacional MUST NOT ser perdido: compras, recebimentos, perdas, vendas,
+movimentacoes de estoque, despesas, pagamentos e eventos relevantes MUST ser
+preservados ou compensados por novos registros, nunca apagados como forma de
+corrigir estado operacional.
 
 Rationale: o ERP depende de trilha historica para auditoria, custo medio,
 financeiro e dashboards confiaveis.
@@ -118,19 +130,27 @@ manutencao.
 
 Toda nova especificacao MUST declarar como preserva os principios desta
 Constituicao. Planos de implementacao MUST incluir uma verificacao explicita para
-estoque por movimentacoes, DTOs, ausencia de regra de negocio em controllers,
-Fluent API, Repository Pattern e preservacao de historico operacional.
+estoque por movimentacoes, mercadorias em transito quando compras forem afetadas,
+inventario inicial quando saldo inicial for afetado, vendas com validacao de
+estoque fisico, custo medio por entradas reais, DTOs, ausencia de regra de
+negocio em controllers, Fluent API, Repository Pattern e preservacao de
+historico operacional.
 
 Tarefas futuras MUST separar trabalho de Domain, Application, Infra.Data, API e
 Frontend quando a funcionalidade atravessar essas camadas. Mudancas que afetem
-compras, vendas, estoque, custo medio, lucro ou financeiro MUST incluir cenarios
-de validacao para os fluxos operacionais afetados.
+compras, recebimentos, perdas, vendas, estoque, custo medio, lucro ou financeiro
+MUST incluir cenarios de validacao para os fluxos operacionais afetados.
 
 ## Governance
 
 Esta Constituicao prevalece sobre especificacoes, planos, tarefas e decisoes
 tecnicas conflitantes. Em caso de conflito, a especificacao ou plano MUST ser
 ajustado antes da implementacao.
+
+A versao 2.0.0 registra uma mudanca de governanca da regra anterior de compras:
+compra registrada deixou de ser evento automatico de entrada de estoque. A regra
+constitucional vigente e que compra cria mercadoria em transito, e somente
+recebimento fisico confirmado cria entrada de estoque.
 
 Alteracoes nesta Constituicao MUST ser documentadas com:
 
@@ -150,4 +170,4 @@ Toda revisao de funcionalidade MUST verificar conformidade com esta Constituicao
 Violacoes so podem ser aceitas quando documentadas no plano com justificativa,
 alternativa mais simples rejeitada e risco operacional conhecido.
 
-**Version**: 1.0.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-04
+**Version**: 2.0.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-07

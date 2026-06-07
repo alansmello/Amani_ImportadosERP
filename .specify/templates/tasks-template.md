@@ -69,6 +69,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T007 Create base models/entities that all stories depend on
 - [ ] T008 Configure error handling and logging infrastructure
 - [ ] T009 Setup environment configuration management
+- [ ] T010 Validate constitution gates for affected ERP flows: stock by movements, purchases in transit, item-level receipts, losses without stock, sales stock validation, average cost from real stock entries, DTOs, Fluent API, Repository Pattern, and backend-owned rules
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -157,6 +158,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
 - [ ] TXXX Security hardening
 - [ ] TXXX Run quickstart.md validation
+- [ ] TXXX Run regression validation for purchases, receipts, losses, stock movements, sales, initial inventory, average cost, and financial dashboard when any of those flows are in scope
 
 ---
 
