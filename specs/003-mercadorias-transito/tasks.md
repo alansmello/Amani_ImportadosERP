@@ -42,14 +42,14 @@
 
 **Purpose**: Centralizar invariantes de quantidade, status e rastreabilidade no dominio.
 
-- [ ] T018 [US1] Definir regra de status inicial de compra criada como pendente/logistica em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
-- [ ] T019 [US2] Implementar validacao de recebimento maior que zero e limitado a `QuantidadePendente` em `src/Amani.ImportadosERP.Domain/Entities/CompraItem.cs`.
-- [ ] T020 [US3] Implementar validacao de perda maior que zero e limitada a `QuantidadePendente` em `src/Amani.ImportadosERP.Domain/Entities/CompraItem.cs`.
-- [ ] T021 [US2] Implementar regra para bloquear recebimento em compra `Cancelada` ou `Finalizada` em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
-- [ ] T022 [US3] Implementar regra para bloquear perda em compra `Cancelada` ou `Finalizada` em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
-- [ ] T023 [US2] Implementar recalculo de status para `ParcialmenteRecebida` e `Recebida` apos recebimentos em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
-- [ ] T024 [US3] Implementar recalculo de status para `EmTransito` e `Finalizada` quando perdas resolvem pendencias em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
-- [ ] T025 [US1] Garantir que nenhuma entidade de produto, compra ou item tenha campo fixo de estoque em `src/Amani.ImportadosERP.Domain/Entities/Produto.cs`, `src/Amani.ImportadosERP.Domain/Entities/Compra.cs` e `src/Amani.ImportadosERP.Domain/Entities/CompraItem.cs`.
+- [X] T018 [US1] Definir regra de status inicial de compra criada como pendente/logistica em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
+- [X] T019 [US2] Implementar validacao de recebimento maior que zero e limitado a `QuantidadePendente` em `src/Amani.ImportadosERP.Domain/Entities/CompraItem.cs`.
+- [X] T020 [US3] Implementar validacao de perda maior que zero e limitada a `QuantidadePendente` em `src/Amani.ImportadosERP.Domain/Entities/CompraItem.cs`.
+- [X] T021 [US2] Implementar regra para bloquear recebimento em compra `Cancelada` ou `Finalizada` em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
+- [X] T022 [US3] Implementar regra para bloquear perda em compra `Cancelada` ou `Finalizada` em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
+- [X] T023 [US2] Implementar recalculo de status para `ParcialmenteRecebida` e `Recebida` apos recebimentos em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
+- [X] T024 [US3] Implementar recalculo de status para `EmTransito` e `Finalizada` quando perdas resolvem pendencias em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
+- [X] T025 [US1] Garantir que nenhuma entidade de produto, compra ou item tenha campo fixo de estoque em `src/Amani.ImportadosERP.Domain/Entities/Produto.cs`, `src/Amani.ImportadosERP.Domain/Entities/Compra.cs` e `src/Amani.ImportadosERP.Domain/Entities/CompraItem.cs`.
 
 **Checkpoint**: Invariantes prontas antes dos casos de uso.
 

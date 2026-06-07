@@ -53,5 +53,93 @@ public sealed class CompraItem : BaseEntity
         return valorBase - Desconto + Acrescimo;
     }
 
+    public void ValidarRecebimento(int quantidade)
+    {
+        ValidarQuantidadePendente(quantidade, "recebimento");
+    }
+
+    public CompraItemRecebimento RegistrarRecebimento(
+        Guid compraId,
+        int quantidade,
+        DateTime? dataRecebimento = null,
+        Guid? estoqueMovimentacaoId = null,
+        string? observacao = null)
+    {
+        ValidarCompra(compraId);
+        ValidarRecebimento(quantidade);
+
+        var recebimento = new CompraItemRecebimento(
+            compraId,
+            Id,
+            ProdutoId,
+            quantidade,
+            CustoUnitario,
+            dataRecebimento,
+            CompraItemRecebimentoOrigem.Operacional,
+            estoqueMovimentacaoId,
+            observacao);
+
+        _recebimentos.Add(recebimento);
+        Touch();
+
+        return recebimento;
+    }
+
+    public void ValidarPerda(int quantidade)
+    {
+        ValidarQuantidadePendente(quantidade, "perda");
+    }
+
+    public CompraItemPerda RegistrarPerda(
+        Guid compraId,
+        int quantidade,
+        CompraItemPerdaMotivo motivo,
+        DateTime? dataPerda = null,
+        string? observacao = null)
+    {
+        ValidarCompra(compraId);
+        ValidarPerda(quantidade);
+
+        var perda = new CompraItemPerda(
+            compraId,
+            Id,
+            ProdutoId,
+            quantidade,
+            motivo,
+            dataPerda,
+            observacao);
+
+        _perdas.Add(perda);
+        Touch();
+
+        return perda;
+    }
+
+    private void ValidarCompra(Guid compraId)
+    {
+        if (compraId == Guid.Empty)
+        {
+            throw new ArgumentException("CompraId e obrigatorio", nameof(compraId));
+        }
+
+        if (CompraId != Guid.Empty && CompraId != compraId)
+        {
+            throw new InvalidOperationException("Item nao pertence a compra informada");
+        }
+    }
+
+    private void ValidarQuantidadePendente(int quantidade, string operacao)
+    {
+        if (quantidade <= 0)
+        {
+            throw new ArgumentException($"Quantidade de {operacao} deve ser maior que zero", nameof(quantidade));
+        }
+
+        if (quantidade > QuantidadePendente)
+        {
+            throw new InvalidOperationException($"Quantidade de {operacao} nao pode exceder a quantidade pendente");
+        }
+    }
+
     protected CompraItem() { }
 }

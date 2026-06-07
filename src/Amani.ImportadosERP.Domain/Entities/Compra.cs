@@ -33,7 +33,7 @@ public sealed class Compra : BaseEntity
         DataCompra = dataCompra == default ? DateTime.UtcNow : dataCompra;
         Desconto = desconto;
         Acrescimo = acrescimo;
-        Status = CompraStatus.Criada;
+        Status = CompraStatus.EmTransito;
     }
 
     protected Compra() { }
@@ -53,7 +53,92 @@ public sealed class Compra : BaseEntity
         _items.Add(item);
     }
 
+    public CompraItemRecebimento RegistrarRecebimentoItem(
+        Guid compraItemId,
+        int quantidade,
+        DateTime? dataRecebimento = null,
+        Guid? estoqueMovimentacaoId = null,
+        string? observacao = null)
+    {
+        GarantirQueAceitaEventosLogisticos("recebimento");
+
+        var item = ObterItem(compraItemId);
+        var recebimento = item.RegistrarRecebimento(
+            Id,
+            quantidade,
+            dataRecebimento,
+            estoqueMovimentacaoId,
+            observacao);
+
+        _recebimentos.Add(recebimento);
+        RecalcularStatusOperacional();
+        Touch();
+
+        return recebimento;
+    }
+
+    public CompraItemPerda RegistrarPerdaItem(
+        Guid compraItemId,
+        int quantidade,
+        CompraItemPerdaMotivo motivo,
+        DateTime? dataPerda = null,
+        string? observacao = null)
+    {
+        GarantirQueAceitaEventosLogisticos("perda");
+
+        var item = ObterItem(compraItemId);
+        var perda = item.RegistrarPerda(Id, quantidade, motivo, dataPerda, observacao);
+
+        _perdas.Add(perda);
+        RecalcularStatusOperacional();
+        Touch();
+
+        return perda;
+    }
+
     public decimal Total() => _items.Sum(i => i.ValorTotal());
+
+    private CompraItem ObterItem(Guid compraItemId)
+    {
+        if (compraItemId == Guid.Empty)
+        {
+            throw new ArgumentException("CompraItemId e obrigatorio", nameof(compraItemId));
+        }
+
+        return _items.FirstOrDefault(i => i.Id == compraItemId)
+            ?? throw new InvalidOperationException("Item nao pertence a compra informada");
+    }
+
+    private void GarantirQueAceitaEventosLogisticos(string evento)
+    {
+        if (Status == CompraStatus.Cancelada || Status == CompraStatus.Finalizada)
+        {
+            throw new InvalidOperationException($"Compra {Status} nao aceita registro de {evento}");
+        }
+    }
+
+    private void RecalcularStatusOperacional()
+    {
+        if (!_items.Any())
+        {
+            Status = CompraStatus.EmTransito;
+            return;
+        }
+
+        var possuiPendencia = _items.Any(i => i.QuantidadePendente > 0);
+        var possuiRecebimento = _items.Any(i => i.QuantidadeRecebida > 0);
+        var possuiPerda = _items.Any(i => i.QuantidadePerdida > 0);
+
+        if (!possuiPendencia)
+        {
+            Status = possuiPerda ? CompraStatus.Finalizada : CompraStatus.Recebida;
+            return;
+        }
+
+        Status = possuiRecebimento
+            ? CompraStatus.ParcialmenteRecebida
+            : CompraStatus.EmTransito;
+    }
 }
 
 public enum CompraStatus
