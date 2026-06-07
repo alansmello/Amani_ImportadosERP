@@ -42,6 +42,7 @@ public sealed class ObterListaComprasQueryHandler : IRequestHandler<ObterListaCo
                 Id = compra.Id,
                 FornecedorId = compra.FornecedorId,
                 DataCompra = compra.DataCompra,
+                Status = compra.Status.ToString(),
                 TotalCompra = totalCompra
             });
         }

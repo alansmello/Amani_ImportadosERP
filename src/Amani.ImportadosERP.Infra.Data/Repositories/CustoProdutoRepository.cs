@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Amani.ImportadosERP.Application.Interfaces;
+using Amani.ImportadosERP.Domain.Entities;
 using Amani.ImportadosERP.Infra.Data.Context;
 
 namespace Amani.ImportadosERP.Infra.Data.Repositories;
@@ -21,7 +22,10 @@ public class CustoProdutoRepository : ICustoProdutoRepository
         if (produtoId == Guid.Empty) throw new ArgumentException("produtoId inválido", nameof(produtoId));
 
         var entradas = await _db.EstoqueMovimentacoes
-            .Where(m => m.ProdutoId == produtoId && m.Tipo == Amani.ImportadosERP.Domain.Entities.TipoMovimentacao.Entrada && m.ValorUnitario != null)
+            .Where(m => m.ProdutoId == produtoId
+                && m.ValorUnitario != null
+                && (m.Tipo == TipoMovimentacao.InventarioInicial
+                    || (m.Tipo == TipoMovimentacao.Entrada && m.CompraItemId != null)))
             .ToListAsync();
 
         var somaQuantidade = entradas.Sum(e => e.Quantidade);

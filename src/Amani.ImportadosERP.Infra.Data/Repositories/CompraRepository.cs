@@ -28,20 +28,35 @@ public class CompraRepository : ICompraRepository
     public async Task<Compra?> ObterPorIdAsync(Guid id)
     {
         if (id == Guid.Empty) return null;
-        return await _db.Compras.AsNoTracking().Include(c => c.Items).FirstOrDefaultAsync(c => c.Id == id);
+        return await QueryCompraCompleta()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task<Compra?> ObterPorIdParaAtualizarAsync(Guid id)
+    {
+        if (id == Guid.Empty) return null;
+        return await QueryCompraCompleta()
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task<Compra?> ObterPorIdComItemParaAtualizarAsync(Guid compraId, Guid itemId)
+    {
+        if (compraId == Guid.Empty || itemId == Guid.Empty) return null;
+        return await QueryCompraCompleta()
+            .FirstOrDefaultAsync(c => c.Id == compraId && c.Items.Any(i => i.Id == itemId));
     }
 
     public async Task<List<Compra>> ObterTodasAsync()
     {
-        return await _db.Compras
+        return await QueryCompraCompleta()
             .AsNoTracking()
-            .Include(c => c.Items)
             .ToListAsync();
     }
 
     public async Task<List<Compra>> ObterComFiltrosAsync(DateTime? dataInicio, DateTime? dataFim, Guid? fornecedorId)
     {
-        var query = _db.Compras.AsNoTracking().AsQueryable();
+        var query = QueryCompraCompleta().AsNoTracking().AsQueryable();
 
         if (dataInicio.HasValue)
             query = query.Where(c => c.DataCompra >= dataInicio.Value);
@@ -52,9 +67,23 @@ public class CompraRepository : ICompraRepository
         if (fornecedorId.HasValue)
             query = query.Where(c => c.FornecedorId == fornecedorId.Value);
 
-        query = query.Include(c => c.Items);
-
         return await query.ToListAsync();
+    }
+
+    public async Task SalvarAsync()
+    {
+        await _db.SaveChangesAsync();
+    }
+
+    private IQueryable<Compra> QueryCompraCompleta()
+    {
+        return _db.Compras
+            .Include(c => c.Items)
+                .ThenInclude(i => i.Recebimentos)
+            .Include(c => c.Items)
+                .ThenInclude(i => i.Perdas)
+            .Include(c => c.Recebimentos)
+            .Include(c => c.Perdas);
     }
 }
 

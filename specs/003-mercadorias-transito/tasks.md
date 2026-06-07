@@ -57,36 +57,36 @@
 
 **Purpose**: Implementar DTOs, interfaces, repositories e services sem AutoMapper, com transacoes nos casos de uso criticos.
 
-- [ ] T026 [P] [US2] Criar `RegistrarRecebimentoCompraItemDto` em `src/Amani.ImportadosERP.Application/DTOs/RegistrarRecebimentoCompraItemDto.cs`.
-- [ ] T027 [P] [US3] Criar `RegistrarPerdaCompraItemDto` em `src/Amani.ImportadosERP.Application/DTOs/RegistrarPerdaCompraItemDto.cs`.
-- [ ] T028 [P] [US2] Criar `RecebimentoCompraItemDto` em `src/Amani.ImportadosERP.Application/DTOs/RecebimentoCompraItemDto.cs`.
-- [ ] T029 [P] [US3] Criar `PerdaCompraItemDto` em `src/Amani.ImportadosERP.Application/DTOs/PerdaCompraItemDto.cs`.
-- [ ] T030 [P] [US4] Criar `CompraEmTransitoDto` e DTO de item em `src/Amani.ImportadosERP.Application/DTOs/CompraEmTransitoDto.cs`.
-- [ ] T031 [P] [US4] Criar `ProdutoPendenteRecebimentoDto` em `src/Amani.ImportadosERP.Application/DTOs/ProdutoPendenteRecebimentoDto.cs`.
-- [ ] T032 [US1] Atualizar `CompraItemResponseDto` para expor quantidades comprada, recebida, perdida e pendente em `src/Amani.ImportadosERP.Application/DTOs/Response/CompraItemResponseDto.cs`.
-- [ ] T033 [US1] Atualizar `CompraResponseDto` e `CompraListDto` para expor status operacional em `src/Amani.ImportadosERP.Application/DTOs/Response/CompraResponseDto.cs` e `src/Amani.ImportadosERP.Application/DTOs/CompraListDto.cs`.
-- [ ] T034 [US1] Atualizar `CompraMapper` para mapeamento manual de status e quantidades calculadas, sem AutoMapper, em `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`.
-- [ ] T035 [P] [US2] Criar mapper manual de recebimentos em `src/Amani.ImportadosERP.Application/Mappers/CompraRecebimentoMapper.cs`.
-- [ ] T036 [P] [US3] Criar mapper manual de perdas em `src/Amani.ImportadosERP.Application/Mappers/CompraPerdaMapper.cs`.
-- [ ] T037 [US2] Estender `ICompraRepository` com busca de compra por item incluindo itens, recebimentos e perdas em `src/Amani.ImportadosERP.Application/Interfaces/ICompraRepository.cs`.
-- [ ] T038 [P] [US2] Criar interface `ICompraItemRecebimentoRepository` em `src/Amani.ImportadosERP.Application/Interfaces/ICompraItemRecebimentoRepository.cs`.
-- [ ] T039 [P] [US3] Criar interface `ICompraItemPerdaRepository` em `src/Amani.ImportadosERP.Application/Interfaces/ICompraItemPerdaRepository.cs`.
-- [ ] T040 Criar interface de unidade de trabalho/transacao para casos atomicos em `src/Amani.ImportadosERP.Application/Interfaces/IUnitOfWork.cs`.
-- [ ] T041 [US1] Alterar `CompraService.CreateAsync` para persistir compra e itens sem criar `EstoqueMovimentacao` em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
-- [ ] T042 [US1] Definir status inicial da compra criada como `EmTransito` ou equivalente pendente em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
-- [ ] T043 [US2] Implementar `RegistrarRecebimentoItemAsync` com validacao de compra, item pertencente, pendencia e status em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
-- [ ] T044 [US2] Garantir transacao unica do recebimento: criar recebimento, criar entrada de estoque, vincular `EstoqueMovimentacaoId` e atualizar status em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
-- [ ] T045 [US2] Criar `EstoqueMovimentacao` de `Entrada` por recebimento operacional preenchendo `CompraId`, `CompraItemId`, `ProdutoId`, quantidade e valor unitario em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
-- [ ] T046 [US3] Implementar `RegistrarPerdaItemAsync` com validacao de compra, item pertencente, motivo, pendencia e status em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
-- [ ] T047 [US3] Garantir transacao unica da perda: criar `CompraItemPerda` como a rastreabilidade de prejuizo operacional desta feature e atualizar status, sem criar evento financeiro, despesa ou impacto financeiro separado em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
-- [ ] T048 [US3] Garantir que perda/extravio/avaria nao chama `IEstoqueMovimentacaoRepository` nem cria movimentacao em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
-- [ ] T049 [US4] Implementar metodos de historico de recebimentos e perdas em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
-- [ ] T050 Atualizar `CustoProdutoRepository` para considerar `InventarioInicial` com valor unitario e `Entrada` de recebimento confirmado, excluindo compra sem recebimento e perdas, em `src/Amani.ImportadosERP.Infra.Data/Repositories/CustoProdutoRepository.cs`.
-- [ ] T051 Atualizar/validar `EstoqueConsultaRepository` para tratar `InventarioInicial` como entrada fisica valida e preservar saidas de venda em `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueConsultaRepository.cs`.
-- [ ] T052 [P] Implementar `CompraItemRecebimentoRepository` em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraItemRecebimentoRepository.cs`.
-- [ ] T053 [P] Implementar `CompraItemPerdaRepository` em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraItemPerdaRepository.cs`.
-- [ ] T054 Implementar unidade de trabalho/transacao EF Core em `src/Amani.ImportadosERP.Infra.Data/Repositories/UnitOfWork.cs`.
-- [ ] T055 Registrar repositories e unidade de trabalho no container DI em `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`.
+- [X] T026 [P] [US2] Criar `RegistrarRecebimentoCompraItemDto` em `src/Amani.ImportadosERP.Application/DTOs/RegistrarRecebimentoCompraItemDto.cs`.
+- [X] T027 [P] [US3] Criar `RegistrarPerdaCompraItemDto` em `src/Amani.ImportadosERP.Application/DTOs/RegistrarPerdaCompraItemDto.cs`.
+- [X] T028 [P] [US2] Criar `RecebimentoCompraItemDto` em `src/Amani.ImportadosERP.Application/DTOs/RecebimentoCompraItemDto.cs`.
+- [X] T029 [P] [US3] Criar `PerdaCompraItemDto` em `src/Amani.ImportadosERP.Application/DTOs/PerdaCompraItemDto.cs`.
+- [X] T030 [P] [US4] Criar `CompraEmTransitoDto` e DTO de item em `src/Amani.ImportadosERP.Application/DTOs/CompraEmTransitoDto.cs`.
+- [X] T031 [P] [US4] Criar `ProdutoPendenteRecebimentoDto` em `src/Amani.ImportadosERP.Application/DTOs/ProdutoPendenteRecebimentoDto.cs`.
+- [X] T032 [US1] Atualizar `CompraItemResponseDto` para expor quantidades comprada, recebida, perdida e pendente em `src/Amani.ImportadosERP.Application/DTOs/Response/CompraItemResponseDto.cs`.
+- [X] T033 [US1] Atualizar `CompraResponseDto` e `CompraListDto` para expor status operacional em `src/Amani.ImportadosERP.Application/DTOs/Response/CompraResponseDto.cs` e `src/Amani.ImportadosERP.Application/DTOs/CompraListDto.cs`.
+- [X] T034 [US1] Atualizar `CompraMapper` para mapeamento manual de status e quantidades calculadas, sem AutoMapper, em `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`.
+- [X] T035 [P] [US2] Criar mapper manual de recebimentos em `src/Amani.ImportadosERP.Application/Mappers/CompraRecebimentoMapper.cs`.
+- [X] T036 [P] [US3] Criar mapper manual de perdas em `src/Amani.ImportadosERP.Application/Mappers/CompraPerdaMapper.cs`.
+- [X] T037 [US2] Estender `ICompraRepository` com busca de compra por item incluindo itens, recebimentos e perdas em `src/Amani.ImportadosERP.Application/Interfaces/ICompraRepository.cs`.
+- [X] T038 [P] [US2] Criar interface `ICompraItemRecebimentoRepository` em `src/Amani.ImportadosERP.Application/Interfaces/ICompraItemRecebimentoRepository.cs`.
+- [X] T039 [P] [US3] Criar interface `ICompraItemPerdaRepository` em `src/Amani.ImportadosERP.Application/Interfaces/ICompraItemPerdaRepository.cs`.
+- [X] T040 Criar interface de unidade de trabalho/transacao para casos atomicos em `src/Amani.ImportadosERP.Application/Interfaces/IUnitOfWork.cs`.
+- [X] T041 [US1] Alterar `CompraService.CreateAsync` para persistir compra e itens sem criar `EstoqueMovimentacao` em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
+- [X] T042 [US1] Definir status inicial da compra criada como `EmTransito` ou equivalente pendente em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
+- [X] T043 [US2] Implementar `RegistrarRecebimentoItemAsync` com validacao de compra, item pertencente, pendencia e status em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
+- [X] T044 [US2] Garantir transacao unica do recebimento: criar recebimento, criar entrada de estoque, vincular `EstoqueMovimentacaoId` e atualizar status em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
+- [X] T045 [US2] Criar `EstoqueMovimentacao` de `Entrada` por recebimento operacional preenchendo `CompraId`, `CompraItemId`, `ProdutoId`, quantidade e valor unitario em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
+- [X] T046 [US3] Implementar `RegistrarPerdaItemAsync` com validacao de compra, item pertencente, motivo, pendencia e status em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
+- [X] T047 [US3] Garantir transacao unica da perda: criar `CompraItemPerda` como a rastreabilidade de prejuizo operacional desta feature e atualizar status, sem criar evento financeiro, despesa ou impacto financeiro separado em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
+- [X] T048 [US3] Garantir que perda/extravio/avaria nao chama `IEstoqueMovimentacaoRepository` nem cria movimentacao em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
+- [X] T049 [US4] Implementar metodos de historico de recebimentos e perdas em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`.
+- [X] T050 Atualizar `CustoProdutoRepository` para considerar `InventarioInicial` com valor unitario e `Entrada` de recebimento confirmado, excluindo compra sem recebimento e perdas, em `src/Amani.ImportadosERP.Infra.Data/Repositories/CustoProdutoRepository.cs`.
+- [X] T051 Atualizar/validar `EstoqueConsultaRepository` para tratar `InventarioInicial` como entrada fisica valida e preservar saidas de venda em `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueConsultaRepository.cs`.
+- [X] T052 [P] Implementar `CompraItemRecebimentoRepository` em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraItemRecebimentoRepository.cs`.
+- [X] T053 [P] Implementar `CompraItemPerdaRepository` em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraItemPerdaRepository.cs`.
+- [X] T054 Implementar unidade de trabalho/transacao EF Core em `src/Amani.ImportadosERP.Infra.Data/Repositories/UnitOfWork.cs`.
+- [X] T055 Registrar repositories e unidade de trabalho no container DI em `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`.
 
 **Checkpoint**: Casos de uso de criacao, recebimento, perda, custo medio e transacoes prontos antes da API.
 
