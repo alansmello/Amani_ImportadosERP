@@ -128,27 +128,27 @@
 
 **Purpose**: Validar criterios de aceite, compatibilidade e fluxos existentes afetados.
 
-- [ ] T076 Executar `dotnet build` e registrar resultado da compilacao em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T077 [US1] Validar criacao de compra sem aumento de estoque e registrar evidencia em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T078 [US1] Validar que compra criada aparece em mercadorias em transito com pendencia igual a quantidade comprada em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T079 [US2] Validar recebimento parcial gerando somente uma entrada de estoque na quantidade recebida em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T080 [US2] Validar multiplos recebimentos do mesmo item acumulando historico e saldo fisico em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T081 [US2] Validar atomicidade do recebimento simulando falha e confirmando ausencia de recebimento/movimentacao/status parcial em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T082 [US3] Validar perda, extravio e avaria reduzindo pendencia sem criar `EstoqueMovimentacao` em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T083 [US3] Validar atomicidade da perda simulando falha e confirmando ausencia de perda/status parcial em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T084 [US2] Validar rejeicao de recebimento com quantidade zero, negativa ou maior que a pendencia em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T085 [US3] Validar rejeicao de perda com quantidade zero, negativa, motivo invalido ou maior que a pendencia em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T086 [US2] Validar rejeicao de recebimento/perda para item que nao pertence a compra em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T087 Validar payloads invalidos dos endpoints de recebimento, perda, historicos e mercadorias em transito retornando `400 Bad Request` em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T088 [US1] Validar status `Recebida`, `Finalizada`, `ParcialmenteRecebida`, `EmTransito` e exclusao de `Recebida`, `Finalizada`, `Cancelada` da lista de transito em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T089 Validar compatibilidade de compras legadas: status `Recebida`, recebimentos `Legado/Migrado`, pendencia zero e nenhuma nova movimentacao de estoque em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T090 Validar que movimentacoes antigas continuam rastreaveis por `CompraId + ProdutoId` com `CompraItemId` nulo em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T091 Validar vendas existentes: venda antes do recebimento rejeitada, venda acima do recebido rejeitada e venda dentro do saldo fisico aceita em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T092 Validar inventario inicial: registro continua criando movimentacao valida e compondo saldo fisico em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T093 Validar custo medio com `InventarioInicial` e recebimento confirmado, excluindo compra sem recebimento e perdas em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T094 Validar impacto esperado no lucro de produtos com inventario inicial valorizado em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T095 Validar dashboard financeiro mantendo compra registrada como impacto financeiro imediato e sem alteracao por recebimento/perda em `specs/003-mercadorias-transito/quickstart.md`.
-- [ ] T096 Validar que inventario inicial, saldo inicial de caixa e contas a receber iniciais nao foram alterados pela feature em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T076 Executar `dotnet build` e registrar resultado da compilacao em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T077 [US1] Validar criacao de compra sem aumento de estoque e registrar evidencia em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T078 [US1] Validar que compra criada aparece em mercadorias em transito com pendencia igual a quantidade comprada em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T079 [US2] Validar recebimento parcial gerando somente uma entrada de estoque na quantidade recebida em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T080 [US2] Validar multiplos recebimentos do mesmo item acumulando historico e saldo fisico em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T081 [US2] Validar atomicidade do recebimento simulando falha e confirmando ausencia de recebimento/movimentacao/status parcial em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T082 [US3] Validar perda, extravio e avaria reduzindo pendencia sem criar `EstoqueMovimentacao` em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T083 [US3] Validar atomicidade da perda simulando falha e confirmando ausencia de perda/status parcial em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T084 [US2] Validar rejeicao de recebimento com quantidade zero, negativa ou maior que a pendencia em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T085 [US3] Validar rejeicao de perda com quantidade zero, negativa, motivo invalido ou maior que a pendencia em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T086 [US2] Validar rejeicao de recebimento/perda para item que nao pertence a compra em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T087 Validar payloads invalidos dos endpoints de recebimento, perda, historicos e mercadorias em transito retornando `400 Bad Request` em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T088 [US1] Validar status `Recebida`, `Finalizada`, `ParcialmenteRecebida`, `EmTransito` e exclusao de `Recebida`, `Finalizada`, `Cancelada` da lista de transito em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T089 Validar compatibilidade de compras legadas: status `Recebida`, recebimentos `Legado/Migrado`, pendencia zero e nenhuma nova movimentacao de estoque em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T090 Validar que movimentacoes antigas continuam rastreaveis por `CompraId + ProdutoId` com `CompraItemId` nulo em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T091 Validar vendas existentes: venda antes do recebimento rejeitada, venda acima do recebido rejeitada e venda dentro do saldo fisico aceita em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T092 Validar inventario inicial: registro continua criando movimentacao valida e compondo saldo fisico em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T093 Validar custo medio com `InventarioInicial` e recebimento confirmado, excluindo compra sem recebimento e perdas em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T094 Validar impacto esperado no lucro de produtos com inventario inicial valorizado em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T095 Validar dashboard financeiro mantendo compra registrada como impacto financeiro imediato e sem alteracao por recebimento/perda em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T096 Validar que inventario inicial, saldo inicial de caixa e contas a receber iniciais nao foram alterados pela feature em `specs/003-mercadorias-transito/quickstart.md`.
 
 **Checkpoint**: Regressao obrigatoria completa antes da validacao final.
 

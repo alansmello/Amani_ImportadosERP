@@ -25,6 +25,12 @@ public class CompraItemPerdaRepository : ICompraItemPerdaRepository
         await _db.SaveChangesAsync();
     }
 
+    public async Task AdicionarSemSalvarAsync(CompraItemPerda perda)
+    {
+        if (perda == null) throw new ArgumentNullException(nameof(perda));
+        await _db.CompraItemPerdas.AddAsync(perda);
+    }
+
     public async Task<List<CompraItemPerda>> ObterPorCompraAsync(Guid compraId)
     {
         if (compraId == Guid.Empty) return new List<CompraItemPerda>();

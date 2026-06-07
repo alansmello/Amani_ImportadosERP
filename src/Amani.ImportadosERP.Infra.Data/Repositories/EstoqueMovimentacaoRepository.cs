@@ -23,6 +23,12 @@ public class EstoqueMovimentacaoRepository : IEstoqueMovimentacaoRepository
         await _db.SaveChangesAsync();
     }
 
+    public async Task AdicionarSemSalvarAsync(EstoqueMovimentacao movimentacao)
+    {
+        if (movimentacao == null) throw new ArgumentNullException(nameof(movimentacao));
+        await _db.EstoqueMovimentacoes.AddAsync(movimentacao);
+    }
+
     public async Task AdicionarRangeAsync(System.Collections.Generic.IEnumerable<EstoqueMovimentacao> movimentacoes)
     {
         if (movimentacoes == null) throw new ArgumentNullException(nameof(movimentacoes));

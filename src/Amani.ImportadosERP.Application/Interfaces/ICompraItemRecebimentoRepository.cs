@@ -8,5 +8,6 @@ namespace Amani.ImportadosERP.Application.Interfaces;
 public interface ICompraItemRecebimentoRepository
 {
     Task AdicionarAsync(CompraItemRecebimento recebimento);
+    Task AdicionarSemSalvarAsync(CompraItemRecebimento recebimento);
     Task<List<CompraItemRecebimento>> ObterPorCompraAsync(Guid compraId);
 }

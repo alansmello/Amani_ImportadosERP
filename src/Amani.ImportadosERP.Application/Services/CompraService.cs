@@ -87,8 +87,8 @@ public class CompraService
                 movimentacao.Id,
                 dto.Observacao);
 
-            await _estoqueRepository.AdicionarAsync(movimentacao);
-            await _compraRepository.SalvarAsync();
+            await _recebimentoRepository.AdicionarSemSalvarAsync(recebimento);
+            await _estoqueRepository.AdicionarSemSalvarAsync(movimentacao);
         });
 
         return CompraRecebimentoMapper.ToDto(recebimento!);
@@ -114,8 +114,7 @@ public class CompraService
 
             item.ValidarPerda(dto.Quantidade);
             perda = compra.RegistrarPerdaItem(item.Id, dto.Quantidade, motivo, dto.DataPerda, dto.Observacao);
-
-            await _compraRepository.SalvarAsync();
+            await _perdaRepository.AdicionarSemSalvarAsync(perda);
         });
 
         return CompraPerdaMapper.ToDto(perda!);

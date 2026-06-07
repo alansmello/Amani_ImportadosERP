@@ -25,6 +25,12 @@ public class CompraItemRecebimentoRepository : ICompraItemRecebimentoRepository
         await _db.SaveChangesAsync();
     }
 
+    public async Task AdicionarSemSalvarAsync(CompraItemRecebimento recebimento)
+    {
+        if (recebimento == null) throw new ArgumentNullException(nameof(recebimento));
+        await _db.CompraItemRecebimentos.AddAsync(recebimento);
+    }
+
     public async Task<List<CompraItemRecebimento>> ObterPorCompraAsync(Guid compraId)
     {
         if (compraId == Guid.Empty) return new List<CompraItemRecebimento>();
