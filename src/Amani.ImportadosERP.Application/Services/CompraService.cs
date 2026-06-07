@@ -133,6 +133,61 @@ public class CompraService
         return perdas.Select(CompraPerdaMapper.ToDto).ToList().AsReadOnly();
     }
 
+    public async Task<IReadOnlyCollection<CompraEmTransitoDto>> ObterComprasEmTransitoAsync()
+    {
+        var compras = await _compraRepository.ObterTodasAsync();
+
+        return compras
+            .Where(c => CompraEstaEmTransito(c) && c.Items.Any(i => i.QuantidadePendente > 0))
+            .Select(c => new CompraEmTransitoDto
+            {
+                CompraId = c.Id,
+                FornecedorId = c.FornecedorId,
+                DataCompra = c.DataCompra,
+                Status = c.Status.ToString(),
+                Itens = c.Items
+                    .Where(i => i.QuantidadePendente > 0)
+                    .Select(i => new CompraEmTransitoItemDto
+                    {
+                        ItemId = i.Id,
+                        ProdutoId = i.ProdutoId,
+                        QuantidadeComprada = i.Quantidade,
+                        QuantidadeRecebida = i.QuantidadeRecebida,
+                        QuantidadePerdida = i.QuantidadePerdida,
+                        QuantidadePendente = i.QuantidadePendente
+                    })
+                    .ToList()
+                    .AsReadOnly()
+            })
+            .ToList()
+            .AsReadOnly();
+    }
+
+    public async Task<IReadOnlyCollection<ProdutoPendenteRecebimentoDto>> ObterProdutosPendentesRecebimentoAsync()
+    {
+        var compras = await _compraRepository.ObterTodasAsync();
+
+        return compras
+            .Where(CompraEstaEmTransito)
+            .SelectMany(c => c.Items
+                .Where(i => i.QuantidadePendente > 0)
+                .Select(i => new ProdutoPendenteRecebimentoDto
+                {
+                    CompraId = c.Id,
+                    ItemId = i.Id,
+                    ProdutoId = i.ProdutoId,
+                    FornecedorId = c.FornecedorId,
+                    DataCompra = c.DataCompra,
+                    StatusCompra = c.Status.ToString(),
+                    QuantidadeComprada = i.Quantidade,
+                    QuantidadeRecebida = i.QuantidadeRecebida,
+                    QuantidadePerdida = i.QuantidadePerdida,
+                    QuantidadePendente = i.QuantidadePendente
+                }))
+            .ToList()
+            .AsReadOnly();
+    }
+
     private async Task<Compra> ObterCompraComItemParaAtualizarAsync(Guid compraId, Guid itemId)
     {
         if (compraId == Guid.Empty) throw new ArgumentException("CompraId e obrigatorio", nameof(compraId));
@@ -140,5 +195,12 @@ public class CompraService
 
         return await _compraRepository.ObterPorIdComItemParaAtualizarAsync(compraId, itemId)
             ?? throw new KeyNotFoundException("Compra ou item de compra nao encontrado");
+    }
+
+    private static bool CompraEstaEmTransito(Compra compra)
+    {
+        return compra.Status != CompraStatus.Recebida
+            && compra.Status != CompraStatus.Finalizada
+            && compra.Status != CompraStatus.Cancelada;
     }
 }

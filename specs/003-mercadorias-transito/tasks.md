@@ -94,16 +94,16 @@
 
 **Purpose**: Expor os endpoints contratados, mantendo controllers sem regra de negocio.
 
-- [ ] T056 [US1] Atualizar `POST /api/compras` para retornar compra criada sem depender de movimentacao automatica em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
-- [ ] T057 [US2] Adicionar `POST /api/compras/{compraId}/itens/{itemId}/recebimentos` delegando ao service e retornando `201` em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
-- [ ] T058 [US3] Adicionar `POST /api/compras/{compraId}/itens/{itemId}/perdas` delegando ao service e retornando `201` em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
-- [ ] T059 [US4] Adicionar `GET /api/compras/em-transito` delegando a consulta de compras pendentes em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
-- [ ] T060 [US4] Adicionar `GET /api/compras/produtos-pendentes` delegando a consulta de itens pendentes em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
-- [ ] T061 [US4] Adicionar `GET /api/compras/{compraId}/recebimentos` para historico de recebimentos em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
-- [ ] T062 [US4] Adicionar `GET /api/compras/{compraId}/perdas` para historico de perdas em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
-- [ ] T063 [US1] Atualizar `GET /api/compras/{id}` para incluir status e quantidades calculadas por item em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
-- [ ] T064 Padronizar respostas `400`, `404` e `409` dos novos endpoints a partir de erros da Application em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
-- [ ] T065 Validar `ModelState`/DTOs dos endpoints de recebimento, perda, historico e mercadorias em transito, garantindo resposta `400 Bad Request` para payload invalido em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T056 [US1] Atualizar `POST /api/compras` para retornar compra criada sem depender de movimentacao automatica em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T057 [US2] Adicionar `POST /api/compras/{compraId}/itens/{itemId}/recebimentos` delegando ao service e retornando `201` em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T058 [US3] Adicionar `POST /api/compras/{compraId}/itens/{itemId}/perdas` delegando ao service e retornando `201` em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T059 [US4] Adicionar `GET /api/compras/em-transito` delegando a consulta de compras pendentes em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T060 [US4] Adicionar `GET /api/compras/produtos-pendentes` delegando a consulta de itens pendentes em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T061 [US4] Adicionar `GET /api/compras/{compraId}/recebimentos` para historico de recebimentos em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T062 [US4] Adicionar `GET /api/compras/{compraId}/perdas` para historico de perdas em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T063 [US1] Atualizar `GET /api/compras/{id}` para incluir status e quantidades calculadas por item em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T064 Padronizar respostas `400`, `404` e `409` dos novos endpoints a partir de erros da Application em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
+- [X] T065 Validar `ModelState`/DTOs dos endpoints de recebimento, perda, historico e mercadorias em transito, garantindo resposta `400 Bad Request` para payload invalido em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`.
 
 **Checkpoint**: Contrato HTTP da feature exposto e delegando regras ao backend.
 
