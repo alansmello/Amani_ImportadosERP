@@ -154,6 +154,8 @@ Expected outcome:
 
 ### Final handoff - 2026-06-07
 
+- Validacao manual final executada em 2026-06-07: PASS para pre-requisitos
+  Spec Kit e build da solucao.
 - Resultado final da Feature 003: PASS para build, migration e cenarios HTTP/SQL
   registrados na execucao da Phase 6.
 - Contratos revisados contra `ComprasController` e DTOs expostos: endpoints de
