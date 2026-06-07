@@ -3,6 +3,7 @@ using System;
 using Amani.ImportadosERP.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Amani.ImportadosERP.Infra.Data.Migrations
 {
     [DbContext(typeof(AmaniDbContext))]
-    partial class AmaniDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260606001634_AddEventoFinanceiroSaldoInicialCaixa")]
+    partial class AddEventoFinanceiroSaldoInicialCaixa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,19 +189,11 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ClienteId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("DataVencimento")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Origem")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -207,12 +202,10 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
-                    b.Property<Guid?>("VendaId")
+                    b.Property<Guid>("VendaId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
 
                     b.HasIndex("VendaId");
 
@@ -524,15 +517,11 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ContaReceber", b =>
                 {
-                    b.HasOne("Amani.ImportadosERP.Domain.Entities.Cliente", null)
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Amani.ImportadosERP.Domain.Entities.Venda", null)
                         .WithMany()
                         .HasForeignKey("VendaId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.Despesa", b =>

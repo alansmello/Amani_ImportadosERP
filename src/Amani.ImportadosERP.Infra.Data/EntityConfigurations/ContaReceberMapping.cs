@@ -13,7 +13,14 @@ public class ContaReceberMapping : IEntityTypeConfiguration<ContaReceber>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.VendaId)
-            .IsRequired();
+            .IsRequired(false);
+
+        builder.Property(x => x.ClienteId)
+            .IsRequired(false);
+
+        builder.Property(x => x.Origem)
+            .IsRequired()
+            .HasMaxLength(50);
 
         builder.Property(x => x.Valor)
             .IsRequired()
@@ -30,6 +37,11 @@ public class ContaReceberMapping : IEntityTypeConfiguration<ContaReceber>
         builder.HasOne<Venda>()
             .WithMany()
             .HasForeignKey(x => x.VendaId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne<Cliente>()
+            .WithMany()
+            .HasForeignKey(x => x.ClienteId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
