@@ -111,16 +111,16 @@
 
 **Purpose**: Disponibilizar visao operacional de transito, pendencias e historicos.
 
-- [ ] T066 [US4] Criar query `ObterComprasEmTransitoQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterComprasEmTransitoQuery.cs`.
-- [ ] T067 [US4] Criar handler de compras em transito excluindo status `Recebida`, `Finalizada` e `Cancelada` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterComprasEmTransitoQueryHandler.cs`.
-- [ ] T068 [US4] Criar query `ObterProdutosPendentesRecebimentoQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterProdutosPendentesRecebimentoQuery.cs`.
-- [ ] T069 [US4] Criar handler de produtos pendentes com `QuantidadePendente > 0` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterProdutosPendentesRecebimentoQueryHandler.cs`.
-- [ ] T070 [US4] Criar query `ObterRecebimentosCompraQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterRecebimentosCompraQuery.cs`.
-- [ ] T071 [US4] Criar handler de historico de recebimentos ordenado por data e incluindo origem `Legado/Migrado` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterRecebimentosCompraQueryHandler.cs`.
-- [ ] T072 [US4] Criar query `ObterPerdasCompraQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterPerdasCompraQuery.cs`.
-- [ ] T073 [US4] Criar handler de historico de perdas ordenado por data e motivo em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterPerdasCompraQueryHandler.cs`.
-- [ ] T074 [US4] Estender `ICompraRepository` com metodos de consulta para transito, pendencias, recebimentos e perdas em `src/Amani.ImportadosERP.Application/Interfaces/ICompraRepository.cs`.
-- [ ] T075 [US4] Implementar consultas agregadas de transito, pendencias e historicos no repository em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`.
+- [X] T066 [US4] Criar query `ObterComprasEmTransitoQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterComprasEmTransitoQuery.cs`.
+- [X] T067 [US4] Criar handler de compras em transito excluindo status `Recebida`, `Finalizada` e `Cancelada` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterComprasEmTransitoQueryHandler.cs`.
+- [X] T068 [US4] Criar query `ObterProdutosPendentesRecebimentoQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterProdutosPendentesRecebimentoQuery.cs`.
+- [X] T069 [US4] Criar handler de produtos pendentes com `QuantidadePendente > 0` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterProdutosPendentesRecebimentoQueryHandler.cs`.
+- [X] T070 [US4] Criar query `ObterRecebimentosCompraQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterRecebimentosCompraQuery.cs`.
+- [X] T071 [US4] Criar handler de historico de recebimentos ordenado por data e incluindo origem `Legado/Migrado` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterRecebimentosCompraQueryHandler.cs`.
+- [X] T072 [US4] Criar query `ObterPerdasCompraQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterPerdasCompraQuery.cs`.
+- [X] T073 [US4] Criar handler de historico de perdas ordenado por data e motivo em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterPerdasCompraQueryHandler.cs`.
+- [X] T074 [US4] Estender `ICompraRepository` com metodos de consulta para transito, pendencias, recebimentos e perdas em `src/Amani.ImportadosERP.Application/Interfaces/ICompraRepository.cs`.
+- [X] T075 [US4] Implementar consultas agregadas de transito, pendencias e historicos no repository em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`.
 
 **Checkpoint**: Consultas operacionais entregam pendencias e historicos sem criar campos fixos de estoque.
 

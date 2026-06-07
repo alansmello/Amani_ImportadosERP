@@ -90,7 +90,7 @@ public class ComprasController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var compras = await _service.ObterComprasEmTransitoAsync();
+        var compras = await _mediator.Send(new ObterComprasEmTransitoQuery());
         return Ok(compras);
     }
 
@@ -99,7 +99,7 @@ public class ComprasController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var produtos = await _service.ObterProdutosPendentesRecebimentoAsync();
+        var produtos = await _mediator.Send(new ObterProdutosPendentesRecebimentoQuery());
         return Ok(produtos);
     }
 
@@ -110,7 +110,7 @@ public class ComprasController : ControllerBase
         if (compraId == Guid.Empty) return BadRequest(new { error = "CompraId e obrigatorio" });
         if (await _service.ObterPorIdAsync(compraId) == null) return NotFound();
 
-        var recebimentos = await _service.ObterRecebimentosAsync(compraId);
+        var recebimentos = await _mediator.Send(new ObterRecebimentosCompraQuery { CompraId = compraId });
         return Ok(recebimentos);
     }
 
@@ -121,7 +121,7 @@ public class ComprasController : ControllerBase
         if (compraId == Guid.Empty) return BadRequest(new { error = "CompraId e obrigatorio" });
         if (await _service.ObterPorIdAsync(compraId) == null) return NotFound();
 
-        var perdas = await _service.ObterPerdasAsync(compraId);
+        var perdas = await _mediator.Send(new ObterPerdasCompraQuery { CompraId = compraId });
         return Ok(perdas);
     }
 

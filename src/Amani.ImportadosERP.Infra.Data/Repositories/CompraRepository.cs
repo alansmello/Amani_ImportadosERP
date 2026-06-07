@@ -70,9 +70,64 @@ public class CompraRepository : ICompraRepository
         return await query.ToListAsync();
     }
 
+    public async Task<List<Compra>> ObterComprasEmTransitoAsync()
+    {
+        return await QueryComprasEmTransito()
+            .Where(c => c.Items.Any(i =>
+                i.Quantidade
+                - i.Recebimentos.Sum(r => r.Quantidade)
+                - i.Perdas.Sum(p => p.Quantidade) > 0))
+            .OrderBy(c => c.DataCompra)
+            .ToListAsync();
+    }
+
+    public async Task<List<Compra>> ObterComprasComProdutosPendentesAsync()
+    {
+        return await QueryComprasEmTransito()
+            .Where(c => c.Items.Any(i =>
+                i.Quantidade
+                - i.Recebimentos.Sum(r => r.Quantidade)
+                - i.Perdas.Sum(p => p.Quantidade) > 0))
+            .OrderBy(c => c.DataCompra)
+            .ToListAsync();
+    }
+
+    public async Task<List<CompraItemRecebimento>> ObterRecebimentosPorCompraAsync(Guid compraId)
+    {
+        if (compraId == Guid.Empty) return new List<CompraItemRecebimento>();
+
+        return await _db.CompraItemRecebimentos
+            .AsNoTracking()
+            .Where(r => r.CompraId == compraId)
+            .OrderBy(r => r.DataRecebimento)
+            .ThenBy(r => r.Origem)
+            .ToListAsync();
+    }
+
+    public async Task<List<CompraItemPerda>> ObterPerdasPorCompraAsync(Guid compraId)
+    {
+        if (compraId == Guid.Empty) return new List<CompraItemPerda>();
+
+        return await _db.CompraItemPerdas
+            .AsNoTracking()
+            .Where(p => p.CompraId == compraId)
+            .OrderBy(p => p.DataPerda)
+            .ThenBy(p => p.Motivo)
+            .ToListAsync();
+    }
+
     public async Task SalvarAsync()
     {
         await _db.SaveChangesAsync();
+    }
+
+    private IQueryable<Compra> QueryComprasEmTransito()
+    {
+        return QueryCompraCompleta()
+            .AsNoTracking()
+            .Where(c => c.Status != CompraStatus.Recebida
+                && c.Status != CompraStatus.Finalizada
+                && c.Status != CompraStatus.Cancelada);
     }
 
     private IQueryable<Compra> QueryCompraCompleta()
