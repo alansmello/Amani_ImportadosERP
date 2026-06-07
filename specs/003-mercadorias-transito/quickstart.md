@@ -122,7 +122,7 @@ Expected outcome:
 Expected outcome:
 
 - Compra antiga fica com status `Recebida`.
-- Cada item antigo possui recebimento `Legado/Migrado` com quantidade igual a
+- Cada item antigo possui recebimento `LegadoMigrado` com quantidade igual a
   quantidade comprada.
 - Recebimento legado nao possui movimentacao nova de estoque.
 - Quantidade pendente da compra antiga e zero.
@@ -151,6 +151,30 @@ Expected outcome:
 - Observacao: `POST /api/implantacao/saldo-inicial-caixa` exige
   `origem = ImplantacaoInicial`; contas a receber iniciais aceitam
   `SaldoInicial`.
+
+### Final handoff - 2026-06-07
+
+- Resultado final da Feature 003: PASS para build, migration e cenarios HTTP/SQL
+  registrados na execucao da Phase 6.
+- Contratos revisados contra `ComprasController` e DTOs expostos: endpoints de
+  criacao, recebimento, perda, mercadorias em transito, produtos pendentes,
+  historico de recebimentos, historico de perdas e detalhe da compra permanecem
+  refletidos em `contracts/compras-transito-api.md`.
+- Modelo de dados revisado contra entidades e migration: status operacional,
+  recebimentos, perdas, compatibilidade legada e `CompraItemId` nullable em
+  `EstoqueMovimentacao` permanecem refletidos em `data-model.md`.
+- Plano revisado contra implementacao: custo medio usa entradas reais
+  (`InventarioInicial` e recebimento confirmado), recebimento/perda sao
+  transacionais, compras legadas usam recebimentos `LegadoMigrado` sem nova
+  movimentacao, e dashboard financeiro continua por compra registrada.
+- Analise cruzada final entre `spec.md`, `plan.md`, `data-model.md`,
+  `contracts/compras-transito-api.md`, `quickstart.md` e `tasks.md`: sem
+  inconsistencias bloqueantes apos alinhar o valor tecnico de origem legada para
+  `LegadoMigrado`.
+- Handoff: a Feature 003 altera apenas o fluxo fisico/operacional de estoque.
+  Compra registrada continua representando impacto financeiro imediato; entrada
+  fisica, saldo disponivel e custo medio passam a depender de recebimentos
+  fisicos confirmados. Recebimentos e perdas nao criam novo regime financeiro.
 
 ## References
 

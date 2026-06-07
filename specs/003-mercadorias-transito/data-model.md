@@ -77,7 +77,7 @@ item de compra.
 - `ValorUnitario`: custo unitario aplicado na entrada.
 - `DataRecebimento`: data do recebimento.
 - `EstoqueMovimentacaoId`: movimentacao de entrada criada pelo recebimento.
-- `Origem`: `Operacional` para recebimentos novos ou `Legado/Migrado` para
+- `Origem`: `Operacional` para recebimentos novos ou `LegadoMigrado` para
   recebimentos criados na migracao de compatibilidade.
 - `Observacao`: texto opcional.
 
@@ -87,7 +87,7 @@ item de compra.
 - Pertence a um `CompraItem`.
 - Cria uma `EstoqueMovimentacao` do tipo `Entrada` quando `Origem` for
   `Operacional`.
-- Nao cria nova movimentacao quando `Origem` for `Legado/Migrado`.
+- Nao cria nova movimentacao quando `Origem` for `LegadoMigrado`.
 
 **Rules**:
 
@@ -96,7 +96,7 @@ item de compra.
 - Nao pode ser criado para compra cancelada ou finalizada.
 - Recebimento operacional deve criar entrada de estoque com mesma quantidade e
   produto.
-- Recebimento `Legado/Migrado` deve existir apenas para compras anteriores a
+- Recebimento `LegadoMigrado` deve existir apenas para compras anteriores a
   Feature 003, com quantidade igual a quantidade comprada do item e pendencia
   zero, sem duplicar movimentacao de estoque antiga.
 
@@ -204,11 +204,11 @@ Criada/EmTransito/ParcialmenteRecebida -> Cancelada
 Compras criadas antes da Feature 003 devem ser migradas para compatibilidade:
 
 - status da compra: `Recebida`;
-- um recebimento `Legado/Migrado` por item;
+- um recebimento `LegadoMigrado` por item;
 - quantidade recebida legada igual a quantidade comprada do item;
 - `EstoqueMovimentacaoId` nulo no recebimento legado;
 - nenhuma nova movimentacao de estoque;
 - quantidade pendente calculada igual a zero;
 - entradas antigas continuam rastreaveis por `CompraId + ProdutoId`.
 
-Recebimentos `Legado/Migrado` nao podem ser criados por endpoint operacional.
+Recebimentos `LegadoMigrado` nao podem ser criados por endpoint operacional.

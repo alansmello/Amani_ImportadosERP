@@ -69,14 +69,14 @@ recebimento, perda, finalizacao ou cancelamento.
 **Rationale**: Antes da Feature 003, compras ja geravam entrada automatica.
 Marcar compras existentes como `Recebida` preserva o historico antigo e impede
 que elas aparecam incorretamente como mercadorias em transito. Criar um
-recebimento `Legado/Migrado` por item, sem nova movimentacao de estoque, mantem
+recebimento `LegadoMigrado` por item, sem nova movimentacao de estoque, mantem
 `QuantidadeRecebida` e `QuantidadePendente` consistentes com o status.
 
 **Alternatives considered**:
 
 - Criar recebimentos retroativos operacionais para todas as compras antigas:
   rejeitado por risco de duplicar efeitos historicos. A alternativa aceita e
-  recebimento `Legado/Migrado`, sem nova movimentacao.
+  recebimento `LegadoMigrado`, sem nova movimentacao.
 - Apenas tratar compras migradas como recebidas por regra de consulta: rejeitado
   porque deixaria status e quantidades calculadas divergentes.
 - Marcar todas como `EmTransito`: rejeitado porque conflita com entradas de

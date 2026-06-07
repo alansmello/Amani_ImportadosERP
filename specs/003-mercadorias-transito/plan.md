@@ -16,7 +16,7 @@ sem gerar estoque.
 
 Compras registradas antes da Feature 003 serao tratadas como legadas. Como o
 modelo antigo ja gerou estoque no momento da compra, a migration deve criar
-recebimentos `Legado/Migrado` por item, sem gerar nova movimentacao de estoque,
+recebimentos `LegadoMigrado` por item, sem gerar nova movimentacao de estoque,
 para manter status, quantidade recebida e quantidade pendente consistentes.
 
 O plano mantem Clean Architecture e DDD Lite: invariantes em Domain/Application,
@@ -191,13 +191,13 @@ and [quickstart.md](./quickstart.md).
   `Cancelada`.
 - Migrar compras existentes para status `Recebida`, porque o modelo antigo ja
   criou entradas de estoque para elas.
-- Criar recebimentos `Legado/Migrado` para cada item de compra existente antes
+- Criar recebimentos `LegadoMigrado` para cada item de compra existente antes
   da Feature 003, com quantidade igual a quantidade comprada, data baseada na
   data da compra, valor unitario do item, e sem criar nova movimentacao de
   estoque.
 - Criar tabela `compra_item_recebimentos` com compra, item, produto, quantidade,
   data, valor unitario, movimentacao de estoque relacionada, origem
-  (`Operacional` ou `Legado/Migrado`) e observacao opcional.
+  (`Operacional` ou `LegadoMigrado`) e observacao opcional.
 - Criar tabela `compra_item_perdas` com compra, item, produto, quantidade, data,
   motivo e observacao opcional.
 - Adicionar `CompraItemId` nullable em `estoque_movimentacoes` para rastrear
@@ -245,7 +245,7 @@ operacional de estoque, nao o regime financeiro. Assim:
 
 - Criacao de compra nao altera saldo fisico nem custo medio.
 - Compras legadas migradas ficam com status `Recebida`, recebimentos
-  `Legado/Migrado`, pendencia zero e nenhuma movimentacao nova de estoque.
+  `LegadoMigrado`, pendencia zero e nenhuma movimentacao nova de estoque.
 - Recebimento parcial altera saldo somente pela quantidade recebida.
 - Recebimentos multiplos do mesmo item acumulam historico e saldo.
 - Perdas reduzem pendencia sem criar movimentacao de estoque.
@@ -270,7 +270,7 @@ operacional de estoque, nao o regime financeiro. Assim:
 O `/speckit-tasks` deve gerar tarefas explicitas para:
 
 - migration/compatibilidade de compras legadas com recebimentos
-  `Legado/Migrado` sem nova movimentacao de estoque;
+  `LegadoMigrado` sem nova movimentacao de estoque;
 - `CompraItemId` nullable em movimentacoes e preenchimento obrigatorio nas novas
   entradas por recebimento;
 - transacao do caso de uso de recebimento;

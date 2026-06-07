@@ -60,9 +60,11 @@ Registra recebimento fisico de quantidade de um item.
   "itemId": "00000000-0000-0000-0000-000000000000",
   "produtoId": "00000000-0000-0000-0000-000000000000",
   "quantidade": 3,
+  "valorUnitario": 25.5,
   "origem": "Operacional",
   "dataRecebimento": "2026-06-07T00:00:00Z",
-  "estoqueMovimentacaoId": "00000000-0000-0000-0000-000000000000"
+  "estoqueMovimentacaoId": "00000000-0000-0000-0000-000000000000",
+  "observacao": "Recebimento parcial"
 }
 ```
 
@@ -107,7 +109,8 @@ Registra perda, extravio ou avaria de quantidade pendente.
   "produtoId": "00000000-0000-0000-0000-000000000000",
   "quantidade": 2,
   "motivo": "Avaria",
-  "dataPerda": "2026-06-07T00:00:00Z"
+  "dataPerda": "2026-06-07T00:00:00Z",
+  "observacao": "Produto danificado no transporte"
 }
 ```
 
@@ -158,6 +161,8 @@ Lista itens pendentes agrupaveis por produto e compra.
     "itemId": "00000000-0000-0000-0000-000000000000",
     "produtoId": "00000000-0000-0000-0000-000000000000",
     "fornecedorId": "00000000-0000-0000-0000-000000000000",
+    "dataCompra": "2026-06-07T00:00:00Z",
+    "statusCompra": "ParcialmenteRecebida",
     "quantidadeComprada": 10,
     "quantidadeRecebida": 4,
     "quantidadePerdida": 1,
@@ -172,9 +177,12 @@ Retorna historico de recebimentos da compra.
 
 **Response 200**: `RecebimentoCompraItemDto[]`
 
-Recebimentos `Legado/Migrado` podem aparecer nesta consulta para compras
+Recebimentos `LegadoMigrado` podem aparecer nesta consulta para compras
 existentes antes da Feature 003. Eles nao possuem `estoqueMovimentacaoId` e nao
 podem ser criados pelos endpoints operacionais.
+
+No contrato JSON, a origem legada e retornada como `LegadoMigrado`, conforme enum
+tecnico usado pelo backend.
 
 ## GET /api/compras/{compraId}/perdas
 

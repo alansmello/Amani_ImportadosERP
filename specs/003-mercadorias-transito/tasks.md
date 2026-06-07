@@ -21,7 +21,7 @@
 - [X] T001 Adicionar enum/status operacional da compra com `Criada`, `EmTransito`, `ParcialmenteRecebida`, `Recebida`, `Finalizada` e `Cancelada` em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
 - [X] T002 Atualizar `Compra` para armazenar status operacional e navegar recebimentos/perdas quando necessario em `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`.
 - [X] T003 Atualizar `CompraItem` com navegacoes para recebimentos/perdas e calculos de `QuantidadeRecebida`, `QuantidadePerdida` e `QuantidadePendente` em `src/Amani.ImportadosERP.Domain/Entities/CompraItem.cs`.
-- [X] T004 [P] Criar entidade `CompraItemRecebimento` com origem `Operacional` e `Legado/Migrado`, valor unitario e vinculo opcional com movimentacao em `src/Amani.ImportadosERP.Domain/Entities/CompraItemRecebimento.cs`.
+- [X] T004 [P] Criar entidade `CompraItemRecebimento` com origem `Operacional` e `LegadoMigrado`, valor unitario e vinculo opcional com movimentacao em `src/Amani.ImportadosERP.Domain/Entities/CompraItemRecebimento.cs`.
 - [X] T005 [P] Criar entidade `CompraItemPerda` com motivo `Perda`, `Extravio` ou `Avaria` em `src/Amani.ImportadosERP.Domain/Entities/CompraItemPerda.cs`.
 - [X] T006 Atualizar `EstoqueMovimentacao` para incluir `CompraItemId` nullable e navegacao opcional para item de compra em `src/Amani.ImportadosERP.Domain/Entities/EstoqueMovimentacao.cs`.
 - [X] T007 Registrar `DbSet` para recebimentos e perdas no `src/Amani.ImportadosERP.Infra.Data/Context/AmaniDbContext.cs`.
@@ -32,7 +32,7 @@
 - [X] T012 Atualizar mapping de `EstoqueMovimentacao` para `CompraItemId` nullable em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/EstoqueMovimentacaoMapping.cs`.
 - [X] T013 Criar migration `AddMercadoriasTransitoRecebimentoParcial` com status em compras, tabelas de recebimentos/perdas e `CompraItemId` nullable em `src/Amani.ImportadosERP.Infra.Data/Migrations/`.
 - [X] T014 Incluir na migration a atualizacao de compras existentes para status `Recebida` em `src/Amani.ImportadosERP.Infra.Data/Migrations/`.
-- [X] T015 Incluir na migration a criacao de recebimentos `Legado/Migrado` por item legado, sem criar nova `EstoqueMovimentacao`, em `src/Amani.ImportadosERP.Infra.Data/Migrations/`.
+- [X] T015 Incluir na migration a criacao de recebimentos `LegadoMigrado` por item legado, sem criar nova `EstoqueMovimentacao`, em `src/Amani.ImportadosERP.Infra.Data/Migrations/`.
 - [X] T016 Garantir na migration que movimentacoes antigas permanecem com `CompraItemId` nulo e rastreaveis por `CompraId + ProdutoId` em `src/Amani.ImportadosERP.Infra.Data/Migrations/`.
 - [X] T017 Atualizar `AmaniDbContextModelSnapshot` via migration EF Core em `src/Amani.ImportadosERP.Infra.Data/Migrations/AmaniDbContextModelSnapshot.cs`.
 
@@ -116,7 +116,7 @@
 - [X] T068 [US4] Criar query `ObterProdutosPendentesRecebimentoQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterProdutosPendentesRecebimentoQuery.cs`.
 - [X] T069 [US4] Criar handler de produtos pendentes com `QuantidadePendente > 0` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterProdutosPendentesRecebimentoQueryHandler.cs`.
 - [X] T070 [US4] Criar query `ObterRecebimentosCompraQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterRecebimentosCompraQuery.cs`.
-- [X] T071 [US4] Criar handler de historico de recebimentos ordenado por data e incluindo origem `Legado/Migrado` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterRecebimentosCompraQueryHandler.cs`.
+- [X] T071 [US4] Criar handler de historico de recebimentos ordenado por data e incluindo origem `LegadoMigrado` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterRecebimentosCompraQueryHandler.cs`.
 - [X] T072 [US4] Criar query `ObterPerdasCompraQuery` em `src/Amani.ImportadosERP.Application/Queries/ObterPerdasCompraQuery.cs`.
 - [X] T073 [US4] Criar handler de historico de perdas ordenado por data e motivo em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterPerdasCompraQueryHandler.cs`.
 - [X] T074 [US4] Estender `ICompraRepository` com metodos de consulta para transito, pendencias, recebimentos e perdas em `src/Amani.ImportadosERP.Application/Interfaces/ICompraRepository.cs`.
@@ -141,7 +141,7 @@
 - [X] T086 [US2] Validar rejeicao de recebimento/perda para item que nao pertence a compra em `specs/003-mercadorias-transito/quickstart.md`.
 - [X] T087 Validar payloads invalidos dos endpoints de recebimento, perda, historicos e mercadorias em transito retornando `400 Bad Request` em `specs/003-mercadorias-transito/quickstart.md`.
 - [X] T088 [US1] Validar status `Recebida`, `Finalizada`, `ParcialmenteRecebida`, `EmTransito` e exclusao de `Recebida`, `Finalizada`, `Cancelada` da lista de transito em `specs/003-mercadorias-transito/quickstart.md`.
-- [X] T089 Validar compatibilidade de compras legadas: status `Recebida`, recebimentos `Legado/Migrado`, pendencia zero e nenhuma nova movimentacao de estoque em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T089 Validar compatibilidade de compras legadas: status `Recebida`, recebimentos `LegadoMigrado`, pendencia zero e nenhuma nova movimentacao de estoque em `specs/003-mercadorias-transito/quickstart.md`.
 - [X] T090 Validar que movimentacoes antigas continuam rastreaveis por `CompraId + ProdutoId` com `CompraItemId` nulo em `specs/003-mercadorias-transito/quickstart.md`.
 - [X] T091 Validar vendas existentes: venda antes do recebimento rejeitada, venda acima do recebido rejeitada e venda dentro do saldo fisico aceita em `specs/003-mercadorias-transito/quickstart.md`.
 - [X] T092 Validar inventario inicial: registro continua criando movimentacao valida e compondo saldo fisico em `specs/003-mercadorias-transito/quickstart.md`.
@@ -156,12 +156,12 @@
 
 **Purpose**: Conferir consistencia final dos artefatos Spec Kit e preparar handoff.
 
-- [ ] T097 Atualizar `specs/003-mercadorias-transito/quickstart.md` com resultados finais dos cenarios executados.
-- [ ] T098 Conferir que `specs/003-mercadorias-transito/contracts/compras-transito-api.md` continua refletindo todos os endpoints implementados.
-- [ ] T099 Conferir que `specs/003-mercadorias-transito/data-model.md` continua refletindo entidades, status, migration legada e `CompraItemId` nullable.
-- [ ] T100 Conferir que `specs/003-mercadorias-transito/plan.md` continua consistente com custo medio, dashboard financeiro, atomicidade e compras legadas.
-- [ ] T101 Executar analise cruzada final entre `spec.md`, `plan.md`, `data-model.md`, `contracts/compras-transito-api.md`, `quickstart.md` e `tasks.md`.
-- [ ] T102 Registrar no handoff que a Feature 003 altera apenas fluxo fisico/operacional de estoque e nao altera regime financeiro em `specs/003-mercadorias-transito/quickstart.md`.
+- [X] T097 Atualizar `specs/003-mercadorias-transito/quickstart.md` com resultados finais dos cenarios executados.
+- [X] T098 Conferir que `specs/003-mercadorias-transito/contracts/compras-transito-api.md` continua refletindo todos os endpoints implementados.
+- [X] T099 Conferir que `specs/003-mercadorias-transito/data-model.md` continua refletindo entidades, status, migration legada e `CompraItemId` nullable.
+- [X] T100 Conferir que `specs/003-mercadorias-transito/plan.md` continua consistente com custo medio, dashboard financeiro, atomicidade e compras legadas.
+- [X] T101 Executar analise cruzada final entre `spec.md`, `plan.md`, `data-model.md`, `contracts/compras-transito-api.md`, `quickstart.md` e `tasks.md`.
+- [X] T102 Registrar no handoff que a Feature 003 altera apenas fluxo fisico/operacional de estoque e nao altera regime financeiro em `specs/003-mercadorias-transito/quickstart.md`.
 
 **Checkpoint**: Feature pronta para implementacao/validacao completa conforme Constituicao 2.0.0.
 
@@ -216,4 +216,4 @@
 - Nao criar campo fixo de estoque.
 - Backend centraliza validacoes de quantidade, status, recebimento, perda e custo medio.
 - `CompraItemId` em `EstoqueMovimentacao` e nullable por compatibilidade; novas entradas por recebimento operacional devem preencher o campo.
-- Recebimentos `Legado/Migrado` sao criados apenas pela migration de compatibilidade e nao geram nova movimentacao de estoque.
+- Recebimentos `LegadoMigrado` sao criados apenas pela migration de compatibilidade e nao geram nova movimentacao de estoque.
