@@ -21,6 +21,8 @@ public static class DependencyInjection
         services.AddScoped<IFornecedorRepository, Amani.ImportadosERP.Infra.Data.Repositories.FornecedorRepository>();
         services.AddScoped<ICategoriaRepository, Amani.ImportadosERP.Infra.Data.Repositories.CategoriaRepository>();
         services.AddScoped<ICompraRepository, Amani.ImportadosERP.Infra.Data.Repositories.CompraRepository>();
+        services.AddScoped<ICompraItemRecebimentoRepository, Amani.ImportadosERP.Infra.Data.Repositories.CompraItemRecebimentoRepository>();
+        services.AddScoped<ICompraItemPerdaRepository, Amani.ImportadosERP.Infra.Data.Repositories.CompraItemPerdaRepository>();
         services.AddScoped<IVendaRepository, Amani.ImportadosERP.Infra.Data.Repositories.VendaRepository>();
         services.AddScoped<IDespesaRepository, Amani.ImportadosERP.Infra.Data.Repositories.DespesaRepository>();
         services.AddScoped<IEstoqueMovimentacaoRepository, Amani.ImportadosERP.Infra.Data.Repositories.EstoqueMovimentacaoRepository>();
@@ -28,6 +30,7 @@ public static class DependencyInjection
         services.AddScoped<ICustoProdutoRepository, Amani.ImportadosERP.Infra.Data.Repositories.CustoProdutoRepository>();
         services.AddScoped<IContaReceberRepository, Amani.ImportadosERP.Infra.Data.Repositories.ContaReceberRepository>();
         services.AddScoped<IEventoFinanceiroRepository, Amani.ImportadosERP.Infra.Data.Repositories.EventoFinanceiroRepository>();
+        services.AddScoped<IUnitOfWork, Amani.ImportadosERP.Infra.Data.Repositories.UnitOfWork>();
 
         // Services
         services.AddScoped<Amani.ImportadosERP.Application.Services.ClienteService>();

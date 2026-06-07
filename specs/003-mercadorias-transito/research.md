@@ -64,26 +64,44 @@ recebimento, perda, finalizacao ou cancelamento.
 - Calcular status sempre por consulta: rejeitado para status como `Cancelada` e
   `Finalizada`, que sao decisoes operacionais e nao apenas resultado numerico.
 
-## Decision: Compras existentes serao migradas como resolvidas
+## Decision: Compras existentes serao migradas com recebimentos legados
 
 **Rationale**: Antes da Feature 003, compras ja geravam entrada automatica.
 Marcar compras existentes como `Recebida` preserva o historico antigo e impede
-que elas aparecam incorretamente como mercadorias em transito.
+que elas aparecam incorretamente como mercadorias em transito. Criar um
+recebimento `LegadoMigrado` por item, sem nova movimentacao de estoque, mantem
+`QuantidadeRecebida` e `QuantidadePendente` consistentes com o status.
 
 **Alternatives considered**:
 
-- Criar recebimentos retroativos para todas as compras antigas: rejeitado por
-  risco de duplicar efeitos historicos e por exigir inferencia operacional que
-  nao existia.
+- Criar recebimentos retroativos operacionais para todas as compras antigas:
+  rejeitado por risco de duplicar efeitos historicos. A alternativa aceita e
+  recebimento `LegadoMigrado`, sem nova movimentacao.
+- Apenas tratar compras migradas como recebidas por regra de consulta: rejeitado
+  porque deixaria status e quantidades calculadas divergentes.
 - Marcar todas como `EmTransito`: rejeitado porque conflita com entradas de
   estoque ja existentes.
+
+## Decision: Movimentacoes antigas mantem rastreio por compra e produto
+
+**Rationale**: Movimentacoes antigas nao possuem `CompraItemId`, mas possuem
+`CompraId` e `ProdutoId`. `CompraItemId` deve ser nullable para preservar esse
+historico. Novas entradas por recebimento devem preencher `CompraItemId`.
+
+**Alternatives considered**:
+
+- Preencher `CompraItemId` retroativamente por inferencia: rejeitado porque pode
+  ser ambiguo em bases com dados inconsistentes ou compras antigas alteradas.
+- Tornar `CompraItemId` obrigatorio: rejeitado porque quebraria movimentacoes de
+  inventario inicial, venda e historico antigo.
 
 ## Decision: Custo medio deve considerar entradas reais
 
 **Rationale**: Depois da mudanca, entradas de compra so ocorrem em recebimentos
 confirmados. O custo medio deve usar `EstoqueMovimentacao` de `Entrada` gerada
 por recebimento e `InventarioInicial` com valor unitario, conforme Constituicao
-2.0.0.
+2.0.0. Compra criada sem recebimento, perda, extravio e avaria nao entram no
+custo medio.
 
 **Alternatives considered**:
 
@@ -91,6 +109,33 @@ por recebimento e `InventarioInicial` com valor unitario, conforme Constituicao
   mercadorias nao recebidas e perdas.
 - Calcular custo medio por valor manual no produto: rejeitado por violar
   historico operacional.
+
+## Decision: Dashboard financeiro permanece por compra registrada
+
+**Rationale**: A Feature 003 altera o regime fisico/operacional de estoque, nao
+o regime financeiro. O dashboard financeiro existente deve continuar
+considerando compras registradas como impacto financeiro imediato. Recebimentos
+e perdas nao criam novo contrato financeiro nesta feature.
+
+**Alternatives considered**:
+
+- Mudar dashboard para considerar apenas recebimentos: rejeitado por alterar o
+  regime financeiro fora do escopo.
+- Remover compras em transito do financeiro: rejeitado porque compra registrada
+  continua representando compromisso/aquisicao financeira.
+
+## Decision: Recebimento e perda exigem transacao
+
+**Rationale**: Recebimento operacional cria evento historico, movimentacao de
+estoque e atualizacao de status. Perda cria evento historico, rastreabilidade de
+prejuizo e atualizacao de status. Cada caso de uso deve ser atomico para evitar
+historico parcial.
+
+**Alternatives considered**:
+
+- Persistir cada parte em chamadas separadas de repository sem transacao:
+  rejeitado porque pode criar recebimento sem estoque, estoque sem recebimento
+  ou status divergente.
 
 ## Decision: Sem novas dependencias
 

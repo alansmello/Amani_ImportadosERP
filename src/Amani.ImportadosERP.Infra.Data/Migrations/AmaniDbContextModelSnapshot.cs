@@ -128,6 +128,13 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Property<Guid>("FornecedorId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasDefaultValue("Criada");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -178,6 +185,110 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.HasIndex("CompraId");
 
                     b.ToTable("compra_items", (string)null);
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemPerda", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataPerda")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("Observacao")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("ProdutoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompraId");
+
+                    b.HasIndex("CompraItemId");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("compra_item_perdas", (string)null);
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemRecebimento", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataRecebimento")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("EstoqueMovimentacaoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Observacao")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Origem")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<Guid>("ProdutoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("ValorUnitario")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompraId");
+
+                    b.HasIndex("CompraItemId");
+
+                    b.HasIndex("EstoqueMovimentacaoId")
+                        .IsUnique();
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("compra_item_recebimentos", (string)null);
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ContaReceber", b =>
@@ -262,6 +373,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Property<Guid?>("CompraId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CompraItemId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -290,6 +404,8 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompraId");
+
+                    b.HasIndex("CompraItemId");
 
                     b.HasIndex("VendaId");
 
@@ -522,6 +638,51 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Navigation("Compra");
                 });
 
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemPerda", b =>
+                {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.Compra", "Compra")
+                        .WithMany("Perdas")
+                        .HasForeignKey("CompraId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraItem", "CompraItem")
+                        .WithMany("Perdas")
+                        .HasForeignKey("CompraItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Compra");
+
+                    b.Navigation("CompraItem");
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemRecebimento", b =>
+                {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.Compra", "Compra")
+                        .WithMany("Recebimentos")
+                        .HasForeignKey("CompraId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraItem", "CompraItem")
+                        .WithMany("Recebimentos")
+                        .HasForeignKey("CompraItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.EstoqueMovimentacao", "EstoqueMovimentacao")
+                        .WithOne()
+                        .HasForeignKey("Amani.ImportadosERP.Domain.Entities.CompraItemRecebimento", "EstoqueMovimentacaoId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Compra");
+
+                    b.Navigation("CompraItem");
+
+                    b.Navigation("EstoqueMovimentacao");
+                });
+
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ContaReceber", b =>
                 {
                     b.HasOne("Amani.ImportadosERP.Domain.Entities.Cliente", null)
@@ -551,10 +712,17 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .HasForeignKey("CompraId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraItem", "CompraItem")
+                        .WithMany()
+                        .HasForeignKey("CompraItemId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Amani.ImportadosERP.Domain.Entities.Venda", null)
                         .WithMany()
                         .HasForeignKey("VendaId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("CompraItem");
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.PagamentoRecebido", b =>
@@ -594,6 +762,17 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.Compra", b =>
                 {
                     b.Navigation("Items");
+
+                    b.Navigation("Perdas");
+
+                    b.Navigation("Recebimentos");
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItem", b =>
+                {
+                    b.Navigation("Perdas");
+
+                    b.Navigation("Recebimentos");
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ContaReceber", b =>
