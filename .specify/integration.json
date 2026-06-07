@@ -2,14 +2,19 @@
   "version": "0.9.5.dev0",
   "integration_state_schema": 1,
   "installed_integrations": [
-    "codex"
+    "codex",
+    "cursor-agent"
   ],
   "integration_settings": {
     "codex": {
       "script": "ps",
       "invoke_separator": "-"
+    },
+    "cursor-agent": {
+      "script": "ps",
+      "invoke_separator": "-"
     }
   },
-  "integration": "codex",
-  "default_integration": "codex"
+  "integration": "cursor-agent",
+  "default_integration": "cursor-agent"
 }
