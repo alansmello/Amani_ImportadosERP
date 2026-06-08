@@ -100,15 +100,15 @@
 
 ### Implementation for User Story 3
 
-- [ ] T035 [P] [US3] Create `RankingProdutoDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/RankingProdutoDto.cs`
-- [ ] T036 [P] [US3] Create `ObterDashboardRankingsQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardRankingsQuery.cs`
-- [ ] T037 [US3] Add ranking method signatures for most sold, most profitable, highest stock, and lowest stock in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardRankingRepository.cs`
-- [ ] T038 [US3] Implement most-sold ranking with stable tie-breaks in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardRankingRepository.cs`
-- [ ] T039 [US3] Implement most-profitable ranking with average-cost and missing-cost warnings in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardRankingRepository.cs`
-- [ ] T040 [US3] Implement highest-stock and lowest-stock rankings from stock movements in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardRankingRepository.cs`
-- [ ] T041 [US3] Implement `ObterDashboardRankingsQueryHandler` with limit handling and filter normalization in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardRankingsQueryHandler.cs`
-- [ ] T042 [US3] Add `GET /api/dashboard-gerencial/rankings` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
-- [ ] T043 [US3] Register `IDashboardRankingRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T035 [P] [US3] Create `RankingProdutoDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/RankingProdutoDto.cs`
+- [X] T036 [P] [US3] Create `ObterDashboardRankingsQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardRankingsQuery.cs`
+- [X] T037 [US3] Add ranking method signatures for most sold, most profitable, highest stock, and lowest stock in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardRankingRepository.cs`
+- [X] T038 [US3] Implement most-sold ranking with stable tie-breaks in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardRankingRepository.cs`
+- [X] T039 [US3] Implement most-profitable ranking with average-cost and missing-cost warnings in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardRankingRepository.cs`
+- [X] T040 [US3] Implement highest-stock and lowest-stock rankings from stock movements in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardRankingRepository.cs`
+- [X] T041 [US3] Implement `ObterDashboardRankingsQueryHandler` with limit handling and filter normalization in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardRankingsQueryHandler.cs`
+- [X] T042 [US3] Add `GET /api/dashboard-gerencial/rankings` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
+- [X] T043 [US3] Register `IDashboardRankingRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
 - [ ] T044 [US3] Validate US3 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 3 is functional and independently testable.

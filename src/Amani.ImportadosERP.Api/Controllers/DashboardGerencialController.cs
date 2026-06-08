@@ -72,4 +72,35 @@ public class DashboardGerencialController : ControllerBase
             });
         }
     }
+
+    [HttpGet("rankings")]
+    public async Task<IActionResult> GetRankings(
+        [FromQuery] DateTime? dataInicial,
+        [FromQuery] DateTime? dataFinal,
+        [FromQuery] int? mes,
+        [FromQuery] int? ano,
+        [FromQuery] int? limiteRankings)
+    {
+        try
+        {
+            var result = await _mediator.Send(new ObterDashboardRankingsQuery
+            {
+                DataInicial = dataInicial,
+                DataFinal = dataFinal,
+                Mes = mes,
+                Ano = ano,
+                LimiteRankings = limiteRankings
+            });
+
+            return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                erro = "Filtro invalido",
+                detalhes = new[] { ex.Message }
+            });
+        }
+    }
 }
