@@ -18,10 +18,10 @@
 
 **Purpose**: Prepare the feature file structure and align with the existing Clean Architecture layout.
 
-- [ ] T001 Review approved dashboard plan, contract, and quickstart before implementation in `specs/004-dashboards-gerenciais/plan.md`, `specs/004-dashboards-gerenciais/contracts/dashboard-gerencial-api.md`, and `specs/004-dashboards-gerenciais/quickstart.md`
-- [ ] T002 [P] Review existing MediatR query conventions in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardFinanceiroQueryHandler.cs` and `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardQueryHandler.cs`
-- [ ] T003 [P] Review existing aggregate repository conventions in `src/Amani.ImportadosERP.Infra.Data/Repositories/CustoProdutoRepository.cs` and `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueConsultaRepository.cs`
-- [ ] T004 Review current financial dashboard compatibility behavior in `src/Amani.ImportadosERP.Api/Controllers/DashboardFinanceiroController.cs`
+- [X] T001 Review approved dashboard plan, contract, and quickstart before implementation in `specs/004-dashboards-gerenciais/plan.md`, `specs/004-dashboards-gerenciais/contracts/dashboard-gerencial-api.md`, and `specs/004-dashboards-gerenciais/quickstart.md`
+- [X] T002 [P] Review existing MediatR query conventions in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardFinanceiroQueryHandler.cs` and `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardQueryHandler.cs`
+- [X] T003 [P] Review existing aggregate repository conventions in `src/Amani.ImportadosERP.Infra.Data/Repositories/CustoProdutoRepository.cs` and `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueConsultaRepository.cs`
+- [X] T004 Review current financial dashboard compatibility behavior in `src/Amani.ImportadosERP.Api/Controllers/DashboardFinanceiroController.cs`
 
 ---
 
@@ -31,17 +31,17 @@
 
 **CRITICAL**: No user story work should begin until this phase is complete.
 
-- [ ] T005 Create `DashboardFiltroDto`, `DashboardFiltroAplicadoDto`, and filter enum/value fields in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardFiltroDto.cs`
-- [ ] T006 [P] Create shared `AvisoDadoIncompletoDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/AvisoDadoIncompletoDto.cs`
-- [ ] T007 [P] Create shared `IndicadorGerencialDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/IndicadorGerencialDto.cs`
-- [ ] T008 Implement dashboard filter normalization and validation in `src/Amani.ImportadosERP.Application/Services/DashboardFiltroService.cs`
-- [ ] T009 Create `IDashboardFinanceiroRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardFinanceiroRepository.cs`
-- [ ] T010 [P] Create `IDashboardOperacionalRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardOperacionalRepository.cs`
-- [ ] T011 [P] Create `IDashboardRankingRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardRankingRepository.cs`
-- [ ] T012 [P] Create `IDashboardAlertaRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardAlertaRepository.cs`
-- [ ] T013 [P] Create `IDashboardGraficoRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardGraficoRepository.cs`
-- [ ] T014 Register `DashboardFiltroService` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
-- [ ] T015 Validate constitution gates for dashboards in `specs/004-dashboards-gerenciais/tasks.md`: stock by movements, purchases in transit, receipts, losses without stock entry, sales stock validation, average cost from real entries, DTOs, Repository Pattern, no AutoMapper, backend-owned rules
+- [X] T005 Create `DashboardFiltroDto`, `DashboardFiltroAplicadoDto`, and filter enum/value fields in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardFiltroDto.cs`
+- [X] T006 [P] Create shared `AvisoDadoIncompletoDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/AvisoDadoIncompletoDto.cs`
+- [X] T007 [P] Create shared `IndicadorGerencialDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/IndicadorGerencialDto.cs`
+- [X] T008 Implement dashboard filter normalization and validation in `src/Amani.ImportadosERP.Application/Services/DashboardFiltroService.cs`
+- [X] T009 Create `IDashboardFinanceiroRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardFinanceiroRepository.cs`
+- [X] T010 [P] Create `IDashboardOperacionalRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardOperacionalRepository.cs`
+- [X] T011 [P] Create `IDashboardRankingRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardRankingRepository.cs`
+- [X] T012 [P] Create `IDashboardAlertaRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardAlertaRepository.cs`
+- [X] T013 [P] Create `IDashboardGraficoRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardGraficoRepository.cs`
+- [X] T014 Register `DashboardFiltroService` in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T015 Validate constitution gates for dashboards in `specs/004-dashboards-gerenciais/tasks.md`: stock by movements, purchases in transit, receipts, losses without stock entry, sales stock validation, average cost from real entries, DTOs, Repository Pattern, no AutoMapper, backend-owned rules
 
 **Checkpoint**: Shared DTOs, filter rules, and repository contracts exist; user story implementation can start.
 
@@ -55,14 +55,14 @@
 
 ### Implementation for User Story 1
 
-- [ ] T016 [P] [US1] Create `DashboardFinanceiroGerencialDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardFinanceiroGerencialDto.cs`
-- [ ] T017 [P] [US1] Create `ObterDashboardFinanceiroGerencialQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardFinanceiroGerencialQuery.cs`
-- [ ] T018 [US1] Implement aggregate financial query methods for revenue, purchases, expenses, receivables, received values, and missing-cost data in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardFinanceiroRepository.cs`
-- [ ] T019 [US1] Implement `DashboardFinanceiroRepository` aggregations in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardFinanceiroRepository.cs`
-- [ ] T020 [US1] Implement `ObterDashboardFinanceiroGerencialQueryHandler` with filter normalization, formulas, and incomplete-cost warnings in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardFinanceiroGerencialQueryHandler.cs`
-- [ ] T021 [US1] Add `GET /api/dashboard-gerencial/financeiro` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
-- [ ] T022 [US1] Preserve compatibility or delegate old financial dashboard behavior in `src/Amani.ImportadosERP.Api/Controllers/DashboardFinanceiroController.cs`
-- [ ] T023 [US1] Register `IDashboardFinanceiroRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T016 [P] [US1] Create `DashboardFinanceiroGerencialDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardFinanceiroGerencialDto.cs`
+- [X] T017 [P] [US1] Create `ObterDashboardFinanceiroGerencialQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardFinanceiroGerencialQuery.cs`
+- [X] T018 [US1] Implement aggregate financial query methods for revenue, purchases, expenses, receivables, received values, and missing-cost data in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardFinanceiroRepository.cs`
+- [X] T019 [US1] Implement `DashboardFinanceiroRepository` aggregations in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardFinanceiroRepository.cs`
+- [X] T020 [US1] Implement `ObterDashboardFinanceiroGerencialQueryHandler` with filter normalization, formulas, and incomplete-cost warnings in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardFinanceiroGerencialQueryHandler.cs`
+- [X] T021 [US1] Add `GET /api/dashboard-gerencial/financeiro` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
+- [X] T022 [US1] Preserve compatibility or delegate old financial dashboard behavior in `src/Amani.ImportadosERP.Api/Controllers/DashboardFinanceiroController.cs`
+- [X] T023 [US1] Register `IDashboardFinanceiroRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
 - [ ] T024 [US1] Validate US1 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 1 is functional and independently testable.

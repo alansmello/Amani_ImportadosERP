@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.AddScoped<ICustoProdutoRepository, Amani.ImportadosERP.Infra.Data.Repositories.CustoProdutoRepository>();
         services.AddScoped<IContaReceberRepository, Amani.ImportadosERP.Infra.Data.Repositories.ContaReceberRepository>();
         services.AddScoped<IEventoFinanceiroRepository, Amani.ImportadosERP.Infra.Data.Repositories.EventoFinanceiroRepository>();
+        services.AddScoped<IDashboardFinanceiroRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardFinanceiroRepository>();
         services.AddScoped<IUnitOfWork, Amani.ImportadosERP.Infra.Data.Repositories.UnitOfWork>();
 
         // Services
@@ -40,6 +41,7 @@ public static class DependencyInjection
         services.AddScoped<Amani.ImportadosERP.Application.Services.ImplantacaoService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.CompraService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.VendaService>();
+        services.AddScoped<Amani.ImportadosERP.Application.Services.DashboardFiltroService>();
 
         // MediatR
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Amani.ImportadosERP.Application.Queries.ObterListaVendasQuery).Assembly));
