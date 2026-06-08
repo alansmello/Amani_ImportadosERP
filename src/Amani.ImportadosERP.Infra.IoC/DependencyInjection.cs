@@ -31,6 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IContaReceberRepository, Amani.ImportadosERP.Infra.Data.Repositories.ContaReceberRepository>();
         services.AddScoped<IEventoFinanceiroRepository, Amani.ImportadosERP.Infra.Data.Repositories.EventoFinanceiroRepository>();
         services.AddScoped<IDashboardFinanceiroRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardFinanceiroRepository>();
+        services.AddScoped<IDashboardOperacionalRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardOperacionalRepository>();
         services.AddScoped<IUnitOfWork, Amani.ImportadosERP.Infra.Data.Repositories.UnitOfWork>();
 
         // Services

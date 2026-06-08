@@ -43,4 +43,33 @@ public class DashboardGerencialController : ControllerBase
             });
         }
     }
+
+    [HttpGet("operacional")]
+    public async Task<IActionResult> GetOperacional(
+        [FromQuery] DateTime? dataInicial,
+        [FromQuery] DateTime? dataFinal,
+        [FromQuery] int? mes,
+        [FromQuery] int? ano)
+    {
+        try
+        {
+            var result = await _mediator.Send(new ObterDashboardOperacionalQuery
+            {
+                DataInicial = dataInicial,
+                DataFinal = dataFinal,
+                Mes = mes,
+                Ano = ano
+            });
+
+            return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                erro = "Filtro invalido",
+                detalhes = new[] { ex.Message }
+            });
+        }
+    }
 }

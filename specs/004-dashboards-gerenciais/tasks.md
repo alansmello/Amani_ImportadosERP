@@ -77,15 +77,15 @@
 
 ### Implementation for User Story 2
 
-- [ ] T025 [P] [US2] Create `DashboardOperacionalDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardOperacionalDto.cs`
-- [ ] T026 [P] [US2] Create `ObterDashboardOperacionalQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardOperacionalQuery.cs`
-- [ ] T027 [US2] Add operational aggregate method signatures for product count, stock total, goods in transit, open purchases, pending products, losses, sales count, and purchase count in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardOperacionalRepository.cs`
-- [ ] T028 [US2] Implement stock-by-movements and product count aggregations in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
-- [ ] T029 [US2] Implement goods-in-transit, open-purchase, pending-product, and loss aggregations from purchases, receipts, and losses in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
-- [ ] T030 [US2] Implement sales and purchase event counts with period filtering in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
-- [ ] T031 [US2] Implement `ObterDashboardOperacionalQueryHandler` with filter normalization and operational formulas in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardOperacionalQueryHandler.cs`
-- [ ] T032 [US2] Add `GET /api/dashboard-gerencial/operacional` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
-- [ ] T033 [US2] Register `IDashboardOperacionalRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T025 [P] [US2] Create `DashboardOperacionalDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardOperacionalDto.cs`
+- [X] T026 [P] [US2] Create `ObterDashboardOperacionalQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardOperacionalQuery.cs`
+- [X] T027 [US2] Add operational aggregate method signatures for product count, stock total, goods in transit, open purchases, pending products, losses, sales count, and purchase count in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardOperacionalRepository.cs`
+- [X] T028 [US2] Implement stock-by-movements and product count aggregations in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
+- [X] T029 [US2] Implement goods-in-transit, open-purchase, pending-product, and loss aggregations from purchases, receipts, and losses in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
+- [X] T030 [US2] Implement sales and purchase event counts with period filtering in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
+- [X] T031 [US2] Implement `ObterDashboardOperacionalQueryHandler` with filter normalization and operational formulas in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardOperacionalQueryHandler.cs`
+- [X] T032 [US2] Add `GET /api/dashboard-gerencial/operacional` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
+- [X] T033 [US2] Register `IDashboardOperacionalRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
 - [ ] T034 [US2] Validate US2 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 2 is functional and independently testable.
