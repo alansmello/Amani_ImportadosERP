@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IDashboardFinanceiroRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardFinanceiroRepository>();
         services.AddScoped<IDashboardOperacionalRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardOperacionalRepository>();
         services.AddScoped<IDashboardRankingRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardRankingRepository>();
+        services.AddScoped<IDashboardAlertaRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardAlertaRepository>();
         services.AddScoped<IUnitOfWork, Amani.ImportadosERP.Infra.Data.Repositories.UnitOfWork>();
 
         // Services

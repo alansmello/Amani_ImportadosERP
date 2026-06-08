@@ -103,4 +103,35 @@ public class DashboardGerencialController : ControllerBase
             });
         }
     }
+
+    [HttpGet("alertas")]
+    public async Task<IActionResult> GetAlertas(
+        [FromQuery] DateTime? dataInicial,
+        [FromQuery] DateTime? dataFinal,
+        [FromQuery] int? mes,
+        [FromQuery] int? ano,
+        [FromQuery] string[] tiposAlertas)
+    {
+        try
+        {
+            var result = await _mediator.Send(new ObterDashboardAlertasQuery
+            {
+                DataInicial = dataInicial,
+                DataFinal = dataFinal,
+                Mes = mes,
+                Ano = ano,
+                TiposAlertas = tiposAlertas
+            });
+
+            return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                erro = "Filtro invalido",
+                detalhes = new[] { ex.Message }
+            });
+        }
+    }
 }

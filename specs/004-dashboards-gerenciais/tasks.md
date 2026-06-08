@@ -123,16 +123,16 @@
 
 ### Implementation for User Story 4
 
-- [ ] T045 [P] [US4] Create `AlertaGerencialDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/AlertaGerencialDto.cs`
-- [ ] T046 [P] [US4] Create `ObterDashboardAlertasQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardAlertasQuery.cs`
-- [ ] T047 [US4] Add alert method signatures for low stock, no movement, old transit, and recurring losses in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardAlertaRepository.cs`
-- [ ] T048 [US4] Implement low-stock alert calculation from stock movements in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`
-- [ ] T049 [US4] Implement no-movement alert calculation from stock, sale, purchase, receipt, and loss events in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`
-- [ ] T050 [US4] Implement old goods-in-transit alert calculation from pending purchases in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`
-- [ ] T051 [US4] Implement recurring-loss alert calculation from item losses in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`
-- [ ] T052 [US4] Implement `ObterDashboardAlertasQueryHandler` with default threshold handling and filter normalization in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardAlertasQueryHandler.cs`
-- [ ] T053 [US4] Add `GET /api/dashboard-gerencial/alertas` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
-- [ ] T054 [US4] Register `IDashboardAlertaRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T045 [P] [US4] Create `AlertaGerencialDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/AlertaGerencialDto.cs`
+- [X] T046 [P] [US4] Create `ObterDashboardAlertasQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardAlertasQuery.cs`
+- [X] T047 [US4] Add alert method signatures for low stock, no movement, old transit, and recurring losses in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardAlertaRepository.cs`
+- [X] T048 [US4] Implement low-stock alert calculation from stock movements in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`
+- [X] T049 [US4] Implement no-movement alert calculation from stock, sale, purchase, receipt, and loss events in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`
+- [X] T050 [US4] Implement old goods-in-transit alert calculation from pending purchases in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`
+- [X] T051 [US4] Implement recurring-loss alert calculation from item losses in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`
+- [X] T052 [US4] Implement `ObterDashboardAlertasQueryHandler` with default threshold handling and filter normalization in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardAlertasQueryHandler.cs`
+- [X] T053 [US4] Add `GET /api/dashboard-gerencial/alertas` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
+- [X] T054 [US4] Register `IDashboardAlertaRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
 - [ ] T055 [US4] Validate US4 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 4 is functional and independently testable.
