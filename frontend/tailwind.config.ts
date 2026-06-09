@@ -16,26 +16,33 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0B0B0F",
-        surface: "#13131A",
-        "surface-light": "#1C1C25",
+        background: "var(--amani-background)",
+        surface: "var(--amani-surface)",
+        "surface-light": "var(--amani-surface-light)",
+        border: "var(--amani-border)",
+        focus: "var(--amani-focus)",
         primary: {
-          DEFAULT: "#7C3AED",
-          hover: "#8B5CF6"
+          DEFAULT: "var(--amani-primary)",
+          hover: "var(--amani-primary-hover)"
         },
-        accent: "#A855F7",
-        "text-primary": "#F8FAFC",
-        "text-secondary": "#94A3B8",
-        success: "#22C55E",
-        warning: "#F59E0B",
-        danger: "#EF4444",
-        info: "#3B82F6"
+        accent: "var(--amani-accent)",
+        "text-primary": "var(--amani-text-primary)",
+        "text-secondary": "var(--amani-text-secondary)",
+        success: "var(--amani-success)",
+        warning: "var(--amani-warning)",
+        danger: "var(--amani-danger)",
+        info: "var(--amani-info)"
       },
       borderRadius: {
-        amani: "8px"
+        amani: "var(--amani-radius)"
       },
       maxWidth: {
         content: "1440px"
+      },
+      screens: {
+        smartphone: "390px",
+        tablet: "768px",
+        desktop: "1024px"
       }
     }
   },

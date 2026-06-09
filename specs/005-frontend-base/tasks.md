@@ -42,21 +42,23 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T008 Define the Amani design tokens, Inter font wiring, dark-only CSS variables, and global base styles in `frontend/src/app/globals.css`
-- [ ] T009 Mirror Amani design tokens and responsive breakpoints in `frontend/tailwind.config.ts`
-- [ ] T010 [P] Create shared class name utility in `frontend/src/lib/cn.ts`
-- [ ] T011 [P] Create design token exports for documentation and component reuse in `frontend/src/lib/design-tokens.ts`
-- [ ] T012 [P] Create navigation, API, and UI state TypeScript contracts in `frontend/src/types/navigation.ts`, `frontend/src/types/api.ts`, and `frontend/src/types/ui-state.ts`
-- [ ] T013 Create route constants for Dashboard, Clientes, Produtos, Compras, Vendas, Estoque, Financeiro, and Configuracoes in `frontend/src/config/routes.ts`
-- [ ] T014 Create centralized navigation configuration for desktop sidebar, mobile bottom navigation, and More grouping in `frontend/src/config/navigation.ts`
-- [ ] T015 Configure TanStack Query client defaults in `frontend/src/lib/query-client.ts`
-- [ ] T016 Create global app providers for TanStack Query and future providers in `frontend/src/providers/app-providers.tsx`
-- [ ] T017 Create normalized API error helpers in `frontend/src/services/errors.ts`
-- [ ] T018 Create base HTTP API client wrapper without business endpoints in `frontend/src/services/api-client.ts`
-- [ ] T019 Wire Inter, global providers, dark-only metadata, and the application shell placeholder in `frontend/src/app/layout.tsx`
-- [ ] T020 Validate constitution gates for this feature in `specs/005-frontend-base/tasks.md`: no frontend business rules, no CRUDs, no real dashboard data, Mobile First, official Design System, backend-owned metrics, and simplicity
+- [X] T008 Define the Amani design tokens, Inter font wiring, dark-only CSS variables, and global base styles in `frontend/src/app/globals.css`
+- [X] T009 Mirror Amani design tokens and responsive breakpoints in `frontend/tailwind.config.ts`
+- [X] T010 [P] Create shared class name utility in `frontend/src/lib/cn.ts`
+- [X] T011 [P] Create design token exports for documentation and component reuse in `frontend/src/lib/design-tokens.ts`
+- [X] T012 [P] Create navigation, API, and UI state TypeScript contracts in `frontend/src/types/navigation.ts`, `frontend/src/types/api.ts`, and `frontend/src/types/ui-state.ts`
+- [X] T013 Create route constants for Dashboard, Clientes, Produtos, Compras, Vendas, Estoque, Financeiro, and Configuracoes in `frontend/src/config/routes.ts`
+- [X] T014 Create centralized navigation configuration for desktop sidebar, mobile bottom navigation, and More grouping in `frontend/src/config/navigation.ts`
+- [X] T015 Configure TanStack Query client defaults in `frontend/src/lib/query-client.ts`
+- [X] T016 Create global app providers for TanStack Query and future providers in `frontend/src/providers/app-providers.tsx`
+- [X] T017 Create normalized API error helpers in `frontend/src/services/errors.ts`
+- [X] T018 Create base HTTP API client wrapper without business endpoints in `frontend/src/services/api-client.ts`
+- [X] T019 Wire Inter, global providers, dark-only metadata, and the application shell placeholder in `frontend/src/app/layout.tsx`
+- [X] T020 Validate constitution gates for this feature in `specs/005-frontend-base/tasks.md`: no frontend business rules, no CRUDs, no real dashboard data, Mobile First, official Design System, backend-owned metrics, and simplicity
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel.
+
+**Phase 2 Constitution Validation**: PASS. The foundational frontend code defines visual tokens, route/navigation contracts, providers, and network primitives only. It does not implement CRUDs, authentication, real dashboard data, external integrations, or frontend calculations for stock, cost, profit, rankings, alerts, financial indicators, or operational metrics. Backend-owned rules remain behind future API contracts.
 
 ---
 
