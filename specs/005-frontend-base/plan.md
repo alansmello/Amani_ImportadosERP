@@ -141,6 +141,7 @@ frontend/
 |   |   |   |-- app-shell.tsx
 |   |   |   |-- desktop-sidebar.tsx
 |   |   |   |-- mobile-bottom-nav.tsx
+|   |   |   |-- page-container.tsx
 |   |   |   `-- page-header.tsx
 |   |   |-- dashboard/
 |   |   |   |-- dashboard-placeholder.tsx
@@ -183,7 +184,7 @@ frontend/
 
 - **Smartphone**: `< 768px`. Experiencia principal. Bottom navigation fixa, conteudo em coluna unica, alvo de toque minimo de 44px, densidade compacta e headers curtos.
 - **Tablet**: `768px - 1023px`. Experiencia intermediaria. Conteudo pode usar duas colunas quando ajudar leitura; navegacao deve evitar duplicidade e pode usar sidebar compacta ou bottom navigation estendida conforme implementacao visual mais estavel.
-- **Desktop**: `>= 1024px`. Sidebar persistente, conteudo com largura maxima legivel, grids de dashboard em multiplas colunas e top area operacional discreta.
+- **Desktop**: `>= 1024px`. Sidebar persistente, conteudo com largura maxima legivel de `1440px` no `PageContainer`, grids de dashboard em multiplas colunas e top area operacional discreta.
 
 ### Navigation Behavior
 
@@ -214,8 +215,9 @@ Os tokens devem ser definidos em `tailwind.config.ts`, refletidos em variaveis C
 
 ### Component Rules
 
-- **Tipografia**: usar fonte sans-serif moderna do stack do sistema inicialmente; hierarquia compacta, sem hero text, com titulos de pagina objetivos e headings internos menores.
+- **Tipografia**: usar Inter como fonte oficial do frontend Amani ERP; hierarquia compacta, sem hero text, com titulos de pagina objetivos e headings internos menores.
 - **Espacamento**: base 4px/8px; telas mobile usam padding de 16px; tablet 20px; desktop 24px a 32px conforme area.
+- **PageContainer**: componente padrao para limitar largura e aplicar padding responsivo nas paginas; desktop usa largura maxima de `1440px`, centralizada dentro da area util apos a sidebar.
 - **Bordas**: radius padrao 8px ou menos; bordas sutis com contraste suficiente contra superficies escuras.
 - **Cards**: apenas para itens ou blocos repetidos; evitar cards dentro de cards; usar superficies planas e densidade operacional.
 - **Botoes**: variantes primary, secondary, ghost, destructive futuro; altura adequada a toque; icone Lucide quando representar acao conhecida.
