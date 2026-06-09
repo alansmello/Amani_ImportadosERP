@@ -147,15 +147,15 @@
 
 ### Implementation for User Story 5
 
-- [ ] T056 [P] [US5] Create `SerieGraficaDto` and `PontoGraficoDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/SerieGraficaDto.cs`
-- [ ] T057 [P] [US5] Create `ObterDashboardGraficosQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardGraficosQuery.cs`
-- [ ] T058 [US5] Add graph method signatures for revenue, profit, purchases, expenses by category, and stock evolution in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardGraficoRepository.cs`
-- [ ] T059 [US5] Implement revenue and profit time series using the same financial formulas as US1 in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardGraficoRepository.cs`
-- [ ] T060 [US5] Implement purchases time series and expenses-by-category series in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardGraficoRepository.cs`
-- [ ] T061 [US5] Implement stock evolution series from accumulated stock movements in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardGraficoRepository.cs`
-- [ ] T062 [US5] Implement `ObterDashboardGraficosQueryHandler` with graph type filtering and filter normalization in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardGraficosQueryHandler.cs`
-- [ ] T063 [US5] Add `GET /api/dashboard-gerencial/graficos` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
-- [ ] T064 [US5] Register `IDashboardGraficoRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T056 [P] [US5] Create `SerieGraficaDto` and `PontoGraficoDto` in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/SerieGraficaDto.cs`
+- [X] T057 [P] [US5] Create `ObterDashboardGraficosQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardGraficosQuery.cs`
+- [X] T058 [US5] Add graph method signatures for revenue, profit, purchases, expenses by category, and stock evolution in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardGraficoRepository.cs`
+- [X] T059 [US5] Implement revenue and profit time series using the same financial formulas as US1 in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardGraficoRepository.cs`
+- [X] T060 [US5] Implement purchases time series and expenses-by-category series in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardGraficoRepository.cs`
+- [X] T061 [US5] Implement stock evolution series from accumulated stock movements in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardGraficoRepository.cs`
+- [X] T062 [US5] Implement `ObterDashboardGraficosQueryHandler` with graph type filtering and filter normalization in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardGraficosQueryHandler.cs`
+- [X] T063 [US5] Add `GET /api/dashboard-gerencial/graficos` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
+- [X] T064 [US5] Register `IDashboardGraficoRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
 - [ ] T065 [US5] Validate US5 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 5 is functional and independently testable.

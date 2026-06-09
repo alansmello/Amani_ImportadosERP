@@ -28,7 +28,10 @@ public sealed class ObterDashboardFinanceiroQueryHandler : IRequestHandler<Obter
         var totalAReceber = await _repository.ObterContasReceberAbertasAsync(filtros.DataReferencia);
         var totalCompras = await _repository.ObterTotalComprasAsync(filtros.DataInicial, filtros.DataFinal);
         var totalDespesas = await _repository.ObterTotalDespesasAsync(filtros.DataInicial, filtros.DataFinal);
-        var itensVendidos = await _repository.ObterItensVendidosComCustoAsync(filtros.DataInicial, filtros.DataFinal);
+        var itensVendidos = await _repository.ObterItensVendidosComCustoAsync(
+            filtros.DataInicial,
+            filtros.DataFinal,
+            filtros.DataReferencia);
 
         var custoCalculavel = itensVendidos
             .Where(i => i.CustoMedio.HasValue)

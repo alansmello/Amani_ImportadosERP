@@ -26,7 +26,10 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
         var filtros = _filtroService.Normalizar(request.ToFiltro());
 
         var receitaTotal = await _repository.ObterReceitaTotalAsync(filtros.DataInicial, filtros.DataFinal);
-        var itensVendidos = await _repository.ObterItensVendidosComCustoAsync(filtros.DataInicial, filtros.DataFinal);
+        var itensVendidos = await _repository.ObterItensVendidosComCustoAsync(
+            filtros.DataInicial,
+            filtros.DataFinal,
+            filtros.DataReferencia);
         var totalCompras = await _repository.ObterTotalComprasAsync(filtros.DataInicial, filtros.DataFinal);
         var totalDespesas = await _repository.ObterTotalDespesasAsync(filtros.DataInicial, filtros.DataFinal);
         var contasReceberAbertas = await _repository.ObterContasReceberAbertasAsync(filtros.DataReferencia);

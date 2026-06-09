@@ -24,7 +24,10 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
         return vendas.Sum(v => v.Total());
     }
 
-    public async Task<IReadOnlyCollection<DashboardVendaCustoDto>> ObterItensVendidosComCustoAsync(DateTime dataInicial, DateTime dataFinal)
+    public async Task<IReadOnlyCollection<DashboardVendaCustoDto>> ObterItensVendidosComCustoAsync(
+        DateTime dataInicial,
+        DateTime dataFinal,
+        DateTime dataReferencia)
     {
         var vendas = await VendasConfirmadasNoPeriodo(dataInicial, dataFinal)
             .Include(v => v.Items)
@@ -36,7 +39,7 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
             .Distinct()
             .ToList();
 
-        var custos = await ObterCustosMediosAsync(produtoIds);
+        var custos = await ObterCustosMediosAsync(produtoIds, dataReferencia);
 
         return vendas
             .SelectMany(v => v.Items.Select(item => new DashboardVendaCustoDto
@@ -104,7 +107,9 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
                 && v.DataVenda <= dataFinal);
     }
 
-    private async Task<IReadOnlyDictionary<Guid, decimal>> ObterCustosMediosAsync(IReadOnlyCollection<Guid> produtoIds)
+    private async Task<IReadOnlyDictionary<Guid, decimal>> ObterCustosMediosAsync(
+        IReadOnlyCollection<Guid> produtoIds,
+        DateTime dataReferencia)
     {
         if (!produtoIds.Any())
         {
@@ -114,6 +119,7 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
         var entradas = await _db.EstoqueMovimentacoes
             .AsNoTracking()
             .Where(m => produtoIds.Contains(m.ProdutoId)
+                && m.Data <= dataReferencia
                 && m.ValorUnitario != null
                 && (m.Tipo == TipoMovimentacao.InventarioInicial
                     || (m.Tipo == TipoMovimentacao.Entrada && m.CompraItemId != null)))
