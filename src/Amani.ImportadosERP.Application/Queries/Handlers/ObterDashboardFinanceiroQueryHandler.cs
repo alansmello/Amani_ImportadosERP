@@ -1,47 +1,49 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Amani.ImportadosERP.Application.DTOs;
 using Amani.ImportadosERP.Application.Interfaces;
+using Amani.ImportadosERP.Application.Queries;
+using Amani.ImportadosERP.Application.Services;
 
 namespace Amani.ImportadosERP.Application.Queries.Handlers;
 
 public sealed class ObterDashboardFinanceiroQueryHandler : IRequestHandler<ObterDashboardFinanceiroQuery, DashboardFinanceiroDto>
 {
-    private readonly IContaReceberRepository _contaRepository;
-    private readonly ICompraRepository _compraRepository;
-    private readonly IDespesaRepository _despesaRepository;
+    private readonly IDashboardFinanceiroRepository _repository;
+    private readonly DashboardFiltroService _filtroService;
 
     public ObterDashboardFinanceiroQueryHandler(
-        IContaReceberRepository contaRepository,
-        ICompraRepository compraRepository,
-        IDespesaRepository despesaRepository)
+        IDashboardFinanceiroRepository repository,
+        DashboardFiltroService filtroService)
     {
-        _contaRepository = contaRepository;
-        _compraRepository = compraRepository;
-        _despesaRepository = despesaRepository;
+        _repository = repository;
+        _filtroService = filtroService;
     }
 
     public async Task<DashboardFinanceiroDto> Handle(ObterDashboardFinanceiroQuery request, CancellationToken cancellationToken)
     {
-        var contas = await _contaRepository.ObterTodasAsync();
-        var compras = await _compraRepository.ObterTodasAsync();
-        var despesas = await _despesaRepository.ObterComFiltrosAsync(null, null, null);
+        var filtros = _filtroService.Normalizar(new());
+        var totalRecebido = await _repository.ObterValoresRecebidosAsync(filtros.DataInicial, filtros.DataFinal);
+        var totalAReceber = await _repository.ObterContasReceberAbertasAsync(filtros.DataReferencia);
+        var totalCompras = await _repository.ObterTotalComprasAsync(filtros.DataInicial, filtros.DataFinal);
+        var totalDespesas = await _repository.ObterTotalDespesasAsync(filtros.DataInicial, filtros.DataFinal);
+        var itensVendidos = await _repository.ObterItensVendidosComCustoAsync(
+            filtros.DataInicial,
+            filtros.DataFinal,
+            filtros.DataReferencia);
 
-        var totalRecebido = contas
-            .SelectMany(c => c.Pagamentos)
-            .Sum(p => p.Valor);
+        var custoCalculavel = itensVendidos
+            .Where(i => i.CustoMedio.HasValue)
+            .Sum(i => i.CustoMedio!.Value * i.Quantidade);
 
-        var totalAReceber = contas
-            .Select(c => c.Valor - c.Pagamentos.Sum(p => p.Valor))
-            .Sum();
+        var receitaCalculavel = itensVendidos
+            .Where(i => i.CustoMedio.HasValue)
+            .Sum(i => i.ValorLiquidoItem);
 
-        var totalCompras = compras.Sum(c => c.Total());
-        var totalDespesas = despesas.Sum(d => d.Valor);
-
+        var receitaTotal = await _repository.ObterReceitaTotalAsync(filtros.DataInicial, filtros.DataFinal);
         var caixaAtual = totalRecebido - totalCompras - totalDespesas;
-        var lucroReal = totalRecebido - totalCompras - totalDespesas;
+        var lucroReal = receitaCalculavel - custoCalculavel;
 
         return new DashboardFinanceiroDto
         {
