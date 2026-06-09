@@ -1,22 +1,27 @@
 <!--
 Sync Impact Report
-Version change: 1.0.0 -> 2.0.0
+Version change: 2.0.0 -> 2.1.0
 Modified principles:
-- III. Compras, Vendas, Custos e Lucro -> III. Compras, Recebimentos, Vendas, Custos e Lucro
+- VI. Backend como Fonte das Regras de Negocio -> VI. Backend como Fonte das Regras de Negocio
+- VII. Simplicidade Antes de Sofisticacao -> XII. Simplicidade Antes de Sofisticacao
 Added sections:
-- None
+- VII. Analytics e Escalabilidade
+- VIII. Mobile First
+- IX. Experiencia Operacional
+- X. Priorizacao do Produto
+- XI. Identidade Visual
 Removed sections:
 - None
 Templates requiring updates:
-- updated: .specify/templates/plan-template.md (Constitution Check now lists ERP-specific gates, including purchases in transit)
-- reviewed: .specify/templates/spec-template.md (no change required; requirements/scenarios already capture feature-specific constraints)
-- updated: .specify/templates/tasks-template.md (tasks now require constitution-driven validation tasks)
+- updated: .specify/templates/plan-template.md (Constitution Check includes analytics, mobile, UX, product priority, and visual identity gates)
+- updated: .specify/templates/spec-template.md (assumptions now preserve Mobile First instead of treating mobile as optional by default)
+- updated: .specify/templates/tasks-template.md (foundational and regression tasks include analytics, mobile, UX, priority, and design-system validation)
 - not present: .specify/templates/commands/*.md
 Runtime guidance requiring updates:
-- reviewed: README.md (no outdated purchase/stock rule found)
-- reviewed: AGENTS.md (points to current Spec Kit plan only; no constitutional rule duplicated)
+- reviewed: README.md (no constitutional rule duplicated; no change required)
+- reviewed: AGENTS.md (points to current Spec Kit plan only; no change required)
 Governance change:
-- Feature 003 changes the previous purchase rule: purchase registration no longer creates stock entry automatically.
+- Minor version bump because new principles and mandatory planning checks were added without removing or redefining existing principles incompatibly.
 Follow-up TODOs:
 - None
 -->
@@ -98,14 +103,90 @@ financeiro e dashboards confiaveis.
 ### VI. Backend como Fonte das Regras de Negocio
 
 O backend MUST centralizar todas as regras de negocio, validacoes operacionais,
-calculos de estoque, custo medio, lucro e consistencia financeira. Frontend
-React/Next.js MAY validar formularios para melhorar a experiencia do usuario,
-mas MUST NOT ser a fonte de verdade para regras do ERP.
+calculos de estoque, custo medio, lucro e consistencia financeira. Formulas
+gerenciais, rankings, indicadores, alertas, metricas e calculos de dashboards
+MUST pertencer ao backend.
 
-Rationale: regras no backend mantem consistencia entre API, frontend e futuras
-integracoes com marketplaces.
+Dashboards, frontends, aplicacoes moveis e futuras integracoes MUST consumir os
+resultados calculados pelo backend. Frontend React/Next.js MAY validar
+formularios para melhorar a experiencia do usuario, mas MUST NOT recalcular
+metricas criticas do ERP nem ser a fonte de verdade para regras gerenciais.
 
-### VII. Simplicidade Antes de Sofisticacao
+Rationale: regras no backend mantem consistencia entre Dashboard, API, frontend,
+aplicacoes moveis e futuras integracoes com marketplaces.
+
+### VII. Analytics e Escalabilidade
+
+Dashboards e relatorios MUST utilizar consultas agregadas sempre que a informacao
+puder ser calculada na persistencia ou em consultas especializadas. Dashboards
+MUST usar repositories especializados de leitura quando cruzarem historico,
+rankings, series temporais, alertas ou metricas consolidadas.
+
+Metricas MUST NOT depender do carregamento integral do historico operacional ou
+financeiro em memoria. Solucoes analiticas MUST privilegiar escalabilidade desde
+o inicio, usando filtros, limites, agregacoes e contratos de resposta adequados
+ao volume de dados esperado.
+
+Rationale: relatorios e dashboards crescem com o negocio; consultas agregadas
+evitam degradacao de performance e preservam a operacao diaria do ERP.
+
+### VIII. Mobile First
+
+O frontend oficial MUST ser concebido com abordagem Mobile First. Toda
+funcionalidade de interface MUST funcionar adequadamente em smartphone, tablet e
+desktop, respeitando responsividade como requisito obrigatorio.
+
+A experiencia mobile MUST ser tratada como critica para a operacao do negocio,
+especialmente em viagens, compras, vendas e acompanhamento operacional. Planos
+de frontend MUST declarar como a funcionalidade sera validada em telas moveis e
+desktop.
+
+Rationale: os usuarios principais operam o ERP frequentemente fora de uma mesa de
+trabalho, e a interface precisa sustentar esse fluxo real.
+
+### IX. Experiencia Operacional
+
+O sistema MUST priorizar rapidez operacional em fluxos de uso frequente.
+Funcionalidades recorrentes MUST exigir o menor numero razoavel de interacoes,
+sem sacrificar validacoes obrigatorias, rastreabilidade ou seguranca dos dados.
+
+Simplicidade operacional MUST prevalecer sobre complexidade visual. Telas,
+formularios e dashboards MUST ser otimizados para uso diario, leitura rapida,
+decisao objetiva e continuidade do trabalho.
+
+Rationale: o ERP existe para acelerar a operacao diaria; interfaces lentas ou
+visualmente complexas reduzem confiabilidade e adesao.
+
+### X. Priorizacao do Produto
+
+Funcionalidades operacionais MUST ter prioridade sobre funcionalidades
+analiticas, integracoes externas e recursos avancados quando houver conflito de
+escopo, prazo ou capacidade. O sistema MUST buscar utilizacao em producao o mais
+cedo possivel, preservando os principios constitucionais.
+
+A priorizacao futura MUST favorecer compras, recebimentos, estoque, vendas e
+controle financeiro antes de recursos avancados. Recursos analiticos,
+integracoes e automacoes SHOULD ser planejados quando reforcarem esses fluxos ou
+quando os fluxos operacionais essenciais ja estiverem utilizaveis.
+
+Rationale: o valor inicial do ERP depende de operar o negocio com seguranca antes
+de ampliar sofisticacao analitica ou integracoes.
+
+### XI. Identidade Visual
+
+O Amani ERP MUST possuir uma identidade visual oficial para o frontend. O
+frontend MUST seguir um Design System unico e consistente entre telas,
+componentes, estados, responsividade e interacoes.
+
+O Dark Theme MUST ser a identidade visual principal. A experiencia visual MUST
+transmitir imagem de SaaS moderno, profissional e premium. Codigos de cor,
+tokens e detalhes visuais especificos MUST ficar no Design System oficial, nao
+nesta Constituicao.
+
+Rationale: uma identidade consistente aumenta confianca, reduz retrabalho e
+mantem o produto coeso conforme novas telas forem adicionadas.
+
+### XII. Simplicidade Antes de Sofisticacao
 
 Solucoes MUST priorizar simplicidade, legibilidade e manutencao antes de
 sofisticacao tecnica. Novas abstracoes, padroes ou dependencias MUST existir
@@ -133,13 +214,16 @@ Constituicao. Planos de implementacao MUST incluir uma verificacao explicita par
 estoque por movimentacoes, mercadorias em transito quando compras forem afetadas,
 inventario inicial quando saldo inicial for afetado, vendas com validacao de
 estoque fisico, custo medio por entradas reais, DTOs, ausencia de regra de
-negocio em controllers, Fluent API, Repository Pattern e preservacao de
-historico operacional.
+negocio em controllers, Fluent API, Repository Pattern, preservacao de historico
+operacional, backend como fonte de metricas criticas, analytics por consultas
+agregadas, Mobile First, experiencia operacional, priorizacao de produto,
+identidade visual e simplicidade.
 
 Tarefas futuras MUST separar trabalho de Domain, Application, Infra.Data, API e
 Frontend quando a funcionalidade atravessar essas camadas. Mudancas que afetem
-compras, recebimentos, perdas, vendas, estoque, custo medio, lucro ou financeiro
-MUST incluir cenarios de validacao para os fluxos operacionais afetados.
+compras, recebimentos, perdas, vendas, estoque, custo medio, lucro, financeiro,
+dashboards, relatorios, frontend ou fluxos operacionais MUST incluir cenarios de
+validacao para os fluxos afetados.
 
 ## Governance
 
@@ -147,10 +231,14 @@ Esta Constituicao prevalece sobre especificacoes, planos, tarefas e decisoes
 tecnicas conflitantes. Em caso de conflito, a especificacao ou plano MUST ser
 ajustado antes da implementacao.
 
-A versao 2.0.0 registra uma mudanca de governanca da regra anterior de compras:
+A versao 2.0.0 registrou uma mudanca de governanca da regra anterior de compras:
 compra registrada deixou de ser evento automatico de entrada de estoque. A regra
 constitucional vigente e que compra cria mercadoria em transito, e somente
 recebimento fisico confirmado cria entrada de estoque.
+
+A versao 2.1.0 expande a governanca para dashboards, analytics, Mobile First,
+experiencia operacional, priorizacao de produto e identidade visual oficial, sem
+alteracao incompatavel dos principios existentes.
 
 Alteracoes nesta Constituicao MUST ser documentadas com:
 
@@ -170,4 +258,4 @@ Toda revisao de funcionalidade MUST verificar conformidade com esta Constituicao
 Violacoes so podem ser aceitas quando documentadas no plano com justificativa,
 alternativa mais simples rejeitada e risco operacional conhecido.
 
-**Version**: 2.0.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-07
+**Version**: 2.1.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-09
