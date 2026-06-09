@@ -26,13 +26,13 @@
 
 **Purpose**: Initialize the frontend project and required toolchain without implementing user stories.
 
-- [ ] T001 Create the Next.js App Router TypeScript project in `frontend/`
-- [ ] T002 Install runtime dependencies Next.js, React, Tailwind CSS, Shadcn/UI prerequisites, TanStack Query, Lucide React, and utility dependencies in `frontend/package.json`
-- [ ] T003 [P] Configure TypeScript compiler settings and path aliases in `frontend/tsconfig.json`
-- [ ] T004 [P] Configure Next.js settings in `frontend/next.config.ts`
-- [ ] T005 [P] Configure Tailwind CSS and PostCSS entry files in `frontend/tailwind.config.ts` and `frontend/postcss.config.mjs`
-- [ ] T006 [P] Configure Shadcn/UI project metadata and aliases in `frontend/components.json`
-- [ ] T007 [P] Add npm scripts for `lint`, `typecheck`, `build`, and `dev` in `frontend/package.json`
+- [X] T001 Create the Next.js App Router TypeScript project in `frontend/`
+- [X] T002 Install runtime dependencies Next.js, React, Tailwind CSS, Shadcn/UI prerequisites, TanStack Query, Lucide React, and utility dependencies in `frontend/package.json`
+- [X] T003 [P] Configure TypeScript compiler settings and path aliases in `frontend/tsconfig.json`
+- [X] T004 [P] Configure Next.js settings in `frontend/next.config.ts`
+- [X] T005 [P] Configure Tailwind CSS and PostCSS entry files in `frontend/tailwind.config.ts` and `frontend/postcss.config.mjs`
+- [X] T006 [P] Configure Shadcn/UI project metadata and aliases in `frontend/components.json`
+- [X] T007 [P] Add npm scripts for `lint`, `typecheck`, `build`, and `dev` in `frontend/package.json`
 
 ---
 
