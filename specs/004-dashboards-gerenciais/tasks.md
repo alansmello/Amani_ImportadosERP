@@ -63,7 +63,7 @@
 - [X] T021 [US1] Add `GET /api/dashboard-gerencial/financeiro` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
 - [X] T022 [US1] Preserve compatibility or delegate old financial dashboard behavior in `src/Amani.ImportadosERP.Api/Controllers/DashboardFinanceiroController.cs`
 - [X] T023 [US1] Register `IDashboardFinanceiroRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
-- [ ] T024 [US1] Validate US1 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
+- [X] T024 [US1] Validate US1 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 1 is functional and independently testable.
 
@@ -86,7 +86,7 @@
 - [X] T031 [US2] Implement `ObterDashboardOperacionalQueryHandler` with filter normalization and operational formulas in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardOperacionalQueryHandler.cs`
 - [X] T032 [US2] Add `GET /api/dashboard-gerencial/operacional` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
 - [X] T033 [US2] Register `IDashboardOperacionalRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
-- [ ] T034 [US2] Validate US2 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
+- [X] T034 [US2] Validate US2 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 2 is functional and independently testable.
 
@@ -109,7 +109,7 @@
 - [X] T041 [US3] Implement `ObterDashboardRankingsQueryHandler` with limit handling and filter normalization in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardRankingsQueryHandler.cs`
 - [X] T042 [US3] Add `GET /api/dashboard-gerencial/rankings` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
 - [X] T043 [US3] Register `IDashboardRankingRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
-- [ ] T044 [US3] Validate US3 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
+- [X] T044 [US3] Validate US3 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 3 is functional and independently testable.
 
@@ -133,7 +133,7 @@
 - [X] T052 [US4] Implement `ObterDashboardAlertasQueryHandler` with default threshold handling and filter normalization in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardAlertasQueryHandler.cs`
 - [X] T053 [US4] Add `GET /api/dashboard-gerencial/alertas` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
 - [X] T054 [US4] Register `IDashboardAlertaRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
-- [ ] T055 [US4] Validate US4 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
+- [X] T055 [US4] Validate US4 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 4 is functional and independently testable.
 
@@ -156,7 +156,7 @@
 - [X] T062 [US5] Implement `ObterDashboardGraficosQueryHandler` with graph type filtering and filter normalization in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardGraficosQueryHandler.cs`
 - [X] T063 [US5] Add `GET /api/dashboard-gerencial/graficos` action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
 - [X] T064 [US5] Register `IDashboardGraficoRepository` implementation in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
-- [ ] T065 [US5] Validate US5 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
+- [X] T065 [US5] Validate US5 quickstart scenario against `specs/004-dashboards-gerenciais/quickstart.md`
 
 **Checkpoint**: User Story 5 is functional and independently testable.
 
@@ -166,11 +166,11 @@
 
 **Purpose**: Compose all completed sections into the optional consolidated endpoint and ensure shared response structure is consistent.
 
-- [ ] T066 Create `DashboardGerencialDto` consolidated response in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardGerencialDto.cs`
-- [ ] T067 Create `ObterDashboardGerencialQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardGerencialQuery.cs`
-- [ ] T068 Implement `ObterDashboardGerencialQueryHandler` composing financial, operational, rankings, alerts, graphs, filters, and warnings in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardGerencialQueryHandler.cs`
-- [ ] T069 Add `GET /api/dashboard-gerencial` consolidated action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
-- [ ] T070 Validate consolidated endpoint response structure against `specs/004-dashboards-gerenciais/contracts/dashboard-gerencial-api.md`
+- [X] T066 Create `DashboardGerencialDto` consolidated response in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardGerencialDto.cs`
+- [X] T067 Create `ObterDashboardGerencialQuery` in `src/Amani.ImportadosERP.Application/Queries/ObterDashboardGerencialQuery.cs`
+- [X] T068 Implement `ObterDashboardGerencialQueryHandler` composing financial, operational, rankings, alerts, graphs, filters, and warnings in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardGerencialQueryHandler.cs`
+- [X] T069 Add `GET /api/dashboard-gerencial` consolidated action to `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs`
+- [X] T070 Validate consolidated endpoint response structure against `specs/004-dashboards-gerenciais/contracts/dashboard-gerencial-api.md`
 
 ---
 
@@ -178,14 +178,14 @@
 
 **Purpose**: Final validation, regressions, and cleanup across all dashboard stories.
 
-- [ ] T071 Run `dotnet build` for `Amani_ImportadosERP.sln`
-- [ ] T072 Validate invalid-filter responses for date range, month, and year rules against `specs/004-dashboards-gerenciais/contracts/dashboard-gerencial-api.md`
-- [ ] T073 Validate period precedence behavior for `dataInicial/dataFinal` over `mes/ano` against `specs/004-dashboards-gerenciais/quickstart.md`
-- [ ] T074 Validate zero-data period responses for financial, operational, rankings, alerts, and graphs against `specs/004-dashboards-gerenciais/spec.md`
-- [ ] T075 Run regression validation for purchases in transit, partial receipts, losses without stock entry, stock by movements, sales stock validation, initial inventory, average cost, and financial dashboard behavior using `specs/003-mercadorias-transito/quickstart.md` and `specs/004-dashboards-gerenciais/quickstart.md`
-- [ ] T076 Review controllers for absence of business rules in `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs` and `src/Amani.ImportadosERP.Api/Controllers/DashboardFinanceiroController.cs`
-- [ ] T077 Review all dashboard DTO mappings for explicit manual mapping and no AutoMapper usage in `src/Amani.ImportadosERP.Application/Queries/Handlers/`
-- [ ] T078 Update feature implementation notes in `specs/004-dashboards-gerenciais/quickstart.md` if actual endpoint behavior differs from the approved contract
+- [X] T071 Run `dotnet build` for `Amani_ImportadosERP.sln`
+- [X] T072 Validate invalid-filter responses for date range, month, and year rules against `specs/004-dashboards-gerenciais/contracts/dashboard-gerencial-api.md`
+- [X] T073 Validate period precedence behavior for `dataInicial/dataFinal` over `mes/ano` against `specs/004-dashboards-gerenciais/quickstart.md`
+- [X] T074 Validate zero-data period responses for financial, operational, rankings, alerts, and graphs against `specs/004-dashboards-gerenciais/spec.md`
+- [X] T075 Run regression validation for purchases in transit, partial receipts, losses without stock entry, stock by movements, sales stock validation, initial inventory, average cost, and financial dashboard behavior using `specs/003-mercadorias-transito/quickstart.md` and `specs/004-dashboards-gerenciais/quickstart.md`
+- [X] T076 Review controllers for absence of business rules in `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs` and `src/Amani.ImportadosERP.Api/Controllers/DashboardFinanceiroController.cs`
+- [X] T077 Review all dashboard DTO mappings for explicit manual mapping and no AutoMapper usage in `src/Amani.ImportadosERP.Application/Queries/Handlers/`
+- [X] T078 Update feature implementation notes in `specs/004-dashboards-gerenciais/quickstart.md` if actual endpoint behavior differs from the approved contract
 
 ---
 

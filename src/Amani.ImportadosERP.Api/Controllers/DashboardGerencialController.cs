@@ -15,6 +15,41 @@ public class DashboardGerencialController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetConsolidado(
+        [FromQuery] DateTime? dataInicial,
+        [FromQuery] DateTime? dataFinal,
+        [FromQuery] int? mes,
+        [FromQuery] int? ano,
+        [FromQuery] int? limiteRankings,
+        [FromQuery] string[] tiposGraficos,
+        [FromQuery] string[] tiposAlertas)
+    {
+        try
+        {
+            var result = await _mediator.Send(new ObterDashboardGerencialQuery
+            {
+                DataInicial = dataInicial,
+                DataFinal = dataFinal,
+                Mes = mes,
+                Ano = ano,
+                LimiteRankings = limiteRankings,
+                TiposGraficos = tiposGraficos,
+                TiposAlertas = tiposAlertas
+            });
+
+            return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                erro = "Filtro invalido",
+                detalhes = new[] { ex.Message }
+            });
+        }
+    }
+
     [HttpGet("financeiro")]
     public async Task<IActionResult> GetFinanceiro(
         [FromQuery] DateTime? dataInicial,

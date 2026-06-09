@@ -68,6 +68,19 @@ Este guia descreve como validar a feature apos implementacao. Ele nao define cod
 3. Consultar com `dataInicial` posterior a `dataFinal`.
 4. Verificar erro de validacao claro e sem calculo parcial.
 
+### 7. Dashboard consolidado
+
+1. Consultar `GET /api/dashboard-gerencial?dataInicial=YYYY-MM-DD&dataFinal=YYYY-MM-DD&limiteRankings=N`.
+2. Verificar:
+   - Resposta contem os campos `filtrosAplicados`, `financeiro`, `operacional`, `rankings`, `alertas`, `graficos` e `avisos`.
+   - Valores de `financeiro.receitaTotal` e `financeiro.lucroTotal` sao identicos ao retorno de `GET /financeiro` com os mesmos filtros.
+   - Valores de `operacional.estoqueDisponivelTotal` e `operacional.mercadoriasEmTransitoQuantidade` sao identicos ao retorno de `GET /operacional`.
+   - `graficos` com `tipoGrafico=ReceitaPorPeriodo` tem `totalConsolidado` igual a `financeiro.receitaTotal`.
+   - `graficos` com `tipoGrafico=LucroPorPeriodo` tem `totalConsolidado` igual a `financeiro.lucroTotal`.
+   - `avisos` contem a uniao dos avisos de financeiro, rankings e graficos sem duplicatas estruturais.
+3. Consultar sem filtros e verificar `tipoFiltro=Padrao` com mes e ano correntes.
+4. Consultar com `limiteRankings=0` e verificar erro 400 com mensagem clara, sem chamada ao banco.
+
 ## Expected Documentation Links
 
 - Data model: [data-model.md](./data-model.md)
