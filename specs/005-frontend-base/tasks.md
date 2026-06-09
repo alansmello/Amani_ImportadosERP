@@ -91,20 +91,22 @@
 
 ### Implementation for User Story 2
 
-- [ ] T027 [P] [US2] Implement persistent desktop sidebar with all ERP modules and active state in `frontend/src/components/layout/desktop-sidebar.tsx`
-- [ ] T028 [P] [US2] Implement mobile bottom navigation with Dashboard, Vendas, Estoque, Compras, and Mais in `frontend/src/components/layout/mobile-bottom-nav.tsx`
-- [ ] T029 [P] [US2] Create reusable module placeholder page component in `frontend/src/components/states/empty-state.tsx`
-- [ ] T030 [P] [US2] Create Clientes placeholder route in `frontend/src/app/clientes/page.tsx`
-- [ ] T031 [P] [US2] Create Produtos placeholder route in `frontend/src/app/produtos/page.tsx`
-- [ ] T032 [P] [US2] Create Compras placeholder route in `frontend/src/app/compras/page.tsx`
-- [ ] T033 [P] [US2] Create Vendas placeholder route in `frontend/src/app/vendas/page.tsx`
-- [ ] T034 [P] [US2] Create Estoque placeholder route in `frontend/src/app/estoque/page.tsx`
-- [ ] T035 [P] [US2] Create Financeiro placeholder route in `frontend/src/app/financeiro/page.tsx`
-- [ ] T036 [P] [US2] Create Configuracoes placeholder route in `frontend/src/app/configuracoes/page.tsx`
-- [ ] T037 [US2] Integrate desktop and mobile navigation into `AppShell` in `frontend/src/components/layout/app-shell.tsx`
-- [ ] T038 [US2] Validate every route in `specs/005-frontend-base/contracts/frontend-foundation-contract.md` loads and shows correct navigation state
+- [X] T027 [P] [US2] Implement persistent desktop sidebar with all ERP modules and active state in `frontend/src/components/layout/desktop-sidebar.tsx`
+- [X] T028 [P] [US2] Implement mobile bottom navigation with Dashboard, Vendas, Estoque, Compras, and Mais in `frontend/src/components/layout/mobile-bottom-nav.tsx`
+- [X] T029 [P] [US2] Create reusable module placeholder page component in `frontend/src/components/states/empty-state.tsx`
+- [X] T030 [P] [US2] Create Clientes placeholder route in `frontend/src/app/clientes/page.tsx`
+- [X] T031 [P] [US2] Create Produtos placeholder route in `frontend/src/app/produtos/page.tsx`
+- [X] T032 [P] [US2] Create Compras placeholder route in `frontend/src/app/compras/page.tsx`
+- [X] T033 [P] [US2] Create Vendas placeholder route in `frontend/src/app/vendas/page.tsx`
+- [X] T034 [P] [US2] Create Estoque placeholder route in `frontend/src/app/estoque/page.tsx`
+- [X] T035 [P] [US2] Create Financeiro placeholder route in `frontend/src/app/financeiro/page.tsx`
+- [X] T036 [P] [US2] Create Configuracoes placeholder route in `frontend/src/app/configuracoes/page.tsx`
+- [X] T037 [US2] Integrate desktop and mobile navigation into `AppShell` in `frontend/src/components/layout/app-shell.tsx`
+- [X] T038 [US2] Validate every route in `specs/005-frontend-base/contracts/frontend-foundation-contract.md` loads and shows correct navigation state
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
+
+**US2 Validation Note**: Static implementation review confirms all contract routes exist, desktop sidebar includes all ERP modules, mobile bottom navigation includes Dashboard, Vendas, Estoque, Compras and Mais, active route state is implemented with `usePathname`, and module pages remain placeholders without CRUD operations.
 
 ---
 
