@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import { AppShell } from "@/components/layout/app-shell";
 import { AppProviders } from "@/providers/app-providers";
 
 import "./globals.css";
@@ -24,7 +25,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${inter.variable} dark`}>
       <body>
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+          <AppShell>{children}</AppShell>
+        </AppProviders>
       </body>
     </html>
   );

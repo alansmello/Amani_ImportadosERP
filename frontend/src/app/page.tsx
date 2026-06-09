@@ -1,8 +1,15 @@
+import { PageHeader } from "@/components/layout/page-header";
+
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-background px-4 py-6 text-text-primary">
-      <p className="text-sm text-text-secondary">Amani ERP</p>
-      <h1 className="mt-2 text-2xl font-semibold">Frontend em preparacao</h1>
+    <main className="space-y-6">
+      <PageHeader
+        title="Frontend em preparacao"
+        description="Base responsiva inicial do Amani ERP, pronta para receber navegacao, dashboard placeholder e modulos operacionais nas proximas fases."
+      />
+      <section className="rounded-amani border border-border bg-surface p-4 text-sm leading-6 text-text-secondary">
+        Shell responsivo ativo para smartphone, tablet e desktop.
+      </section>
     </main>
   );
 }
