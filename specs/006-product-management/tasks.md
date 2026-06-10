@@ -110,11 +110,11 @@
 
 ### Implementation for User Story 4
 
-- [ ] T032 [US4] Extend ProductForm to support edit mode and initial values in frontend/src/components/produtos/product-form.tsx
-- [ ] T033 [US4] Implement edit product route with product/support-list loading, error, and not-found states in frontend/src/app/produtos/[id]/editar/page.tsx
-- [ ] T034 [US4] Wire update mutation, success feedback, query invalidation, and post-save navigation in frontend/src/app/produtos/[id]/editar/page.tsx
-- [ ] T035 [US4] Preserve entered form values and display backend rejection messages on update failure in frontend/src/components/produtos/product-form.tsx
-- [ ] T036 [US4] Ensure edit payload sends only nome, precoVenda, custo, categoriaId, and nullable fornecedorId in frontend/src/components/produtos/product-form.tsx
+- [X] T032 [US4] Extend ProductForm to support edit mode and initial values in frontend/src/components/produtos/product-form.tsx
+- [X] T033 [US4] Implement edit product route with product/support-list loading, error, and not-found states in frontend/src/app/produtos/[id]/editar/page.tsx
+- [X] T034 [US4] Wire update mutation, success feedback, query invalidation, and post-save navigation in frontend/src/app/produtos/[id]/editar/page.tsx
+- [X] T035 [US4] Preserve entered form values and display backend rejection messages on update failure in frontend/src/components/produtos/product-form.tsx
+- [X] T036 [US4] Ensure edit payload sends only nome, precoVenda, custo, categoriaId, and nullable fornecedorId in frontend/src/components/produtos/product-form.tsx
 
 **Checkpoint**: All user stories are independently functional.
 

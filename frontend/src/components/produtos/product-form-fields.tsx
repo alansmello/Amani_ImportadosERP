@@ -154,7 +154,7 @@ export function ProductFormFields({
             className={cn(selectClassName)}
             value={values.fornecedorId}
             onChange={(event) => onChange("fornecedorId", event.target.value)}
-            disabled={disabled || suppliers.length === 0}
+            disabled={disabled}
             aria-invalid={Boolean(errors.fornecedorId)}
             aria-describedby={
               errors.fornecedorId ? "product-supplier-error" : undefined

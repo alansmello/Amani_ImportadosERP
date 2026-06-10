@@ -2,7 +2,7 @@
 
 import { LoaderCircle, Save } from "lucide-react";
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   ProductFormFields,
@@ -124,6 +124,12 @@ export function ProductForm({
   const [values, setValues] = useState<ProductFormValues>(initialValues);
   const [errors, setErrors] = useState<ProductFormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setValues(initialValues);
+    setErrors({});
+    setSubmitError(null);
+  }, [initialValues]);
 
   const isCreateMode = mode === "create";
   const title = isCreateMode ? "Cadastrar produto" : "Editar produto";
