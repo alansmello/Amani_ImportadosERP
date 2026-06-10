@@ -74,12 +74,12 @@
 
 ### Implementation for User Story 2
 
-- [ ] T022 [P] [US2] Create reusable product form fields with validation messages in frontend/src/components/produtos/product-form-fields.tsx
-- [ ] T023 [US2] Create product form component for create mode with controlled state and submit handling in frontend/src/components/produtos/product-form.tsx
-- [ ] T024 [US2] Implement create product route with PageHeader, support-list loading/error states, and ProductForm in frontend/src/app/produtos/novo/page.tsx
-- [ ] T025 [US2] Wire create mutation success handling, query invalidation, and navigation feedback in frontend/src/app/produtos/novo/page.tsx
-- [ ] T026 [US2] Handle empty categories as a blocking dependency and empty suppliers as optional in frontend/src/app/produtos/novo/page.tsx
-- [ ] T027 [US2] Ensure create payload sends only nome, precoVenda, custo, categoriaId, and nullable fornecedorId in frontend/src/components/produtos/product-form.tsx
+- [X] T022 [P] [US2] Create reusable product form fields with validation messages in frontend/src/components/produtos/product-form-fields.tsx
+- [X] T023 [US2] Create product form component for create mode with controlled state and submit handling in frontend/src/components/produtos/product-form.tsx
+- [X] T024 [US2] Implement create product route with PageHeader, support-list loading/error states, and ProductForm in frontend/src/app/produtos/novo/page.tsx
+- [X] T025 [US2] Wire create mutation success handling, query invalidation, and navigation feedback in frontend/src/app/produtos/novo/page.tsx
+- [X] T026 [US2] Handle empty categories as a blocking dependency and empty suppliers as optional in frontend/src/app/produtos/novo/page.tsx
+- [X] T027 [US2] Ensure create payload sends only nome, precoVenda, custo, categoriaId, and nullable fornecedorId in frontend/src/components/produtos/product-form.tsx
 
 **Checkpoint**: User Stories 1 and 2 work independently without category/supplier CRUD.
 
