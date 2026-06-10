@@ -18,11 +18,11 @@
 
 **Purpose**: Confirm the existing frontend foundation and create the module folders without changing backend scope.
 
-- [ ] T001 Review existing frontend scripts and dependencies in frontend/package.json
-- [ ] T002 Review existing API client and QueryClient conventions in frontend/src/services/api-client.ts and frontend/src/lib/query-client.ts
-- [ ] T003 [P] Review reusable UI/state components in frontend/src/components/ui and frontend/src/components/states
-- [ ] T004 [P] Review current Produtos placeholder route in frontend/src/app/produtos/page.tsx
-- [ ] T005 Create Produtos module directories in frontend/src/components/produtos and frontend/src/app/produtos/[id]/editar
+- [X] T001 Review existing frontend scripts and dependencies in frontend/package.json
+- [X] T002 Review existing API client and QueryClient conventions in frontend/src/services/api-client.ts and frontend/src/lib/query-client.ts
+- [X] T003 [P] Review reusable UI/state components in frontend/src/components/ui and frontend/src/components/states
+- [X] T004 [P] Review current Produtos placeholder route in frontend/src/app/produtos/page.tsx
+- [X] T005 Create Produtos module directories in frontend/src/components/produtos and frontend/src/app/produtos/[id]/editar
 
 ---
 
