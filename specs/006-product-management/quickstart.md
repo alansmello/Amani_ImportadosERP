@@ -106,4 +106,7 @@ Expected result: content does not overlap, actions remain accessible, forms are 
 - No delete/inactivation UI exists.
 - No category/supplier CRUD exists.
 - No stock, profit, average cost or indicator calculation exists in frontend code.
+- Product lookup plus opening details completes within 30 seconds.
+- Valid product creation completes within 2 minutes.
+- Valid product editing completes within 2 minutes.
 - `npm run lint`, `npm run typecheck` and `npm run build` pass inside `frontend/`.

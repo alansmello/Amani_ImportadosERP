@@ -126,7 +126,7 @@
 
 - [ ] T037 Review all Produtos routes for Dark Only, Mobile First layout, touch targets, and no overlapping text in frontend/src/app/produtos
 - [ ] T038 Review user-facing labels, empty states, loading states, and error messages across frontend/src/app/produtos and frontend/src/components/produtos
-- [ ] T039 Run quickstart scenarios for product list, create, details, edit, not found, API failure, and responsive review from specs/006-product-management/quickstart.md
+- [ ] T039 Run quickstart scenarios for product list, create, details, edit, not found, API failure, SC-001/SC-002/SC-003 timing targets, and responsive review from specs/006-product-management/quickstart.md
 - [ ] T040 Run npm run lint in frontend/package.json
 - [ ] T041 Run npm run typecheck in frontend/package.json
 - [ ] T042 Run npm run build in frontend/package.json
