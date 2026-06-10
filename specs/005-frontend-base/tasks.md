@@ -118,16 +118,18 @@
 
 ### Implementation for User Story 3
 
-- [ ] T039 [P] [US3] Add Shadcn-compatible Button component themed with Amani tokens in `frontend/src/components/ui/button.tsx`
-- [ ] T040 [P] [US3] Add Shadcn-compatible Card component themed with Amani tokens and no nested-card assumptions in `frontend/src/components/ui/card.tsx`
-- [ ] T041 [P] [US3] Add Badge component variants for neutral, success, warning, danger, info, and accent in `frontend/src/components/ui/badge.tsx`
-- [ ] T042 [P] [US3] Add Input base component with focus, disabled, and error-ready states in `frontend/src/components/ui/input.tsx`
-- [ ] T043 [P] [US3] Add Dialog or modal base component without operational flows in `frontend/src/components/ui/dialog.tsx`
-- [ ] T044 [P] [US3] Add Table base styling for future compact operational tables in `frontend/src/components/ui/table.tsx`
-- [ ] T045 [US3] Apply Button, Card, Badge, and tokenized styles to navigation and placeholders in `frontend/src/components/layout/desktop-sidebar.tsx`, `frontend/src/components/layout/mobile-bottom-nav.tsx`, and `frontend/src/components/states/empty-state.tsx`
-- [ ] T046 [US3] Validate dark-only theme, Inter typography, contrast, focus, hover, active, and disabled states against `specs/005-frontend-base/contracts/frontend-foundation-contract.md`
+- [X] T039 [P] [US3] Add Shadcn-compatible Button component themed with Amani tokens in `frontend/src/components/ui/button.tsx`
+- [X] T040 [P] [US3] Add Shadcn-compatible Card component themed with Amani tokens and no nested-card assumptions in `frontend/src/components/ui/card.tsx`
+- [X] T041 [P] [US3] Add Badge component variants for neutral, success, warning, danger, info, and accent in `frontend/src/components/ui/badge.tsx`
+- [X] T042 [P] [US3] Add Input base component with focus, disabled, and error-ready states in `frontend/src/components/ui/input.tsx`
+- [X] T043 [P] [US3] Add Dialog or modal base component without operational flows in `frontend/src/components/ui/dialog.tsx`
+- [X] T044 [P] [US3] Add Table base styling for future compact operational tables in `frontend/src/components/ui/table.tsx`
+- [X] T045 [US3] Apply Button, Card, Badge, and tokenized styles to navigation and placeholders in `frontend/src/components/layout/desktop-sidebar.tsx`, `frontend/src/components/layout/mobile-bottom-nav.tsx`, and `frontend/src/components/states/empty-state.tsx`
+- [X] T046 [US3] Validate dark-only theme, Inter typography, contrast, focus, hover, active, and disabled states against `specs/005-frontend-base/contracts/frontend-foundation-contract.md`
 
 **Checkpoint**: User Stories 1, 2, and 3 provide a usable and visually consistent frontend foundation.
+
+**US3 Validation Note**: Static implementation review confirms Button, Card, Badge, Input, Dialog, and Table primitives use Amani Tailwind tokens and dark-only surfaces. Navigation and placeholders now consume base UI primitives, active/hover/focus/disabled states are tokenized, and no operational CRUDs, forms, backend calls, real metrics, authentication, or frontend business rules were added.
 
 ---
 

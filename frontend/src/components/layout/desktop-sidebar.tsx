@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 
 import { desktopNavigationItems } from "@/config/navigation";
 import { cn } from "@/lib/cn";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 function isActiveRoute(pathname: string, href: string) {
   if (href === "/") {
@@ -23,7 +25,10 @@ export function DesktopSidebar() {
       className="hidden min-h-screen w-64 shrink-0 border-r border-border bg-surface desktop:block"
     >
       <div className="px-5 py-6">
-        <p className="text-sm font-semibold text-text-primary">Amani ERP</p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm font-semibold text-text-primary">Amani ERP</p>
+          <Badge variant="accent">Base</Badge>
+        </div>
         <p className="mt-1 text-xs text-text-secondary">Operacao em preparacao</p>
       </div>
 
@@ -33,20 +38,21 @@ export function DesktopSidebar() {
           const active = isActiveRoute(pathname, item.href);
 
           return (
-            <Link
+            <Button
               key={item.id}
-              href={item.href}
+              asChild
+              variant={active ? "primary" : "ghost"}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex min-h-11 items-center gap-3 rounded-amani px-3 text-sm font-medium transition-colors",
-                active
-                  ? "bg-primary text-text-primary"
-                  : "text-text-secondary hover:bg-surface-light hover:text-text-primary"
+                "w-full justify-start px-3",
+                active ? "shadow-sm" : undefined
               )}
             >
-              <Icon className="h-4 w-4 shrink-0" aria-hidden />
-              <span className="truncate">{item.label}</span>
-            </Link>
+              <Link href={item.href}>
+                <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                <span className="truncate">{item.label}</span>
+              </Link>
+            </Button>
           );
         })}
       </nav>

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { mobileNavigationItems, moreNavigationItems } from "@/config/navigation";
 import { cn } from "@/lib/cn";
+import { Button } from "@/components/ui/button";
 
 function isActiveRoute(pathname: string, href: string) {
   if (href === "/") {
@@ -35,20 +36,21 @@ export function MobileBottomNav() {
               : isActiveRoute(pathname, item.href);
 
           return (
-            <Link
+            <Button
               key={item.id}
-              href={item.href}
+              asChild
+              variant={active ? "primary" : "ghost"}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex min-h-14 min-w-0 flex-col items-center justify-center gap-1 rounded-amani px-1 text-[11px] font-medium leading-none transition-colors",
-                active
-                  ? "bg-primary text-text-primary"
-                  : "text-text-secondary hover:bg-surface-light hover:text-text-primary"
+                "h-14 min-w-0 flex-col gap-1 px-1 text-[11px] leading-none",
+                active ? "shadow-sm" : undefined
               )}
             >
-              <Icon className="h-5 w-5 shrink-0" aria-hidden />
-              <span className="max-w-full truncate">{item.label}</span>
-            </Link>
+              <Link href={item.href}>
+                <Icon className="h-5 w-5 shrink-0" aria-hidden />
+                <span className="max-w-full truncate">{item.label}</span>
+              </Link>
+            </Button>
           );
         })}
       </div>

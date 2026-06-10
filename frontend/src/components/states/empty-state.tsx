@@ -1,6 +1,14 @@
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/cn";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
 
 type EmptyStateProps = {
   title: string;
@@ -11,21 +19,25 @@ type EmptyStateProps = {
 
 export function EmptyState({ title, description, icon, className }: EmptyStateProps) {
   return (
-    <section
-      className={cn(
-        "rounded-amani border border-border bg-surface p-5 text-text-primary",
-        className
-      )}
-    >
-      {icon ? (
-        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-amani border border-border bg-surface-light text-primary">
-          {icon}
-        </div>
-      ) : null}
-      <h2 className="text-base font-semibold">{title}</h2>
-      <p className="mt-2 max-w-2xl text-sm leading-6 text-text-secondary">
-        {description}
-      </p>
-    </section>
+    <Card className={className}>
+      <section>
+        <CardHeader className={cn(icon ? "pb-3" : undefined)}>
+          <div className="flex flex-wrap items-center gap-3">
+            {icon ? (
+              <div className="flex h-10 w-10 items-center justify-center rounded-amani border border-border bg-surface-light text-primary">
+                {icon}
+              </div>
+            ) : null}
+            <Badge variant="neutral">Placeholder</Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription className="mt-2 max-w-2xl">
+            {description}
+          </CardDescription>
+        </CardContent>
+      </section>
+    </Card>
   );
 }
