@@ -35,9 +35,11 @@ export function ErrorState({
           <AlertTriangle className="h-5 w-5" aria-hidden />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-w-0">
         <CardTitle>{title}</CardTitle>
-        <CardDescription className="mt-2">{description}</CardDescription>
+        <CardDescription className="mt-2 break-words">
+          {description}
+        </CardDescription>
       </CardContent>
       {onRetry ? (
         <CardFooter>

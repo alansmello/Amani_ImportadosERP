@@ -27,9 +27,11 @@ export function LoadingState({
           <LoaderCircle className="h-5 w-5 animate-spin" aria-hidden />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-w-0">
         <CardTitle>{title}</CardTitle>
-        <CardDescription className="mt-2">{description}</CardDescription>
+        <CardDescription className="mt-2 break-words">
+          {description}
+        </CardDescription>
       </CardContent>
     </Card>
   );

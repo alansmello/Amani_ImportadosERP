@@ -44,9 +44,9 @@ export function EmptyState({
             </Badge>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="min-w-0">
           <CardTitle>{title}</CardTitle>
-          <CardDescription className="mt-2 max-w-2xl">
+          <CardDescription className="mt-2 max-w-2xl break-words">
             {description}
           </CardDescription>
         </CardContent>
