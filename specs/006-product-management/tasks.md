@@ -32,17 +32,17 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T006 [P] Define Product and ProductPayload types in frontend/src/types/product.ts
-- [ ] T007 [P] Define Category type in frontend/src/types/category.ts
-- [ ] T008 [P] Define Supplier type in frontend/src/types/supplier.ts
-- [ ] T009 Implement productsService list/getById/create/update methods in frontend/src/services/products.ts
-- [ ] T010 [P] Implement categoriesService list method in frontend/src/services/categories.ts
-- [ ] T011 [P] Implement suppliersService list method in frontend/src/services/suppliers.ts
-- [ ] T012 Implement product query and mutation hooks in frontend/src/hooks/use-products.ts
-- [ ] T013 [P] Implement category query hook in frontend/src/hooks/use-categories.ts
-- [ ] T014 [P] Implement supplier query hook in frontend/src/hooks/use-suppliers.ts
-- [ ] T015 Verify no delete, inactivation, stock, profit, average cost, dashboard, category CRUD, or supplier CRUD API functions exist in frontend/src/services/products.ts, frontend/src/services/categories.ts, and frontend/src/services/suppliers.ts
-- [ ] T016 Validate constitution gates for Feature 006 in specs/006-product-management/plan.md
+- [X] T006 [P] Define Product and ProductPayload types in frontend/src/types/product.ts
+- [X] T007 [P] Define Category type in frontend/src/types/category.ts
+- [X] T008 [P] Define Supplier type in frontend/src/types/supplier.ts
+- [X] T009 Implement productsService list/getById/create/update methods in frontend/src/services/products.ts
+- [X] T010 [P] Implement categoriesService list method in frontend/src/services/categories.ts
+- [X] T011 [P] Implement suppliersService list method in frontend/src/services/suppliers.ts
+- [X] T012 Implement product query and mutation hooks in frontend/src/hooks/use-products.ts
+- [X] T013 [P] Implement category query hook in frontend/src/hooks/use-categories.ts
+- [X] T014 [P] Implement supplier query hook in frontend/src/hooks/use-suppliers.ts
+- [X] T015 Verify no delete, inactivation, stock, profit, average cost, dashboard, category CRUD, or supplier CRUD API functions exist in frontend/src/services/products.ts, frontend/src/services/categories.ts, and frontend/src/services/suppliers.ts
+- [X] T016 Validate constitution gates for Feature 006 in specs/006-product-management/plan.md
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in priority order or in parallel if staffed.
 
@@ -56,11 +56,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T017 [P] [US1] Create product action buttons without delete/inactivation in frontend/src/components/produtos/product-actions.tsx
-- [ ] T018 [P] [US1] Create responsive product table/list component in frontend/src/components/produtos/product-table.tsx
-- [ ] T019 [US1] Replace Produtos placeholder with real list, search, loading, error, empty, and actions in frontend/src/app/produtos/page.tsx
-- [ ] T020 [US1] Resolve category and supplier display names from support lists in frontend/src/app/produtos/page.tsx
-- [ ] T021 [US1] Ensure `/produtos` renders no mocked values and no remove/inactivate controls in frontend/src/app/produtos/page.tsx and frontend/src/components/produtos/product-actions.tsx
+- [X] T017 [P] [US1] Create product action buttons without delete/inactivation in frontend/src/components/produtos/product-actions.tsx
+- [X] T018 [P] [US1] Create responsive product table/list component in frontend/src/components/produtos/product-table.tsx
+- [X] T019 [US1] Replace Produtos placeholder with real list, search, loading, error, empty, and actions in frontend/src/app/produtos/page.tsx
+- [X] T020 [US1] Resolve category and supplier display names from support lists in frontend/src/app/produtos/page.tsx
+- [X] T021 [US1] Ensure `/produtos` renders no mocked values and no remove/inactivate controls in frontend/src/app/produtos/page.tsx and frontend/src/components/produtos/product-actions.tsx
 
 **Checkpoint**: User Story 1 is independently functional and testable as the MVP.
 
