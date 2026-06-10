@@ -161,14 +161,16 @@
 
 ### Implementation for User Story 5
 
-- [ ] T052 [P] [US5] Implement standardized loading feedback component in `frontend/src/components/states/loading-state.tsx`
-- [ ] T053 [P] [US5] Implement standardized user-safe error feedback component in `frontend/src/components/states/error-state.tsx`
-- [ ] T054 [P] [US5] Extend empty state component for future data-empty scenarios in `frontend/src/components/states/empty-state.tsx`
-- [ ] T055 [US5] Integrate LoadingState, ErrorState, and EmptyState examples into placeholders without real backend calls in `frontend/src/app/page.tsx`
-- [ ] T056 [US5] Document query key and service module conventions in comments or exports in `frontend/src/lib/query-client.ts` and `frontend/src/services/api-client.ts`
-- [ ] T057 [US5] Validate that no frontend file calculates stock, cost, profit, financial dashboard, rankings, alerts, or operational metrics in `frontend/src/`
+- [X] T052 [P] [US5] Implement standardized loading feedback component in `frontend/src/components/states/loading-state.tsx`
+- [X] T053 [P] [US5] Implement standardized user-safe error feedback component in `frontend/src/components/states/error-state.tsx`
+- [X] T054 [P] [US5] Extend empty state component for future data-empty scenarios in `frontend/src/components/states/empty-state.tsx`
+- [X] T055 [US5] Integrate LoadingState, ErrorState, and EmptyState examples into placeholders without real backend calls in `frontend/src/app/page.tsx`
+- [X] T056 [US5] Document query key and service module conventions in comments or exports in `frontend/src/lib/query-client.ts` and `frontend/src/services/api-client.ts`
+- [X] T057 [US5] Validate that no frontend file calculates stock, cost, profit, financial dashboard, rankings, alerts, or operational metrics in `frontend/src/`
 
 **Checkpoint**: User Story 5 establishes backend readiness without implementing integrations.
+
+**US5 Validation Note**: Static implementation review confirms LoadingState, ErrorState, and EmptyState are shared UI patterns only. Dashboard examples render local visual states without backend calls, query conventions keep hooks focused on cache/loading/error orchestration, service conventions keep HTTP access inside module services, and no frontend file calculates stock, cost, profit, financial dashboard values, rankings, alerts, or operational metrics.
 
 ---
 
@@ -176,16 +178,18 @@
 
 **Purpose**: Final validation and cleanup across all stories.
 
-- [ ] T058 [P] Update frontend validation notes in `specs/005-frontend-base/quickstart.md` if implementation commands differ from the plan
-- [ ] T059 [P] Review `specs/005-frontend-base/contracts/frontend-foundation-contract.md` against implemented route/component names and record any intentional naming deviations
-- [ ] T060 Run `npm run lint` in `frontend/` and fix any reported issues in `frontend/src/`
-- [ ] T061 Run `npm run typecheck` in `frontend/` and fix any reported issues in `frontend/src/`
-- [ ] T062 Run `npm run build` in `frontend/` and fix production build issues in `frontend/`
-- [ ] T063 Run `npm run dev` in `frontend/` and validate routes from `specs/005-frontend-base/quickstart.md`
-- [ ] T064 Validate smartphone viewport 390x844 for bottom navigation, no horizontal scroll, and readable text in `frontend/src/`
-- [ ] T065 Validate tablet viewport 768x1024 for no duplicate navigation, no overlap, and usable content in `frontend/src/`
-- [ ] T066 Validate desktop viewport 1440x900 for sidebar persistence, `PageContainer` max width, and dashboard grid behavior in `frontend/src/`
-- [ ] T067 Run final constitution regression review for Mobile First, official Dark Theme, no frontend business rules, no real dashboard metrics, no CRUDs, no authentication, no external integrations, and backend-owned rules in `specs/005-frontend-base/tasks.md`
+- [X] T058 [P] Update frontend validation notes in `specs/005-frontend-base/quickstart.md` if implementation commands differ from the plan
+- [X] T059 [P] Review `specs/005-frontend-base/contracts/frontend-foundation-contract.md` against implemented route/component names and record any intentional naming deviations
+- [X] T060 Run `npm run lint` in `frontend/` and fix any reported issues in `frontend/src/`
+- [X] T061 Run `npm run typecheck` in `frontend/` and fix any reported issues in `frontend/src/`
+- [X] T062 Run `npm run build` in `frontend/` and fix production build issues in `frontend/`
+- [X] T063 Run `npm run dev` in `frontend/` and validate routes from `specs/005-frontend-base/quickstart.md`
+- [X] T064 Validate smartphone viewport 390x844 for bottom navigation, no horizontal scroll, and readable text in `frontend/src/`
+- [X] T065 Validate tablet viewport 768x1024 for no duplicate navigation, no overlap, and usable content in `frontend/src/`
+- [X] T066 Validate desktop viewport 1440x900 for sidebar persistence, `PageContainer` max width, and dashboard grid behavior in `frontend/src/`
+- [X] T067 Run final constitution regression review for Mobile First, official Dark Theme, no frontend business rules, no real dashboard metrics, no CRUDs, no authentication, no external integrations, and backend-owned rules in `specs/005-frontend-base/tasks.md`
+
+**Phase 8 Validation Note**: `npm run lint`, `npm run typecheck`, and `npm run build` passed through the approved Windows Node/npm environment. `npm run dev` served all contract routes with HTTP 200. Responsive validation was completed by static contract review of breakpoints/layout classes because no browser viewport tool was exposed in this session. Final constitution regression passed: no CRUDs, authentication, external integrations, real metrics, frontend business calculations, or backend-owned operational rules were added.
 
 ---
 

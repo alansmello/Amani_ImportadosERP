@@ -3,6 +3,9 @@ import type { ApiRequestOptions } from "@/types/api";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
+// Convenção: componentes nao chamam este client diretamente quando existir um
+// service module. Cada modulo operacional deve encapsular endpoints em
+// `frontend/src/services/<modulo>.ts` antes de expor hooks de consulta.
 function buildUrl(path: string) {
   if (/^https?:\/\//i.test(path)) {
     return path;
@@ -22,6 +25,8 @@ async function parseResponse<TData>(response: Response): Promise<TData> {
   return (await response.json()) as TData;
 }
 
+// Este wrapper trata transporte HTTP e erros normalizados. Validacoes,
+// calculos, rankings, alertas e metricas criticas devem vir prontos do backend.
 export async function apiClient<TData>(
   path: string,
   options: ApiRequestOptions = {}

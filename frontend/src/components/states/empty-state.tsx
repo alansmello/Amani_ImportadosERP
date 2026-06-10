@@ -14,10 +14,21 @@ type EmptyStateProps = {
   title: string;
   description: string;
   icon?: ReactNode;
+  badgeLabel?: string;
+  variant?: "placeholder" | "empty";
   className?: string;
 };
 
-export function EmptyState({ title, description, icon, className }: EmptyStateProps) {
+export function EmptyState({
+  title,
+  description,
+  icon,
+  badgeLabel,
+  variant = "placeholder",
+  className
+}: EmptyStateProps) {
+  const label = badgeLabel ?? (variant === "empty" ? "Sem dados" : "Placeholder");
+
   return (
     <Card className={className}>
       <section>
@@ -28,7 +39,9 @@ export function EmptyState({ title, description, icon, className }: EmptyStatePr
                 {icon}
               </div>
             ) : null}
-            <Badge variant="neutral">Placeholder</Badge>
+            <Badge variant={variant === "empty" ? "info" : "neutral"}>
+              {label}
+            </Badge>
           </div>
         </CardHeader>
         <CardContent>

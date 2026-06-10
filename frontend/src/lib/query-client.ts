@@ -2,6 +2,8 @@
 
 import { QueryClient } from "@tanstack/react-query";
 
+// Query hooks futuros devem compor chaves a partir destes prefixos por modulo.
+// Regras de negocio, agregacoes e metricas permanecem no backend.
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -15,6 +17,8 @@ export const queryClient = new QueryClient({
   }
 });
 
+// Convenção: service modules retornam dados ja contratados pela API; query hooks
+// apenas orquestram cache/loading/error e nao calculam indicadores operacionais.
 export const queryKeys = {
   dashboard: ["dashboard"] as const,
   clientes: ["clientes"] as const,

@@ -2,6 +2,7 @@ import {
   Boxes,
   ClipboardList,
   CreditCard,
+  Database,
   PackageSearch,
   ShoppingCart,
   Siren,
@@ -11,6 +12,9 @@ import {
 import { MetricPlaceholderCard } from "@/components/dashboard/metric-placeholder-card";
 import { QuickActionGrid } from "@/components/dashboard/quick-action-grid";
 import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/states/empty-state";
+import { ErrorState } from "@/components/states/error-state";
+import { LoadingState } from "@/components/states/loading-state";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -140,6 +144,34 @@ export function DashboardPlaceholder() {
             </CardDescription>
           </CardContent>
         </Card>
+      </section>
+
+      <section className="space-y-3">
+        <div className="space-y-1">
+          <h2 className="text-base font-semibold text-text-primary">
+            Estados de comunicacao
+          </h2>
+          <p className="text-sm leading-6 text-text-secondary">
+            Padroes visuais para futuras consultas ao backend, sem chamadas reais
+            nesta feature.
+          </p>
+        </div>
+        <div className="grid gap-4 tablet:grid-cols-3">
+          <LoadingState
+            title="Consulta futura"
+            description="Estado padrao para areas que aguardam resposta da API."
+          />
+          <ErrorState
+            title="Falha controlada"
+            description="Mensagem segura para erro de rede ou indisponibilidade."
+          />
+          <EmptyState
+            title="Nenhum registro exibido"
+            description="Estado previsto para respostas validas sem conteudo."
+            icon={<Database className="h-5 w-5" aria-hidden />}
+            variant="empty"
+          />
+        </div>
       </section>
 
       <QuickActionGrid actions={quickActions} />
