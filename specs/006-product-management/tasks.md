@@ -93,10 +93,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T028 [P] [US3] Create product details display component in frontend/src/components/produtos/product-details.tsx
-- [ ] T029 [US3] Implement product detail route with loading, error, not-found, and edit navigation in frontend/src/app/produtos/[id]/page.tsx
-- [ ] T030 [US3] Resolve category and supplier display names for details in frontend/src/app/produtos/[id]/page.tsx
-- [ ] T031 [US3] Ensure product details do not display stock, profit, average cost, dashboard metrics, status, image, or history in frontend/src/components/produtos/product-details.tsx
+- [X] T028 [P] [US3] Create product details display component in frontend/src/components/produtos/product-details.tsx
+- [X] T029 [US3] Implement product detail route with loading, error, not-found, and edit navigation in frontend/src/app/produtos/[id]/page.tsx
+- [X] T030 [US3] Resolve category and supplier display names for details in frontend/src/app/produtos/[id]/page.tsx
+- [X] T031 [US3] Ensure product details do not display stock, profit, average cost, dashboard metrics, status, image, or history in frontend/src/components/produtos/product-details.tsx
 
 **Checkpoint**: User Story 3 works independently after foundational hooks and can be reached from `/produtos`.
 
