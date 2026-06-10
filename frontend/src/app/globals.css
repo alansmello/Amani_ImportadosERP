@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --amani-background: #0b0b0f;
+  --amani-surface: #13131a;
+  --amani-surface-light: #1c1c25;
+  --amani-primary: #7c3aed;
+  --amani-primary-hover: #8b5cf6;
+  --amani-accent: #a855f7;
+  --amani-text-primary: #f8fafc;
+  --amani-text-secondary: #94a3b8;
+  --amani-success: #22c55e;
+  --amani-warning: #f59e0b;
+  --amani-danger: #ef4444;
+  --amani-info: #3b82f6;
+  --amani-border: rgba(148, 163, 184, 0.16);
+  --amani-focus: rgba(124, 58, 237, 0.44);
+  --amani-radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--amani-background);
+  color: var(--amani-text-primary);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--amani-background);
+  color: var(--amani-text-primary);
+  font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: var(--amani-primary);
+  color: var(--amani-text-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--amani-primary-hover);
+  outline-offset: 2px;
+}
