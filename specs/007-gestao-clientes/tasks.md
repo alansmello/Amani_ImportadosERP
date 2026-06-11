@@ -32,11 +32,11 @@
 
 **CRITICAL**: No user story page should be considered complete until this phase is complete.
 
-- [ ] T006 Implement `Customer`, `CustomerPayload`, and `CustomerStatusFilter` types in `frontend/src/types/customer.ts`
-- [ ] T007 Implement `customersService.list`, `getById`, `create`, `update`, and `inactivate` using `/api/clientes` in `frontend/src/services/customers.ts`
-- [ ] T008 Implement `customerQueryKeys`, `useCustomers`, `useCustomer`, `useCreateCustomer`, `useUpdateCustomer`, and `useInactivateCustomer` in `frontend/src/hooks/use-customers.ts`
-- [ ] T009 Implement shared active/inactive status badge rendering helper or inline component support in `frontend/src/components/clientes/customer-details.tsx`
-- [ ] T010 Validate constitution guardrails for this frontend-only feature in `specs/007-gestao-clientes/tasks.md`: no stock, sales, finance, dashboards, rankings, document field, or definitive customer deletion tasks are introduced
+- [X] T006 Implement `Customer`, `CustomerPayload`, and `CustomerStatusFilter` types in `frontend/src/types/customer.ts`
+- [X] T007 Implement `customersService.list`, `getById`, `create`, `update`, and `inactivate` using `/api/clientes` in `frontend/src/services/customers.ts`
+- [X] T008 Implement `customerQueryKeys`, `useCustomers`, `useCustomer`, `useCreateCustomer`, `useUpdateCustomer`, and `useInactivateCustomer` in `frontend/src/hooks/use-customers.ts`
+- [X] T009 Implement shared active/inactive status badge rendering helper or inline component support in `frontend/src/components/clientes/customer-details.tsx`
+- [X] T010 Validate constitution guardrails for this frontend-only feature in `specs/007-gestao-clientes/tasks.md`: no stock, sales, finance, dashboards, rankings, document field, or definitive customer deletion tasks are introduced
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 
