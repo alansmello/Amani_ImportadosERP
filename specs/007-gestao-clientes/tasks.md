@@ -50,10 +50,10 @@
 
 ### Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Implement responsive customer table/cards with name, email, phone, status, and action slot in `frontend/src/components/clientes/customer-table.tsx`
-- [ ] T012 [P] [US1] Implement basic customer actions for details and edit links in `frontend/src/components/clientes/customer-actions.tsx`
-- [ ] T013 [US1] Replace the clientes placeholder with customer list page state, status filter, search input, loading, error, empty, and no-results states in `frontend/src/app/clientes/page.tsx`
-- [ ] T014 [US1] Wire `useCustomers` refetch and status filter behavior into `frontend/src/app/clientes/page.tsx`
+- [X] T011 [P] [US1] Implement responsive customer table/cards with name, email, phone, status, and action slot in `frontend/src/components/clientes/customer-table.tsx`
+- [X] T012 [P] [US1] Implement basic customer actions for details and edit links in `frontend/src/components/clientes/customer-actions.tsx`
+- [X] T013 [US1] Replace the clientes placeholder with customer list page state, status filter, search input, loading, error, empty, and no-results states in `frontend/src/app/clientes/page.tsx`
+- [X] T014 [US1] Wire `useCustomers` refetch and status filter behavior into `frontend/src/app/clientes/page.tsx`
 - [ ] T015 [US1] Verify `/clientes` responsive behavior manually against quickstart scenarios in `specs/007-gestao-clientes/quickstart.md`
 
 **Checkpoint**: User Story 1 is fully functional and testable independently as the MVP.
