@@ -68,10 +68,10 @@
 
 ### Implementation for User Story 2
 
-- [ ] T016 [P] [US2] Implement controlled name, email, and phone fields with validation messages in `frontend/src/components/clientes/customer-form-fields.tsx`
-- [ ] T017 [US2] Implement create/edit reusable customer form shell with submit error and success feedback in `frontend/src/components/clientes/customer-form.tsx`
-- [ ] T018 [US2] Implement `/clientes/novo` create page using `CustomerForm` and `useCreateCustomer` in `frontend/src/app/clientes/novo/page.tsx`
-- [ ] T019 [US2] Ensure successful customer creation invalidates customer lists and navigates to a context where the new customer is visible in `frontend/src/app/clientes/novo/page.tsx`
+- [X] T016 [P] [US2] Implement controlled name, email, and phone fields with validation messages in `frontend/src/components/clientes/customer-form-fields.tsx`
+- [X] T017 [US2] Implement create/edit reusable customer form shell with submit error and success feedback in `frontend/src/components/clientes/customer-form.tsx`
+- [X] T018 [US2] Implement `/clientes/novo` create page using `CustomerForm` and `useCreateCustomer` in `frontend/src/app/clientes/novo/page.tsx`
+- [X] T019 [US2] Ensure successful customer creation invalidates customer lists and navigates to a context where the new customer is visible in `frontend/src/app/clientes/novo/page.tsx`
 - [ ] T020 [US2] Verify create customer quickstart scenario manually in `specs/007-gestao-clientes/quickstart.md`
 
 **Checkpoint**: User Stories 1 and 2 work independently.
