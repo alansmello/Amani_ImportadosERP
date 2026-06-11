@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, UserX } from "lucide-react";
+import { useState } from "react";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { CustomerActions } from "@/components/clientes/customer-actions";
@@ -11,7 +12,7 @@ import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
 import { Button } from "@/components/ui/button";
-import { useCustomer } from "@/hooks/use-customers";
+import { useCustomer, useInactivateCustomer } from "@/hooks/use-customers";
 import { ApiError } from "@/services/errors";
 
 function getParamValue(value: string | string[] | undefined) {
@@ -25,13 +26,22 @@ function getParamValue(value: string | string[] | undefined) {
 export default function ClienteDetalhePage() {
   const params = useParams();
   const customerId = getParamValue(params.id);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const customerQuery = useCustomer(customerId);
+  const inactivateCustomer = useInactivateCustomer();
   const customer = customerQuery.data;
   const isCustomerNotFound =
     customerQuery.error instanceof ApiError && customerQuery.error.status === 404;
 
   function retryLoad() {
     void customerQuery.refetch();
+  }
+
+  async function handleInactivateCustomer(id: string) {
+    await inactivateCustomer.mutateAsync(id);
+    setSuccessMessage(
+      "Cliente inativado. O status atualizado permanecera disponivel nesta tela."
+    );
   }
 
   return (
@@ -48,7 +58,14 @@ export default function ClienteDetalhePage() {
               </Link>
             </Button>
             {customer ? (
-              <CustomerActions customerId={customer.id} showDetails={false} />
+              <CustomerActions
+                customerId={customer.id}
+                customerName={customer.nome}
+                isActive={customer.ativo}
+                showDetails={false}
+                isInactivating={inactivateCustomer.isPending}
+                onInactivate={handleInactivateCustomer}
+              />
             ) : null}
           </div>
         }
@@ -82,7 +99,14 @@ export default function ClienteDetalhePage() {
       ) : null}
 
       {!customerQuery.isLoading && !customerQuery.isError && customer ? (
-        <CustomerDetails customer={customer} />
+        <section className="space-y-4">
+          {successMessage ? (
+            <div className="rounded-amani border border-success bg-surface-light px-4 py-3 text-sm leading-6 text-text-primary">
+              {successMessage}
+            </div>
+          ) : null}
+          <CustomerDetails customer={customer} />
+        </section>
       ) : null}
     </main>
   );

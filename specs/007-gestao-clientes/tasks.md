@@ -120,10 +120,10 @@
 
 ### Implementation for User Story 5
 
-- [ ] T029 [P] [US5] Implement confirmation dialog for customer inactivation in `frontend/src/components/clientes/customer-inactivate-dialog.tsx`
-- [ ] T030 [US5] Extend `CustomerActions` to show inactivate action only for active customers in `frontend/src/components/clientes/customer-actions.tsx`
-- [ ] T031 [US5] Wire `useInactivateCustomer` into list and detail flows without exposing definitive deletion in `frontend/src/app/clientes/page.tsx` and `frontend/src/app/clientes/[id]/page.tsx`
-- [ ] T032 [US5] Ensure successful inactivation invalidates customer lists and detail cache in `frontend/src/hooks/use-customers.ts`
+- [X] T029 [P] [US5] Implement confirmation dialog for customer inactivation in `frontend/src/components/clientes/customer-inactivate-dialog.tsx`
+- [X] T030 [US5] Extend `CustomerActions` to show inactivate action only for active customers in `frontend/src/components/clientes/customer-actions.tsx`
+- [X] T031 [US5] Wire `useInactivateCustomer` into list and detail flows without exposing definitive deletion in `frontend/src/app/clientes/page.tsx` and `frontend/src/app/clientes/[id]/page.tsx`
+- [X] T032 [US5] Ensure successful inactivation invalidates customer lists and detail cache in `frontend/src/hooks/use-customers.ts`
 - [ ] T033 [US5] Verify inactivation quickstart scenario manually in `specs/007-gestao-clientes/quickstart.md`
 
 **Checkpoint**: All user stories are independently functional.

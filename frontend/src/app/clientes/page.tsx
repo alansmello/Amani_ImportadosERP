@@ -11,7 +11,7 @@ import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useCustomers } from "@/hooks/use-customers";
+import { useCustomers, useInactivateCustomer } from "@/hooks/use-customers";
 import type { CustomerStatusFilter } from "@/types/customer";
 
 const statusFilterOptions: Array<{
@@ -52,7 +52,11 @@ export default function ClientesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] =
     useState<CustomerStatusFilter>("active");
+  const [inactivatingCustomerId, setInactivatingCustomerId] = useState<
+    string | null
+  >(null);
   const customersQuery = useCustomers(statusFilter);
+  const inactivateCustomer = useInactivateCustomer();
 
   const customers = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLocaleLowerCase("pt-BR");
@@ -79,6 +83,16 @@ export default function ClientesPage() {
 
   function retryLoad() {
     void customersQuery.refetch();
+  }
+
+  async function handleInactivateCustomer(customerId: string) {
+    setInactivatingCustomerId(customerId);
+
+    try {
+      await inactivateCustomer.mutateAsync(customerId);
+    } finally {
+      setInactivatingCustomerId(null);
+    }
   }
 
   return (
@@ -169,7 +183,11 @@ export default function ClientesPage() {
               icon={<Search className="h-5 w-5" aria-hidden />}
             />
           ) : (
-            <CustomerTable customers={customers} />
+            <CustomerTable
+              customers={customers}
+              inactivatingCustomerId={inactivatingCustomerId}
+              onInactivate={handleInactivateCustomer}
+            />
           )}
         </section>
       ) : null}

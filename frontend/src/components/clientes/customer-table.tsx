@@ -20,6 +20,8 @@ import type { Customer } from "@/types/customer";
 
 type CustomerTableProps = {
   customers: Customer[];
+  inactivatingCustomerId?: string | null;
+  onInactivate?: (customerId: string) => Promise<void>;
 };
 
 function formatOptional(value: string | null) {
@@ -28,7 +30,11 @@ function formatOptional(value: string | null) {
   return normalizedValue ? normalizedValue : "Nao informado";
 }
 
-export function CustomerTable({ customers }: CustomerTableProps) {
+export function CustomerTable({
+  customers,
+  inactivatingCustomerId,
+  onInactivate
+}: CustomerTableProps) {
   return (
     <section aria-label="Clientes cadastrados">
       <div className="grid gap-3 desktop:hidden">
@@ -70,7 +76,13 @@ export function CustomerTable({ customers }: CustomerTableProps) {
                   </dd>
                 </div>
               </dl>
-              <CustomerActions customerId={customer.id} />
+              <CustomerActions
+                customerId={customer.id}
+                customerName={customer.nome}
+                isActive={customer.ativo}
+                isInactivating={inactivatingCustomerId === customer.id}
+                onInactivate={onInactivate}
+              />
             </CardContent>
           </Card>
         ))}
@@ -97,7 +109,13 @@ export function CustomerTable({ customers }: CustomerTableProps) {
                   <CustomerStatusBadge active={customer.ativo} />
                 </TableCell>
                 <TableCell>
-                  <CustomerActions customerId={customer.id} />
+                  <CustomerActions
+                    customerId={customer.id}
+                    customerName={customer.nome}
+                    isActive={customer.ativo}
+                    isInactivating={inactivatingCustomerId === customer.id}
+                    onInactivate={onInactivate}
+                  />
                 </TableCell>
               </TableRow>
             ))}
