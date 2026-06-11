@@ -103,9 +103,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T025 [US4] Extend `CustomerForm` to support edit mode and initial customer values in `frontend/src/components/clientes/customer-form.tsx`
-- [ ] T026 [US4] Implement `/clientes/[id]/editar` page with customer loading, not-found handling, `CustomerForm`, and `useUpdateCustomer` in `frontend/src/app/clientes/[id]/editar/page.tsx`
-- [ ] T027 [US4] Ensure successful customer update invalidates list and detail cache in `frontend/src/hooks/use-customers.ts`
+- [X] T025 [US4] Extend `CustomerForm` to support edit mode and initial customer values in `frontend/src/components/clientes/customer-form.tsx`
+- [X] T026 [US4] Implement `/clientes/[id]/editar` page with customer loading, not-found handling, `CustomerForm`, and `useUpdateCustomer` in `frontend/src/app/clientes/[id]/editar/page.tsx`
+- [X] T027 [US4] Ensure successful customer update invalidates list and detail cache in `frontend/src/hooks/use-customers.ts`
 - [ ] T028 [US4] Verify edit customer quickstart scenario manually in `specs/007-gestao-clientes/quickstart.md`
 
 **Checkpoint**: User Stories 1 through 4 work independently.
