@@ -134,14 +134,14 @@
 
 **Purpose**: Final consistency, validation, and regression checks across the customer module.
 
-- [ ] T034 [P] Review customer UI copy for consistency with Produtos and Amani operational language in `frontend/src/app/clientes/page.tsx`, `frontend/src/app/clientes/novo/page.tsx`, `frontend/src/app/clientes/[id]/page.tsx`, and `frontend/src/app/clientes/[id]/editar/page.tsx`
-- [ ] T035 [P] Review responsive spacing, touch targets, and text wrapping in customer components under `frontend/src/components/clientes/`
-- [ ] T036 Confirm no CPF/CNPJ/document, sales history, accounts receivable, financial metrics, rankings, dashboards, or definitive deletion UI exists under `frontend/src/app/clientes/` and `frontend/src/components/clientes/`
-- [ ] T037 Run `npm run lint` in `frontend/`
-- [ ] T038 Run `npm run typecheck` in `frontend/`
-- [ ] T039 Run `npm run build` in `frontend/`
+- [X] T034 [P] Review customer UI copy for consistency with Produtos and Amani operational language in `frontend/src/app/clientes/page.tsx`, `frontend/src/app/clientes/novo/page.tsx`, `frontend/src/app/clientes/[id]/page.tsx`, and `frontend/src/app/clientes/[id]/editar/page.tsx`
+- [X] T035 [P] Review responsive spacing, touch targets, and text wrapping in customer components under `frontend/src/components/clientes/`
+- [X] T036 Confirm no CPF/CNPJ/document, sales history, accounts receivable, financial metrics, rankings, dashboards, or definitive deletion UI exists under `frontend/src/app/clientes/` and `frontend/src/components/clientes/`
+- [X] T037 Run `npm run lint` in `frontend/`
+- [X] T038 Run `npm run typecheck` in `frontend/`
+- [X] T039 Run `npm run build` in `frontend/`
 - [ ] T040 Execute all manual scenarios from `specs/007-gestao-clientes/quickstart.md`
-- [ ] T041 Prepare final implementation report with files created/altered and validations executed
+- [X] T041 Prepare final implementation report with files created/altered and validations executed
 
 ---
 

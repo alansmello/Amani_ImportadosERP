@@ -31,6 +31,17 @@ Expected outcome:
 - TypeScript completes without errors.
 - Production build completes without errors.
 
+### Latest Static Validation
+
+Executed on 2026-06-11 from `frontend/`:
+
+- `npm run lint`: passed.
+- `npm run typecheck`: passed.
+- `npm run build`: passed.
+
+The build confirmed the customer routes `/clientes`, `/clientes/novo`,
+`/clientes/[id]`, and `/clientes/[id]/editar` are included in the Next.js app.
+
 ## Manual Validation Scenarios
 
 ### 1. List active customers
@@ -104,3 +115,9 @@ Expected outcome: actions remain reachable, text does not overlap, cards/tables 
 - Do not show sales history, accounts receivable, balances, rankings or dashboards.
 - Do not calculate financial or operational metrics in the frontend.
 - Do not implement definitive customer deletion.
+
+## Implementation Status
+
+Feature 007 is implemented and ready for environment validation with a running
+backend API. Manual scenarios above require `/api/clientes` to be available with
+real data so list, create, edit and inactivate flows can be confirmed end to end.

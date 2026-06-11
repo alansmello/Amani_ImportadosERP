@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-11
 
-**Status**: Draft
+**Status**: Ready for validation
 
 **Input**: User description: "Vamos iniciar a proxima feature do frontend: Gestao de Clientes. Objetivo: Implementar as telas e componentes de clientes seguindo o mesmo padrao usado na Feature 006 - Gestao de Produtos. Use como referencia direta: estrutura de paginas de produtos; componentes reutilizaveis de produtos; service/api client de produtos; padrao de listagem, formulario, loading, erro e navegacao. Ao final: Informar arquivos criados/alterados. Informar validacoes executadas."
 

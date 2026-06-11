@@ -104,7 +104,7 @@ export default function ClientesPage() {
           <Button asChild>
             <Link href="/clientes/novo">
               <Plus className="h-4 w-4" aria-hidden />
-              <span>Novo Cliente</span>
+              <span>Novo cliente</span>
             </Link>
           </Button>
         }
