@@ -127,13 +127,12 @@ Como usuario operacional, quero inativar um cliente quando ele nao deve mais apa
 - **FR-013**: O sistema MUST exibir feedback de sucesso apos cadastro ou edicao concluidos.
 - **FR-014**: O sistema MUST redirecionar ou atualizar a tela apos cadastro ou edicao bem-sucedidos para que o usuario veja o cliente salvo.
 - **FR-015**: O sistema MUST listar clientes ativos por padrao e permitir alternar a visualizacao para clientes inativos ou todos os clientes quando a fonte oficial suportar esse filtro.
-- **FR-016**: O sistema MUST permitir inativar cliente ativo mediante confirmacao explicita, preservando os dados e o historico operacional.
+- **FR-016**: O sistema MUST permitir inativar cliente ativo somente mediante confirmacao explicita, preservando os dados e o historico operacional.
 - **FR-017**: O sistema MUST NOT implementar vendas, financeiro, ranking, historico comercial, indicadores ou calculos gerenciais no frontend.
 - **FR-018**: O sistema MUST preservar o padrao visual Dark Only, Mobile First e responsivo definido para o frontend base.
 - **FR-019**: O sistema MUST manter a experiencia de listagem, formulario, loading, erro e navegacao consistente com a area de produtos da Feature 006.
 - **FR-020**: O sistema MUST tratar navegacao de retorno entre lista, detalhes, cadastro e edicao de forma clara em telas pequenas e grandes.
 - **FR-021**: O sistema MUST documentar como fora de escopo qualquer remocao definitiva de cliente.
-- **FR-022**: O sistema MUST oferecer confirmacao antes de inativar cliente.
 
 ### Key Entities *(include if feature involves data)*
 
