@@ -86,9 +86,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T021 [P] [US3] Implement customer details display with ID, name, email, phone, status, and neutral missing-value text in `frontend/src/components/clientes/customer-details.tsx`
-- [ ] T022 [US3] Implement `/clientes/[id]` detail page with `useCustomer`, loading, error, not-found, back navigation, and edit link in `frontend/src/app/clientes/[id]/page.tsx`
-- [ ] T023 [US3] Integrate `CustomerActions` into the detail page without exposing definitive deletion in `frontend/src/app/clientes/[id]/page.tsx`
+- [X] T021 [P] [US3] Implement customer details display with ID, name, email, phone, status, and neutral missing-value text in `frontend/src/components/clientes/customer-details.tsx`
+- [X] T022 [US3] Implement `/clientes/[id]` detail page with `useCustomer`, loading, error, not-found, back navigation, and edit link in `frontend/src/app/clientes/[id]/page.tsx`
+- [X] T023 [US3] Integrate `CustomerActions` into the detail page without exposing definitive deletion in `frontend/src/app/clientes/[id]/page.tsx`
 - [ ] T024 [US3] Verify customer details quickstart scenario manually in `specs/007-gestao-clientes/quickstart.md`
 
 **Checkpoint**: User Stories 1, 2, and 3 work independently.
