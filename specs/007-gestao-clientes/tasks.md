@@ -18,11 +18,11 @@
 
 **Purpose**: Prepare customer module files and shared frontend contracts without changing behavior yet.
 
-- [ ] T001 Create customer route directories and placeholder route files in `frontend/src/app/clientes/novo/page.tsx`, `frontend/src/app/clientes/[id]/page.tsx`, and `frontend/src/app/clientes/[id]/editar/page.tsx`
-- [ ] T002 Create customer component directory and placeholder component files in `frontend/src/components/clientes/customer-actions.tsx`, `frontend/src/components/clientes/customer-details.tsx`, `frontend/src/components/clientes/customer-form.tsx`, `frontend/src/components/clientes/customer-form-fields.tsx`, `frontend/src/components/clientes/customer-inactivate-dialog.tsx`, and `frontend/src/components/clientes/customer-table.tsx`
-- [ ] T003 [P] Create frontend customer types in `frontend/src/types/customer.ts`
-- [ ] T004 [P] Create customer service shell in `frontend/src/services/customers.ts`
-- [ ] T005 [P] Create customer query hook shell in `frontend/src/hooks/use-customers.ts`
+- [X] T001 Create customer route directories and placeholder route files in `frontend/src/app/clientes/novo/page.tsx`, `frontend/src/app/clientes/[id]/page.tsx`, and `frontend/src/app/clientes/[id]/editar/page.tsx`
+- [X] T002 Create customer component directory and placeholder component files in `frontend/src/components/clientes/customer-actions.tsx`, `frontend/src/components/clientes/customer-details.tsx`, `frontend/src/components/clientes/customer-form.tsx`, `frontend/src/components/clientes/customer-form-fields.tsx`, `frontend/src/components/clientes/customer-inactivate-dialog.tsx`, and `frontend/src/components/clientes/customer-table.tsx`
+- [X] T003 [P] Create frontend customer types in `frontend/src/types/customer.ts`
+- [X] T004 [P] Create customer service shell in `frontend/src/services/customers.ts`
+- [X] T005 [P] Create customer query hook shell in `frontend/src/hooks/use-customers.ts`
 
 ---
 
