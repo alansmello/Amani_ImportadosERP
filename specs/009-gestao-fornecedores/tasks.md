@@ -101,10 +101,10 @@
 
 ### Implementation for User Story 4
 
-- [ ] T023 [US4] Implement supplier edit page loading current supplier and passing initial nome to SupplierForm in frontend/src/app/fornecedores/[id]/editar/page.tsx
-- [ ] T024 [US4] Connect supplier edit page to useUpdateSupplier and send only payload { nome } in frontend/src/app/fornecedores/[id]/editar/page.tsx
-- [ ] T025 [US4] Handle loading, API error, success feedback, not-found states, and post-success navigation or visible refresh to updated supplier detail in frontend/src/app/fornecedores/[id]/editar/page.tsx
-- [ ] T026 [US4] Ensure cache invalidation refreshes supplier list and edited supplier detail through useUpdateSupplier in frontend/src/hooks/use-suppliers.ts
+- [X] T023 [US4] Implement supplier edit page loading current supplier and passing initial nome to SupplierForm in frontend/src/app/fornecedores/[id]/editar/page.tsx
+- [X] T024 [US4] Connect supplier edit page to useUpdateSupplier and send only payload { nome } in frontend/src/app/fornecedores/[id]/editar/page.tsx
+- [X] T025 [US4] Handle loading, API error, success feedback, not-found states, and post-success navigation or visible refresh to updated supplier detail in frontend/src/app/fornecedores/[id]/editar/page.tsx
+- [X] T026 [US4] Ensure cache invalidation refreshes supplier list and edited supplier detail through useUpdateSupplier in frontend/src/hooks/use-suppliers.ts
 
 **Checkpoint**: User Story 4 completes the edit flow without changing unsupported fields.
 
