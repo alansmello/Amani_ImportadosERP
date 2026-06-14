@@ -22,6 +22,7 @@ export const queryClient = new QueryClient({
 export const queryKeys = {
   dashboard: ["dashboard"] as const,
   clientes: ["clientes"] as const,
+  fornecedores: ["fornecedores"] as const,
   produtos: ["produtos"] as const,
   compras: ["compras"] as const,
   vendas: ["vendas"] as const,

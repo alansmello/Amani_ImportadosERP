@@ -1,6 +1,7 @@
 export const routes = {
   dashboard: "/",
   clientes: "/clientes",
+  fornecedores: "/fornecedores",
   produtos: "/produtos",
   compras: "/compras",
   vendas: "/vendas",
