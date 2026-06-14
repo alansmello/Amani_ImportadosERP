@@ -66,11 +66,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T014 [P] [US2] Create SupplierFormFields with nome input, validation message slots, and disabled state in frontend/src/components/fornecedores/supplier-form-fields.tsx
-- [ ] T015 [US2] Create SupplierForm with trim, required nome validation, submit loading, success feedback, API error handling, and payload { nome } in frontend/src/components/fornecedores/supplier-form.tsx
-- [ ] T016 [US2] Implement new supplier page using SupplierForm and useCreateSupplier in frontend/src/app/fornecedores/novo/page.tsx
-- [ ] T017 [US2] Redirect or navigate after successful creation so the user can see the saved supplier in frontend/src/app/fornecedores/novo/page.tsx
-- [ ] T018 [US2] Preserve typed nome when local validation or API rejection fails in frontend/src/components/fornecedores/supplier-form.tsx
+- [X] T014 [P] [US2] Create SupplierFormFields with nome input, validation message slots, and disabled state in frontend/src/components/fornecedores/supplier-form-fields.tsx
+- [X] T015 [US2] Create SupplierForm with trim, required nome validation, submit loading, success feedback, API error handling, and payload { nome } in frontend/src/components/fornecedores/supplier-form.tsx
+- [X] T016 [US2] Implement new supplier page using SupplierForm and useCreateSupplier in frontend/src/app/fornecedores/novo/page.tsx
+- [X] T017 [US2] Redirect or navigate after successful creation so the user can see the saved supplier in frontend/src/app/fornecedores/novo/page.tsx
+- [X] T018 [US2] Preserve typed nome when local validation or API rejection fails in frontend/src/components/fornecedores/supplier-form.tsx
 
 **Checkpoint**: User Story 2 works independently after foundation and can be validated without editing existing suppliers.
 
