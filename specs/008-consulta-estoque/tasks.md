@@ -62,10 +62,10 @@
 
 **Purpose**: Expor os endpoints contratados, mantendo o controller sem regra de negocio.
 
-- [ ] T017 [US1] Criar `EstoqueController` com rota `api/estoque` e injetar `IMediator` em `src/Amani.ImportadosERP.Api/Controllers/EstoqueController.cs`.
-- [ ] T018 [US1] Implementar `GET /api/estoque` com query opcional `categoriaId` e `apenasComSaldo`, delegando a `ObterSaldosEstoqueQuery`, em `src/Amani.ImportadosERP.Api/Controllers/EstoqueController.cs`.
-- [ ] T019 [US2] Implementar `GET /api/estoque/{produtoId}/movimentacoes` com filtros `dataInicio`, `dataFim`, `tipo` e `limite`, delegando a `ObterMovimentacoesProdutoQuery`, em `src/Amani.ImportadosERP.Api/Controllers/EstoqueController.cs`.
-- [ ] T020 [US3] Padronizar respostas `400` (produtoId/tipo/periodo invalidos) e `404` (produto inexistente) a partir dos erros da Application em `src/Amani.ImportadosERP.Api/Controllers/EstoqueController.cs`.
+- [X] T017 [US1] Criar `EstoqueController` com rota `api/estoque` e injetar `IMediator` em `src/Amani.ImportadosERP.Api/Controllers/EstoqueController.cs`.
+- [X] T018 [US1] Implementar `GET /api/estoque` com query opcional `categoriaId` e `apenasComSaldo`, delegando a `ObterSaldosEstoqueQuery`, em `src/Amani.ImportadosERP.Api/Controllers/EstoqueController.cs`.
+- [X] T019 [US2] Implementar `GET /api/estoque/{produtoId}/movimentacoes` com filtros `dataInicio`, `dataFim`, `tipo` e `limite`, delegando a `ObterMovimentacoesProdutoQuery`, em `src/Amani.ImportadosERP.Api/Controllers/EstoqueController.cs`.
+- [X] T020 [US3] Padronizar respostas `400` (produtoId/tipo/periodo invalidos) e `404` (produto inexistente) a partir dos erros da Application em `src/Amani.ImportadosERP.Api/Controllers/EstoqueController.cs`.
 
 **Checkpoint**: Contrato HTTP de consulta de estoque exposto e delegando ao backend.
 
