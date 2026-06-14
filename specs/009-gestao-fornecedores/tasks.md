@@ -30,11 +30,11 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 Update supplier type contract with SupplierPayload in frontend/src/types/supplier.ts
-- [ ] T005 Extend suppliersService with getById, create, and update methods in frontend/src/services/suppliers.ts
-- [ ] T006 Extend supplier query keys and add useSupplier, useCreateSupplier, and useUpdateSupplier in frontend/src/hooks/use-suppliers.ts
-- [ ] T007 [P] Create shared SupplierActions component without delete/inactivate/remove actions in frontend/src/components/fornecedores/supplier-actions.tsx
-- [ ] T008 Validate constitution gates for this frontend-only feature in specs/009-gestao-fornecedores/tasks.md, confirming no backend rules, stock, purchase, sales, analytics, schema, migration, or metric behavior is introduced
+- [X] T004 Update supplier type contract with SupplierPayload in frontend/src/types/supplier.ts
+- [X] T005 Extend suppliersService with getById, create, and update methods in frontend/src/services/suppliers.ts
+- [X] T006 Extend supplier query keys and add useSupplier, useCreateSupplier, and useUpdateSupplier in frontend/src/hooks/use-suppliers.ts
+- [X] T007 [P] Create shared SupplierActions component without delete/inactivate/remove actions in frontend/src/components/fornecedores/supplier-actions.tsx
+- [X] T008 Validate constitution gates for this frontend-only feature in specs/009-gestao-fornecedores/tasks.md, confirming no backend rules, stock, purchase, sales, analytics, schema, migration, or metric behavior is introduced
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 
