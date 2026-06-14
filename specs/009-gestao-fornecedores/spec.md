@@ -17,6 +17,12 @@ historico e nao substitui a fonte oficial das validacoes. A experiencia deve seg
 Mobile First, Dark Only, identidade visual existente, simplicidade operacional e
 continuidade com o modulo de Produtos ja validado.
 
+## Clarifications
+
+### Session 2026-06-14
+
+- Q: Quais campos de fornecedor a feature deve expor e editar no formulario? -> A: Apenas nome; identificador somente leitura.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Consultar fornecedores (Priority: P1)
@@ -55,10 +61,9 @@ salvando o fornecedor e confirmando que ele aparece na lista e pode ser consulta
 
 **Acceptance Scenarios**:
 
-1. **Given** que o usuario esta no cadastro de fornecedor, **When** preenche os campos obrigatorios e opcionais aceitos com valores validos, **Then** o sistema cadastra o fornecedor e permite ver o registro salvo.
-2. **Given** que campos opcionais nao foram informados, **When** os campos obrigatorios estao validos, **Then** o fornecedor e criado sem exigir dados que a fonte oficial nao torna obrigatorios.
-3. **Given** que algum campo obrigatorio esta ausente ou invalido, **When** o usuario tenta salvar, **Then** o sistema destaca os campos afetados e preserva os dados ja digitados.
-4. **Given** que a fonte oficial rejeita o cadastro, **When** a tela recebe a rejeicao, **Then** a mensagem e apresentada de forma clara para correcao pelo usuario.
+1. **Given** que o usuario esta no cadastro de fornecedor, **When** preenche o nome com valor valido, **Then** o sistema cadastra o fornecedor e permite ver o registro salvo.
+2. **Given** que o nome nao foi informado ou esta invalido, **When** o usuario tenta salvar, **Then** o sistema destaca o campo afetado e preserva os dados ja digitados.
+3. **Given** que a fonte oficial rejeita o cadastro, **When** a tela recebe a rejeicao, **Then** a mensagem e apresentada de forma clara para correcao pelo usuario.
 
 ---
 
@@ -85,8 +90,7 @@ sem informacoes inventadas.
 ### User Story 4 - Editar fornecedor existente (Priority: P4)
 
 Como usuario operacional, quero editar os dados permitidos de um fornecedor para
-manter o cadastro correto conforme mudancas de nome, contato ou dados comerciais
-suportados.
+manter o cadastro correto conforme mudancas de nome suportadas.
 
 **Why this priority**: A edicao completa o ciclo basico de manutencao de
 fornecedores e preserva a utilidade do cadastro para Compras.
@@ -98,7 +102,7 @@ os dados atualizados.
 **Acceptance Scenarios**:
 
 1. **Given** que o fornecedor existe, **When** o usuario abre a edicao, **Then** o formulario e preenchido com os dados atuais do fornecedor.
-2. **Given** que o usuario altera campos permitidos com valores validos, **When** salva o formulario, **Then** o sistema atualiza o fornecedor e permite conferir os dados salvos.
+2. **Given** que o usuario altera o nome com valor valido, **When** salva o formulario, **Then** o sistema atualiza o fornecedor e permite conferir os dados salvos.
 3. **Given** que a fonte oficial rejeita a atualizacao por dados invalidos, **When** o usuario tenta salvar, **Then** a tela exibe a mensagem retornada e permite corrigir sem perder o preenchimento.
 
 ---
@@ -124,8 +128,7 @@ tablet e desktop e validando que o item de fornecedores leva para a area correta
 
 - O carregamento da lista ou de um fornecedor individual pode falhar; cada tela deve exibir estado de erro claro sem bloquear toda a navegacao.
 - A lista de fornecedores pode estar vazia; a tela deve orientar o usuario para cadastrar o primeiro fornecedor.
-- Um fornecedor pode nao possuir todos os campos opcionais preenchidos; lista, detalhes e formulario devem exibir essa ausencia de forma neutra.
-- O usuario pode informar dados de contato ou cadastro em formato invalido; o sistema deve impedir o envio quando houver validacao basica clara ou apresentar a rejeicao retornada pela fonte oficial.
+- O usuario pode informar nome ausente ou invalido; o sistema deve impedir o envio quando houver validacao basica clara ou apresentar a rejeicao retornada pela fonte oficial.
 - O usuario pode tentar abrir ou editar um identificador inexistente; o sistema deve exibir estado de nao encontrado.
 - A fonte oficial nao oferece inativacao de fornecedor; a interface nao deve exibir acao de inativar, excluir ou remover fornecedor.
 - A tela nao deve exibir historico de compras, metricas, ranking, totais comprados ou indicadores calculados no frontend.
@@ -138,15 +141,15 @@ tablet e desktop e validando que o item de fornecedores leva para a area correta
 - **FR-001**: O sistema MUST exibir uma area principal de fornecedores com titulo, descricao curta, acao para novo fornecedor, busca simples, listagem responsiva e acoes por fornecedor.
 - **FR-002**: O sistema MUST listar somente fornecedores reais retornados pela fonte oficial, sem dados mockados ou valores inventados.
 - **FR-003**: O sistema MUST tratar estados de carregamento, vazio e erro na listagem de fornecedores.
-- **FR-004**: O sistema MUST permitir busca simples sobre os fornecedores exibidos, no minimo por nome e, quando disponiveis, dados de contato, sem alterar os dados persistidos.
+- **FR-004**: O sistema MUST permitir busca simples sobre os fornecedores exibidos por nome, sem alterar os dados persistidos.
 - **FR-005**: O sistema MUST permitir abrir a consulta individual de um fornecedor por identificador.
-- **FR-006**: O sistema MUST exibir nos detalhes de fornecedor os dados principais atualmente suportados pela fonte oficial.
-- **FR-007**: O sistema MUST permitir cadastrar fornecedor com os campos obrigatorios definidos pela fonte oficial e demais campos opcionais aceitos.
-- **FR-008**: O sistema MUST permitir que campos opcionais fiquem ausentes quando a fonte oficial assim permitir.
-- **FR-009**: O sistema MUST validar visualmente campos obrigatorios e formatos basicos antes ou durante a tentativa de salvar.
+- **FR-006**: O sistema MUST exibir nos detalhes de fornecedor o identificador e o nome atualmente suportados pela fonte oficial.
+- **FR-007**: O sistema MUST permitir cadastrar fornecedor informando nome valido.
+- **FR-008**: O sistema MUST tratar o identificador do fornecedor como dado somente leitura gerado pela fonte oficial.
+- **FR-009**: O sistema MUST validar visualmente o nome antes ou durante a tentativa de salvar.
 - **FR-010**: O sistema MUST apresentar mensagens claras quando a fonte oficial rejeitar cadastro ou edicao.
-- **FR-011**: O sistema MUST permitir editar fornecedor existente, preenchendo o formulario com os dados atuais antes da alteracao.
-- **FR-012**: O sistema MUST salvar apenas os campos atualmente aceitos para fornecedor pela fonte oficial.
+- **FR-011**: O sistema MUST permitir editar fornecedor existente, preenchendo o formulario com o nome atual antes da alteracao.
+- **FR-012**: O sistema MUST salvar apenas o nome editavel atualmente aceito para fornecedor pela fonte oficial.
 - **FR-013**: O sistema MUST exibir feedback de sucesso apos cadastro ou edicao concluidos.
 - **FR-014**: O sistema MUST redirecionar ou atualizar a tela apos cadastro ou edicao bem-sucedidos para que o usuario veja o fornecedor salvo.
 - **FR-015**: O sistema MUST adicionar fornecedores a navegacao principal de forma consistente com os demais cadastros operacionais.
@@ -159,14 +162,14 @@ tablet e desktop e validando que o item de fornecedores leva para a area correta
 
 ### Key Entities *(include if feature involves data)*
 
-- **Fornecedor**: Pessoa ou empresa que fornece mercadorias para a operacao. Dados principais no escopo atual: identificador, nome e demais campos cadastrais ou de contato aceitos pela fonte oficial.
+- **Fornecedor**: Pessoa ou empresa que fornece mercadorias para a operacao. Dados no escopo atual: identificador gerado pela fonte oficial e nome editavel.
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
 - **SC-001**: Um usuario consegue localizar um fornecedor existente e abrir seus detalhes em ate 30 segundos a partir da area principal de fornecedores.
-- **SC-002**: Um usuario consegue cadastrar um fornecedor valido em ate 2 minutos usando os campos aceitos pela fonte oficial.
+- **SC-002**: Um usuario consegue cadastrar um fornecedor valido em ate 2 minutos informando nome aceito pela fonte oficial.
 - **SC-003**: Um usuario consegue editar um fornecedor existente em ate 2 minutos sem precisar redigitar todos os dados.
 - **SC-004**: 100% dos fluxos de lista, detalhe, cadastro e edicao apresentam estados de carregamento, erro ou vazio quando aplicavel.
 - **SC-005**: 100% das telas de fornecedores permanecem utilizaveis sem sobreposicao de conteudo em smartphone, tablet e desktop.
@@ -178,7 +181,7 @@ tablet e desktop e validando que o item de fornecedores leva para a area correta
 
 - O usuario alvo e um operador interno do Amani ERP que ja tem acesso ao frontend; autenticacao e autorizacao permanecem fora do escopo desta feature.
 - A fonte oficial atual permite listar, consultar, criar e editar fornecedores, mas nao oferece inativacao, exclusao ou remocao.
-- Nome e tratado como campo obrigatorio minimo para fornecedor; demais campos seguem obrigatoriedade e validacoes da fonte oficial.
+- Nome e o unico campo editavel no escopo desta feature; o identificador e somente leitura e gerado pela fonte oficial.
 - O contrato atual de fornecedor nao inclui historico de compras, metricas, totais comprados, ranking, indicadores ou status de inativacao.
 - A listagem atual de fornecedores pode nao oferecer paginacao oficial; a tela pode exibir a lista retornada e aplicar busca simples sobre os dados carregados.
 - A feature preserva Mobile First, Dark Only e a identidade visual existente do frontend base.
