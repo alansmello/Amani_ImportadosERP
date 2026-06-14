@@ -81,15 +81,15 @@
 
 **Purpose**: Validar criterios de aceite e ausencia de efeitos colaterais.
 
-- [ ] T022 Executar `dotnet build` e validar manualmente, via cenarios HTTP do `quickstart.md`, que as consultas respondem em ate 2 segundos para o volume de referencia, usam agregacao/limites e nao materializam historico integral; registrar resultado em `specs/008-consulta-estoque/quickstart.md`, confirmando ausencia de migration pendente.
-- [ ] T023 [US1] Validar `GET /api/estoque`: saldo igual a entradas mais inventario inicial menos saidas, produto sem movimentacao com saldo zero, em `specs/008-consulta-estoque/quickstart.md`.
-- [ ] T024 [US1] Validar filtros da lista: por categoria e por apenas com saldo positivo, em `specs/008-consulta-estoque/quickstart.md`.
-- [ ] T025 [US2] Validar `GET /api/estoque/{produtoId}/movimentacoes`: `saldoAtual`, lista ordenada por data, origem `Compra`/`Venda`/`InventarioInicial` com referencias corretas, em `specs/008-consulta-estoque/quickstart.md`.
-- [ ] T026 [US3] Validar filtros de periodo e tipo e que `saldoAtual` reflete o historico completo independente dos filtros em `specs/008-consulta-estoque/quickstart.md`.
-- [ ] T027 [US3] Validar limite padrao de 50 sem limite informado, limite maximo de 200 quando excede, e `totalMovimentacoes` refletindo a contagem total dos filtros antes do limite quando houver truncamento, em `specs/008-consulta-estoque/quickstart.md`.
-- [ ] T028 [US3] Validar rejeicoes: `produtoId` invalido `400`, `tipo` invalido `400`, periodo invalido `400`, produto inexistente `404`, em `specs/008-consulta-estoque/quickstart.md`.
-- [ ] T029 [US2] Validar produto sem movimentacoes: `saldoAtual` zero e `movimentacoes` vazio em `specs/008-consulta-estoque/quickstart.md`.
-- [ ] T030 Validar regressao: `VendaService` continua validando saldo fisico via `ObterSaldoAsync`; nenhuma consulta cria, altera ou apaga movimentacao; nenhuma migration nova, em `specs/008-consulta-estoque/quickstart.md`.
+- [X] T022 Executar `dotnet build` e validar manualmente, via cenarios HTTP do `quickstart.md`, que as consultas respondem em ate 2 segundos para o volume de referencia, usam agregacao/limites e nao materializam historico integral; registrar resultado em `specs/008-consulta-estoque/quickstart.md`, confirmando ausencia de migration pendente.
+- [X] T023 [US1] Validar `GET /api/estoque`: saldo igual a entradas mais inventario inicial menos saidas, produto sem movimentacao com saldo zero, em `specs/008-consulta-estoque/quickstart.md`.
+- [X] T024 [US1] Validar filtros da lista: por categoria e por apenas com saldo positivo, em `specs/008-consulta-estoque/quickstart.md`.
+- [X] T025 [US2] Validar `GET /api/estoque/{produtoId}/movimentacoes`: `saldoAtual`, lista ordenada por data, origem `Compra`/`Venda`/`InventarioInicial` com referencias corretas, em `specs/008-consulta-estoque/quickstart.md`.
+- [X] T026 [US3] Validar filtros de periodo e tipo e que `saldoAtual` reflete o historico completo independente dos filtros em `specs/008-consulta-estoque/quickstart.md`.
+- [X] T027 [US3] Validar limite padrao de 50 sem limite informado, limite maximo de 200 quando excede, e `totalMovimentacoes` refletindo a contagem total dos filtros antes do limite quando houver truncamento, em `specs/008-consulta-estoque/quickstart.md`.
+- [X] T028 [US3] Validar rejeicoes: `produtoId` invalido `400`, `tipo` invalido `400`, periodo invalido `400`, produto inexistente `404`, em `specs/008-consulta-estoque/quickstart.md`.
+- [X] T029 [US2] Validar produto sem movimentacoes: `saldoAtual` zero e `movimentacoes` vazio em `specs/008-consulta-estoque/quickstart.md`.
+- [X] T030 Validar regressao: `VendaService` continua validando saldo fisico via `ObterSaldoAsync`; nenhuma consulta cria, altera ou apaga movimentacao; nenhuma migration nova, em `specs/008-consulta-estoque/quickstart.md`.
 
 **Checkpoint**: Regressao obrigatoria completa antes da validacao final.
 

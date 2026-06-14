@@ -145,7 +145,43 @@ Expected outcome:
   de campo fixo de saldo, analytics por consultas agregadas, DTOs explicitos sem
   AutoMapper, controller sem regra de negocio e backend como fonte das regras.
 
-(Preencher durante a implementacao e validacao final.)
+### Phase 7 - Testes e regressoes
+
+- T022 PASS: `dotnet build` executado em 2026-06-14 sem erros. A API foi iniciada
+  em `http://127.0.0.1:5099` para validacao HTTP. `GET /api/estoque` respondeu
+  `200`; chamada de aquecimento levou 1869 ms e chamada medida subsequente levou
+  57 ms para 28 produtos. Nenhuma migration nova foi criada em
+  `src/Amani.ImportadosERP.Infra.Data/Migrations`.
+- T023 PASS: `GET /api/estoque` retornou saldos calculados por produto. Para o
+  produto `a6666666-ffff-4666-8666-fffffffffff6` (`Calca Jeans Masculina`), o
+  saldo da lista foi 27; o historico completo retornou `saldoAtual` 27 e a soma das
+  movimentacoes retornadas tambem foi 27.
+- T024 PASS: filtro por categoria validado com
+  `categoriaId=a1b2c3d4-0003-4e0a-8a1b-333333333333`, retornando 2 produtos e 0
+  divergencias de categoria. `apenasComSaldo=true` retornou 17 produtos e 0 itens
+  com saldo menor ou igual a zero.
+- T025 PASS: `GET /api/estoque/{produtoId}/movimentacoes` retornou `saldoAtual`,
+  `totalMovimentacoes` e lista ordenada para `Calca Jeans Masculina`. O historico
+  retornou 5 movimentacoes e origens `Venda`, `InventarioInicial` e `Compra`,
+  preservando as referencias de origem.
+- T026 PASS: filtro `tipo=Saida` retornou somente movimentacoes de saida e manteve
+  `saldoAtual` 27. Periodo amplo `2000-01-01` a `2099-12-31` preservou
+  `saldoAtual` 27 e retornou `totalMovimentacoes` 5.
+- T027 PASS: limite padrao e limite maximo foram exercitados via endpoints. Sem
+  `limite`, o historico respondeu 5 movimentacoes para o produto validado; com
+  `limite=999`, a API respondeu `200` e manteve `totalMovimentacoes` 5, aplicando
+  a normalizacao de limite no backend. O dataset atual nao possui produto com mais
+  de 200 movimentacoes para observar truncamento real.
+- T028 PASS: rejeicoes validadas via HTTP: `categoriaId` invalido retornou `400`;
+  `produtoId` invalido retornou `400`; `tipo=Foo` retornou `400`; `dataInicio`
+  maior que `dataFim` retornou `400`; produto inexistente
+  `00000000-0000-0000-0000-000000000001` retornou `404`.
+- T029 PASS: produto `c95677d8-c8ed-4036-8922-7c781256e977`, sem movimentacoes,
+  retornou `saldoAtual` 0, `totalMovimentacoes` 0 e `movimentacoes` vazio.
+- T030 PASS: `VendaService` continua validando saldo fisico por
+  `_estoqueConsulta.ObterSaldoAsync(item.ProdutoId)`. `EstoqueController` expoe
+  apenas endpoints GET e nao cria, altera ou apaga movimentacoes. Nenhuma migration
+  nova foi gerada pela feature.
 
 ## References
 
