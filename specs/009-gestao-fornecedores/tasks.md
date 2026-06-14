@@ -120,7 +120,7 @@
 
 - [X] T027 [P] [US5] Add fornecedores route key pointing to /fornecedores in frontend/src/config/routes.ts
 - [X] T028 [US5] Add Fornecedores navigation item near operational cadastro entries using an existing lucide icon in frontend/src/config/navigation.ts
-- [ ] T029 [US5] Ensure list, new, detail, and edit pages expose clear back/list navigation in frontend/src/app/fornecedores/page.tsx, frontend/src/app/fornecedores/novo/page.tsx, frontend/src/app/fornecedores/[id]/page.tsx, and frontend/src/app/fornecedores/[id]/editar/page.tsx
+- [X] T029 [US5] Ensure list, new, detail, and edit pages expose clear back/list navigation in frontend/src/app/fornecedores/page.tsx, frontend/src/app/fornecedores/novo/page.tsx, frontend/src/app/fornecedores/[id]/page.tsx, and frontend/src/app/fornecedores/[id]/editar/page.tsx
 
 **Checkpoint**: User Story 5 makes the module discoverable and navigable across viewport sizes.
 
@@ -130,14 +130,14 @@
 
 **Purpose**: Validacao final, regressao e acabamento transversal.
 
-- [ ] T030 [P] Validate Dark Only visual consistency and absence of unsupported supplier fields/actions across frontend/src/app/fornecedores and frontend/src/components/fornecedores
-- [ ] T031 Validate Mobile First behavior at 390px smartphone, tablet, and desktop widths using scenarios in specs/009-gestao-fornecedores/quickstart.md
-- [ ] T032 Validate timed success criteria from spec.md for locating supplier details within 30 seconds, creating within 2 minutes, and editing within 2 minutes using specs/009-gestao-fornecedores/quickstart.md
-- [ ] T033 Run npm run lint in frontend and fix any issues in frontend/src/app/fornecedores, frontend/src/components/fornecedores, frontend/src/hooks/use-suppliers.ts, frontend/src/services/suppliers.ts, frontend/src/types/supplier.ts, frontend/src/config/routes.ts, and frontend/src/config/navigation.ts
-- [ ] T034 Run npm run typecheck in frontend and fix any TypeScript issues in frontend/src/app/fornecedores, frontend/src/components/fornecedores, frontend/src/hooks/use-suppliers.ts, frontend/src/services/suppliers.ts, and frontend/src/types/supplier.ts
-- [ ] T035 Run npm run build in frontend and fix any build issues in frontend/src/app/fornecedores and related supplier files
-- [ ] T036 Validate regression that Produtos still loads supplier names through useSuppliers in frontend/src/app/produtos/page.tsx
-- [ ] T037 Confirm no backend files, migrations, stock movement logic, purchase flow, sales flow, financial dashboard, analytics aggregation, or metrics behavior were changed for this frontend-only feature in src and frontend/src
+- [X] T030 [P] Validate Dark Only visual consistency and absence of unsupported supplier fields/actions across frontend/src/app/fornecedores and frontend/src/components/fornecedores
+- [X] T031 Validate Mobile First behavior at 390px smartphone, tablet, and desktop widths using scenarios in specs/009-gestao-fornecedores/quickstart.md
+- [X] T032 Validate timed success criteria from spec.md for locating supplier details within 30 seconds, creating within 2 minutes, and editing within 2 minutes using specs/009-gestao-fornecedores/quickstart.md
+- [X] T033 Run npm run lint in frontend and fix any issues in frontend/src/app/fornecedores, frontend/src/components/fornecedores, frontend/src/hooks/use-suppliers.ts, frontend/src/services/suppliers.ts, frontend/src/types/supplier.ts, frontend/src/config/routes.ts, and frontend/src/config/navigation.ts
+- [X] T034 Run npm run typecheck in frontend and fix any TypeScript issues in frontend/src/app/fornecedores, frontend/src/components/fornecedores, frontend/src/hooks/use-suppliers.ts, frontend/src/services/suppliers.ts, and frontend/src/types/supplier.ts
+- [X] T035 Run npm run build in frontend and fix any build issues in frontend/src/app/fornecedores and related supplier files
+- [X] T036 Validate regression that Produtos still loads supplier names through useSuppliers in frontend/src/app/produtos/page.tsx
+- [X] T037 Confirm no backend files, migrations, stock movement logic, purchase flow, sales flow, financial dashboard, analytics aggregation, or metrics behavior were changed for this frontend-only feature in src and frontend/src
 
 ---
 

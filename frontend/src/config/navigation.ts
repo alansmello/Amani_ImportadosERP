@@ -44,7 +44,7 @@ export const navigationItems = [
     desktopVisible: true,
     mobileVisible: false,
     group: "more",
-    status: "placeholder"
+    status: "ready"
   },
   {
     id: "produtos",

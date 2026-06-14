@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Building2 } from "lucide-react";
+import { ArrowLeft, Building2, Eye } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { SupplierForm } from "@/components/fornecedores/supplier-form";
@@ -69,14 +69,22 @@ export default function EditarFornecedorPage() {
         title="Editar fornecedor"
         description="Atualize somente o nome aceito pelo contrato real de fornecedor."
         actions={
-          <Button asChild variant="secondary">
-            <Link
-              href={supplierId ? `/fornecedores/${supplierId}` : "/fornecedores"}
-            >
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="secondary">
+              <Link href="/fornecedores">
+                <ArrowLeft className="h-4 w-4" aria-hidden />
+                <span>Voltar</span>
+              </Link>
+            </Button>
+            {supplier ? (
+              <Button asChild variant="secondary">
+                <Link href={`/fornecedores/${supplier.id}`}>
+                  <Eye className="h-4 w-4" aria-hidden />
+                  <span>Detalhes</span>
+                </Link>
+              </Button>
+            ) : null}
+          </div>
         }
       />
 
