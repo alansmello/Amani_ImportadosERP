@@ -49,12 +49,12 @@
 
 **Purpose**: Expressar os casos de uso de leitura via MediatR com mapeamento manual.
 
-- [ ] T011 [P] [US1] Criar `ObterSaldosEstoqueQuery` com `CategoriaId` e `ApenasComSaldo` retornando `IReadOnlyCollection<EstoqueProdutoSaldoDto>` em `src/Amani.ImportadosERP.Application/Queries/ObterSaldosEstoqueQuery.cs`.
-- [ ] T012 [US1] Criar `ObterSaldosEstoqueQueryHandler` delegando ao repository e mapeando manualmente para `EstoqueProdutoSaldoDto` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterSaldosEstoqueQueryHandler.cs`.
-- [ ] T013 [P] [US2] Criar `ObterMovimentacoesProdutoQuery` com `ProdutoId`, `DataInicio`, `DataFim`, `Tipo` e `Limite` retornando `EstoqueProdutoMovimentacoesDto` em `src/Amani.ImportadosERP.Application/Queries/ObterMovimentacoesProdutoQuery.cs`.
-- [ ] T014 [US2] Criar `ObterMovimentacoesProdutoQueryHandler` que valida existencia do produto (404 quando inexistente), calcula `SaldoAtual` pelo historico completo, popula `TotalMovimentacoes` via `ContarMovimentacoesAsync` com os filtros aplicados antes do limite, aplica limite padrao/maximo e mapeia manualmente a origem (`Compra`, `Venda`, `InventarioInicial`) em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterMovimentacoesProdutoQueryHandler.cs`.
-- [ ] T015 [US3] Implementar no handler de historico a validacao de periodo (`DataInicio` maior que `DataFim` invalido) e de tipo, e a normalizacao de datas em UTC, em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterMovimentacoesProdutoQueryHandler.cs`.
-- [ ] T016 [US3] Definir constantes de limite padrao (50) e limite maximo (200) do historico e aplica-las no handler em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterMovimentacoesProdutoQueryHandler.cs`.
+- [X] T011 [P] [US1] Criar `ObterSaldosEstoqueQuery` com `CategoriaId` e `ApenasComSaldo` retornando `IReadOnlyCollection<EstoqueProdutoSaldoDto>` em `src/Amani.ImportadosERP.Application/Queries/ObterSaldosEstoqueQuery.cs`.
+- [X] T012 [US1] Criar `ObterSaldosEstoqueQueryHandler` delegando ao repository e mapeando manualmente para `EstoqueProdutoSaldoDto` em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterSaldosEstoqueQueryHandler.cs`.
+- [X] T013 [P] [US2] Criar `ObterMovimentacoesProdutoQuery` com `ProdutoId`, `DataInicio`, `DataFim`, `Tipo` e `Limite` retornando `EstoqueProdutoMovimentacoesDto` em `src/Amani.ImportadosERP.Application/Queries/ObterMovimentacoesProdutoQuery.cs`.
+- [X] T014 [US2] Criar `ObterMovimentacoesProdutoQueryHandler` que valida existencia do produto (404 quando inexistente), calcula `SaldoAtual` pelo historico completo, popula `TotalMovimentacoes` via `ContarMovimentacoesAsync` com os filtros aplicados antes do limite, aplica limite padrao/maximo e mapeia manualmente a origem (`Compra`, `Venda`, `InventarioInicial`) em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterMovimentacoesProdutoQueryHandler.cs`.
+- [X] T015 [US3] Implementar no handler de historico a validacao de periodo (`DataInicio` maior que `DataFim` invalido) e de tipo, e a normalizacao de datas em UTC, em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterMovimentacoesProdutoQueryHandler.cs`.
+- [X] T016 [US3] Definir constantes de limite padrao (50) e limite maximo (200) do historico e aplica-las no handler em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterMovimentacoesProdutoQueryHandler.cs`.
 
 **Checkpoint**: Casos de uso de saldo e historico prontos antes da API.
 
