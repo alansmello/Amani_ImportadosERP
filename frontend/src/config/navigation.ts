@@ -1,4 +1,5 @@
 import {
+  Building2,
   Boxes,
   ClipboardList,
   CreditCard,
@@ -30,6 +31,16 @@ export const navigationItems = [
     label: "Clientes",
     href: routes.clientes,
     icon: Users,
+    desktopVisible: true,
+    mobileVisible: false,
+    group: "more",
+    status: "placeholder"
+  },
+  {
+    id: "fornecedores",
+    label: "Fornecedores",
+    href: routes.fornecedores,
+    icon: Building2,
     desktopVisible: true,
     mobileVisible: false,
     group: "more",

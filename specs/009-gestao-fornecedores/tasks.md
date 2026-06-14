@@ -48,11 +48,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T009 [P] [US1] Create responsive SupplierTable for mobile cards and desktop table in frontend/src/components/fornecedores/supplier-table.tsx
-- [ ] T010 [US1] Implement suppliers list page with PageHeader, search by nome, LoadingState, EmptyState, ErrorState, retry, and SupplierTable in frontend/src/app/fornecedores/page.tsx
-- [ ] T011 [US1] Ensure supplier list page uses only real API data from useSuppliers and no mocked values in frontend/src/app/fornecedores/page.tsx
-- [ ] T012 [US1] Ensure search normalization uses pt-BR locale and filters only supplier.nome in frontend/src/app/fornecedores/page.tsx
-- [ ] T013 [US1] Wire SupplierActions detail/edit links from list rows and cards in frontend/src/components/fornecedores/supplier-actions.tsx
+- [X] T009 [P] [US1] Create responsive SupplierTable for mobile cards and desktop table in frontend/src/components/fornecedores/supplier-table.tsx
+- [X] T010 [US1] Implement suppliers list page with PageHeader, search by nome, LoadingState, EmptyState, ErrorState, retry, and SupplierTable in frontend/src/app/fornecedores/page.tsx
+- [X] T011 [US1] Ensure supplier list page uses only real API data from useSuppliers and no mocked values in frontend/src/app/fornecedores/page.tsx
+- [X] T012 [US1] Ensure search normalization uses pt-BR locale and filters only supplier.nome in frontend/src/app/fornecedores/page.tsx
+- [X] T013 [US1] Wire SupplierActions detail/edit links from list rows and cards in frontend/src/components/fornecedores/supplier-actions.tsx
 
 **Checkpoint**: User Story 1 is fully functional and testable independently.
 
@@ -118,8 +118,8 @@
 
 ### Implementation for User Story 5
 
-- [ ] T027 [P] [US5] Add fornecedores route key pointing to /fornecedores in frontend/src/config/routes.ts
-- [ ] T028 [US5] Add Fornecedores navigation item near operational cadastro entries using an existing lucide icon in frontend/src/config/navigation.ts
+- [X] T027 [P] [US5] Add fornecedores route key pointing to /fornecedores in frontend/src/config/routes.ts
+- [X] T028 [US5] Add Fornecedores navigation item near operational cadastro entries using an existing lucide icon in frontend/src/config/navigation.ts
 - [ ] T029 [US5] Ensure list, new, detail, and edit pages expose clear back/list navigation in frontend/src/app/fornecedores/page.tsx, frontend/src/app/fornecedores/novo/page.tsx, frontend/src/app/fornecedores/[id]/page.tsx, and frontend/src/app/fornecedores/[id]/editar/page.tsx
 
 **Checkpoint**: User Story 5 makes the module discoverable and navigable across viewport sizes.

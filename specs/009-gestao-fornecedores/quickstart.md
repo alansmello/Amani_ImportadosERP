@@ -27,11 +27,12 @@ Open the frontend URL reported by Next.js and validate the scenarios below.
 2. Confirm the main navigation exposes `Fornecedores` with the operational
    cadastro entries.
 3. Open smartphone width at 390px, tablet width, and desktop width.
-4. Confirm `Fornecedores` remains reachable without layout overlap.
+4. Confirm `Fornecedores` remains reachable from the main navigation or existing
+   `Mais` group without layout overlap.
 
 Expected outcome:
 
-- `/fornecedores` opens from navigation.
+- `/fornecedores` opens from the main navigation entry.
 - No text or action overlaps in mobile, tablet or desktop.
 
 ## Scenario 2: Supplier List and Search
