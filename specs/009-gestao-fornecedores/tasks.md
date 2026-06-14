@@ -18,9 +18,9 @@
 
 **Purpose**: Preparar estrutura de arquivos do modulo sem alterar comportamento ainda.
 
-- [ ] T001 Create supplier route directories in frontend/src/app/fornecedores, frontend/src/app/fornecedores/novo, frontend/src/app/fornecedores/[id], and frontend/src/app/fornecedores/[id]/editar
-- [ ] T002 Create supplier component directory in frontend/src/components/fornecedores
-- [ ] T003 [P] Review Produtos reference files frontend/src/app/produtos/page.tsx and frontend/src/components/produtos/product-table.tsx before implementing supplier list patterns
+- [X] T001 Create supplier route directories in frontend/src/app/fornecedores, frontend/src/app/fornecedores/novo, frontend/src/app/fornecedores/[id], and frontend/src/app/fornecedores/[id]/editar
+- [X] T002 Create supplier component directory in frontend/src/components/fornecedores
+- [X] T003 [P] Review Produtos reference files frontend/src/app/produtos/page.tsx and frontend/src/components/produtos/product-table.tsx before implementing supplier list patterns
 
 ---
 
