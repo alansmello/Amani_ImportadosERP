@@ -18,8 +18,8 @@
 
 **Purpose**: Confirmar premissas da feature antes de implementar leitura.
 
-- [ ] T001 Confirmar que a feature e somente leitura e nao gera migration: revisar `specs/008-consulta-estoque/plan.md` e garantir que nenhuma tarefa altera entidades, mappings ou schema.
-- [ ] T002 Validar gates constitucionais para os fluxos afetados (estoque por movimentacoes, sem campo fixo de saldo, analytics por consultas agregadas, DTOs explicitos sem AutoMapper, controllers sem regra de negocio, backend como fonte das regras), registrando conformidade em `specs/008-consulta-estoque/quickstart.md`.
+- [X] T001 Confirmar que a feature e somente leitura e nao gera migration: revisar `specs/008-consulta-estoque/plan.md` e garantir que nenhuma tarefa altera entidades, mappings ou schema.
+- [X] T002 Validar gates constitucionais para os fluxos afetados (estoque por movimentacoes, sem campo fixo de saldo, analytics por consultas agregadas, DTOs explicitos sem AutoMapper, controllers sem regra de negocio, backend como fonte das regras), registrando conformidade em `specs/008-consulta-estoque/quickstart.md`.
 
 **Checkpoint**: Escopo de leitura confirmado, sem schema afetado.
 
@@ -27,9 +27,9 @@
 
 **Purpose**: Definir os contratos de resposta com mapeamento manual, sem AutoMapper.
 
-- [ ] T003 [P] [US1] Criar `EstoqueProdutoSaldoDto` com `ProdutoId`, `NomeProduto`, `CategoriaId` e `Saldo` em `src/Amani.ImportadosERP.Application/DTOs/Estoque/EstoqueProdutoSaldoDto.cs`.
-- [ ] T004 [P] [US2] Criar `EstoqueMovimentacaoItemDto` com `Id`, `Data`, `Tipo`, `Quantidade`, `Origem`, `CompraId`, `CompraItemId`, `VendaId` e `ValorUnitario` em `src/Amani.ImportadosERP.Application/DTOs/Estoque/EstoqueMovimentacaoItemDto.cs`.
-- [ ] T005 [US2] Criar `EstoqueProdutoMovimentacoesDto` com `ProdutoId`, `NomeProduto`, `SaldoAtual`, `TotalMovimentacoes` e `Movimentacoes` em `src/Amani.ImportadosERP.Application/DTOs/Estoque/EstoqueProdutoMovimentacoesDto.cs`.
+- [X] T003 [P] [US1] Criar `EstoqueProdutoSaldoDto` com `ProdutoId`, `NomeProduto`, `CategoriaId` e `Saldo` em `src/Amani.ImportadosERP.Application/DTOs/Estoque/EstoqueProdutoSaldoDto.cs`.
+- [X] T004 [P] [US2] Criar `EstoqueMovimentacaoItemDto` com `Id`, `Data`, `Tipo`, `Quantidade`, `Origem`, `CompraId`, `CompraItemId`, `VendaId` e `ValorUnitario` em `src/Amani.ImportadosERP.Application/DTOs/Estoque/EstoqueMovimentacaoItemDto.cs`.
+- [X] T005 [US2] Criar `EstoqueProdutoMovimentacoesDto` com `ProdutoId`, `NomeProduto`, `SaldoAtual`, `TotalMovimentacoes` e `Movimentacoes` em `src/Amani.ImportadosERP.Application/DTOs/Estoque/EstoqueProdutoMovimentacoesDto.cs`.
 
 **Checkpoint**: Contratos de resposta prontos antes de Queries e repository.
 

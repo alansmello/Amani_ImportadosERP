@@ -135,6 +135,16 @@ Expected outcome:
 
 ## Validation Results
 
+### Phase 1 - Setup e gates
+
+- T001 PASS: Plano e tarefas revisados em 2026-06-14. A feature permanece somente
+  leitura, nao cria migration, nao altera schema, entidades de dominio nem
+  mappings. As tarefas futuras atuam em DTOs, Queries/Handlers, controller e
+  repository de consulta.
+- T002 PASS: Gates constitucionais validados para estoque por movimentacoes, ausencia
+  de campo fixo de saldo, analytics por consultas agregadas, DTOs explicitos sem
+  AutoMapper, controller sem regra de negocio e backend como fonte das regras.
+
 (Preencher durante a implementacao e validacao final.)
 
 ## References
