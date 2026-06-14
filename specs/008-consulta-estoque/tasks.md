@@ -73,7 +73,7 @@
 
 **Purpose**: Garantir registro e descoberta dos componentes.
 
-- [ ] T021 Confirmar que `IEstoqueConsultaRepository` permanece registrado e que as novas Queries/Handlers sao descobertas pelo registro de assembly do MediatR em `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs` (sem nova interface se a existente foi estendida).
+- [X] T021 Confirmar que `IEstoqueConsultaRepository` permanece registrado e que as novas Queries/Handlers sao descobertas pelo registro de assembly do MediatR em `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs` (sem nova interface se a existente foi estendida).
 
 **Checkpoint**: Dependencias resolvidas sem nova abstracao desnecessaria.
 
