@@ -183,6 +183,25 @@ Expected outcome:
   apenas endpoints GET e nao cria, altera ou apaga movimentacoes. Nenhuma migration
   nova foi gerada pela feature.
 
+### Phase 8 - Documentacao/validacao final
+
+- T031 PASS: Resultados finais dos cenarios executados consolidados neste
+  `quickstart.md`, cobrindo build, endpoints HTTP, filtros, limites, respostas de
+  erro, produto sem movimentacoes, regressao de vendas e ausencia de migration.
+- T032 PASS: `contracts/consulta-estoque-api.md` conferido contra a implementacao.
+  O contrato reflete `GET /api/estoque`, `GET /api/estoque/{produtoId}/movimentacoes`,
+  parametros de query, respostas `400`/`404`, DTOs de saldo e historico,
+  `totalMovimentacoes` e `compraItemId`.
+- T033 PASS: `data-model.md` conferido contra a implementacao. O modelo permanece
+  somente leitura, sem campo fixo de saldo, sem nova migration, com saldo derivado
+  de `EstoqueMovimentacao` e projecao de historico incluindo `CompraItemId` quando
+  existir.
+- T034 PASS: Analise cruzada final entre `spec.md`, `plan.md`, `data-model.md`,
+  `contracts/consulta-estoque-api.md`, `quickstart.md` e `tasks.md` concluida sem
+  blockers. Risco residual documentado: nao ha projeto de testes automatizados na
+  solucao e o dataset atual nao possui produto com mais de 200 movimentacoes para
+  observar truncamento real, embora o limite maximo tenha sido exercitado via API.
+ 
 ## References
 
 - [Specification](./spec.md)

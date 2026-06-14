@@ -62,6 +62,8 @@ do saldo. Esta feature apenas le este historico.
 - `Origem`: classificacao de leitura derivada do tipo e das referencias
   (`Compra`, `Venda` ou `InventarioInicial`).
 - `CompraId`: presente quando a origem e compra.
+- `CompraItemId`: item de compra de origem, quando a movimentacao de entrada foi
+  gerada por recebimento de item de compra e a referencia existir.
 - `VendaId`: presente quando a origem e venda.
 - `ValorUnitario`: custo unitario quando existir.
 
@@ -76,7 +78,8 @@ do saldo. Esta feature apenas le este historico.
 - A origem e derivada do estado atual da movimentacao; nenhum campo de origem e
   adicionado a entidade.
 - Movimentacoes antigas de entrada por compra com `CompraId` e sem `CompraItemId`
-  continuam classificadas como origem `Compra`.
+  continuam classificadas como origem `Compra`; movimentacoes novas retornam
+  `CompraItemId` quando a referencia existir.
 
 ## Historico de Movimentacoes do Produto (projecao de consulta)
 

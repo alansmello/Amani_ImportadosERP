@@ -97,10 +97,10 @@
 
 **Purpose**: Conferir consistencia final dos artefatos Spec Kit e preparar handoff.
 
-- [ ] T031 Atualizar `specs/008-consulta-estoque/quickstart.md` com resultados finais dos cenarios executados.
-- [ ] T032 Conferir que `specs/008-consulta-estoque/contracts/consulta-estoque-api.md` reflete os endpoints implementados.
-- [ ] T033 Conferir que `specs/008-consulta-estoque/data-model.md` reflete a leitura sem campo fixo de saldo e sem migration.
-- [ ] T034 Executar analise cruzada final entre `spec.md`, `plan.md`, `data-model.md`, `contracts/consulta-estoque-api.md`, `quickstart.md` e `tasks.md`.
+- [X] T031 Atualizar `specs/008-consulta-estoque/quickstart.md` com resultados finais dos cenarios executados.
+- [X] T032 Conferir que `specs/008-consulta-estoque/contracts/consulta-estoque-api.md` reflete os endpoints implementados.
+- [X] T033 Conferir que `specs/008-consulta-estoque/data-model.md` reflete a leitura sem campo fixo de saldo e sem migration.
+- [X] T034 Executar analise cruzada final entre `spec.md`, `plan.md`, `data-model.md`, `contracts/consulta-estoque-api.md`, `quickstart.md` e `tasks.md`.
 
 **Checkpoint**: Feature pronta para validacao completa conforme a Constituicao.
 
