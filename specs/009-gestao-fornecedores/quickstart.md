@@ -26,7 +26,7 @@ Open the frontend URL reported by Next.js and validate the scenarios below.
 1. Open the application in desktop viewport.
 2. Confirm the main navigation exposes `Fornecedores` with the operational
    cadastro entries.
-3. Open smartphone and tablet widths.
+3. Open smartphone width at 390px, tablet width, and desktop width.
 4. Confirm `Fornecedores` remains reachable without layout overlap.
 
 Expected outcome:
@@ -41,6 +41,7 @@ Expected outcome:
 3. Search by part of a supplier name.
 4. Search by a term that matches no supplier.
 5. Clear the search.
+6. Confirm locating and opening supplier details can be completed within 30 seconds.
 
 Expected outcome:
 
@@ -70,6 +71,7 @@ Expected outcome:
 3. Enter a valid supplier name and submit.
 4. Confirm success feedback and navigation/update.
 5. Return to `/fornecedores`.
+6. Confirm the create flow can be completed within 2 minutes.
 
 Expected outcome:
 
@@ -96,6 +98,7 @@ Expected outcome:
 3. Submit with empty `nome` and confirm validation.
 4. Change `nome` to a valid value and submit.
 5. Confirm detail/list show the updated value without manual reload.
+6. Confirm the edit flow can be completed within 2 minutes.
 
 Expected outcome:
 
