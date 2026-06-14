@@ -84,10 +84,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T019 [P] [US3] Create SupplierDetails component showing nome and read-only id only in frontend/src/components/fornecedores/supplier-details.tsx
-- [ ] T020 [US3] Implement supplier detail page with useSupplier, LoadingState, ErrorState, not-found state, back navigation, and edit action in frontend/src/app/fornecedores/[id]/page.tsx
-- [ ] T021 [US3] Ensure detail page displays no purchase history, totals, rankings, metrics, contact fields, delete, remove, or inactivate actions in frontend/src/app/fornecedores/[id]/page.tsx
-- [ ] T022 [US3] Validate missing supplier ID behavior with a not-found state and list navigation in frontend/src/app/fornecedores/[id]/page.tsx
+- [X] T019 [P] [US3] Create SupplierDetails component showing nome and read-only id only in frontend/src/components/fornecedores/supplier-details.tsx
+- [X] T020 [US3] Implement supplier detail page with useSupplier, LoadingState, ErrorState, not-found state, back navigation, and edit action in frontend/src/app/fornecedores/[id]/page.tsx
+- [X] T021 [US3] Ensure detail page displays no purchase history, totals, rankings, metrics, contact fields, delete, remove, or inactivate actions in frontend/src/app/fornecedores/[id]/page.tsx
+- [X] T022 [US3] Validate missing supplier ID behavior with a not-found state and list navigation in frontend/src/app/fornecedores/[id]/page.tsx
 
 **Checkpoint**: User Story 3 is independently functional for existing and missing suppliers.
 
