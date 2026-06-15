@@ -169,13 +169,13 @@ nao se mistura com operacoes diarias.
 - **FR-018**: O sistema MUST oferecer confirmacao explicita antes de enviar cada tipo de lancamento inicial.
 - **FR-019**: O sistema MUST bloquear novo envio de uma etapa depois que ela for registrada com sucesso, exibindo estado concluido para evitar duplo lancamento.
 - **FR-020**: O sistema MUST manter inventario, caixa e contas a receber como etapas independentes, permitindo que uma etapa seja concluida sem exigir que todas sejam enviadas no mesmo momento.
-- **FR-026**: O sistema MUST exibir progresso geral da implantacao com base nas etapas concluidas, pendentes e com erro.
-- **FR-027**: O sistema MUST tratar cada envio em lote de uma etapa como tudo-ou-nada para fins de conclusao da etapa.
 - **FR-021**: O sistema MUST NOT oferecer reabertura, edicao em massa ou importacao de planilha nesta feature.
 - **FR-022**: O sistema MUST NOT recalcular custo medio, saldo de estoque, saldo financeiro, lucro, metricas, rankings ou indicadores gerenciais na interface.
 - **FR-023**: O sistema MUST NOT tratar compra, recebimento de compra, venda, pagamento de recebivel ou despesa recorrente como parte desta feature.
 - **FR-024**: O sistema MUST manter a experiencia responsiva, Mobile First e Dark Only em todas as etapas do fluxo.
 - **FR-025**: O sistema MUST manter linguagem operacional clara para diferenciar dados iniciais de operacoes recorrentes do ERP.
+- **FR-026**: O sistema MUST exibir progresso geral da implantacao com base nas etapas concluidas, pendentes e com erro.
+- **FR-027**: O sistema MUST tratar cada envio em lote de uma etapa como tudo-ou-nada para fins de conclusao da etapa.
 
 ### Key Entities *(include if feature involves data)*
 
