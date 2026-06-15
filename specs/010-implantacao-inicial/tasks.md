@@ -18,11 +18,11 @@
 
 **Purpose**: Preparar estrutura de arquivos, rotas e contratos base sem implementar as etapas ainda.
 
-- [ ] T001 Create implantation route directory in frontend/src/app/configuracoes/implantacao
-- [ ] T002 Create implantation component directory in frontend/src/components/implantacao
-- [ ] T003 [P] Review existing configuration placeholder in frontend/src/app/configuracoes/page.tsx and reference operational patterns in frontend/src/app/produtos/page.tsx
-- [ ] T004 [P] Review existing products and customers hooks/services in frontend/src/hooks/use-products.ts, frontend/src/hooks/use-customers.ts, frontend/src/services/products.ts, and frontend/src/services/customers.ts
-- [ ] T005 [P] Review backend contract source in src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs and DTO source files under src/Amani.ImportadosERP.Application/DTOs before implementing frontend payloads
+- [X] T001 Create implantation route directory in frontend/src/app/configuracoes/implantacao
+- [X] T002 Create implantation component directory in frontend/src/components/implantacao
+- [X] T003 [P] Review existing configuration placeholder in frontend/src/app/configuracoes/page.tsx and reference operational patterns in frontend/src/app/produtos/page.tsx
+- [X] T004 [P] Review existing products and customers hooks/services in frontend/src/hooks/use-products.ts, frontend/src/hooks/use-customers.ts, frontend/src/services/products.ts, and frontend/src/services/customers.ts
+- [X] T005 [P] Review backend contract source in src/Amani.ImportadosERP.Api/Controllers/ImplantacaoController.cs and DTO source files under src/Amani.ImportadosERP.Application/DTOs before implementing frontend payloads
 
 ---
 
