@@ -32,13 +32,13 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T006 Create implantation type contracts for payloads, results, step status, local item drafts, and validation errors in frontend/src/types/implantation.ts
-- [ ] T007 Create implantationService with registerInitialInventory, registerInitialCashBalance, and registerInitialReceivable methods in frontend/src/services/implantation.ts
-- [ ] T008 Extend queryKeys with implantacao prefix in frontend/src/lib/query-client.ts
-- [ ] T009 Create use-implantation hooks with mutations for initial inventory, initial cash balance, and initial receivable registration in frontend/src/hooks/use-implantation.ts
-- [ ] T010 Implement local validation helpers for inventory items, cash balance, receivable drafts, duplicate products, and required references in frontend/src/components/implantacao/implantation-validation.ts
-- [ ] T011 [P] Add configuracoesImplantacao route key pointing to /configuracoes/implantacao in frontend/src/config/routes.ts
-- [ ] T012 Improve API error message extraction for backend `{ error }` responses in frontend/src/services/api-client.ts and frontend/src/services/errors.ts
+- [X] T006 Create implantation type contracts for payloads, results, step status, local item drafts, and validation errors in frontend/src/types/implantation.ts
+- [X] T007 Create implantationService with registerInitialInventory, registerInitialCashBalance, and registerInitialReceivable methods in frontend/src/services/implantation.ts
+- [X] T008 Extend queryKeys with implantacao prefix in frontend/src/lib/query-client.ts
+- [X] T009 Create use-implantation hooks with mutations for initial inventory, initial cash balance, and initial receivable registration in frontend/src/hooks/use-implantation.ts
+- [X] T010 Implement local validation helpers for inventory items, cash balance, receivable drafts, duplicate products, and required references in frontend/src/components/implantacao/implantation-validation.ts
+- [X] T011 [P] Add configuracoesImplantacao route key pointing to /configuracoes/implantacao in frontend/src/config/routes.ts
+- [X] T012 Improve API error message extraction for backend `{ error }` responses in frontend/src/services/api-client.ts and frontend/src/services/errors.ts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 
@@ -52,14 +52,14 @@
 
 ### Implementation for User Story 1
 
-- [ ] T013 [P] [US1] Create ImplantationProgress component showing pending, editing, submitting, completed, and error states in frontend/src/components/implantacao/implantation-progress.tsx
-- [ ] T014 [P] [US1] Create ImplantationReviewDialog component for pre-submit confirmation using existing dialog UI in frontend/src/components/implantacao/implantation-review-dialog.tsx
-- [ ] T015 [P] [US1] Create ImplantationResultSummary component for success and error summaries in frontend/src/components/implantacao/implantation-result-summary.tsx
-- [ ] T016 [US1] Create InitialInventoryStep component with product selector, quantity, optional unit value, add/remove draft item, duplicate-product validation, and disabled completed state in frontend/src/components/implantacao/initial-inventory-step.tsx
-- [ ] T017 [US1] Connect InitialInventoryStep to useProducts and registerInitialInventory mutation, sending origem ImplantacaoInicial and preserving draft data on validation/API errors in frontend/src/components/implantacao/initial-inventory-step.tsx
-- [ ] T018 [US1] Implement inventory review summary with product names, quantities, unit values, total item count, and confirmation action in frontend/src/components/implantacao/initial-inventory-step.tsx
-- [ ] T019 [US1] Mark inventory step as completed only after successful API response and block subsequent inventory submission in the current screen/session in frontend/src/components/implantacao/initial-inventory-step.tsx
-- [ ] T020 [US1] Create implantation page shell loading products and rendering the inventory step with loading/error states in frontend/src/app/configuracoes/implantacao/page.tsx
+- [X] T013 [P] [US1] Create ImplantationProgress component showing pending, editing, submitting, completed, and error states in frontend/src/components/implantacao/implantation-progress.tsx
+- [X] T014 [P] [US1] Create ImplantationReviewDialog component for pre-submit confirmation using existing dialog UI in frontend/src/components/implantacao/implantation-review-dialog.tsx
+- [X] T015 [P] [US1] Create ImplantationResultSummary component for success and error summaries in frontend/src/components/implantacao/implantation-result-summary.tsx
+- [X] T016 [US1] Create InitialInventoryStep component with product selector, quantity, optional unit value, add/remove draft item, duplicate-product validation, and disabled completed state in frontend/src/components/implantacao/initial-inventory-step.tsx
+- [X] T017 [US1] Connect InitialInventoryStep to useProducts and registerInitialInventory mutation, sending origem ImplantacaoInicial and preserving draft data on validation/API errors in frontend/src/components/implantacao/initial-inventory-step.tsx
+- [X] T018 [US1] Implement inventory review summary with product names, quantities, unit values, total item count, and confirmation action in frontend/src/components/implantacao/initial-inventory-step.tsx
+- [X] T019 [US1] Mark inventory step as completed only after successful API response and block subsequent inventory submission in the current screen/session in frontend/src/components/implantacao/initial-inventory-step.tsx
+- [X] T020 [US1] Create implantation page shell loading products and rendering the inventory step with loading/error states in frontend/src/app/configuracoes/implantacao/page.tsx
 
 **Checkpoint**: User Story 1 is fully functional and testable independently.
 
