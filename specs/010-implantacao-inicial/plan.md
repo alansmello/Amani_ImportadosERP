@@ -50,8 +50,8 @@ vez via queries existentes e reutilizadas no preenchimento.
 **Constraints**: Dark Only, Mobile First, sem dados mockados, sem regra critica de
 negocio no frontend, sem recalcule de custo medio/saldo/lucro/metricas, sem
 reabertura, sem edicao em massa, sem importacao de planilha. Etapa concluida fica
-bloqueada para novo envio no escopo da sessao/tela; rejeicoes definitivas e
-duplicidades oficiais permanecem responsabilidade do backend.
+bloqueada para novo envio no escopo da sessao/tela atual; rejeicoes definitivas e
+duplicidades oficiais em novo carregamento permanecem responsabilidade do backend.
 
 **Scale/Scope**: Uma area de implantacao acessivel a partir de Configuracoes,
 preferencialmente em `/configuracoes/implantacao`, com componentes em
@@ -74,7 +74,9 @@ rotas/navegacao e reuso dos hooks de produtos/clientes.
   reutilizados como referencias de preenchimento.
 - O endpoint de contas a receber iniciais e unitario; a UX de lote da etapa deve
   validar todos os itens antes e enviar sequencialmente. Se algum item falhar, a
-  etapa nao deve ser marcada como concluida.
+  etapa nao deve ser marcada como concluida na interface. Essa regra e de
+  conclusao visual/operacional da etapa, nao uma garantia de atomicidade
+  transacional no backend atual.
 - Nao existe endpoint de status de implantacao. O estado concluido/bloqueado da
   etapa no frontend e um feedback operacional local apos sucesso; ao reabrir a
   tela, eventuais duplicidades devem ser tratadas pela rejeicao oficial do
@@ -92,7 +94,8 @@ rotas/navegacao e reuso dos hooks de produtos/clientes.
   - contas a receber iniciais: invalidar clientes/financeiro futuro quando existir.
 - Para a etapa de contas a receber em lote, o hook/componente deve validar todos
   os registros locais antes de iniciar envios. Se qualquer chamada falhar, a etapa
-  permanece com erro/pendente e nenhum item individual e exibido como concluido.
+  permanece com erro/pendente e nenhum item individual e exibido como concluido na
+  interface.
 
 ## Constitution Check
 
@@ -233,8 +236,8 @@ marcadores pendentes de esclarecimento.
 - Saldo inicial de caixa permite revisar e registrar valor/data/origem/descricao.
 - Contas a receber iniciais permitem montar lote local, revisar e enviar chamadas
   unitarias de forma controlada.
-- Etapa concluida fica bloqueada para novo envio na sessao/tela.
-- Falha em item de lote nao marca a etapa como concluida.
+- Etapa concluida fica bloqueada para novo envio na sessao/tela atual.
+- Falha em item de lote nao marca a etapa como concluida na interface.
 - Estados de loading, vazio, erro, sucesso e pendente aparecem quando aplicavel.
 - Nenhum calculo de custo medio, saldo, lucro, metrica ou ranking ocorre no
   frontend.
@@ -256,7 +259,7 @@ O `/speckit-tasks` deve gerar tarefas explicitas para:
 - atualizar `/configuracoes` para expor acesso ao fluxo;
 - criar componentes de progresso, etapas, revisao e resumo;
 - reutilizar `useProducts` e `useCustomers` para listas de apoio;
-- validar bloqueio de etapa concluida e tudo-ou-nada por etapa;
+- validar bloqueio local de etapa concluida e tudo-ou-nada visual por etapa;
 - validar Mobile First, Dark Only e ausencia de calculos gerenciais;
 - executar lint, typecheck e build.
 

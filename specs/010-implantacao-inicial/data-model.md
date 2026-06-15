@@ -167,10 +167,10 @@ Resposta da fonte oficial apos uma conta a receber inicial.
 
 ### State Impact
 
-- A etapa de recebiveis so e `completed` se todas as contas do lote local forem
-  registradas com sucesso.
-- Se qualquer envio falhar, a etapa permanece `error`/pendente e nenhum item do
-  lote e apresentado como concluido.
+- A etapa de recebiveis so e `completed` na interface se todas as contas do lote
+  local forem registradas com sucesso.
+- Se qualquer envio falhar, a etapa permanece `error`/pendente na interface e
+  nenhum item do lote e apresentado visualmente como concluido.
 
 ## Produto
 

@@ -90,7 +90,7 @@ Content-Type: application/json
 
 - Enviar inventario como um unico lote.
 - Marcar etapa como concluida somente apos `200`.
-- Bloquear novo envio apos sucesso.
+- Bloquear novo envio apos sucesso na sessao/tela atual.
 - Em erro, manter dados preenchidos para correcao.
 
 ## Register Initial Cash Balance
@@ -133,7 +133,7 @@ Content-Type: application/json
 
 - Exibir revisao antes do envio.
 - Marcar etapa como concluida somente apos `200`.
-- Bloquear novo envio apos sucesso.
+- Bloquear novo envio apos sucesso na sessao/tela atual.
 - Em erro, mostrar mensagem retornada pela fonte oficial.
 
 ## Register Initial Receivable
@@ -184,7 +184,10 @@ Content-Type: application/json
   item na UI.
 - Marcar a etapa como concluida somente se todos os envios retornarem sucesso.
 - Se qualquer envio falhar, a etapa permanece com erro/pendente e nenhum item do
-  lote e exibido como concluido.
+  lote e exibido como concluido na interface.
+- Como o endpoint atual registra uma conta por chamada, essa regra define a
+  conclusao visual da etapa no frontend; ela nao promete atomicidade transacional
+  de registros ja aceitos pela fonte oficial.
 
 ## Error Contract
 
@@ -196,15 +199,14 @@ Erros conhecidos podem retornar:
 }
 ```
 
-O `apiClient` atual normaliza mensagens HTTP de erro. A implementacao deve, se
-necessario, melhorar a leitura de `{ error }` para exibir a mensagem especifica
-retornada pelo backend sem depender de dados mockados.
+O `apiClient` deve ler `{ error }` quando retornado pelo backend e expor a
+mensagem especifica para a interface sem depender de dados mockados.
 
 ## Cache and State Contract
 
 - Dados confirmados ficam na fonte oficial; o frontend nao persiste estado local
   como fonte de verdade.
 - Estado `completed` e bloqueio de reenvio sao feedback local apos sucesso da
-  etapa.
+  etapa na sessao/tela atual.
 - Reabertura, edicao em massa e importacao de planilha estao fora do contrato da
   F010.

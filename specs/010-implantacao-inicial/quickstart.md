@@ -53,7 +53,7 @@ Expected:
 - A fonte oficial registra movimentacoes de inventario inicial.
 - A tela mostra feedback de sucesso com quantidade de itens e referencia das
   movimentacoes quando disponivel.
-- A etapa fica concluida e bloqueada para novo envio.
+- A etapa fica concluida e bloqueada para novo envio na sessao/tela atual.
 
 ## Scenario 3: Initial Inventory Validation
 
@@ -78,7 +78,7 @@ Expected:
 Expected:
 
 - A fonte oficial registra o evento financeiro de saldo inicial.
-- A etapa mostra sucesso e fica bloqueada para novo envio.
+- A etapa mostra sucesso e fica bloqueada para novo envio na sessao/tela atual.
 - Em rejeicao da fonte oficial, a mensagem e exibida e a etapa segue corrigivel.
 
 ## Scenario 5: Initial Receivables Success
@@ -92,8 +92,8 @@ Expected:
 Expected:
 
 - Todas as contas validas sao enviadas para a fonte oficial.
-- A etapa so fica concluida se todos os envios retornarem sucesso.
-- A etapa concluida fica bloqueada para novo envio.
+- A etapa so fica concluida visualmente se todos os envios retornarem sucesso.
+- A etapa concluida fica bloqueada para novo envio na sessao/tela atual.
 
 ## Scenario 6: Initial Receivables Failure Is Not Partial Success
 
@@ -103,8 +103,11 @@ Expected:
 Expected:
 
 - Se a validacao local detectar o erro, nenhum envio e iniciado.
-- Se a fonte oficial rejeitar qualquer item, a etapa nao fica concluida.
+- Se a fonte oficial rejeitar qualquer item, a etapa nao fica concluida na interface.
 - A UI nao apresenta itens individuais como concluidos.
+- Como a fonte oficial registra uma conta por chamada, registros ja aceitos antes
+  de uma falha seguem responsabilidade do backend; a interface apenas nao marca a
+  etapa como concluida.
 - O preenchimento permanece disponivel para correcao.
 
 ## Scenario 7: Supporting Data Failure

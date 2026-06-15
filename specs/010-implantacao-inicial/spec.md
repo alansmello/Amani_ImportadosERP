@@ -22,9 +22,9 @@ identidade visual existente e cuidado especial contra duplo lancamento.
 
 ### Session 2026-06-15
 
-- Q: Depois que uma etapa de implantacao inicial for registrada com sucesso, qual deve ser o comportamento para evitar duplo lancamento? -> A: Apos sucesso, a etapa fica bloqueada para novo envio e mostra estado concluido.
+- Q: Depois que uma etapa de implantacao inicial for registrada com sucesso, qual deve ser o comportamento para evitar duplo lancamento? -> A: Apos sucesso, a etapa fica bloqueada para novo envio na sessao/tela atual e mostra estado concluido.
 - Q: A implantacao inicial deve ser concluida como pacote unico ou por etapas independentes? -> A: Cada etapa pode ser concluida separadamente; a implantacao geral mostra progresso parcial.
-- Q: Como tratar falha em um item dentro de um envio em lote de uma etapa? -> A: Se qualquer item do lote falhar, nenhum item da etapa e marcado como concluido.
+- Q: Como tratar falha em um item dentro de um envio em lote de uma etapa? -> A: Se qualquer item do lote falhar, nenhum item da etapa e marcado como concluido na interface.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -86,7 +86,7 @@ sistema registra os recebiveis informados.
 
 1. **Given** que existem clientes cadastrados, **When** o usuario informa contas a receber iniciais validas e confirma, **Then** o sistema registra os recebiveis e exibe feedback de sucesso.
 2. **Given** que uma conta esta sem cliente, valor, descricao ou vencimento valido, **When** o usuario tenta confirmar, **Then** o sistema destaca o problema e preserva as demais contas preenchidas.
-3. **Given** que a fonte oficial rejeita uma ou mais contas, **When** a resposta e exibida, **Then** a etapa permanece pendente, nenhum item do lote e tratado como concluido e o usuario entende quais dados precisam ser corrigidos sem perder o preenchimento.
+3. **Given** que a fonte oficial rejeita uma ou mais contas, **When** a resposta e exibida, **Then** a etapa permanece pendente na interface, nenhum item do lote e tratado visualmente como concluido e o usuario entende quais dados precisam ser corrigidos sem perder o preenchimento.
 
 ---
 
@@ -107,7 +107,7 @@ antes do envio definitivo.
 
 1. **Given** que o usuario preencheu uma etapa de implantacao, **When** avanca para confirmacao, **Then** o sistema apresenta resumo claro dos dados que serao registrados.
 2. **Given** que o usuario identifica um erro no resumo, **When** retorna para a etapa anterior, **Then** os dados preenchidos permanecem disponiveis para edicao antes da confirmacao.
-3. **Given** que o lancamento foi confirmado com sucesso, **When** o usuario retorna a tela de implantacao, **Then** o sistema exibe a etapa como concluida e bloqueia novo envio para evitar lancamento duplicado.
+3. **Given** que o lancamento foi confirmado com sucesso, **When** o usuario permanece ou retorna dentro da sessao/tela atual de implantacao, **Then** o sistema exibe a etapa como concluida e bloqueia novo envio para evitar lancamento duplicado.
 
 ---
 
@@ -139,8 +139,8 @@ nao se mistura com operacoes diarias.
 - A fonte oficial pode recusar um lancamento por duplicidade ou regra operacional; a tela deve exibir a mensagem retornada para evitar duplo lancamento.
 - O carregamento de produtos ou clientes pode falhar; a etapa afetada deve mostrar erro e permitir tentar novamente sem quebrar as demais etapas.
 - A implantacao pode ser feita parcialmente; cada etapa deve indicar claramente o que foi concluido, pendente ou rejeitado.
-- Uma etapa concluida com sucesso nao deve permitir novo envio dentro desta feature; correcoes devem seguir fluxo futuro ou definido pela fonte oficial.
-- Se qualquer item de um envio em lote falhar, a etapa inteira deve permanecer pendente ou com erro, sem marcar itens individuais como concluidos.
+- Uma etapa concluida com sucesso nao deve permitir novo envio na sessao/tela atual desta feature; em novo carregamento, duplicidades e correcoes devem seguir a resposta da fonte oficial ou fluxo futuro.
+- Se qualquer item de um envio em lote falhar, a etapa inteira deve permanecer pendente ou com erro na interface, sem marcar itens individuais como concluidos na experiencia visual.
 - O usuario pode sair do fluxo antes de confirmar; dados nao confirmados nao devem ser apresentados como registrados.
 - A interface nao deve recalcular custo medio, saldo de estoque, saldo financeiro, lucro, metricas ou indicadores gerenciais.
 - A experiencia deve funcionar em smartphone, tablet e desktop, com formularios extensos sem sobreposicao de campos, botoes ou mensagens.
@@ -167,7 +167,7 @@ nao se mistura com operacoes diarias.
 - **FR-016**: O sistema MUST apresentar mensagens de erro retornadas pela fonte oficial de forma compreensivel para correcao pelo usuario.
 - **FR-017**: O sistema MUST sinalizar etapas concluidas, pendentes ou com erro para orientar a continuidade da implantacao.
 - **FR-018**: O sistema MUST oferecer confirmacao explicita antes de enviar cada tipo de lancamento inicial.
-- **FR-019**: O sistema MUST bloquear novo envio de uma etapa depois que ela for registrada com sucesso, exibindo estado concluido para evitar duplo lancamento.
+- **FR-019**: O sistema MUST bloquear novo envio de uma etapa depois que ela for registrada com sucesso na sessao/tela atual, exibindo estado concluido para evitar duplo lancamento acidental.
 - **FR-020**: O sistema MUST manter inventario, caixa e contas a receber como etapas independentes, permitindo que uma etapa seja concluida sem exigir que todas sejam enviadas no mesmo momento.
 - **FR-021**: O sistema MUST NOT oferecer reabertura, edicao em massa ou importacao de planilha nesta feature.
 - **FR-022**: O sistema MUST NOT recalcular custo medio, saldo de estoque, saldo financeiro, lucro, metricas, rankings ou indicadores gerenciais na interface.
@@ -175,7 +175,7 @@ nao se mistura com operacoes diarias.
 - **FR-024**: O sistema MUST manter a experiencia responsiva, Mobile First e Dark Only em todas as etapas do fluxo.
 - **FR-025**: O sistema MUST manter linguagem operacional clara para diferenciar dados iniciais de operacoes recorrentes do ERP.
 - **FR-026**: O sistema MUST exibir progresso geral da implantacao com base nas etapas concluidas, pendentes e com erro.
-- **FR-027**: O sistema MUST tratar cada envio em lote de uma etapa como tudo-ou-nada para fins de conclusao da etapa.
+- **FR-027**: O sistema MUST tratar cada envio em lote de uma etapa como tudo-ou-nada para fins de conclusao visual da etapa na interface, sem prometer atomicidade transacional quando a fonte oficial expuser chamadas unitarias.
 
 ### Key Entities *(include if feature involves data)*
 
