@@ -1,9 +1,10 @@
 "use client";
 
-import { ClipboardList, ReceiptText } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 
 import { InitialCashStep } from "@/components/implantacao/initial-cash-step";
 import { InitialInventoryStep } from "@/components/implantacao/initial-inventory-step";
+import { InitialReceivablesStep } from "@/components/implantacao/initial-receivables-step";
 import { ImplantationProgress } from "@/components/implantacao/implantation-progress";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/states/empty-state";
@@ -38,9 +39,9 @@ export default function ImplantacaoInicialPage() {
           },
           {
             id: "initialReceivables",
-            status: "pending",
+            status: "editing",
             title: "Contas a receber iniciais",
-            description: "Etapa planejada para a proxima fase."
+            description: "Recebiveis anteriores ao uso do ERP."
           }
         ]}
       />
@@ -78,12 +79,7 @@ export default function ImplantacaoInicialPage() {
 
       <InitialCashStep />
 
-      <EmptyState
-        title="Proxima etapa da implantacao"
-        description="Contas a receber iniciais serao habilitadas na proxima fase desta feature."
-        badgeLabel="Em preparo"
-        icon={<ReceiptText className="h-5 w-5" aria-hidden />}
-      />
+      <InitialReceivablesStep />
     </main>
   );
 }

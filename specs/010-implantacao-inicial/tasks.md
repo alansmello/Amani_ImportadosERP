@@ -90,13 +90,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Create InitialReceivablesStep component with client selector, value, due date, optional description, add/remove draft receivable, and completed-state lock in frontend/src/components/implantacao/initial-receivables-step.tsx
-- [ ] T026 [US3] Connect InitialReceivablesStep to useCustomers("active") and show loading, empty, and error states for customer support data in frontend/src/components/implantacao/initial-receivables-step.tsx
-- [ ] T027 [US3] Implement local validation for all receivable drafts before any API call, including required client, value greater than zero, required due date, and max 10 item UX guard in frontend/src/components/implantacao/initial-receivables-step.tsx
-- [ ] T028 [US3] Implement receivables review summary with client names, descriptions, values, due dates, and total count in frontend/src/components/implantacao/initial-receivables-step.tsx
-- [ ] T029 [US3] Implement sequential initial receivable submissions using registerInitialReceivable mutation, preserving the editable draft batch and keeping the step pending/error if any request fails in frontend/src/components/implantacao/initial-receivables-step.tsx
-- [ ] T030 [US3] Mark receivables step as visually completed only after every receivable in the local batch succeeds and never show individual item success when the batch fails in frontend/src/components/implantacao/initial-receivables-step.tsx
-- [ ] T031 [US3] Add receivables step to implantation page with independent state from inventory and cash in frontend/src/app/configuracoes/implantacao/page.tsx
+- [X] T025 [US3] Create InitialReceivablesStep component with client selector, value, due date, optional description, add/remove draft receivable, and completed-state lock in frontend/src/components/implantacao/initial-receivables-step.tsx
+- [X] T026 [US3] Connect InitialReceivablesStep to useCustomers("active") and show loading, empty, and error states for customer support data in frontend/src/components/implantacao/initial-receivables-step.tsx
+- [X] T027 [US3] Implement local validation for all receivable drafts before any API call, including required client, value greater than zero, required due date, and max 10 item UX guard in frontend/src/components/implantacao/initial-receivables-step.tsx
+- [X] T028 [US3] Implement receivables review summary with client names, descriptions, values, due dates, and total count in frontend/src/components/implantacao/initial-receivables-step.tsx
+- [X] T029 [US3] Implement sequential initial receivable submissions using registerInitialReceivable mutation, preserving the editable draft batch and keeping the step pending/error if any request fails in frontend/src/components/implantacao/initial-receivables-step.tsx
+- [X] T030 [US3] Mark receivables step as visually completed only after every receivable in the local batch succeeds and never show individual item success when the batch fails in frontend/src/components/implantacao/initial-receivables-step.tsx
+- [X] T031 [US3] Add receivables step to implantation page with independent state from inventory and cash in frontend/src/app/configuracoes/implantacao/page.tsx
 
 **Checkpoint**: User Story 3 is independently functional and preserves all-or-nothing visual completion semantics.
 
