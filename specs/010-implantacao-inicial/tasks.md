@@ -142,16 +142,16 @@
 
 **Purpose**: Validacao final, regressao constitucional e acabamento transversal.
 
-- [ ] T042 [P] Validate API error extraction displays backend `{ error }` messages during implantation failures using specs/010-implantacao-inicial/quickstart.md
-- [ ] T043 [P] Validate Dark Only visual consistency and absence of unsupported import/reopening/mass-edit actions across frontend/src/app/configuracoes and frontend/src/components/implantacao
-- [ ] T044 Validate Mobile First behavior at 390px smartphone, tablet, and desktop widths using scenarios in specs/010-implantacao-inicial/quickstart.md
-- [ ] T045 Validate timed success criteria for access within 20 seconds, 10 inventory items within 5 minutes, cash within 1 minute, and 10 receivables within 5 minutes using specs/010-implantacao-inicial/quickstart.md
-- [ ] T046 Validate that frontend/src/components/implantacao and frontend/src/hooks/use-implantation.ts perform no cost average, stock balance, financial balance, profit, ranking, metric, dashboard, or transactional rollback calculations
-- [ ] T047 Run npm run lint in frontend and fix any issues in frontend/src/app/configuracoes, frontend/src/components/implantacao, frontend/src/hooks/use-implantation.ts, frontend/src/services/implantation.ts, frontend/src/types/implantation.ts, frontend/src/config/routes.ts, and frontend/src/config/navigation.ts
-- [ ] T048 Run npm run typecheck in frontend and fix any TypeScript issues in frontend/src/app/configuracoes, frontend/src/components/implantacao, frontend/src/hooks/use-implantation.ts, frontend/src/services/implantation.ts, and frontend/src/types/implantation.ts
-- [ ] T049 Run npm run build in frontend and fix any build issues in frontend/src/app/configuracoes and related implantation files
-- [ ] T050 Validate regression that Produtos and Clientes pages still load through existing hooks after shared query key and route changes in frontend/src/app/produtos/page.tsx and frontend/src/app/clientes/page.tsx
-- [ ] T051 Validate constitution gates and confirm no backend files, migrations, stock movement logic, purchase flow, sales flow, financial dashboard, analytics aggregation, import flow, reopening flow, or mass-edit behavior were changed for this frontend-only feature in src and frontend/src
+- [X] T042 [P] Validate API error extraction displays backend `{ error }` messages during implantation failures using specs/010-implantacao-inicial/quickstart.md
+- [X] T043 [P] Validate Dark Only visual consistency and absence of unsupported import/reopening/mass-edit actions across frontend/src/app/configuracoes and frontend/src/components/implantacao
+- [X] T044 Validate Mobile First behavior at 390px smartphone, tablet, and desktop widths using scenarios in specs/010-implantacao-inicial/quickstart.md
+- [X] T045 Validate timed success criteria for access within 20 seconds, 10 inventory items within 5 minutes, cash within 1 minute, and 10 receivables within 5 minutes using specs/010-implantacao-inicial/quickstart.md
+- [X] T046 Validate that frontend/src/components/implantacao and frontend/src/hooks/use-implantation.ts perform no cost average, stock balance, financial balance, profit, ranking, metric, dashboard, or transactional rollback calculations
+- [X] T047 Run npm run lint in frontend and fix any issues in frontend/src/app/configuracoes, frontend/src/components/implantacao, frontend/src/hooks/use-implantation.ts, frontend/src/services/implantation.ts, frontend/src/types/implantation.ts, frontend/src/config/routes.ts, and frontend/src/config/navigation.ts
+- [X] T048 Run npm run typecheck in frontend and fix any TypeScript issues in frontend/src/app/configuracoes, frontend/src/components/implantacao, frontend/src/hooks/use-implantation.ts, frontend/src/services/implantation.ts, and frontend/src/types/implantation.ts
+- [X] T049 Run npm run build in frontend and fix any build issues in frontend/src/app/configuracoes and related implantation files
+- [X] T050 Validate regression that Produtos and Clientes pages still load through existing hooks after shared query key and route changes in frontend/src/app/produtos/page.tsx and frontend/src/app/clientes/page.tsx
+- [X] T051 Validate constitution gates and confirm no backend files, migrations, stock movement logic, purchase flow, sales flow, financial dashboard, analytics aggregation, import flow, reopening flow, or mass-edit behavior were changed for this frontend-only feature in src and frontend/src
 
 ---
 
