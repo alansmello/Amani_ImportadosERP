@@ -4,6 +4,7 @@ export const routes = {
   fornecedores: "/fornecedores",
   produtos: "/produtos",
   compras: "/compras",
+  comprasNova: "/compras/nova",
   vendas: "/vendas",
   estoque: "/estoque",
   financeiro: "/financeiro",
@@ -13,3 +14,7 @@ export const routes = {
 
 export type AppRouteKey = keyof typeof routes;
 export type AppRoute = (typeof routes)[AppRouteKey];
+
+export function compraDetalhe(id: string) {
+  return `/compras/${id}` as const;
+}

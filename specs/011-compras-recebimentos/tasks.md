@@ -20,11 +20,11 @@
 
 **Purpose**: Confirm existing context and prepare the frontend structure for compras.
 
-- [ ] T001 Review current placeholder and local frontend patterns in `frontend/src/app/compras/page.tsx`, `frontend/src/services/suppliers.ts`, `frontend/src/services/products.ts`, `frontend/src/hooks/use-suppliers.ts`, and `frontend/src/hooks/use-products.ts`
-- [ ] T002 [P] Review existing route and navigation conventions in `frontend/src/config/routes.ts` and `frontend/src/config/navigation.ts`
-- [ ] T003 [P] Review React Query conventions and existing query keys in `frontend/src/lib/query-client.ts`
-- [ ] T004 [P] Create the compras component directory planned for the feature under `frontend/src/components/compras/`
-- [ ] T005 Confirm the backend contract remains unchanged against `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs` before implementing frontend calls
+- [X] T001 Review current placeholder and local frontend patterns in `frontend/src/app/compras/page.tsx`, `frontend/src/services/suppliers.ts`, `frontend/src/services/products.ts`, `frontend/src/hooks/use-suppliers.ts`, and `frontend/src/hooks/use-products.ts`
+- [X] T002 [P] Review existing route and navigation conventions in `frontend/src/config/routes.ts` and `frontend/src/config/navigation.ts`
+- [X] T003 [P] Review React Query conventions and existing query keys in `frontend/src/lib/query-client.ts`
+- [X] T004 [P] Create the compras component directory planned for the feature under `frontend/src/components/compras/`
+- [X] T005 Confirm the backend contract remains unchanged against `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs` before implementing frontend calls
 
 ---
 
@@ -34,13 +34,13 @@
 
 **CRITICAL**: No user story work should start until this phase is complete.
 
-- [ ] T006 [P] Define purchase DTO, filter, draft, receipt, loss, and loss motive types in `frontend/src/types/purchase.ts`
-- [ ] T007 Implement all purchase API calls in `frontend/src/services/purchases.ts` for list, in-transit, pending products, detail, create, receipt, loss, receipt history, and loss history
-- [ ] T008 Implement purchase query keys, read queries, mutations, and cache invalidation in `frontend/src/hooks/use-purchases.ts`
-- [ ] T009 [P] Add shared purchase form/action validation helpers in `frontend/src/components/compras/purchase-validation.ts`
-- [ ] T010 Add `comprasNova` and `compraDetalhe` route helpers in `frontend/src/config/routes.ts`
-- [ ] T011 Update compras navigation readiness metadata in `frontend/src/config/navigation.ts`
-- [ ] T012 Validate constitution guardrails for frontend-only scope in `specs/011-compras-recebimentos/plan.md`
+- [X] T006 [P] Define purchase DTO, filter, draft, receipt, loss, and loss motive types in `frontend/src/types/purchase.ts`
+- [X] T007 Implement all purchase API calls in `frontend/src/services/purchases.ts` for list, in-transit, pending products, detail, create, receipt, loss, receipt history, and loss history
+- [X] T008 Implement purchase query keys, read queries, mutations, and cache invalidation in `frontend/src/hooks/use-purchases.ts`
+- [X] T009 [P] Add shared purchase form/action validation helpers in `frontend/src/components/compras/purchase-validation.ts`
+- [X] T010 Add `comprasNova` and `compraDetalhe` route helpers in `frontend/src/config/routes.ts`
+- [X] T011 Update compras navigation readiness metadata in `frontend/src/config/navigation.ts`
+- [X] T012 Validate constitution guardrails for frontend-only scope in `specs/011-compras-recebimentos/plan.md`
 
 **Checkpoint**: Foundation ready. User story implementation can proceed.
 
