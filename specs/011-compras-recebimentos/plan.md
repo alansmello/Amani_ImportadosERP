@@ -176,7 +176,8 @@ frontend/
     |       |-- pending-products-panel.tsx
     |       |-- receipt-dialog.tsx
     |       |-- loss-dialog.tsx
-    |       `-- purchase-history.tsx
+    |       |-- purchase-history.tsx
+    |       `-- purchase-validation.ts
     |-- config/
     |   |-- navigation.ts
     |   `-- routes.ts
