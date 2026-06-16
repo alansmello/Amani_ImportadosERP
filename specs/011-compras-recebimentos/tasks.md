@@ -54,14 +54,14 @@
 
 ### Implementation for User Story 1
 
-- [ ] T013 [P] [US1] Create the purchase item editor UI with product selection, quantity, cost, item discount, item increase, duplicate product feedback, and remove item action in `frontend/src/components/compras/purchase-item-editor.tsx`
-- [ ] T014 [US1] Create the purchase form shell with supplier, date, total discount, total increase, item list, add item action, submit area, loading state, and error state in `frontend/src/components/compras/purchase-form.tsx`
-- [ ] T015 [US1] Integrate `useSuppliers` and `useProducts` into `frontend/src/components/compras/purchase-form.tsx` with loading, empty, error, and retry states for supporting data
-- [ ] T016 [US1] Wire local validation from `frontend/src/components/compras/purchase-validation.ts` into `frontend/src/components/compras/purchase-form.tsx` for required supplier/date/items, unique product, positive quantity, non-negative cost, and non-negative adjustments
-- [ ] T017 [US1] Wire `useCreatePurchase` submission in `frontend/src/components/compras/purchase-form.tsx`, preserving filled data on local or official rejection
-- [ ] T018 [US1] Add success handling in `frontend/src/components/compras/purchase-form.tsx` that navigates to the created purchase detail via `frontend/src/config/routes.ts`
-- [ ] T019 [US1] Create the `/compras/nova` route page with the purchase form and operational copy that creation is transit only, not stock entry, in `frontend/src/app/compras/nova/page.tsx`
-- [ ] T020 [US1] Validate the US1 quickstart scenarios for create success and create validation from `specs/011-compras-recebimentos/quickstart.md` against `frontend/src/app/compras/nova/page.tsx`, including SC-001 timing: valid purchase with up to 10 items in 5 minutes or less
+- [X] T013 [P] [US1] Create the purchase item editor UI with product selection, quantity, cost, item discount, item increase, duplicate product feedback, and remove item action in `frontend/src/components/compras/purchase-item-editor.tsx`
+- [X] T014 [US1] Create the purchase form shell with supplier, date, total discount, total increase, item list, add item action, submit area, loading state, and error state in `frontend/src/components/compras/purchase-form.tsx`
+- [X] T015 [US1] Integrate `useSuppliers` and `useProducts` into `frontend/src/components/compras/purchase-form.tsx` with loading, empty, error, and retry states for supporting data
+- [X] T016 [US1] Wire local validation from `frontend/src/components/compras/purchase-validation.ts` into `frontend/src/components/compras/purchase-form.tsx` for required supplier/date/items, unique product, positive quantity, non-negative cost, and non-negative adjustments
+- [X] T017 [US1] Wire `useCreatePurchase` submission in `frontend/src/components/compras/purchase-form.tsx`, preserving filled data on local or official rejection
+- [X] T018 [US1] Add success handling in `frontend/src/components/compras/purchase-form.tsx` that navigates to the created purchase detail via `frontend/src/config/routes.ts`
+- [X] T019 [US1] Create the `/compras/nova` route page with the purchase form and operational copy that creation is transit only, not stock entry, in `frontend/src/app/compras/nova/page.tsx`
+- [X] T020 [US1] Validate the US1 quickstart scenarios for create success and create validation from `specs/011-compras-recebimentos/quickstart.md` against `frontend/src/app/compras/nova/page.tsx`, including SC-001 timing: valid purchase with up to 10 items in 5 minutes or less
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
