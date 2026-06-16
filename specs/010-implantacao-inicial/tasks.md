@@ -110,12 +110,12 @@
 
 ### Implementation for User Story 4
 
-- [ ] T032 [US4] Create ImplantationFlow component to coordinate active step, local step states, progress, review dialog opening, and result summaries in frontend/src/components/implantacao/implantation-flow.tsx
-- [ ] T033 [US4] Move shared step completion, error, pending, and completedAt state management from page-level code into ImplantationFlow in frontend/src/components/implantacao/implantation-flow.tsx
-- [ ] T034 [US4] Ensure each review dialog can return to editing without clearing draft state in frontend/src/components/implantacao/implantation-review-dialog.tsx
-- [ ] T035 [US4] Render progress summary for completed, pending, submitting, and error steps in frontend/src/components/implantacao/implantation-progress.tsx
-- [ ] T036 [US4] Refactor implantation page to render ImplantationFlow with product and customer support data in frontend/src/app/configuracoes/implantacao/page.tsx
-- [ ] T037 [US4] Ensure completed steps remain visible as concluded and unavailable for new submission in the current screen/session while pending/error steps remain editable in frontend/src/components/implantacao/implantation-flow.tsx
+- [X] T032 [US4] Create ImplantationFlow component to coordinate active step, local step states, progress, review dialog opening, and result summaries in frontend/src/components/implantacao/implantation-flow.tsx
+- [X] T033 [US4] Move shared step completion, error, pending, and completedAt state management from page-level code into ImplantationFlow in frontend/src/components/implantacao/implantation-flow.tsx
+- [X] T034 [US4] Ensure each review dialog can return to editing without clearing draft state in frontend/src/components/implantacao/implantation-review-dialog.tsx
+- [X] T035 [US4] Render progress summary for completed, pending, submitting, and error steps in frontend/src/components/implantacao/implantation-progress.tsx
+- [X] T036 [US4] Refactor implantation page to render ImplantationFlow with product and customer support data in frontend/src/app/configuracoes/implantacao/page.tsx
+- [X] T037 [US4] Ensure completed steps remain visible as concluded and unavailable for new submission in the current screen/session while pending/error steps remain editable in frontend/src/components/implantacao/implantation-flow.tsx
 
 **Checkpoint**: User Story 4 provides the full guided workflow experience across independently completed steps.
 

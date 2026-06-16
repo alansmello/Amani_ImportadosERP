@@ -8,7 +8,7 @@ import {
   Trash2
 } from "lucide-react";
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   getValidationMessage,
@@ -34,6 +34,7 @@ import { useCustomers } from "@/hooks/use-customers";
 import { toApiError } from "@/services/errors";
 import type {
   ImplantationValidationError,
+  ImplantationStepStatus,
   InitialReceivableDraft,
   InitialReceivablePayload,
   InitialReceivableResult
@@ -70,7 +71,16 @@ function formatCurrency(value: number) {
   }).format(value);
 }
 
-export function InitialReceivablesStep() {
+type InitialReceivablesStepProps = {
+  onStatusChange?: (
+    status: ImplantationStepStatus,
+    errorMessage?: string
+  ) => void;
+};
+
+export function InitialReceivablesStep({
+  onStatusChange
+}: InitialReceivablesStepProps) {
   const customersQuery = useCustomers("active");
   const registerReceivable = useRegisterInitialReceivable();
   const customers = useMemo(
@@ -91,6 +101,26 @@ export function InitialReceivablesStep() {
   const customerNameById = useMemo(() => {
     return new Map(customers.map((customer) => [customer.id, customer.nome]));
   }, [customers]);
+
+  useEffect(() => {
+    if (isCompleted) {
+      return;
+    }
+
+    if (customersQuery.isError) {
+      onStatusChange?.("error", "Nao foi possivel carregar clientes ativos.");
+      return;
+    }
+
+    if (!customersQuery.isLoading) {
+      onStatusChange?.("editing");
+    }
+  }, [
+    customersQuery.isError,
+    customersQuery.isLoading,
+    isCompleted,
+    onStatusChange
+  ]);
 
   const reviewItems = useMemo(() => {
     return drafts.map((draft) => ({
@@ -169,9 +199,14 @@ export function InitialReceivablesStep() {
     setSubmitError(null);
 
     if (isCompleted || !validateForReview()) {
+      if (!isCompleted) {
+        onStatusChange?.("error", "Corrija as contas a receber iniciais.");
+      }
+
       return;
     }
 
+    onStatusChange?.("reviewing");
     setIsReviewOpen(true);
   }
 
@@ -179,11 +214,16 @@ export function InitialReceivablesStep() {
     setSubmitError(null);
 
     if (isCompleted || !validateForReview()) {
+      if (!isCompleted) {
+        onStatusChange?.("editing");
+      }
+
       setIsReviewOpen(false);
       return;
     }
 
     const successfulResults: InitialReceivableResult[] = [];
+    onStatusChange?.("submitting");
 
     try {
       for (const draft of drafts) {
@@ -195,10 +235,20 @@ export function InitialReceivablesStep() {
       setResults(successfulResults);
       setErrors([]);
       setIsReviewOpen(false);
+      onStatusChange?.("completed");
     } catch (error) {
       const apiError = toApiError(error);
       setSubmitError(apiError.message);
       setIsReviewOpen(false);
+      onStatusChange?.("error", apiError.message);
+    }
+  }
+
+  function handleReviewOpenChange(open: boolean) {
+    setIsReviewOpen(open);
+
+    if (!open && !isCompleted && !isSubmitting) {
+      onStatusChange?.(submitError ? "error" : "editing", submitError ?? undefined);
     }
   }
 
@@ -436,7 +486,7 @@ export function InitialReceivablesStep() {
         description="Confira o lote antes de iniciar os envios para a fonte oficial."
         confirmLabel="Confirmar contas"
         isSubmitting={isSubmitting}
-        onOpenChange={setIsReviewOpen}
+        onOpenChange={handleReviewOpenChange}
         onConfirm={confirmSubmit}
       >
         <div className="space-y-3">

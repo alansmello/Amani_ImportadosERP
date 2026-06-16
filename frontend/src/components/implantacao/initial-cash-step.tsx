@@ -24,6 +24,7 @@ import { useRegisterInitialCashBalance } from "@/hooks/use-implantation";
 import { toApiError } from "@/services/errors";
 import type {
   ImplantationValidationError,
+  ImplantationStepStatus,
   InitialCashBalanceDraft,
   InitialCashBalancePayload,
   InitialCashBalanceResult
@@ -49,7 +50,14 @@ function formatCurrency(value: number) {
   }).format(value);
 }
 
-export function InitialCashStep() {
+type InitialCashStepProps = {
+  onStatusChange?: (
+    status: ImplantationStepStatus,
+    errorMessage?: string
+  ) => void;
+};
+
+export function InitialCashStep({ onStatusChange }: InitialCashStepProps) {
   const registerCashBalance = useRegisterInitialCashBalance();
   const [draft, setDraft] = useState<InitialCashBalanceDraft>({
     valor: "",
@@ -104,9 +112,14 @@ export function InitialCashStep() {
     setSubmitError(null);
 
     if (isCompleted || !validateForReview()) {
+      if (!isCompleted) {
+        onStatusChange?.("error", "Corrija os dados do saldo inicial.");
+      }
+
       return;
     }
 
+    onStatusChange?.("reviewing");
     setIsReviewOpen(true);
   }
 
@@ -114,19 +127,35 @@ export function InitialCashStep() {
     setSubmitError(null);
 
     if (isCompleted || !validateForReview()) {
+      if (!isCompleted) {
+        onStatusChange?.("editing");
+      }
+
       setIsReviewOpen(false);
       return;
     }
+
+    onStatusChange?.("submitting");
 
     try {
       const response = await registerCashBalance.mutateAsync(buildPayload());
       setResult(response);
       setErrors([]);
       setIsReviewOpen(false);
+      onStatusChange?.("completed");
     } catch (error) {
       const apiError = toApiError(error);
       setSubmitError(apiError.message);
       setIsReviewOpen(false);
+      onStatusChange?.("error", apiError.message);
+    }
+  }
+
+  function handleReviewOpenChange(open: boolean) {
+    setIsReviewOpen(open);
+
+    if (!open && !isCompleted && !isSubmitting) {
+      onStatusChange?.(submitError ? "error" : "editing", submitError ?? undefined);
     }
   }
 
@@ -245,7 +274,7 @@ export function InitialCashStep() {
         description="Confira valor e data antes de registrar o saldo inicial de caixa."
         confirmLabel="Confirmar saldo"
         isSubmitting={isSubmitting}
-        onOpenChange={setIsReviewOpen}
+        onOpenChange={handleReviewOpenChange}
         onConfirm={confirmSubmit}
       >
         <dl className="grid gap-3 rounded-amani border border-border bg-surface-light p-3 text-sm tablet:grid-cols-2">
@@ -274,4 +303,3 @@ export function InitialCashStep() {
     </>
   );
 }
-

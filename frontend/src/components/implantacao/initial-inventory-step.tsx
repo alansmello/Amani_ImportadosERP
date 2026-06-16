@@ -30,6 +30,7 @@ import { useRegisterInitialInventory } from "@/hooks/use-implantation";
 import { toApiError } from "@/services/errors";
 import type {
   ImplantationValidationError,
+  ImplantationStepStatus,
   InitialInventoryItemDraft,
   InitialInventoryPayload,
   InitialInventoryResult
@@ -39,6 +40,10 @@ import type { Product } from "@/types/product";
 
 type InitialInventoryStepProps = {
   products: Product[];
+  onStatusChange?: (
+    status: ImplantationStepStatus,
+    errorMessage?: string
+  ) => void;
 };
 
 function createDraft(): InitialInventoryItemDraft {
@@ -76,7 +81,10 @@ function formatDateForApi(value: string) {
   return new Date(`${value}T00:00:00`).toISOString();
 }
 
-export function InitialInventoryStep({ products }: InitialInventoryStepProps) {
+export function InitialInventoryStep({
+  products,
+  onStatusChange
+}: InitialInventoryStepProps) {
   const registerInventory = useRegisterInitialInventory();
   const [data, setData] = useState(todayInputValue);
   const [drafts, setDrafts] = useState<InitialInventoryItemDraft[]>([
@@ -177,9 +185,14 @@ export function InitialInventoryStep({ products }: InitialInventoryStepProps) {
     setSubmitError(null);
 
     if (isCompleted || !validateForReview()) {
+      if (!isCompleted) {
+        onStatusChange?.("error", "Corrija os dados do inventario inicial.");
+      }
+
       return;
     }
 
+    onStatusChange?.("reviewing");
     setIsReviewOpen(true);
   }
 
@@ -187,19 +200,35 @@ export function InitialInventoryStep({ products }: InitialInventoryStepProps) {
     setSubmitError(null);
 
     if (isCompleted || !validateForReview()) {
+      if (!isCompleted) {
+        onStatusChange?.("editing");
+      }
+
       setIsReviewOpen(false);
       return;
     }
+
+    onStatusChange?.("submitting");
 
     try {
       const response = await registerInventory.mutateAsync(buildPayload());
       setResult(response);
       setIsReviewOpen(false);
       setErrors([]);
+      onStatusChange?.("completed");
     } catch (error) {
       const apiError = toApiError(error);
       setSubmitError(apiError.message);
       setIsReviewOpen(false);
+      onStatusChange?.("error", apiError.message);
+    }
+  }
+
+  function handleReviewOpenChange(open: boolean) {
+    setIsReviewOpen(open);
+
+    if (!open && !isCompleted && !isSubmitting) {
+      onStatusChange?.(submitError ? "error" : "editing", submitError ?? undefined);
     }
   }
 
@@ -409,7 +438,7 @@ export function InitialInventoryStep({ products }: InitialInventoryStepProps) {
         description="Confira os produtos e quantidades antes de registrar a entrada inicial."
         confirmLabel="Confirmar inventario"
         isSubmitting={isSubmitting}
-        onOpenChange={setIsReviewOpen}
+        onOpenChange={handleReviewOpenChange}
         onConfirm={confirmSubmit}
       >
         <div className="space-y-3">
