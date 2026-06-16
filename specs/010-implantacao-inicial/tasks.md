@@ -129,10 +129,10 @@
 
 ### Implementation for User Story 5
 
-- [ ] T038 [US5] Replace Configuracoes placeholder with a configuration landing page that exposes Implantacao Inicial access without changing preferences or permissions in frontend/src/app/configuracoes/page.tsx
-- [ ] T039 [US5] Add clear back navigation from implantation page to Configuracoes in frontend/src/app/configuracoes/implantacao/page.tsx
-- [ ] T040 [US5] Ensure navigation text differentiates initial data setup from recurring purchases, sales, finance, and stock operations in frontend/src/app/configuracoes/page.tsx and frontend/src/app/configuracoes/implantacao/page.tsx
-- [ ] T041 [P] [US5] Add or adjust Configuracoes navigation status to reflect the real implantation entry while preserving existing menu structure in frontend/src/config/navigation.ts
+- [X] T038 [US5] Replace Configuracoes placeholder with a configuration landing page that exposes Implantacao Inicial access without changing preferences or permissions in frontend/src/app/configuracoes/page.tsx
+- [X] T039 [US5] Add clear back navigation from implantation page to Configuracoes in frontend/src/app/configuracoes/implantacao/page.tsx
+- [X] T040 [US5] Ensure navigation text differentiates initial data setup from recurring purchases, sales, finance, and stock operations in frontend/src/app/configuracoes/page.tsx and frontend/src/app/configuracoes/implantacao/page.tsx
+- [X] T041 [P] [US5] Add or adjust Configuracoes navigation status to reflect the real implantation entry while preserving existing menu structure in frontend/src/config/navigation.ts
 
 **Checkpoint**: User Story 5 makes the feature discoverable and navigable across viewport sizes.
 
