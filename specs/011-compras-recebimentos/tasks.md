@@ -75,17 +75,17 @@
 
 ### Implementation for User Story 2
 
-- [ ] T021 [P] [US2] Create purchase filters with date range, supplier, status, apply, and clear controls in `frontend/src/components/compras/purchase-filters.tsx`
-- [ ] T022 [P] [US2] Create responsive purchase list cards/table with supplier, date, status, total, pending indicator, empty state, error state, and detail links in `frontend/src/components/compras/purchase-list.tsx`
-- [ ] T023 [P] [US2] Create pending products panel with product, supplier, purchase origin, pending quantity, loading, empty, error, and detail links in `frontend/src/components/compras/pending-products-panel.tsx`
-- [ ] T024 [P] [US2] Create purchase history presentation for receipts and losses in `frontend/src/components/compras/purchase-history.tsx`
-- [ ] T025 [US2] Create base purchase detail component with header, supplier/date/status/total, items, received/lost/pending quantities, and history areas in `frontend/src/components/compras/purchase-detail.tsx`
-- [ ] T026 [US2] Replace the compras placeholder with list, filters, default recent in-transit view, pending products panel, and new purchase action in `frontend/src/app/compras/page.tsx`
-- [ ] T027 [US2] Implement filter orchestration in `frontend/src/app/compras/page.tsx` using official date and supplier filters plus local status filtering when needed
-- [ ] T028 [US2] Apply the default 30-day in-transit or pending recency rule in `frontend/src/app/compras/page.tsx`
-- [ ] T029 [US2] Create the purchase detail route using `usePurchase`, `usePurchaseReceipts`, and `usePurchaseLosses` in `frontend/src/app/compras/[id]/page.tsx`
-- [ ] T030 [US2] Add not found, loading, empty, and recoverable error handling for purchase detail in `frontend/src/app/compras/[id]/page.tsx`
-- [ ] T031 [US2] Validate the US2 quickstart scenarios for default list, filters, pending products, and detail from `specs/011-compras-recebimentos/quickstart.md` against `frontend/src/app/compras/page.tsx` and `frontend/src/app/compras/[id]/page.tsx`, including SC-002 timing: locate recent in-transit or pending purchases in 30 seconds or less
+- [X] T021 [P] [US2] Create purchase filters with date range, supplier, status, apply, and clear controls in `frontend/src/components/compras/purchase-filters.tsx`
+- [X] T022 [P] [US2] Create responsive purchase list cards/table with supplier, date, status, total, pending indicator, empty state, error state, and detail links in `frontend/src/components/compras/purchase-list.tsx`
+- [X] T023 [P] [US2] Create pending products panel with product, supplier, purchase origin, pending quantity, loading, empty, error, and detail links in `frontend/src/components/compras/pending-products-panel.tsx`
+- [X] T024 [P] [US2] Create purchase history presentation for receipts and losses in `frontend/src/components/compras/purchase-history.tsx`
+- [X] T025 [US2] Create base purchase detail component with header, supplier/date/status/total, items, received/lost/pending quantities, and history areas in `frontend/src/components/compras/purchase-detail.tsx`
+- [X] T026 [US2] Replace the compras placeholder with list, filters, default recent in-transit view, pending products panel, and new purchase action in `frontend/src/app/compras/page.tsx`
+- [X] T027 [US2] Implement filter orchestration in `frontend/src/app/compras/page.tsx` using official date and supplier filters plus local status filtering when needed
+- [X] T028 [US2] Apply the default 30-day in-transit or pending recency rule in `frontend/src/app/compras/page.tsx`
+- [X] T029 [US2] Create the purchase detail route using `usePurchase`, `usePurchaseReceipts`, and `usePurchaseLosses` in `frontend/src/app/compras/[id]/page.tsx`
+- [X] T030 [US2] Add not found, loading, empty, and recoverable error handling for purchase detail in `frontend/src/app/compras/[id]/page.tsx`
+- [X] T031 [US2] Validate the US2 quickstart scenarios for default list, filters, pending products, and detail from `specs/011-compras-recebimentos/quickstart.md` against `frontend/src/app/compras/page.tsx` and `frontend/src/app/compras/[id]/page.tsx`, including SC-002 timing: locate recent in-transit or pending purchases in 30 seconds or less
 
 **Checkpoint**: User Stories 1 and 2 work independently.
 
