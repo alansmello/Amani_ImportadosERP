@@ -1,4 +1,4 @@
-import { ApiError } from "@/services/errors";
+import { ApiError, getApiErrorMessageFromBody } from "@/services/errors";
 import type { ApiRequestOptions } from "@/types/api";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
@@ -23,6 +23,20 @@ async function parseResponse<TData>(response: Response): Promise<TData> {
   }
 
   return (await response.json()) as TData;
+}
+
+async function parseErrorMessage(response: Response) {
+  const contentType = response.headers.get("content-type") ?? "";
+
+  if (!contentType.includes("application/json")) {
+    return "Nao foi possivel carregar as informacoes solicitadas.";
+  }
+
+  try {
+    return getApiErrorMessageFromBody(await response.json());
+  } catch {
+    return "Nao foi possivel carregar as informacoes solicitadas.";
+  }
 }
 
 // Este wrapper trata transporte HTTP e erros normalizados. Validacoes,
@@ -50,7 +64,7 @@ export async function apiClient<TData>(
   if (!response.ok) {
     throw new ApiError({
       status: response.status,
-      message: "Nao foi possivel carregar as informacoes solicitadas."
+      message: await parseErrorMessage(response)
     });
   }
 
