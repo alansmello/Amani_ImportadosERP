@@ -118,12 +118,12 @@
 
 ### Implementation for User Story 4
 
-- [ ] T038 [P] [US4] Create loss dialog with quantity, closed motive selection, loss date, observation, review step, confirm action, loading state, and error state in `frontend/src/components/compras/loss-dialog.tsx`
-- [ ] T039 [US4] Add local loss validation for positive quantity, visible pending quantity limit, and allowed motives `Perda`, `Extravio`, and `Avaria` in `frontend/src/components/compras/purchase-validation.ts`
-- [ ] T040 [US4] Wire `useRegisterPurchaseLoss` into `frontend/src/components/compras/loss-dialog.tsx`, showing official errors without marking the action complete
-- [ ] T041 [US4] Integrate loss actions for pending items in `frontend/src/components/compras/purchase-detail.tsx`
-- [ ] T042 [US4] Ensure loss success refreshes detail, histories, in-transit list, and pending products without presenting stock entry through `frontend/src/hooks/use-purchases.ts`
-- [ ] T043 [US4] Validate the US4 quickstart scenarios for loss success and loss validation from `specs/011-compras-recebimentos/quickstart.md` against `frontend/src/components/compras/loss-dialog.tsx`, including SC-004 timing: register loss, extravio, or avaria within 1 minute after opening purchase detail
+- [X] T038 [P] [US4] Create loss dialog with quantity, closed motive selection, loss date, observation, review step, confirm action, loading state, and error state in `frontend/src/components/compras/loss-dialog.tsx`
+- [X] T039 [US4] Add local loss validation for positive quantity, visible pending quantity limit, and allowed motives `Perda`, `Extravio`, and `Avaria` in `frontend/src/components/compras/purchase-validation.ts`
+- [X] T040 [US4] Wire `useRegisterPurchaseLoss` into `frontend/src/components/compras/loss-dialog.tsx`, showing official errors without marking the action complete
+- [X] T041 [US4] Integrate loss actions for pending items in `frontend/src/components/compras/purchase-detail.tsx`
+- [X] T042 [US4] Ensure loss success refreshes detail, histories, in-transit list, and pending products without presenting stock entry through `frontend/src/hooks/use-purchases.ts`
+- [X] T043 [US4] Validate the US4 quickstart scenarios for loss success and loss validation from `specs/011-compras-recebimentos/quickstart.md` against `frontend/src/components/compras/loss-dialog.tsx`, including SC-004 timing: register loss, extravio, or avaria within 1 minute after opening purchase detail
 
 **Checkpoint**: User Stories 1, 2, 3, and 4 work independently.
 

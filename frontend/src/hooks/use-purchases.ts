@@ -97,6 +97,10 @@ export function useRegisterPurchaseReceipt() {
     onSuccess: async (_data, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: purchaseQueryKeys.all }),
+        queryClient.invalidateQueries({ queryKey: purchaseQueryKeys.inTransit }),
+        queryClient.invalidateQueries({
+          queryKey: purchaseQueryKeys.pendingProducts
+        }),
         queryClient.invalidateQueries({
           queryKey: purchaseQueryKeys.detail(variables.compraId)
         }),

@@ -1,11 +1,11 @@
 "use client";
 
-import { AlertTriangle, PackageOpen } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 
+import { LossDialog } from "@/components/compras/loss-dialog";
 import { PurchaseHistory } from "@/components/compras/purchase-history";
 import { ReceiptDialog } from "@/components/compras/receipt-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -184,16 +184,11 @@ export function PurchaseDetail({
                           item={item}
                           productName={getProductName(products, item.produtoId)}
                         />
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          size="sm"
-                          disabled
-                          title="Disponivel na fase de perdas"
-                        >
-                          <AlertTriangle className="h-4 w-4" aria-hidden />
-                          <span>Perda</span>
-                        </Button>
+                        <LossDialog
+                          compraId={purchase.id}
+                          item={item}
+                          productName={getProductName(products, item.produtoId)}
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

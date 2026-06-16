@@ -4,6 +4,7 @@ import {
   type PurchaseActionDraft,
   type PurchaseDraft,
   type PurchaseLossDraft,
+  type PurchaseLossMotive,
   type PurchaseValidationError,
   type RegisterPurchaseLossPayload,
   type RegisterPurchaseReceiptPayload
@@ -32,7 +33,7 @@ function hasReference(id: string, references: ExistingReference[]) {
   return references.some((reference) => reference.id === id);
 }
 
-function isValidLossMotive(value: string) {
+function isValidLossMotive(value: string): value is PurchaseLossMotive {
   return purchaseLossMotives.some((motive) => motive === value);
 }
 
@@ -248,9 +249,13 @@ export function validateLossDraft(
 export function buildLossPayload(
   draft: PurchaseLossDraft
 ): RegisterPurchaseLossPayload {
+  if (!isValidLossMotive(draft.motivo)) {
+    throw new Error("Motivo de perda invalido.");
+  }
+
   return {
     quantidade: parseNumber(draft.quantidade),
-    motivo: draft.motivo || "Perda",
+    motivo: draft.motivo,
     dataPerda: draft.data ? new Date(draft.data).toISOString() : null,
     observacao: draft.observacao.trim() || null
   };
