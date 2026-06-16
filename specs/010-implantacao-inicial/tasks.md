@@ -73,10 +73,10 @@
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Create InitialCashStep component with value, date, optional description, validation messages, review trigger, and completed-state lock in frontend/src/components/implantacao/initial-cash-step.tsx
-- [ ] T022 [US2] Connect InitialCashStep to registerInitialCashBalance mutation using origem SaldoInicial and preserving typed data on validation/API errors in frontend/src/components/implantacao/initial-cash-step.tsx
-- [ ] T023 [US2] Render cash result summary with event id, value, date, and origem after success in frontend/src/components/implantacao/initial-cash-step.tsx
-- [ ] T024 [US2] Add initial cash step to implantation page with independent state from inventory in frontend/src/app/configuracoes/implantacao/page.tsx
+- [X] T021 [US2] Create InitialCashStep component with value, date, optional description, validation messages, review trigger, and completed-state lock in frontend/src/components/implantacao/initial-cash-step.tsx
+- [X] T022 [US2] Connect InitialCashStep to registerInitialCashBalance mutation using origem SaldoInicial and preserving typed data on validation/API errors in frontend/src/components/implantacao/initial-cash-step.tsx
+- [X] T023 [US2] Render cash result summary with event id, value, date, and origem after success in frontend/src/components/implantacao/initial-cash-step.tsx
+- [X] T024 [US2] Add initial cash step to implantation page with independent state from inventory in frontend/src/app/configuracoes/implantacao/page.tsx
 
 **Checkpoint**: User Story 2 works independently after foundation and can be validated without completing other steps.
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { ClipboardList, PackagePlus } from "lucide-react";
+import { ClipboardList, ReceiptText } from "lucide-react";
 
+import { InitialCashStep } from "@/components/implantacao/initial-cash-step";
 import { InitialInventoryStep } from "@/components/implantacao/initial-inventory-step";
 import { ImplantationProgress } from "@/components/implantacao/implantation-progress";
 import { PageHeader } from "@/components/layout/page-header";
@@ -31,9 +32,9 @@ export default function ImplantacaoInicialPage() {
           },
           {
             id: "initialCash",
-            status: "pending",
+            status: "editing",
             title: "Saldo inicial de caixa",
-            description: "Etapa planejada para a proxima fase."
+            description: "Evento financeiro de partida."
           },
           {
             id: "initialReceivables",
@@ -75,13 +76,14 @@ export default function ImplantacaoInicialPage() {
         )
       ) : null}
 
+      <InitialCashStep />
+
       <EmptyState
-        title="Proximas etapas da implantacao"
-        description="Saldo inicial de caixa e contas a receber iniciais serao habilitados nas proximas fases desta feature."
+        title="Proxima etapa da implantacao"
+        description="Contas a receber iniciais serao habilitadas na proxima fase desta feature."
         badgeLabel="Em preparo"
-        icon={<PackagePlus className="h-5 w-5" aria-hidden />}
+        icon={<ReceiptText className="h-5 w-5" aria-hidden />}
       />
     </main>
   );
 }
-
