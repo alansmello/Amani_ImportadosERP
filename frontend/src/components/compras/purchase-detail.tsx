@@ -1,8 +1,9 @@
 "use client";
 
-import { AlertTriangle, CheckCircle2, PackageOpen } from "lucide-react";
+import { AlertTriangle, PackageOpen } from "lucide-react";
 
 import { PurchaseHistory } from "@/components/compras/purchase-history";
+import { ReceiptDialog } from "@/components/compras/receipt-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -178,16 +179,11 @@ export function PurchaseDetail({
                     <TableCell>{formatCurrency(item.valorTotal)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          size="sm"
-                          disabled
-                          title="Disponivel na fase de recebimento"
-                        >
-                          <CheckCircle2 className="h-4 w-4" aria-hidden />
-                          <span>Receber</span>
-                        </Button>
+                        <ReceiptDialog
+                          compraId={purchase.id}
+                          item={item}
+                          productName={getProductName(products, item.produtoId)}
+                        />
                         <Button
                           type="button"
                           variant="secondary"

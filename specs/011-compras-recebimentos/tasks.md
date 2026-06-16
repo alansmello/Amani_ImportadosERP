@@ -99,12 +99,12 @@
 
 ### Implementation for User Story 3
 
-- [ ] T032 [P] [US3] Create receipt dialog with quantity, receipt date, observation, review step, confirm action, loading state, and error state in `frontend/src/components/compras/receipt-dialog.tsx`
-- [ ] T033 [US3] Add local receipt validation for positive quantity and visible pending quantity limit in `frontend/src/components/compras/purchase-validation.ts`
-- [ ] T034 [US3] Wire `useRegisterPurchaseReceipt` into `frontend/src/components/compras/receipt-dialog.tsx`, showing official errors without marking the action complete
-- [ ] T035 [US3] Integrate receipt actions for pending items in `frontend/src/components/compras/purchase-detail.tsx`
-- [ ] T036 [US3] Ensure receipt success refreshes detail, histories, in-transit list, pending products, and `queryKeys.estoque` when present through `frontend/src/hooks/use-purchases.ts`
-- [ ] T037 [US3] Validate the US3 quickstart scenarios for partial receipt and receipt failure from `specs/011-compras-recebimentos/quickstart.md` against `frontend/src/components/compras/receipt-dialog.tsx`, including SC-003 timing: register a partial receipt within 1 minute after opening purchase detail
+- [X] T032 [P] [US3] Create receipt dialog with quantity, receipt date, observation, review step, confirm action, loading state, and error state in `frontend/src/components/compras/receipt-dialog.tsx`
+- [X] T033 [US3] Add local receipt validation for positive quantity and visible pending quantity limit in `frontend/src/components/compras/purchase-validation.ts`
+- [X] T034 [US3] Wire `useRegisterPurchaseReceipt` into `frontend/src/components/compras/receipt-dialog.tsx`, showing official errors without marking the action complete
+- [X] T035 [US3] Integrate receipt actions for pending items in `frontend/src/components/compras/purchase-detail.tsx`
+- [X] T036 [US3] Ensure receipt success refreshes detail, histories, in-transit list, pending products, and `queryKeys.estoque` when present through `frontend/src/hooks/use-purchases.ts`
+- [X] T037 [US3] Validate the US3 quickstart scenarios for partial receipt and receipt failure from `specs/011-compras-recebimentos/quickstart.md` against `frontend/src/components/compras/receipt-dialog.tsx`, including SC-003 timing: register a partial receipt within 1 minute after opening purchase detail
 
 **Checkpoint**: User Stories 1, 2, and 3 work independently.
 
