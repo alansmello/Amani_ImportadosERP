@@ -64,7 +64,7 @@ export function PurchaseItemEditor({
 
   return (
     <div className="rounded-amani border border-border bg-surface-light p-4">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-4 flex flex-col gap-3 tablet:flex-row tablet:items-center tablet:justify-between">
         <p className="text-sm font-semibold text-text-primary">
           Item {index + 1}
         </p>
@@ -75,6 +75,7 @@ export function PurchaseItemEditor({
           disabled={disabled || !canRemove}
           onClick={() => onRemove(item.id)}
           aria-label={`Remover item ${index + 1}`}
+          className="w-full tablet:w-auto"
         >
           <Trash2 className="h-4 w-4" aria-hidden />
           <span>Remover</span>

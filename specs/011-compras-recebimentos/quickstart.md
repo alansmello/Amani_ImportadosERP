@@ -187,3 +187,19 @@ Expected:
 - As paginas continuam carregando pelos hooks existentes.
 - Alteracoes de query keys, rotas ou navegacao de compras nao quebram modulos
   ja entregues.
+
+## Completion Evidence
+
+Validacao registrada em 2026-06-16 para fechamento da F011:
+
+- `npm run typecheck` executado em `frontend/` com sucesso.
+- `npm run lint` executado em `frontend/` com sucesso.
+- `npm run build` executado em `frontend/` com sucesso, incluindo as rotas
+  `/compras`, `/compras/nova`, `/compras/[id]`, `/fornecedores` e `/produtos`.
+- Revisao estrutural dos fluxos mobile/tablet/desktop aplicada em lista,
+  filtros, pendencias, formulario, detalhe, historico e dialogos de recebimento
+  e perda.
+- Varredura de escopo confirmou ausencia de acoes de cancelamento, edicao de
+  compra, importacao, transferencia, ajuste manual de estoque e calculos
+  criticos no frontend de compras; os unicos achados foram falsos positivos do
+  nome interno `PurchaseItemEditor`.

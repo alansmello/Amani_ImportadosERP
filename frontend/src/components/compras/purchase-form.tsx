@@ -375,8 +375,8 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
           </div>
 
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
+            <div className="flex flex-col gap-3 tablet:flex-row tablet:items-center tablet:justify-between">
+              <div className="min-w-0">
                 <h3 className="text-sm font-semibold text-text-primary">
                   Itens da compra
                 </h3>
@@ -391,6 +391,7 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
                 size="sm"
                 onClick={addItem}
                 disabled={isSubmitting}
+                className="w-full tablet:w-auto"
               >
                 <Plus className="h-4 w-4" aria-hidden />
                 <span>Adicionar item</span>

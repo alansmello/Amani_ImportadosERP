@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-16
 
-**Status**: Draft
+**Status**: Implemented
 
 **Input**: User description: "F011 - Compras e Recebimentos, para operar o ciclo de compra: registrar compra como mercadoria em transito, acompanhar pendencias, registrar recebimento parcial e perdas, com filtros, detalhe, visao de produtos pendentes, erros claros, responsividade e sem gerar estoque automaticamente na criacao da compra."
 

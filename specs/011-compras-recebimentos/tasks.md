@@ -137,11 +137,11 @@
 
 ### Implementation for User Story 5
 
-- [ ] T044 [US5] Adjust responsive layout for list, filters, and pending products in `frontend/src/app/compras/page.tsx`
-- [ ] T045 [US5] Adjust responsive layout for the purchase form and item editor in `frontend/src/components/compras/purchase-form.tsx` and `frontend/src/components/compras/purchase-item-editor.tsx`
-- [ ] T046 [US5] Adjust responsive layout for detail, item actions, and history in `frontend/src/components/compras/purchase-detail.tsx` and `frontend/src/components/compras/purchase-history.tsx`
-- [ ] T047 [US5] Adjust responsive layout and focus states for receipt and loss review dialogs in `frontend/src/components/compras/receipt-dialog.tsx` and `frontend/src/components/compras/loss-dialog.tsx`
-- [ ] T048 [US5] Validate the US5 quickstart responsive scenario from `specs/011-compras-recebimentos/quickstart.md` against `/compras`, `/compras/nova`, and `/compras/[id]`
+- [X] T044 [US5] Adjust responsive layout for list, filters, and pending products in `frontend/src/app/compras/page.tsx`
+- [X] T045 [US5] Adjust responsive layout for the purchase form and item editor in `frontend/src/components/compras/purchase-form.tsx` and `frontend/src/components/compras/purchase-item-editor.tsx`
+- [X] T046 [US5] Adjust responsive layout for detail, item actions, and history in `frontend/src/components/compras/purchase-detail.tsx` and `frontend/src/components/compras/purchase-history.tsx`
+- [X] T047 [US5] Adjust responsive layout and focus states for receipt and loss review dialogs in `frontend/src/components/compras/receipt-dialog.tsx` and `frontend/src/components/compras/loss-dialog.tsx`
+- [X] T048 [US5] Validate the US5 quickstart responsive scenario from `specs/011-compras-recebimentos/quickstart.md` against `/compras`, `/compras/nova`, and `/compras/[id]`
 
 **Checkpoint**: All user stories are functionally complete and responsive.
 
@@ -151,14 +151,14 @@
 
 **Purpose**: Verify guardrails, regressions, and build quality across the complete feature.
 
-- [ ] T049 Verify the feature does not expose cancellation, edit purchase, stock adjustment, transfer, or mass import actions in `frontend/src/app/compras/page.tsx`, `frontend/src/app/compras/nova/page.tsx`, and `frontend/src/app/compras/[id]/page.tsx`
-- [ ] T050 Verify the frontend does not calculate critical stock, average cost, profit, rankings, dashboards, or financial metrics in `frontend/src/components/compras/`, `frontend/src/hooks/use-purchases.ts`, and `frontend/src/services/purchases.ts`
-- [ ] T051 Verify official backend error messages are surfaced with clear fallbacks across `frontend/src/services/purchases.ts`, `frontend/src/hooks/use-purchases.ts`, and `frontend/src/components/compras/`
-- [ ] T052 Run `npm run lint` in `frontend/` and fix any issues in `frontend/src/app/compras/`, `frontend/src/components/compras/`, `frontend/src/hooks/use-purchases.ts`, `frontend/src/services/purchases.ts`, and `frontend/src/types/purchase.ts`
-- [ ] T053 Run `npm run typecheck` in `frontend/` and fix any type issues in `frontend/src/app/compras/`, `frontend/src/components/compras/`, `frontend/src/hooks/use-purchases.ts`, `frontend/src/services/purchases.ts`, and `frontend/src/types/purchase.ts`
-- [ ] T054 Run `npm run build` in `frontend/` and fix any build issues in `frontend/src/app/compras/`, `frontend/src/components/compras/`, `frontend/src/hooks/use-purchases.ts`, `frontend/src/services/purchases.ts`, and `frontend/src/types/purchase.ts`
-- [ ] T055 Validate existing `/fornecedores` and `/produtos` pages still load through their hooks after compras query keys and routes change in `frontend/src/hooks/use-suppliers.ts`, `frontend/src/hooks/use-products.ts`, and `frontend/src/config/routes.ts`
-- [ ] T056 Update completion evidence in `specs/011-compras-recebimentos/quickstart.md` only if implementation validation reveals necessary corrections to the documented manual scenarios
+- [X] T049 Verify the feature does not expose cancellation, edit purchase, stock adjustment, transfer, or mass import actions in `frontend/src/app/compras/page.tsx`, `frontend/src/app/compras/nova/page.tsx`, and `frontend/src/app/compras/[id]/page.tsx`
+- [X] T050 Verify the frontend does not calculate critical stock, average cost, profit, rankings, dashboards, or financial metrics in `frontend/src/components/compras/`, `frontend/src/hooks/use-purchases.ts`, and `frontend/src/services/purchases.ts`
+- [X] T051 Verify official backend error messages are surfaced with clear fallbacks across `frontend/src/services/purchases.ts`, `frontend/src/hooks/use-purchases.ts`, and `frontend/src/components/compras/`
+- [X] T052 Run `npm run lint` in `frontend/` and fix any issues in `frontend/src/app/compras/`, `frontend/src/components/compras/`, `frontend/src/hooks/use-purchases.ts`, `frontend/src/services/purchases.ts`, and `frontend/src/types/purchase.ts`
+- [X] T053 Run `npm run typecheck` in `frontend/` and fix any type issues in `frontend/src/app/compras/`, `frontend/src/components/compras/`, `frontend/src/hooks/use-purchases.ts`, `frontend/src/services/purchases.ts`, and `frontend/src/types/purchase.ts`
+- [X] T054 Run `npm run build` in `frontend/` and fix any build issues in `frontend/src/app/compras/`, `frontend/src/components/compras/`, `frontend/src/hooks/use-purchases.ts`, `frontend/src/services/purchases.ts`, and `frontend/src/types/purchase.ts`
+- [X] T055 Validate existing `/fornecedores` and `/produtos` pages still load through their hooks after compras query keys and routes change in `frontend/src/hooks/use-suppliers.ts`, `frontend/src/hooks/use-products.ts`, and `frontend/src/config/routes.ts`
+- [X] T056 Update completion evidence in `specs/011-compras-recebimentos/quickstart.md` only if implementation validation reveals necessary corrections to the documented manual scenarios
 
 ---
 

@@ -144,7 +144,7 @@ export default function ComprasPage() {
       ) : null}
 
       {!isLoading && !hasError ? (
-        <div className="grid gap-6 desktop:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)]">
+        <div className="grid min-w-0 gap-6 desktop:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)]">
           <PurchaseList
             purchases={purchases}
             suppliers={suppliers}

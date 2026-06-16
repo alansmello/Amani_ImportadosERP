@@ -79,7 +79,7 @@ export function PurchaseFilters({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="grid gap-4 desktop:grid-cols-[repeat(4,minmax(0,1fr))_auto] desktop:items-end">
+      <CardContent className="grid min-w-0 gap-4 tablet:grid-cols-2 desktop:grid-cols-[repeat(4,minmax(0,1fr))_auto] desktop:items-end">
         <div className="grid gap-2">
           <label className={fieldLabelClassName} htmlFor="purchase-start-date">
             Data inicial
@@ -149,7 +149,7 @@ export function PurchaseFilters({
           <p className={fieldHelpClassName}>Aplicado localmente quando usado.</p>
         </div>
 
-        <div className="flex flex-col gap-2 tablet:flex-row desktop:flex-col">
+        <div className="grid gap-2 tablet:col-span-2 tablet:grid-cols-2 desktop:col-span-1 desktop:grid-cols-1">
           <Button type="button" onClick={submitFilters} disabled={disabled}>
             <Search className="h-4 w-4" aria-hidden />
             <span>Aplicar</span>

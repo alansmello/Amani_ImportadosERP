@@ -38,7 +38,7 @@ const fieldLabelClassName = "text-sm font-medium text-text-primary";
 const fieldHelpClassName = "text-xs leading-5 text-text-secondary";
 const fieldErrorClassName = "text-xs font-medium leading-5 text-danger";
 const selectClassName =
-  "h-10 rounded-amani border border-border bg-surface px-3 text-sm text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50";
+  "h-11 w-full rounded-amani border border-border bg-surface px-3 text-sm text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-danger aria-[invalid=true]:focus-visible:ring-danger";
 
 function buildInitialDraft(): PurchaseLossDraft {
   return {
@@ -130,7 +130,7 @@ export function LossDialog({ compraId, item, productName }: LossDialogProps) {
           <span>Perda</span>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[calc(100vh-2rem)] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Registrar perda</DialogTitle>
           <DialogDescription>
@@ -146,7 +146,9 @@ export function LossDialog({ compraId, item, productName }: LossDialogProps) {
         ) : null}
 
         <div className="rounded-amani border border-border bg-surface-light p-4">
-          <p className="text-sm font-semibold text-text-primary">{productName}</p>
+          <p className="break-words text-sm font-semibold text-text-primary">
+            {productName}
+          </p>
           <p className="mt-1 text-xs leading-5 text-text-secondary">
             Pendente: {item.quantidadePendente} unidade(s)
           </p>
@@ -278,7 +280,12 @@ export function LossDialog({ compraId, item, productName }: LossDialogProps) {
               >
                 Voltar
               </Button>
-              <Button type="button" onClick={confirmLoss} disabled={isSubmitting}>
+              <Button
+                type="button"
+                onClick={confirmLoss}
+                disabled={isSubmitting}
+                className="w-full tablet:w-auto"
+              >
                 {isSubmitting ? (
                   <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden />
                 ) : (
@@ -288,7 +295,12 @@ export function LossDialog({ compraId, item, productName }: LossDialogProps) {
               </Button>
             </>
           ) : (
-            <Button type="button" onClick={moveToReview} disabled={isSubmitting}>
+            <Button
+              type="button"
+              onClick={moveToReview}
+              disabled={isSubmitting}
+              className="w-full tablet:w-auto"
+            >
               <AlertTriangle className="h-4 w-4" aria-hidden />
               <span>Revisar perda</span>
             </Button>

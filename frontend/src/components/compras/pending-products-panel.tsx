@@ -96,7 +96,7 @@ export function PendingProductsPanel({
           >
             <div className="flex flex-col gap-3 tablet:flex-row tablet:items-center tablet:justify-between">
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-text-primary">
+                <p className="break-words text-sm font-semibold text-text-primary">
                   {getProductName(productCatalog, pending.produtoId)}
                 </p>
                 <p className="mt-1 text-xs leading-5 text-text-secondary">
@@ -107,7 +107,12 @@ export function PendingProductsPanel({
                   {pending.quantidadePendente} unidade(s) pendente(s)
                 </p>
               </div>
-              <Button asChild variant="secondary" size="sm">
+              <Button
+                asChild
+                variant="secondary"
+                size="sm"
+                className="w-full tablet:w-auto"
+              >
                 <Link href={compraDetalhe(pending.compraId)}>
                   <span>Detalhe</span>
                   <ArrowRight className="h-4 w-4" aria-hidden />

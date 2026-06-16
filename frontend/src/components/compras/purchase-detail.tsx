@@ -102,7 +102,7 @@ export function PurchaseDetail({
             <div className="min-w-0">
               <CardTitle>Compra em acompanhamento</CardTitle>
               <CardDescription className="mt-2">
-                {getSupplierName(suppliers, purchase.fornecedorId)} ·{" "}
+                {getSupplierName(suppliers, purchase.fornecedorId)} -{" "}
                 {formatDate(purchase.dataCompra)}
               </CardDescription>
             </div>
@@ -146,8 +146,8 @@ export function PurchaseDetail({
             Quantidades oficiais compradas, recebidas, perdidas e pendentes.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Table>
+        <CardContent className="min-w-0">
+          <Table className="min-w-[56rem]">
             <TableHeader>
               <TableRow>
                 <TableHead>Produto</TableHead>
@@ -165,8 +165,10 @@ export function PurchaseDetail({
 
                 return (
                   <TableRow key={item.id}>
-                    <TableCell className="min-w-40 font-medium">
-                      {getProductName(products, item.produtoId)}
+                    <TableCell className="min-w-48 max-w-64 font-medium">
+                      <span className="block break-words">
+                        {getProductName(products, item.produtoId)}
+                      </span>
                     </TableCell>
                     <TableCell>{item.quantidadeComprada}</TableCell>
                     <TableCell>{item.quantidadeRecebida}</TableCell>
@@ -178,7 +180,7 @@ export function PurchaseDetail({
                     </TableCell>
                     <TableCell>{formatCurrency(item.valorTotal)}</TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                      <div className="flex min-w-44 flex-wrap justify-end gap-2">
                         <ReceiptDialog
                           compraId={purchase.id}
                           item={item}
@@ -205,7 +207,7 @@ export function PurchaseDetail({
             <div className="flex h-10 w-10 items-center justify-center rounded-amani border border-border bg-surface-light text-primary">
               <PackageOpen className="h-5 w-5" aria-hidden />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <CardTitle>Transito e estoque</CardTitle>
               <CardDescription className="mt-1">
                 Esta compra nao representa estoque disponivel. Somente

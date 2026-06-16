@@ -81,7 +81,7 @@ export function PurchaseHistory({
             key={`${event.kind}-${event.id}`}
             className="rounded-amani border border-border bg-surface-light p-4"
           >
-            <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="flex flex-col gap-3 tablet:flex-row tablet:items-start tablet:justify-between">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   {event.kind === "receipt" ? (
@@ -95,15 +95,15 @@ export function PurchaseHistory({
                       aria-hidden
                     />
                   )}
-                  <p className="text-sm font-semibold text-text-primary">
+                  <p className="break-words text-sm font-semibold text-text-primary">
                     {getProductName(products, event.produtoId)}
                   </p>
                 </div>
                 <p className="mt-2 text-sm text-text-secondary">
-                  {event.quantidade} unidade(s) · {formatDate(event.date)}
+                  {event.quantidade} unidade(s) - {formatDate(event.date)}
                 </p>
                 {event.description ? (
-                  <p className="mt-2 text-sm leading-6 text-text-primary">
+                  <p className="mt-2 break-words text-sm leading-6 text-text-primary">
                     {event.description}
                   </p>
                 ) : null}

@@ -100,8 +100,8 @@ export function PurchaseList({
           Lista operacional com fornecedor, data, situacao e pendencias.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Table>
+      <CardContent className="min-w-0">
+        <Table className="min-w-[46rem]">
           <TableHeader>
             <TableRow>
               <TableHead>Fornecedor</TableHead>
@@ -118,10 +118,14 @@ export function PurchaseList({
 
               return (
                 <TableRow key={purchase.id}>
-                  <TableCell className="min-w-40 font-medium">
-                    {getSupplierName(suppliers, purchase.fornecedorId)}
+                  <TableCell className="min-w-44 max-w-60 font-medium">
+                    <span className="block break-words">
+                      {getSupplierName(suppliers, purchase.fornecedorId)}
+                    </span>
                   </TableCell>
-                  <TableCell>{formatDate(purchase.dataCompra)}</TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {formatDate(purchase.dataCompra)}
+                  </TableCell>
                   <TableCell>
                     <Badge variant={getStatusVariant(purchase.status)}>
                       {getStatusLabel(purchase.status)}
@@ -132,7 +136,9 @@ export function PurchaseList({
                       ? `${pendingQuantity} unidade(s)`
                       : "Sem pendencia informada"}
                   </TableCell>
-                  <TableCell>{formatCurrency(purchase.totalCompra)}</TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {formatCurrency(purchase.totalCompra)}
+                  </TableCell>
                   <TableCell className="text-right">
                     <Button asChild variant="secondary" size="sm">
                       <Link href={compraDetalhe(purchase.id)}>
