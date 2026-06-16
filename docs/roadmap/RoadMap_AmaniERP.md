@@ -26,9 +26,9 @@ Endpoints já implementados e funcionais:
 
 ## **1.2 Frontend (`frontend/`) — Next.js 15 / React 19 / Tailwind, Dark Only, Mobile First**
 
-- **Implementado de verdade:** Produtos (lista, novo, detalhe, editar) e Clientes (lista, novo, detalhe, editar, inativar). Design System completo (`app-shell`, `desktop-sidebar`, `mobile-bottom-nav`, estados loading/error/empty, UI base, TanStack Query).
+- **Implementado de verdade:** Produtos (lista, novo, detalhe, editar), Clientes (lista, novo, detalhe, editar, inativar) e Compras/Recebimentos F011 (lista, filtros, nova compra, detalhe, recebimentos, perdas e pendências). Design System completo (`app-shell`, `desktop-sidebar`, `mobile-bottom-nav`, estados loading/error/empty, UI base, TanStack Query).
 - **Service pronto sem tela:** `services/suppliers.ts` existe, mas não há página de Fornecedores.
-- **Apenas placeholders (`EmptyState`):** Dashboard (home), Compras, Vendas, Estoque, Financeiro, Configurações.
+- **Apenas placeholders (`EmptyState`):** Dashboard (home), Vendas, Estoque, Financeiro, Configurações.
 
 ## **1.3 Features concluídas (specs 001–007)**
 

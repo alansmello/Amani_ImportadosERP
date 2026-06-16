@@ -65,7 +65,7 @@ export const navigationItems = [
     mobileVisible: true,
     mobileOrder: 4,
     group: "main",
-    status: "placeholder"
+    status: "ready"
   },
   {
     id: "vendas",
