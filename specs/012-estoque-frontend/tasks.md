@@ -88,13 +88,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T023 [P] [US3] Create movement filters component with period fields, type select, apply, and clear actions in frontend/src/components/estoque/stock-movement-filters.tsx
-- [ ] T024 [P] [US3] Create movement list component showing type, quantity, date, origin, optional reference, optional unit value, and limited-list notice in frontend/src/components/estoque/stock-movement-list.tsx
-- [ ] T025 [P] [US3] Create movement detail header component showing product identity and official current balance in frontend/src/components/estoque/stock-movement-detail.tsx
-- [ ] T026 [US3] Create product stock detail route using `useStockMovements(produtoId, filters)` and `useProducts()` in frontend/src/app/estoque/[produtoId]/page.tsx
-- [ ] T027 [US3] Add period/type filter state and refetch behavior for movement history in frontend/src/app/estoque/[produtoId]/page.tsx
-- [ ] T028 [US3] Add loading, error, retry, not-found, empty-history, and limited-history states in frontend/src/app/estoque/[produtoId]/page.tsx
-- [ ] T029 [US3] Ensure the detail page contains no create, edit, delete, adjustment, transfer, or minimum-stock alert controls in frontend/src/app/estoque/[produtoId]/page.tsx
+- [X] T023 [P] [US3] Create movement filters component with period fields, type select, apply, and clear actions in frontend/src/components/estoque/stock-movement-filters.tsx
+- [X] T024 [P] [US3] Create movement list component showing type, quantity, date, origin, optional reference, optional unit value, and limited-list notice in frontend/src/components/estoque/stock-movement-list.tsx
+- [X] T025 [P] [US3] Create movement detail header component showing product identity and official current balance in frontend/src/components/estoque/stock-movement-detail.tsx
+- [X] T026 [US3] Create product stock detail route using `useStockMovements(produtoId, filters)` and `useProducts()` in frontend/src/app/estoque/[produtoId]/page.tsx
+- [X] T027 [US3] Add period/type filter state and refetch behavior for movement history in frontend/src/app/estoque/[produtoId]/page.tsx
+- [X] T028 [US3] Add loading, error, retry, not-found, empty-history, and limited-history states in frontend/src/app/estoque/[produtoId]/page.tsx
+- [X] T029 [US3] Ensure the detail page contains no create, edit, delete, adjustment, transfer, or minimum-stock alert controls in frontend/src/app/estoque/[produtoId]/page.tsx
 
 **Checkpoint**: User Story 3 works independently after foundation and validates stock traceability.
 
@@ -108,11 +108,11 @@
 
 ### Implementation for User Story 4
 
-- [ ] T030 [P] [US4] Create pending receipts panel for Estoque using `PendingPurchaseProduct`, product catalog, suppliers, and `compraDetalhe(compraId)` in frontend/src/components/estoque/pending-receipts-panel.tsx
-- [ ] T031 [US4] Integrate `usePendingPurchaseProducts()`, `useProducts()`, and `useSuppliers()` data into the pending receipts panel without blocking the already loaded stock list in frontend/src/app/estoque/page.tsx
-- [ ] T032 [US4] Add pending receipts loading, error, retry, and empty states that do not block already loaded stock balances in frontend/src/app/estoque/page.tsx
-- [ ] T033 [US4] Ensure pending quantities are labelled as aguardando recebimento and are never summed into `saldoAtual` in frontend/src/components/estoque/pending-receipts-panel.tsx
-- [ ] T034 [US4] Validate the pending receipt action opens the existing purchase detail route via `compraDetalhe(compraId)` in frontend/src/components/estoque/pending-receipts-panel.tsx
+- [X] T030 [P] [US4] Create pending receipts panel for Estoque using `PendingPurchaseProduct`, product catalog, suppliers, and `compraDetalhe(compraId)` in frontend/src/components/estoque/pending-receipts-panel.tsx
+- [X] T031 [US4] Integrate `usePendingPurchaseProducts()`, `useProducts()`, and `useSuppliers()` data into the pending receipts panel without blocking the already loaded stock list in frontend/src/app/estoque/page.tsx
+- [X] T032 [US4] Add pending receipts loading, error, retry, and empty states that do not block already loaded stock balances in frontend/src/app/estoque/page.tsx
+- [X] T033 [US4] Ensure pending quantities are labelled as aguardando recebimento and are never summed into `saldoAtual` in frontend/src/components/estoque/pending-receipts-panel.tsx
+- [X] T034 [US4] Validate the pending receipt action opens the existing purchase detail route via `compraDetalhe(compraId)` in frontend/src/components/estoque/pending-receipts-panel.tsx
 
 **Checkpoint**: User Story 4 works independently and keeps receipt/loss actions in Compras.
 
