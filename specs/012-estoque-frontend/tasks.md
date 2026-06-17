@@ -18,11 +18,11 @@
 
 **Purpose**: Create the shared module skeleton and route helpers used by all stories.
 
-- [ ] T001 Create Estoque component directory in frontend/src/components/estoque/
-- [ ] T002 [P] Create stock type module skeleton in frontend/src/types/stock.ts
-- [ ] T003 [P] Create stock service module skeleton in frontend/src/services/stock.ts
-- [ ] T004 [P] Create stock query hook module skeleton in frontend/src/hooks/use-stock.ts
-- [ ] T005 Add `estoqueDetalhe(produtoId: string)` route helper in frontend/src/config/routes.ts
+- [X] T001 Create Estoque component directory in frontend/src/components/estoque/
+- [X] T002 [P] Create stock type module skeleton in frontend/src/types/stock.ts
+- [X] T003 [P] Create stock service module skeleton in frontend/src/services/stock.ts
+- [X] T004 [P] Create stock query hook module skeleton in frontend/src/hooks/use-stock.ts
+- [X] T005 Add `estoqueDetalhe(produtoId: string)` route helper in frontend/src/config/routes.ts
 
 ---
 
@@ -32,12 +32,12 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T006 Define `StockProduct`, `StockListFilters`, `StockMovementType`, `StockMovement`, `StockMovementFilters`, and `StockMovementHistory` in frontend/src/types/stock.ts
-- [ ] T007 Implement query string builders for stock list and product movement filters in frontend/src/services/stock.ts
-- [ ] T008 Implement `stockService.list(filters)` and `stockService.getMovements(produtoId, filters)` using `apiClient` in frontend/src/services/stock.ts
-- [ ] T009 Implement `stockQueryKeys`, `useStockProducts(filters)`, and `useStockMovements(produtoId, filters)` in frontend/src/hooks/use-stock.ts
-- [ ] T010 [P] Create number, date, movement type, movement origin, and stock status formatters in frontend/src/components/estoque/stock-formatters.ts
-- [ ] T011 Validate constitution gates for F012 in specs/012-estoque-frontend/plan.md: stock by movements, purchases in transit, item-level receipts, losses without stock, backend-owned rules, analytics limits, Mobile First, operational UX, Dark Only, and simplicity
+- [X] T006 Define `StockProduct`, `StockListFilters`, `StockMovementType`, `StockMovement`, `StockMovementFilters`, and `StockMovementHistory` in frontend/src/types/stock.ts
+- [X] T007 Implement query string builders for stock list and product movement filters in frontend/src/services/stock.ts
+- [X] T008 Implement `stockService.list(filters)` and `stockService.getMovements(produtoId, filters)` using `apiClient` in frontend/src/services/stock.ts
+- [X] T009 Implement `stockQueryKeys`, `useStockProducts(filters)`, and `useStockMovements(produtoId, filters)` in frontend/src/hooks/use-stock.ts
+- [X] T010 [P] Create number, date, movement type, movement origin, and stock status formatters in frontend/src/components/estoque/stock-formatters.ts
+- [X] T011 Validate constitution gates for F012 in specs/012-estoque-frontend/plan.md: stock by movements, purchases in transit, item-level receipts, losses without stock, backend-owned rules, analytics limits, Mobile First, operational UX, Dark Only, and simplicity
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 

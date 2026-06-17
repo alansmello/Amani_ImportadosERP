@@ -18,3 +18,7 @@ export type AppRoute = (typeof routes)[AppRouteKey];
 export function compraDetalhe(id: string) {
   return `/compras/${id}` as const;
 }
+
+export function estoqueDetalhe(produtoId: string) {
+  return `/estoque/${produtoId}` as const;
+}
