@@ -50,14 +50,14 @@
 
 ### Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Create the sale item editor for product, quantity, price, discount, and addition fields in `frontend/src/components/vendas/sale-item-editor.tsx`
-- [ ] T012 [P] [US1] Create the sale summary component for item totals, general discount/addition, and submission readiness in `frontend/src/components/vendas/sale-summary.tsx`
-- [ ] T013 [US1] Create the sale form component with cliente selection, optional sale date, general discount/addition, item management, validation, and submit flow in `frontend/src/components/vendas/sale-form.tsx`
-- [ ] T014 [US1] Implement duplicate product consolidation in the sale draft flow in `frontend/src/components/vendas/sale-form.tsx`
-- [ ] T015 [US1] Integrate `useClients`, `useProducts`, and optional `useStockProducts` as selection/support data in `frontend/src/components/vendas/sale-form.tsx`
-- [ ] T016 [US1] Create the new sale route that renders the operational form and navigates after success in `frontend/src/app/vendas/nova/page.tsx`
-- [ ] T017 [US1] Ensure successful creation invalidates vendas and estoque queries and never shows success before backend confirmation in `frontend/src/hooks/use-sales.ts`
-- [ ] T018 [US1] Validate the new sale flow from quickstart scenarios 2 and 3 using `specs/013-vendas-frontend/quickstart.md`
+- [X] T011 [P] [US1] Create the sale item editor for product, quantity, price, discount, and addition fields in `frontend/src/components/vendas/sale-item-editor.tsx`
+- [X] T012 [P] [US1] Create the sale summary component for item totals, general discount/addition, and submission readiness in `frontend/src/components/vendas/sale-summary.tsx`
+- [X] T013 [US1] Create the sale form component with cliente selection, optional sale date, general discount/addition, item management, validation, and submit flow in `frontend/src/components/vendas/sale-form.tsx`
+- [X] T014 [US1] Implement duplicate product consolidation in the sale draft flow in `frontend/src/components/vendas/sale-form.tsx`
+- [X] T015 [US1] Integrate `useClients`, `useProducts`, and optional `useStockProducts` as selection/support data in `frontend/src/components/vendas/sale-form.tsx`
+- [X] T016 [US1] Create the new sale route that renders the operational form and navigates after success in `frontend/src/app/vendas/nova/page.tsx`
+- [X] T017 [US1] Ensure successful creation invalidates vendas and estoque queries and never shows success before backend confirmation in `frontend/src/hooks/use-sales.ts`
+- [X] T018 [US1] Validate the new sale flow from quickstart scenarios 2 and 3 using `specs/013-vendas-frontend/quickstart.md`
 
 **Checkpoint**: User Story 1 is independently functional as the MVP increment.
 
@@ -71,11 +71,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] Preserve and expose `{ error }` messages from failed sale creation in `frontend/src/services/sales.ts`
-- [ ] T020 [US2] Display stock-insufficient and operational creation errors without clearing the draft in `frontend/src/components/vendas/sale-form.tsx`
-- [ ] T021 [US2] Add item-level visual context for products with no known/available stock without using local stock as final authorization in `frontend/src/components/vendas/sale-item-editor.tsx`
-- [ ] T022 [US2] Ensure failed creation does not invalidate vendas/estoque as successful completion in `frontend/src/hooks/use-sales.ts`
-- [ ] T023 [US2] Validate insufficient stock and invalid input paths from quickstart scenario 4 in `specs/013-vendas-frontend/quickstart.md`
+- [X] T019 [US2] Preserve and expose `{ error }` messages from failed sale creation in `frontend/src/services/sales.ts`
+- [X] T020 [US2] Display stock-insufficient and operational creation errors without clearing the draft in `frontend/src/components/vendas/sale-form.tsx`
+- [X] T021 [US2] Add item-level visual context for products with no known/available stock without using local stock as final authorization in `frontend/src/components/vendas/sale-item-editor.tsx`
+- [X] T022 [US2] Ensure failed creation does not invalidate vendas/estoque as successful completion in `frontend/src/hooks/use-sales.ts`
+- [X] T023 [US2] Validate insufficient stock and invalid input paths from quickstart scenario 4 in `specs/013-vendas-frontend/quickstart.md`
 
 **Checkpoint**: User Stories 1 and 2 work independently and together.
 
