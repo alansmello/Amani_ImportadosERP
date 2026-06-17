@@ -126,11 +126,11 @@
 
 ### Implementation for User Story 5
 
-- [ ] T035 [P] [US5] Create confirmation dialog for cancel sale with pending, success, error, and retry states in `frontend/src/components/vendas/cancel-sale-dialog.tsx`
-- [ ] T036 [US5] Integrate cancel action into sale detail without inventing local sale status or cancelability fields in `frontend/src/components/vendas/sale-detail.tsx`
-- [ ] T037 [US5] Invalidate vendas, sale detail, and estoque queries after successful cancellation in `frontend/src/hooks/use-sales.ts`
-- [ ] T038 [US5] Preserve previous detail state and show a recoverable message when cancel fails in `frontend/src/app/vendas/[vendaId]/page.tsx`
-- [ ] T039 [US5] Validate cancellation from quickstart scenario 6 using `specs/013-vendas-frontend/quickstart.md`
+- [X] T035 [P] [US5] Create confirmation dialog for cancel sale with pending, success, error, and retry states in `frontend/src/components/vendas/cancel-sale-dialog.tsx`
+- [X] T036 [US5] Integrate cancel action into sale detail without inventing local sale status or cancelability fields in `frontend/src/components/vendas/sale-detail.tsx`
+- [X] T037 [US5] Invalidate vendas, sale detail, and estoque queries after successful cancellation in `frontend/src/hooks/use-sales.ts`
+- [X] T038 [US5] Preserve previous detail state and show a recoverable message when cancel fails in `frontend/src/app/vendas/[vendaId]/page.tsx`
+- [X] T039 [US5] Validate cancellation from quickstart scenario 6 using `specs/013-vendas-frontend/quickstart.md`
 
 **Checkpoint**: User Story 5 is independently functional after foundational tasks and detail route availability.
 
@@ -144,10 +144,10 @@
 
 ### Implementation for User Story 6
 
-- [ ] T040 [US6] Review and adjust responsive layout of the sales list and filters in `frontend/src/app/vendas/page.tsx`, `frontend/src/components/vendas/sales-list.tsx`, and `frontend/src/components/vendas/sales-filters.tsx`
-- [ ] T041 [US6] Review and adjust responsive layout of the sale form, item editor, and summary in `frontend/src/app/vendas/nova/page.tsx`, `frontend/src/components/vendas/sale-form.tsx`, `frontend/src/components/vendas/sale-item-editor.tsx`, and `frontend/src/components/vendas/sale-summary.tsx`
-- [ ] T042 [US6] Review and adjust responsive layout of sale detail and cancel dialog in `frontend/src/app/vendas/[vendaId]/page.tsx`, `frontend/src/components/vendas/sale-detail.tsx`, and `frontend/src/components/vendas/cancel-sale-dialog.tsx`
-- [ ] T043 [US6] Validate Mobile First and desktop behavior from quickstart scenario 8 using `specs/013-vendas-frontend/quickstart.md`
+- [X] T040 [US6] Review and adjust responsive layout of the sales list and filters in `frontend/src/app/vendas/page.tsx`, `frontend/src/components/vendas/sales-list.tsx`, and `frontend/src/components/vendas/sales-filters.tsx`
+- [X] T041 [US6] Review and adjust responsive layout of the sale form, item editor, and summary in `frontend/src/app/vendas/nova/page.tsx`, `frontend/src/components/vendas/sale-form.tsx`, `frontend/src/components/vendas/sale-item-editor.tsx`, and `frontend/src/components/vendas/sale-summary.tsx`
+- [X] T042 [US6] Review and adjust responsive layout of sale detail and cancel dialog in `frontend/src/app/vendas/[vendaId]/page.tsx`, `frontend/src/components/vendas/sale-detail.tsx`, and `frontend/src/components/vendas/cancel-sale-dialog.tsx`
+- [X] T043 [US6] Validate Mobile First and desktop behavior from quickstart scenario 8 using `specs/013-vendas-frontend/quickstart.md`
 
 **Checkpoint**: All user stories are independently functional and responsive.
 
@@ -158,7 +158,7 @@
 **Purpose**: Validate scope exclusions, consistency, and build quality across the feature.
 
 - [ ] T044 Verify absence of form of payment, receivables generation, sale editing, partial return, fiscal issuing, and local stock/profit/average-cost calculation across `frontend/src/app/vendas/` and `frontend/src/components/vendas/`
-- [ ] T045 [P] Mark the Vendas navigation item as implemented if navigation uses readiness metadata in `frontend/src/config/navigation.ts`
+- [X] T045 [P] Mark the Vendas navigation item as implemented if navigation uses readiness metadata in `frontend/src/config/navigation.ts`
 - [ ] T046 [P] Review sales copy, labels, empty states, and error messages for consistency with operational Dark Only UI in `frontend/src/app/vendas/` and `frontend/src/components/vendas/`
 - [ ] T047 Run the full quickstart validation scenarios in `specs/013-vendas-frontend/quickstart.md`
 - [ ] T048 Run `npm run lint` in `frontend/`

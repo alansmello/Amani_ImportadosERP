@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
 
+import { CancelSaleDialog } from "@/components/vendas/cancel-sale-dialog";
 import { SaleDetail } from "@/components/vendas/sale-detail";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/states/empty-state";
@@ -26,6 +28,7 @@ export default function VendaDetalhePage() {
   const saleQuery = useSale(vendaId);
   const customersQuery = useCustomers();
   const productsQuery = useProducts();
+  const [cancelSuccess, setCancelSuccess] = useState(false);
 
   const isLoading =
     saleQuery.isLoading ||
@@ -55,6 +58,12 @@ export default function VendaDetalhePage() {
         }
       />
 
+      {cancelSuccess ? (
+        <div className="rounded-amani border border-success bg-surface-light px-4 py-3 text-sm leading-6 text-success">
+          Cancelamento solicitado com sucesso. Os dados da venda foram atualizados.
+        </div>
+      ) : null}
+
       {isLoading ? (
         <LoadingState
           title="Carregando venda"
@@ -83,6 +92,12 @@ export default function VendaDetalhePage() {
           sale={saleQuery.data}
           customers={customersQuery.data ?? EMPTY_CUSTOMERS}
           products={productsQuery.data ?? EMPTY_PRODUCTS}
+          cancelAction={
+            <CancelSaleDialog
+              vendaId={vendaId}
+              onCancelled={() => setCancelSuccess(true)}
+            />
+          }
         />
       ) : null}
     </main>

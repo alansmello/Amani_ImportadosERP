@@ -76,7 +76,7 @@ export const navigationItems = [
     mobileVisible: true,
     mobileOrder: 2,
     group: "main",
-    status: "placeholder"
+    status: "ready"
   },
   {
     id: "estoque",
