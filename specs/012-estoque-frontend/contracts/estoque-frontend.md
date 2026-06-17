@@ -16,7 +16,6 @@ Lista produtos com saldo atual oficial.
 
 ```ts
 type StockListFilters = {
-  categoriaId?: string;
   somenteComSaldo?: boolean;
   busca?: string;
 };

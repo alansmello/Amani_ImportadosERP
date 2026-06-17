@@ -18,7 +18,7 @@
 
 **Purpose**: Create the shared module skeleton and route helpers used by all stories.
 
-- [ ] T001 Create Estoque component directory with placeholder barrel or `.gitkeep` in frontend/src/components/estoque/.gitkeep
+- [ ] T001 Create Estoque component directory in frontend/src/components/estoque/
 - [ ] T002 [P] Create stock type module skeleton in frontend/src/types/stock.ts
 - [ ] T003 [P] Create stock service module skeleton in frontend/src/services/stock.ts
 - [ ] T004 [P] Create stock query hook module skeleton in frontend/src/hooks/use-stock.ts
@@ -54,7 +54,7 @@
 - [ ] T012 [P] [US1] Create stock summary component for total products, positive balances, zero balances, and negative balances from already returned values in frontend/src/components/estoque/stock-summary.tsx
 - [ ] T013 [P] [US1] Create stock list component that renders product identity, official balance, zero balance, and negative balance highlighting in frontend/src/components/estoque/stock-list.tsx
 - [ ] T014 [P] [US1] Create basic stock filters component with disabled search and "com saldo" controls reserved for US2 in frontend/src/components/estoque/stock-filters.tsx
-- [ ] T015 [US1] Replace Estoque placeholder with client page loading `useStockProducts({})`, `useProducts()`, `usePendingPurchaseProducts()`, and `useSuppliers()` in frontend/src/app/estoque/page.tsx
+- [ ] T015 [US1] Replace Estoque placeholder with client page loading `useStockProducts({})` in frontend/src/app/estoque/page.tsx
 - [ ] T016 [US1] Integrate loading, error, retry, and empty states for the stock list in frontend/src/app/estoque/page.tsx
 - [ ] T017 [US1] Wire each product row to `estoqueDetalhe(produtoId)` without adding movement editing actions in frontend/src/components/estoque/stock-list.tsx
 
@@ -109,7 +109,7 @@
 ### Implementation for User Story 4
 
 - [ ] T030 [P] [US4] Create pending receipts panel for Estoque using `PendingPurchaseProduct`, product catalog, suppliers, and `compraDetalhe(compraId)` in frontend/src/components/estoque/pending-receipts-panel.tsx
-- [ ] T031 [US4] Integrate `usePendingPurchaseProducts()`, `useProducts()`, and `useSuppliers()` data into the pending receipts panel in frontend/src/app/estoque/page.tsx
+- [ ] T031 [US4] Integrate `usePendingPurchaseProducts()`, `useProducts()`, and `useSuppliers()` data into the pending receipts panel without blocking the already loaded stock list in frontend/src/app/estoque/page.tsx
 - [ ] T032 [US4] Add pending receipts loading, error, retry, and empty states that do not block already loaded stock balances in frontend/src/app/estoque/page.tsx
 - [ ] T033 [US4] Ensure pending quantities are labelled as aguardando recebimento and are never summed into `saldoAtual` in frontend/src/components/estoque/pending-receipts-panel.tsx
 - [ ] T034 [US4] Validate the pending receipt action opens the existing purchase detail route via `compraDetalhe(compraId)` in frontend/src/components/estoque/pending-receipts-panel.tsx
@@ -147,8 +147,9 @@
 - [ ] T044 Run `npm run lint` in frontend/
 - [ ] T045 Run `npm run typecheck` in frontend/
 - [ ] T046 Run `npm run build` in frontend/
-- [ ] T047 Execute quickstart validation scenarios from specs/012-estoque-frontend/quickstart.md for stock list, filters, negative balance, movement detail, pending receipts, errors, and Mobile First layouts
-- [ ] T048 Run regression check that `/compras` still displays pending products and receipt/loss actions remain only in the Compras flow in frontend/src/app/compras/page.tsx and frontend/src/app/compras/[id]/page.tsx
+- [ ] T047 Confirm a validation dataset with at least 100 products is available before running search/filter timing checks in specs/012-estoque-frontend/quickstart.md
+- [ ] T048 Execute quickstart validation scenarios from specs/012-estoque-frontend/quickstart.md for stock list, filters, negative balance, movement detail, pending receipts, errors, and Mobile First layouts
+- [ ] T049 Run regression check that `/compras` still displays pending products and receipt/loss actions remain only in the Compras flow in frontend/src/app/compras/page.tsx and frontend/src/app/compras/[id]/page.tsx
 
 ---
 
