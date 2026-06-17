@@ -51,12 +51,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create stock summary component for total products, positive balances, zero balances, and negative balances from already returned values in frontend/src/components/estoque/stock-summary.tsx
-- [ ] T013 [P] [US1] Create stock list component that renders product identity, official balance, zero balance, and negative balance highlighting in frontend/src/components/estoque/stock-list.tsx
-- [ ] T014 [P] [US1] Create basic stock filters component with disabled search and "com saldo" controls reserved for US2 in frontend/src/components/estoque/stock-filters.tsx
-- [ ] T015 [US1] Replace Estoque placeholder with client page loading `useStockProducts({})` in frontend/src/app/estoque/page.tsx
-- [ ] T016 [US1] Integrate loading, error, retry, and empty states for the stock list in frontend/src/app/estoque/page.tsx
-- [ ] T017 [US1] Wire each product row to `estoqueDetalhe(produtoId)` without adding movement editing actions in frontend/src/components/estoque/stock-list.tsx
+- [X] T012 [P] [US1] Create stock summary component for total products, positive balances, zero balances, and negative balances from already returned values in frontend/src/components/estoque/stock-summary.tsx
+- [X] T013 [P] [US1] Create stock list component that renders product identity, official balance, zero balance, and negative balance highlighting in frontend/src/components/estoque/stock-list.tsx
+- [X] T014 [P] [US1] Create basic stock filters component with disabled search and "com saldo" controls reserved for US2 in frontend/src/components/estoque/stock-filters.tsx
+- [X] T015 [US1] Replace Estoque placeholder with client page loading `useStockProducts({})` in frontend/src/app/estoque/page.tsx
+- [X] T016 [US1] Integrate loading, error, retry, and empty states for the stock list in frontend/src/app/estoque/page.tsx
+- [X] T017 [US1] Wire each product row to `estoqueDetalhe(produtoId)` without adding movement editing actions in frontend/src/components/estoque/stock-list.tsx
 
 **Checkpoint**: User Story 1 is independently functional and validates the MVP scope.
 
@@ -70,11 +70,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T018 [P] [US2] Implement controlled search input, "com saldo" toggle, active filter count, and clear action in frontend/src/components/estoque/stock-filters.tsx
-- [ ] T019 [US2] Add local filter state for `busca` and `somenteComSaldo` in frontend/src/app/estoque/page.tsx
-- [ ] T020 [US2] Apply search by product name, code, or equivalent identity and apply "com saldo" filtering without changing official balances in frontend/src/app/estoque/page.tsx
-- [ ] T021 [US2] Add filtered empty state that preserves the search term and offers clear filters in frontend/src/app/estoque/page.tsx
-- [ ] T022 [US2] Ensure stock summary reflects the currently displayed list while preserving original official balance values in frontend/src/components/estoque/stock-summary.tsx
+- [X] T018 [P] [US2] Implement controlled search input, "com saldo" toggle, active filter count, and clear action in frontend/src/components/estoque/stock-filters.tsx
+- [X] T019 [US2] Add local filter state for `busca` and `somenteComSaldo` in frontend/src/app/estoque/page.tsx
+- [X] T020 [US2] Apply search by product name, code, or equivalent identity and apply "com saldo" filtering without changing official balances in frontend/src/app/estoque/page.tsx
+- [X] T021 [US2] Add filtered empty state that preserves the search term and offers clear filters in frontend/src/app/estoque/page.tsx
+- [X] T022 [US2] Ensure stock summary reflects the currently displayed list while preserving original official balance values in frontend/src/components/estoque/stock-summary.tsx
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
