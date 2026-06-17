@@ -126,11 +126,11 @@
 
 ### Implementation for User Story 5
 
-- [ ] T035 [US5] Apply responsive layout for summary, filters, stock list, and pending receipts in frontend/src/app/estoque/page.tsx
-- [ ] T036 [US5] Apply responsive layout for product detail, movement filters, and movement list in frontend/src/app/estoque/[produtoId]/page.tsx
-- [ ] T037 [US5] Audit text wrapping, stable control dimensions, and mobile tap targets in frontend/src/components/estoque/stock-list.tsx
-- [ ] T038 [US5] Audit text wrapping, stable control dimensions, and mobile tap targets in frontend/src/components/estoque/stock-movement-list.tsx
-- [ ] T039 [US5] Audit text wrapping, stable control dimensions, and mobile tap targets in frontend/src/components/estoque/pending-receipts-panel.tsx
+- [X] T035 [US5] Apply responsive layout for summary, filters, stock list, and pending receipts in frontend/src/app/estoque/page.tsx
+- [X] T036 [US5] Apply responsive layout for product detail, movement filters, and movement list in frontend/src/app/estoque/[produtoId]/page.tsx
+- [X] T037 [US5] Audit text wrapping, stable control dimensions, and mobile tap targets in frontend/src/components/estoque/stock-list.tsx
+- [X] T038 [US5] Audit text wrapping, stable control dimensions, and mobile tap targets in frontend/src/components/estoque/stock-movement-list.tsx
+- [X] T039 [US5] Audit text wrapping, stable control dimensions, and mobile tap targets in frontend/src/components/estoque/pending-receipts-panel.tsx
 
 **Checkpoint**: User Story 5 validates the module against Mobile First requirements.
 
@@ -140,16 +140,18 @@
 
 **Purpose**: Final integration, navigation status, validation, and regression checks across stories.
 
-- [ ] T040 Update Estoque navigation status from placeholder to ready in frontend/src/config/navigation.ts
-- [ ] T041 [P] Review `/estoque` copy for Dark Only operational tone and absence of feature-explainer prose in frontend/src/app/estoque/page.tsx
-- [ ] T042 [P] Review `/estoque/[produtoId]` copy for Dark Only operational tone and absence of feature-explainer prose in frontend/src/app/estoque/[produtoId]/page.tsx
-- [ ] T043 Verify no task introduced local stock, cost, profit, dashboard metric, pending quantity, or average cost calculation in frontend/src/app/estoque/page.tsx, frontend/src/app/estoque/[produtoId]/page.tsx, frontend/src/hooks/use-stock.ts, and frontend/src/services/stock.ts
-- [ ] T044 Run `npm run lint` in frontend/
-- [ ] T045 Run `npm run typecheck` in frontend/
-- [ ] T046 Run `npm run build` in frontend/
+- [X] T040 Update Estoque navigation status from placeholder to ready in frontend/src/config/navigation.ts
+- [X] T041 [P] Review `/estoque` copy for Dark Only operational tone and absence of feature-explainer prose in frontend/src/app/estoque/page.tsx
+- [X] T042 [P] Review `/estoque/[produtoId]` copy for Dark Only operational tone and absence of feature-explainer prose in frontend/src/app/estoque/[produtoId]/page.tsx
+- [X] T043 Verify no task introduced local stock, cost, profit, dashboard metric, pending quantity, or average cost calculation in frontend/src/app/estoque/page.tsx, frontend/src/app/estoque/[produtoId]/page.tsx, frontend/src/hooks/use-stock.ts, and frontend/src/services/stock.ts
+- [X] T044 Run `npm run lint` in frontend/
+- [X] T045 Run `npm run typecheck` in frontend/
+- [X] T046 Run `npm run build` in frontend/
 - [ ] T047 Confirm a validation dataset with at least 100 products is available before running search/filter timing checks in specs/012-estoque-frontend/quickstart.md
 - [ ] T048 Execute quickstart validation scenarios from specs/012-estoque-frontend/quickstart.md for stock list, filters, negative balance, movement detail, pending receipts, errors, and Mobile First layouts
-- [ ] T049 Run regression check that `/compras` still displays pending products and receipt/loss actions remain only in the Compras flow in frontend/src/app/compras/page.tsx and frontend/src/app/compras/[id]/page.tsx
+- [X] T049 Run regression check that `/compras` still displays pending products and receipt/loss actions remain only in the Compras flow in frontend/src/app/compras/page.tsx and frontend/src/app/compras/[id]/page.tsx
+
+**Validation note**: T047 and T048 require a running backend/database with the quickstart dataset, including at least 100 products for timing checks. No repository-local seed or fixture with that dataset was found; see `validation.md`.
 
 ---
 

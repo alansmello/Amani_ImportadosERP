@@ -43,17 +43,19 @@ const balanceClassByVariant = {
 } as const;
 
 function getProductIdentity(product: StockProduct) {
-  return product.codigo ?? product.categoriaNome ?? product.categoriaId ?? product.produtoId;
+  return (
+    product.codigo ?? product.categoriaNome ?? product.categoriaId ?? product.produtoId
+  );
 }
 
 function StockBalance({ product }: { product: StockProduct }) {
   const variant = getStockBalanceVariant(product.saldoAtual);
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex min-w-0 flex-wrap items-center gap-2">
       <span
         className={cn(
-          "font-semibold tabular-nums",
+          "break-words font-semibold tabular-nums",
           balanceClassByVariant[variant]
         )}
       >
@@ -88,7 +90,7 @@ export function StockList({ products }: StockListProps) {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-col gap-2 tablet:flex-row tablet:items-center tablet:justify-between">
                 <span className="text-sm text-text-secondary">Saldo atual</span>
                 <StockBalance product={product} />
               </div>

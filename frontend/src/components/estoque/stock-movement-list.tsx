@@ -70,7 +70,9 @@ export function StockMovementList({
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-amani border border-border bg-surface-light text-primary">
               <ArrowRightLeft className="h-5 w-5" aria-hidden />
             </div>
-            <CardTitle>Movimentacoes</CardTitle>
+            <CardTitle className="break-words leading-6">
+              Movimentacoes
+            </CardTitle>
           </div>
           <Badge variant="neutral">{movements.length} exibidas</Badge>
         </div>
@@ -92,7 +94,7 @@ export function StockMovementList({
               key={movement.id}
               className="rounded-amani border border-border bg-surface-light p-4"
             >
-              <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-col gap-2 tablet:flex-row tablet:items-center tablet:justify-between">
                 <Badge variant={getMovementVariant(movement.tipo)}>
                   {formatMovementType(movement.tipo)}
                 </Badge>
@@ -101,7 +103,7 @@ export function StockMovementList({
                 </span>
               </div>
               <dl className="mt-4 grid gap-3 text-sm">
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col gap-1 tablet:flex-row tablet:items-center tablet:justify-between tablet:gap-3">
                   <dt className="text-text-secondary">Quantidade</dt>
                   <dd className="font-medium text-text-primary">
                     {formatStockQuantity(movement.quantidade)}
@@ -119,7 +121,7 @@ export function StockMovementList({
                     {getReferenceLabel(movement)}
                   </dd>
                 </div>
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col gap-1 tablet:flex-row tablet:items-center tablet:justify-between tablet:gap-3">
                   <dt className="text-text-secondary">Valor unitario</dt>
                   <dd className="font-medium text-text-primary">
                     {formatStockCurrency(movement.valorUnitario)}

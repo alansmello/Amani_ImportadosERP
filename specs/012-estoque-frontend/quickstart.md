@@ -1,5 +1,10 @@
 # Quickstart: Estoque Frontend
 
+## Implementation Readiness
+
+Frontend implementation status and automated validation results are tracked in
+[validation.md](./validation.md).
+
 ## Prerequisites
 
 - Backend com F008 disponivel para consulta oficial de estoque.
