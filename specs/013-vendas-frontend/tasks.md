@@ -89,12 +89,12 @@
 
 ### Implementation for User Story 3
 
-- [ ] T024 [P] [US3] Create sales filters for date range and cliente selection in `frontend/src/components/vendas/sales-filters.tsx`
-- [ ] T025 [P] [US3] Create sales list with loading, error, empty, filtered-empty, total/profit display, and detail navigation in `frontend/src/components/vendas/sales-list.tsx`
-- [ ] T026 [US3] Replace the sales placeholder with the list page, filters, new-sale action, and state orchestration in `frontend/src/app/vendas/page.tsx`
-- [ ] T027 [US3] Map `SaleFilters` to `dataInicio`, `dataFim`, and `clienteId` query params in `frontend/src/services/sales.ts`
-- [ ] T028 [US3] Use `vendaDetalhe(id)` and `vendasNova()` route helpers from the list page in `frontend/src/app/vendas/page.tsx`
-- [ ] T029 [US3] Validate list and filtering from quickstart scenario 1 using `specs/013-vendas-frontend/quickstart.md`
+- [X] T024 [P] [US3] Create sales filters for date range and cliente selection in `frontend/src/components/vendas/sales-filters.tsx`
+- [X] T025 [P] [US3] Create sales list with loading, error, empty, filtered-empty, total/profit display, and detail navigation in `frontend/src/components/vendas/sales-list.tsx`
+- [X] T026 [US3] Replace the sales placeholder with the list page, filters, new-sale action, and state orchestration in `frontend/src/app/vendas/page.tsx`
+- [X] T027 [US3] Map `SaleFilters` to `dataInicio`, `dataFim`, and `clienteId` query params in `frontend/src/services/sales.ts`
+- [X] T028 [US3] Use `vendaDetalhe(id)` and `vendasNova()` route helpers from the list page in `frontend/src/app/vendas/page.tsx`
+- [X] T029 [US3] Validate list and filtering from quickstart scenario 1 using `specs/013-vendas-frontend/quickstart.md`
 
 **Checkpoint**: User Story 3 is independently functional after foundational tasks.
 
@@ -108,11 +108,11 @@
 
 ### Implementation for User Story 4
 
-- [ ] T030 [P] [US4] Create sale detail component for cliente, date, items, discounts, additions, total, and official profit in `frontend/src/components/vendas/sale-detail.tsx`
-- [ ] T031 [US4] Create the sale detail route with loading, error, not-found, retry, and no-local-profit behavior in `frontend/src/app/vendas/[vendaId]/page.tsx`
-- [ ] T032 [US4] Enrich sale detail display with cliente and product names from existing hooks without changing official sale values in `frontend/src/components/vendas/sale-detail.tsx`
-- [ ] T033 [US4] Display absence of lucro data as unavailable information without calculating profit or average-cost substitutes in `frontend/src/components/vendas/sale-detail.tsx`
-- [ ] T034 [US4] Validate detail and official-profit behavior from quickstart scenario 5 using `specs/013-vendas-frontend/quickstart.md`
+- [X] T030 [P] [US4] Create sale detail component for cliente, date, items, discounts, additions, total, and official profit in `frontend/src/components/vendas/sale-detail.tsx`
+- [X] T031 [US4] Create the sale detail route with loading, error, not-found, retry, and no-local-profit behavior in `frontend/src/app/vendas/[vendaId]/page.tsx`
+- [X] T032 [US4] Enrich sale detail display with cliente and product names from existing hooks without changing official sale values in `frontend/src/components/vendas/sale-detail.tsx`
+- [X] T033 [US4] Display absence of lucro data as unavailable information without calculating profit or average-cost substitutes in `frontend/src/components/vendas/sale-detail.tsx`
+- [X] T034 [US4] Validate detail and official-profit behavior from quickstart scenario 5 using `specs/013-vendas-frontend/quickstart.md`
 
 **Checkpoint**: User Story 4 is independently functional after foundational tasks.
 
