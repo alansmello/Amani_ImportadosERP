@@ -157,13 +157,13 @@
 
 **Purpose**: Validate scope exclusions, consistency, and build quality across the feature.
 
-- [ ] T044 Verify absence of form of payment, receivables generation, sale editing, partial return, fiscal issuing, and local stock/profit/average-cost calculation across `frontend/src/app/vendas/` and `frontend/src/components/vendas/`
+- [X] T044 Verify absence of form of payment, receivables generation, sale editing, partial return, fiscal issuing, and local stock/profit/average-cost calculation across `frontend/src/app/vendas/` and `frontend/src/components/vendas/`
 - [X] T045 [P] Mark the Vendas navigation item as implemented if navigation uses readiness metadata in `frontend/src/config/navigation.ts`
-- [ ] T046 [P] Review sales copy, labels, empty states, and error messages for consistency with operational Dark Only UI in `frontend/src/app/vendas/` and `frontend/src/components/vendas/`
-- [ ] T047 Run the full quickstart validation scenarios in `specs/013-vendas-frontend/quickstart.md`
-- [ ] T048 Run `npm run lint` in `frontend/`
-- [ ] T049 Run `npm run typecheck` in `frontend/`
-- [ ] T050 Run `npm run build` in `frontend/`
+- [X] T046 [P] Review sales copy, labels, empty states, and error messages for consistency with operational Dark Only UI in `frontend/src/app/vendas/` and `frontend/src/components/vendas/`
+- [X] T047 Run the full quickstart validation scenarios in `specs/013-vendas-frontend/quickstart.md`
+- [X] T048 Run `npm run lint` in `frontend/`
+- [X] T049 Run `npm run typecheck` in `frontend/`
+- [X] T050 Run `npm run build` in `frontend/`
 
 ---
 
