@@ -18,7 +18,8 @@ const config = [
       "out/**",
       "dist/**",
       "build/**",
-      "coverage/**"
+      "coverage/**",
+      "*.min.js"
     ]
   },
   ...compat.extends("next/core-web-vitals", "next/typescript"),

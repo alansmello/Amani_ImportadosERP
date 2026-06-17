@@ -18,9 +18,9 @@
 
 **Purpose**: Confirm existing frontend structure and create feature folders.
 
-- [ ] T001 Verify current sales placeholder and shared operational patterns in `frontend/src/app/vendas/page.tsx`, `frontend/src/components/compras/`, and `frontend/src/components/estoque/`
-- [ ] T002 Create the sales feature directory structure in `frontend/src/components/vendas/`, `frontend/src/app/vendas/nova/`, and `frontend/src/app/vendas/[vendaId]/`
-- [ ] T003 [P] Review route and navigation conventions in `frontend/src/config/routes.ts` and `frontend/src/config/navigation.ts`
+- [X] T001 Verify current sales placeholder and shared operational patterns in `frontend/src/app/vendas/page.tsx`, `frontend/src/components/compras/`, and `frontend/src/components/estoque/`
+- [X] T002 Create the sales feature directory structure in `frontend/src/components/vendas/`, `frontend/src/app/vendas/nova/`, and `frontend/src/app/vendas/[vendaId]/`
+- [X] T003 [P] Review route and navigation conventions in `frontend/src/config/routes.ts` and `frontend/src/config/navigation.ts`
 
 ---
 
@@ -30,13 +30,13 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 Create explicit sales types for filters, list items, details, items, payloads, drafts, and validation errors in `frontend/src/types/sale.ts`
-- [ ] T005 Create sales API service with list, getById, create, and cancel methods in `frontend/src/services/sales.ts`
-- [ ] T006 Create sales query keys, list/detail queries, create/cancel mutations, and cache invalidation for vendas and estoque in `frontend/src/hooks/use-sales.ts`
-- [ ] T007 Add `vendasNova()` and `vendaDetalhe(id)` route helpers in `frontend/src/config/routes.ts`
-- [ ] T008 [P] Create sale formatting helpers for dates, currency, totals, and profit display in `frontend/src/components/vendas/sale-formatters.ts`
-- [ ] T009 Create sale validation helpers for required cliente, item presence, numeric fields, and duplicate product consolidation in `frontend/src/components/vendas/sale-validation.ts`
-- [ ] T010 Validate constitution gates for F013 in `specs/013-vendas-frontend/plan.md`: backend-owned stock/profit rules, stock by movements, DTO contracts, Mobile First, Dark Only, operational UX, no local business calculations, no financial/fiscal scope, and no new dependency
+- [X] T004 Create explicit sales types for filters, list items, details, items, payloads, drafts, and validation errors in `frontend/src/types/sale.ts`
+- [X] T005 Create sales API service with list, getById, create, and cancel methods in `frontend/src/services/sales.ts`
+- [X] T006 Create sales query keys, list/detail queries, create/cancel mutations, and cache invalidation for vendas and estoque in `frontend/src/hooks/use-sales.ts`
+- [X] T007 Add `vendasNova()` and `vendaDetalhe(id)` route helpers in `frontend/src/config/routes.ts`
+- [X] T008 [P] Create sale formatting helpers for dates, currency, totals, and profit display in `frontend/src/components/vendas/sale-formatters.ts`
+- [X] T009 Create sale validation helpers for required cliente, item presence, numeric fields, and duplicate product consolidation in `frontend/src/components/vendas/sale-validation.ts`
+- [X] T010 Validate constitution gates for F013 in `specs/013-vendas-frontend/plan.md`: backend-owned stock/profit rules, stock by movements, DTO contracts, Mobile First, Dark Only, operational UX, no local business calculations, no financial/fiscal scope, and no new dependency
 
 **Checkpoint**: Foundation ready. User story implementation can now begin.
 
