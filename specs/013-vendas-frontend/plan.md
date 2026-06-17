@@ -272,6 +272,24 @@ O `/speckit-tasks` deve gerar tarefas explicitas para:
 - validar Mobile First, Dark Only e ausencia de dados mockados;
 - executar lint, typecheck e build.
 
+## Bug Fixes
+
+### BF001 — Preco unitario nao atualiza ao trocar produto (2026-06-17)
+
+**Arquivo**: `frontend/src/components/vendas/sale-form.tsx` — funcao `updateItem`
+
+**Causa raiz**: O guard `!item.precoUnitario` na logica de auto-preenchimento
+impedia a atualizacao do preco quando o operador trocava o produto por outro
+apos ja ter selecionado um produto anteriormente.
+
+**Correcao**: Removido o guard. Ao alterar `produtoId`, o `precoUnitario` e
+sempre atualizado com o `precoVenda` do novo produto. O operador pode editar o
+valor manualmente depois.
+
+**Escopo preservado**: O backend continua sendo a fonte de validacao de saldo,
+calculo de lucro e custo medio. O preco preenchido automaticamente e apenas um
+ponto de partida comercial editavel.
+
 ## Complexity Tracking
 
 No constitution violations.

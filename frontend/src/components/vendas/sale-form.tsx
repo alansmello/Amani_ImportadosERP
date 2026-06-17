@@ -156,7 +156,7 @@ export function SaleForm({ onCreated }: SaleFormProps) {
 
         const nextItem = { ...item, [field]: value };
 
-        if (field === "produtoId" && value && !item.precoUnitario) {
+        if (field === "produtoId" && value) {
           const product = products.find(
             (availableProduct) => availableProduct.id === value
           );

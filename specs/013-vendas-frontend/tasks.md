@@ -167,6 +167,41 @@
 
 ---
 
+## Bug Fixes (Pos-Implementacao)
+
+### BF001 — Preco unitario nao atualiza ao trocar produto no item da venda
+
+**Data**: 2026-06-17
+**Arquivo**: `frontend/src/components/vendas/sale-form.tsx`
+**Funcao**: `updateItem`
+
+**Sintoma**: Ao trocar o produto selecionado em um item ja preenchido, o campo
+`precoUnitario` permanecia com o valor do produto anterior em vez de ser
+atualizado com o `precoVenda` do novo produto.
+
+**Causa**: A condicao de preenchimento automatico do preco continha o guard
+`!item.precoUnitario`, que impedia a atualizacao quando o campo ja tinha algum
+valor (mesmo que proveniente de uma selecao anterior automatica).
+
+```ts
+// Antes (com bug)
+if (field === "produtoId" && value && !item.precoUnitario) {
+
+// Depois (corrigido)
+if (field === "produtoId" && value) {
+```
+
+**Justificativa**: A troca de produto implica que o operador quer trabalhar com
+o novo produto. O `precoVenda` e apenas um ponto de partida editavel; o operador
+pode ajustar o preco manualmente apos a selecao. O backend continua sendo a
+fonte final de validacao de estoque e calculo de lucro.
+
+**Validacao**: `npm run lint` e `npm run typecheck` passam apos a correcao.
+
+- [X] BF001 Corrigir preenchimento automatico de `precoUnitario` ao trocar produto no item
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
