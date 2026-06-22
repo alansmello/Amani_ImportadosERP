@@ -81,7 +81,7 @@
 ### Implementation for User Story 2
 
 - [X] T018 [P] [US2] Criar modal/bottom-sheet de pagamento com campo de valor, validação de valor positivo, estados de loading/erro/sucesso e fechamento somente após confirmação da fonte oficial em `frontend/src/components/financeiro/receivable-payment-modal.tsx`
-- [ ] T019 [US2] Integrar ação de registrar pagamento no componente de lista e no detalhe por cliente, passando `id` da conta e conectando `useRegisterPayment` com invalidação de cache em `frontend/src/components/financeiro/receivables-list.tsx` e `frontend/src/components/financeiro/receivable-client-detail.tsx` (depende de T018, T027)
+- [X] T019 [US2] Integrar ação de registrar pagamento no componente de lista e no detalhe por cliente, passando `id` da conta e conectando `useRegisterPayment` com invalidação de cache em `frontend/src/components/financeiro/receivables-list.tsx` e `frontend/src/components/financeiro/receivable-client-detail.tsx` (depende de T018, T027)
 - [ ] T020 [US2] Validar fluxo de pagamento dos cenários C03, C04 e C15 em `specs/014-financeiro-contas-receber/quickstart.md`
 
 **Checkpoint**: User Stories 1 e 2 funcionam independentemente.
@@ -96,10 +96,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T021 [P] [US3] Criar componente de filtros com seleção de status ("Pendente"/"Pago"/todos) e campo de busca por nome de cliente com limpeza, aplicados localmente sobre o conjunto carregado em `frontend/src/components/financeiro/receivables-filters.tsx`
-- [ ] T022 [P] [US3] Criar lista de contas com colunas de cliente (resolver `NomeCliente` via cache de `useCustomers`; exibir `ClienteId` como fallback se nome indisponível), Status, ValorTotal, TotalPago, Saldo, Origem (com link para `/vendas/[vendaId]` quando VendaId presente), DataVencimento, e ações de pagamento/editar/excluir; incluir estados loading, erro (com botão de nova tentativa visível) e vazio e vazio-filtrado em `frontend/src/components/financeiro/receivables-list.tsx`
-- [ ] T023 [US3] Substituir `frontend/src/app/financeiro/page.tsx` por redirect ou link direto para `/financeiro/contas-receber` — depende apenas de T002; pode executar a partir da Phase 2 sem aguardar os componentes de US3
-- [ ] T024 [US3] Criar página principal com tab "Lista" (renderiza receivables-list + receivables-filters) e ação de nova conta em `frontend/src/app/financeiro/contas-receber/page.tsx` (depende de T021, T022)
+- [X] T021 [P] [US3] Criar componente de filtros com seleção de status ("Pendente"/"Pago"/todos) e campo de busca por nome de cliente com limpeza, aplicados localmente sobre o conjunto carregado em `frontend/src/components/financeiro/receivables-filters.tsx`
+- [X] T022 [P] [US3] Criar lista de contas com colunas de cliente (resolver `NomeCliente` via cache de `useCustomers`; exibir `ClienteId` como fallback se nome indisponível), Status, ValorTotal, TotalPago, Saldo, Origem (com link para `/vendas/[vendaId]` quando VendaId presente), DataVencimento, e ações de pagamento/editar/excluir; incluir estados loading, erro (com botão de nova tentativa visível) e vazio e vazio-filtrado em `frontend/src/components/financeiro/receivables-list.tsx`
+- [X] T023 [US3] Substituir `frontend/src/app/financeiro/page.tsx` por redirect ou link direto para `/financeiro/contas-receber` — depende apenas de T002; pode executar a partir da Phase 2 sem aguardar os componentes de US3
+- [X] T024 [US3] Criar página principal com tab "Lista" (renderiza receivables-list + receivables-filters) e ação de nova conta em `frontend/src/app/financeiro/contas-receber/page.tsx` (depende de T021, T022)
 - [ ] T025 [US3] Validar lista, filtros, busca, link de venda, estado vazio e estado de erro dos cenários C05, C06, C07, C13 e C14 em `specs/014-financeiro-contas-receber/quickstart.md`
 
 **Checkpoint**: User Story 3 funcional independentemente após fase foundational.
@@ -114,10 +114,10 @@
 
 ### Implementation for User Story 4
 
-- [ ] T026 [P] [US4] Criar componente de visão por cliente com lista de clientes, NomeCliente, TotalAReceber, e link para detalhe; incluir estados loading, erro e vazio em `frontend/src/components/financeiro/receivables-by-client.tsx`
-- [ ] T027 [P] [US4] Criar componente de detalhe por cliente com contas em aberto (Status, ValorTotal, TotalPago, Saldo, DataVencimento, Origem, link de venda) e accordion/lista de pagamentos individuais de cada conta em `frontend/src/components/financeiro/receivable-client-detail.tsx`
-- [ ] T028 [US4] Criar rota de detalhe por cliente com loading, erro (com botão de nova tentativa visível), vazio e ação de registrar pagamento em `frontend/src/app/financeiro/contas-receber/cliente/[clienteId]/page.tsx` (depende de T027)
-- [ ] T029 [US4] Adicionar tab "Por Cliente" à página principal renderizando `receivables-by-client` com navegação para detalhe em `frontend/src/app/financeiro/contas-receber/page.tsx` (depende de T026)
+- [X] T026 [P] [US4] Criar componente de visão por cliente com lista de clientes, NomeCliente, TotalAReceber, e link para detalhe; incluir estados loading, erro e vazio em `frontend/src/components/financeiro/receivables-by-client.tsx`
+- [X] T027 [P] [US4] Criar componente de detalhe por cliente com contas em aberto (Status, ValorTotal, TotalPago, Saldo, DataVencimento, Origem, link de venda) e accordion/lista de pagamentos individuais de cada conta em `frontend/src/components/financeiro/receivable-client-detail.tsx`
+- [X] T028 [US4] Criar rota de detalhe por cliente com loading, erro (com botão de nova tentativa visível), vazio e ação de registrar pagamento em `frontend/src/app/financeiro/contas-receber/cliente/[clienteId]/page.tsx` (depende de T027)
+- [X] T029 [US4] Adicionar tab "Por Cliente" à página principal renderizando `receivables-by-client` com navegação para detalhe em `frontend/src/app/financeiro/contas-receber/page.tsx` (depende de T026)
 - [ ] T030 [US4] Validar visão por cliente e detalhe dos cenários C11 e C12 em `specs/014-financeiro-contas-receber/quickstart.md`
 
 **Checkpoint**: User Story 4 funcional independentemente após fase foundational.
