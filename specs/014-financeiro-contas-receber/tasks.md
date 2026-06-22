@@ -132,8 +132,8 @@
 
 ### Implementation for User Story 5
 
-- [ ] T031 [US5] Estender `receivable-form.tsx` com modo de edição: pré-preencher valor e data de vencimento a partir dos dados existentes, executar `useUpdateReceivable` em vez de `useCreateReceivable`, incluir estado de carregamento durante mutação (botão desabilitado + indicador visual) e preservar dados na tela quando a fonte oficial rejeitar em `frontend/src/components/financeiro/receivable-form.tsx`
-- [ ] T032 [US5] Criar rota de edição que carrega a conta, renderiza o formulário em modo edição e navega de volta após sucesso em `frontend/src/app/financeiro/contas-receber/[id]/editar/page.tsx` (depende de T031)
+- [X] T031 [US5] Estender `receivable-form.tsx` com modo de edição: pré-preencher valor e data de vencimento a partir dos dados existentes, executar `useUpdateReceivable` em vez de `useCreateReceivable`, incluir estado de carregamento durante mutação (botão desabilitado + indicador visual) e preservar dados na tela quando a fonte oficial rejeitar em `frontend/src/components/financeiro/receivable-form.tsx`
+- [X] T032 [US5] Criar rota de edição que carrega a conta, renderiza o formulário em modo edição e navega de volta após sucesso em `frontend/src/app/financeiro/contas-receber/[id]/editar/page.tsx` (depende de T031)
 - [ ] T033 [US5] Validar edição e preservação de erro do cenário C08 em `specs/014-financeiro-contas-receber/quickstart.md`
 
 **Checkpoint**: User Story 5 funcional independentemente.
@@ -148,8 +148,8 @@
 
 ### Implementation for User Story 6
 
-- [ ] T034 [P] [US6] Criar diálogo de confirmação de exclusão com estados de loading, erro e prévia do item a excluir; não fechar e não remover da lista até sucesso confirmado pela fonte oficial em `frontend/src/components/financeiro/delete-receivable-dialog.tsx`
-- [ ] T035 [US6] Integrar ação de exclusão na lista de contas conectando `useDeleteReceivable` com invalidação de `queryKeys.financeiro` e exibição de erro sem silenciar a razão de rejeição em `frontend/src/components/financeiro/receivables-list.tsx` (depende de T034)
+- [X] T034 [P] [US6] Criar diálogo de confirmação de exclusão com estados de loading, erro e prévia do item a excluir; não fechar e não remover da lista até sucesso confirmado pela fonte oficial em `frontend/src/components/financeiro/delete-receivable-dialog.tsx`
+- [X] T035 [US6] Integrar ação de exclusão na lista de contas conectando `useDeleteReceivable` com invalidação de `queryKeys.financeiro` e exibição de erro sem silenciar a razão de rejeição em `frontend/src/components/financeiro/receivables-list.tsx` (depende de T034)
 - [ ] T036 [US6] Validar exclusão e cancelamento dos cenários C09 e C10 em `specs/014-financeiro-contas-receber/quickstart.md`
 
 **Checkpoint**: User Story 6 funcional independentemente.

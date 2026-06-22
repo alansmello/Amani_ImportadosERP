@@ -14,6 +14,7 @@ import {
   formatReceivableDate,
   formatReceivableOrigin
 } from "@/components/financeiro/receivable-formatters";
+import { DeleteReceivableDialog } from "@/components/financeiro/delete-receivable-dialog";
 import { ReceivablePaymentModal } from "@/components/financeiro/receivable-payment-modal";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
@@ -234,6 +235,11 @@ export function ReceivablesList({
                             </span>
                           </Link>
                         </Button>
+                        <DeleteReceivableDialog
+                          receivableId={receivable.id}
+                          clienteName={clienteName}
+                          valorTotal={receivable.valorTotal}
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

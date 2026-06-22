@@ -16,14 +16,28 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useCustomers } from "@/hooks/use-customers";
-import { useCreateReceivable } from "@/hooks/use-receivables";
+import {
+  useCreateReceivable,
+  useUpdateReceivable
+} from "@/hooks/use-receivables";
 import { cn } from "@/lib/cn";
 import { toApiError } from "@/services/errors";
-import type { CreateReceivablePayload } from "@/types/receivable";
+import type { CreateReceivablePayload, UpdateReceivablePayload } from "@/types/receivable";
 
-type ReceivableFormProps = {
+type CreateModeProps = {
+  mode?: "create";
   onCreated?: () => void;
 };
+
+type EditModeProps = {
+  mode: "edit";
+  receivableId: string;
+  initialValor: number;
+  initialDataVencimento: string;
+  onUpdated?: () => void;
+};
+
+type ReceivableFormProps = CreateModeProps | EditModeProps;
 
 type FormDraft = {
   clienteId: string;
@@ -42,20 +56,27 @@ const fieldErrorClassName = "text-xs font-medium leading-5 text-danger";
 const selectClassName =
   "flex h-11 w-full rounded-amani border border-border bg-surface px-3 py-2 text-sm text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-danger aria-[invalid=true]:focus-visible:ring-danger";
 
-function buildInitialDraft(): FormDraft {
-  return { clienteId: "", valor: "", dataVencimento: "" };
-}
-
 function isDateInPast(dateStr: string): boolean {
   if (!dateStr) return false;
   const today = new Date().toISOString().slice(0, 10);
   return dateStr < today;
 }
 
-function validateDraft(draft: FormDraft): FormErrors {
+function buildInitialDraft(props: ReceivableFormProps): FormDraft {
+  if (props.mode === "edit") {
+    return {
+      clienteId: "",
+      valor: String(props.initialValor),
+      dataVencimento: props.initialDataVencimento.slice(0, 10)
+    };
+  }
+  return { clienteId: "", valor: "", dataVencimento: "" };
+}
+
+function validateDraft(draft: FormDraft, isEdit: boolean): FormErrors {
   const errors: FormErrors = {};
 
-  if (!draft.clienteId) {
+  if (!isEdit && !draft.clienteId) {
     errors.clienteId = "Selecione um cliente.";
   }
 
@@ -77,23 +98,20 @@ function hasErrors(errors: FormErrors): boolean {
   return Object.values(errors).some(Boolean);
 }
 
-function buildPayload(draft: FormDraft): CreateReceivablePayload {
-  return {
-    clienteId: draft.clienteId,
-    valor: Number(draft.valor),
-    dataVencimento: draft.dataVencimento
-  };
-}
+export function ReceivableForm(props: ReceivableFormProps) {
+  const isEdit = props.mode === "edit";
 
-export function ReceivableForm({ onCreated }: ReceivableFormProps) {
   const customersQuery = useCustomers();
   const createReceivable = useCreateReceivable();
+  const updateReceivable = useUpdateReceivable();
 
-  const [draft, setDraft] = useState<FormDraft>(() => buildInitialDraft());
+  const [draft, setDraft] = useState<FormDraft>(() => buildInitialDraft(props));
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const isSubmitting = createReceivable.isPending;
+  const isSubmitting = isEdit
+    ? updateReceivable.isPending
+    : createReceivable.isPending;
   const customers = customersQuery.data ?? [];
   const isPastDate = isDateInPast(draft.dataVencimento);
 
@@ -106,7 +124,7 @@ export function ReceivableForm({ onCreated }: ReceivableFormProps) {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const validationErrors = validateDraft(draft);
+    const validationErrors = validateDraft(draft, isEdit);
     setErrors(validationErrors);
 
     if (hasErrors(validationErrors)) {
@@ -116,15 +134,32 @@ export function ReceivableForm({ onCreated }: ReceivableFormProps) {
     setSubmitError(null);
 
     try {
-      await createReceivable.mutateAsync(buildPayload(draft));
-      onCreated?.();
+      if (isEdit && props.mode === "edit") {
+        const payload: UpdateReceivablePayload = {
+          valor: Number(draft.valor),
+          dataVencimento: draft.dataVencimento
+        };
+        await updateReceivable.mutateAsync({
+          id: props.receivableId,
+          payload
+        });
+        props.onUpdated?.();
+      } else if (!isEdit && props.mode !== "edit") {
+        const payload: CreateReceivablePayload = {
+          clienteId: draft.clienteId,
+          valor: Number(draft.valor),
+          dataVencimento: draft.dataVencimento
+        };
+        await createReceivable.mutateAsync(payload);
+        props.onCreated?.();
+      }
     } catch (error) {
       const apiError = toApiError(error);
       setSubmitError(apiError.message);
     }
   }
 
-  if (customersQuery.isLoading) {
+  if (!isEdit && customersQuery.isLoading) {
     return (
       <LoadingState
         title="Carregando clientes"
@@ -133,7 +168,7 @@ export function ReceivableForm({ onCreated }: ReceivableFormProps) {
     );
   }
 
-  if (customersQuery.isError) {
+  if (!isEdit && customersQuery.isError) {
     return (
       <ErrorState
         title="Nao foi possivel carregar os clientes"
@@ -147,7 +182,9 @@ export function ReceivableForm({ onCreated }: ReceivableFormProps) {
     <form onSubmit={handleSubmit} noValidate>
       <Card>
         <CardHeader>
-          <CardTitle>Nova conta a receber</CardTitle>
+          <CardTitle>
+            {isEdit ? "Editar conta a receber" : "Nova conta a receber"}
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="grid gap-5 tablet:grid-cols-2">
@@ -158,37 +195,42 @@ export function ReceivableForm({ onCreated }: ReceivableFormProps) {
             </div>
           ) : null}
 
-          <div className="col-span-full grid gap-2">
-            <label
-              className={fieldLabelClassName}
-              htmlFor="receivable-cliente"
-            >
-              Cliente
-            </label>
-            <select
-              id="receivable-cliente"
-              className={cn(selectClassName)}
-              value={draft.clienteId}
-              onChange={(e) => updateField("clienteId", e.target.value)}
-              disabled={isSubmitting}
-              aria-invalid={Boolean(errors.clienteId)}
-              aria-describedby={
-                errors.clienteId ? "receivable-cliente-error" : undefined
-              }
-            >
-              <option value="">Selecione um cliente</option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.nome}
-                </option>
-              ))}
-            </select>
-            {errors.clienteId ? (
-              <p id="receivable-cliente-error" className={fieldErrorClassName}>
-                {errors.clienteId}
-              </p>
-            ) : null}
-          </div>
+          {!isEdit ? (
+            <div className="col-span-full grid gap-2">
+              <label
+                className={fieldLabelClassName}
+                htmlFor="receivable-cliente"
+              >
+                Cliente
+              </label>
+              <select
+                id="receivable-cliente"
+                className={cn(selectClassName)}
+                value={draft.clienteId}
+                onChange={(e) => updateField("clienteId", e.target.value)}
+                disabled={isSubmitting}
+                aria-invalid={Boolean(errors.clienteId)}
+                aria-describedby={
+                  errors.clienteId ? "receivable-cliente-error" : undefined
+                }
+              >
+                <option value="">Selecione um cliente</option>
+                {customers.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.nome}
+                  </option>
+                ))}
+              </select>
+              {errors.clienteId ? (
+                <p
+                  id="receivable-cliente-error"
+                  className={fieldErrorClassName}
+                >
+                  {errors.clienteId}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
 
           <div className="grid gap-2">
             <label
@@ -254,7 +296,7 @@ export function ReceivableForm({ onCreated }: ReceivableFormProps) {
                   className="h-3.5 w-3.5 shrink-0"
                   aria-hidden
                 />
-                Data no passado. A conta sera criada normalmente.
+                Data no passado. A conta sera salva normalmente.
               </p>
             ) : null}
           </div>
@@ -271,7 +313,13 @@ export function ReceivableForm({ onCreated }: ReceivableFormProps) {
             ) : (
               <Save className="h-4 w-4" aria-hidden />
             )}
-            <span>{isSubmitting ? "Salvando" : "Criar conta"}</span>
+            <span>
+              {isSubmitting
+                ? "Salvando"
+                : isEdit
+                  ? "Salvar alteracoes"
+                  : "Criar conta"}
+            </span>
           </Button>
         </CardFooter>
       </Card>
