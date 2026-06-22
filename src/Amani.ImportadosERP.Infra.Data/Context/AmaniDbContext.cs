@@ -23,6 +23,8 @@ public class AmaniDbContext : DbContext
     public DbSet<ContaReceber> ContasReceber { get; set; } = null!;
     public DbSet<PagamentoRecebido> PagamentosRecebidos { get; set; } = null!;
     public DbSet<EventoFinanceiro> EventosFinanceiros { get; set; } = null!;
+    public DbSet<ConfiguracaoFormaPagamento> ConfiguracoesFormasPagamento { get; set; } = null!;
+    public DbSet<DespesaOperadora> DespesasOperadora { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

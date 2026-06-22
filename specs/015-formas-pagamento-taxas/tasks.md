@@ -18,11 +18,11 @@
 
 **Purpose**: Confirm current implementation points and prepare files that every story will use.
 
-- [ ] T001 Review current sale creation flow in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
-- [ ] T002 Review current receivable payment flow in `src/Amani.ImportadosERP.Application/Commands/Handlers/RegistrarPagamentoCommandHandler.cs`
-- [ ] T003 [P] Review current sale frontend submit flow in `frontend/src/app/vendas/nova/page.tsx`
-- [ ] T004 [P] Review current receivable payment modal in `frontend/src/components/financeiro/receivable-payment-modal.tsx`
-- [ ] T005 [P] Review current route registry in `frontend/src/config/routes.ts`
+- [X] T001 Review current sale creation flow in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T002 Review current receivable payment flow in `src/Amani.ImportadosERP.Application/Commands/Handlers/RegistrarPagamentoCommandHandler.cs`
+- [X] T003 [P] Review current sale frontend submit flow in `frontend/src/app/vendas/nova/page.tsx`
+- [X] T004 [P] Review current receivable payment modal in `frontend/src/components/financeiro/receivable-payment-modal.tsx`
+- [X] T005 [P] Review current route registry in `frontend/src/config/routes.ts`
 
 ---
 
@@ -32,32 +32,32 @@
 
 **Critical**: No user story work should begin until this phase is complete.
 
-- [ ] T006 [P] Create `FormaPagamento` enum with Dinheiro, PIX, CartaoDebito, CartaoCredito and Fiado in `src/Amani.ImportadosERP.Domain/Enums/FormaPagamento.cs`
-- [ ] T007 [P] Create `ConfiguracaoFormaPagamento` entity with FormaPagamento, PercentualTaxa and AtualizadoEm in `src/Amani.ImportadosERP.Domain/Entities/ConfiguracaoFormaPagamento.cs`
-- [ ] T008 [P] Create `DespesaOperadora` entity with VendaId, FormaPagamento, ValorBruto, ValorLiquido, PercentualTaxa and DataRegistro in `src/Amani.ImportadosERP.Domain/Entities/DespesaOperadora.cs`
-- [ ] T009 Extend `Venda` with FormaPagamento and PercentualTaxaAplicado invariants in `src/Amani.ImportadosERP.Domain/Entities/Venda.cs`
-- [ ] T010 Extend `PagamentoRecebido` with Desconto and ValorBrutoLiquidado invariants in `src/Amani.ImportadosERP.Domain/Entities/PagamentoRecebido.cs`
-- [ ] T011 [P] Create Fluent mapping for `ConfiguracaoFormaPagamento` in `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ConfiguracaoFormaPagamentoMapping.cs`
-- [ ] T012 [P] Create Fluent mapping for `DespesaOperadora` in `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/DespesaOperadoraMapping.cs`
-- [ ] T013 Update `VendaMapping` for FormaPagamento and PercentualTaxaAplicado in `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/VendaMapping.cs`
-- [ ] T014 Update `PagamentoRecebidoMapping` for Desconto and ValorBrutoLiquidado in `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/PagamentoRecebidoMapping.cs`
-- [ ] T015 Register new entity mappings in `src/Amani.ImportadosERP.Infra.Data/AppDbContext.cs`
-- [ ] T016 [P] Create `IConfiguracaoFormaPagamentoRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IConfiguracaoFormaPagamentoRepository.cs`
-- [ ] T017 [P] Create `IDespesaOperadoraRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDespesaOperadoraRepository.cs`
-- [ ] T018 [P] Implement `ConfiguracaoFormaPagamentoRepository` in `src/Amani.ImportadosERP.Infra.Data/Repositories/ConfiguracaoFormaPagamentoRepository.cs`
-- [ ] T019 [P] Implement `DespesaOperadoraRepository` with date/payment filters in `src/Amani.ImportadosERP.Infra.Data/Repositories/DespesaOperadoraRepository.cs`
-- [ ] T020 Register new repositories in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
-- [ ] T021 Add EF migration for Venda, PagamentoRecebido, ConfiguracaoFormaPagamento and DespesaOperadora schema changes in `src/Amani.ImportadosERP.Infra.Data/Migrations/`
-- [ ] T022 Add seed data for default payment method fees in `src/Amani.ImportadosERP.Infra.Data/Migrations/`
-- [ ] T023 Update database snapshot after migration in `src/Amani.ImportadosERP.Infra.Data/Migrations/AppDbContextModelSnapshot.cs`
-- [ ] T024 [P] Create backend DTOs for payment settings in `src/Amani.ImportadosERP.Application/DTOs/ConfiguracaoFormaPagamentoDto.cs`
-- [ ] T025 [P] Create backend DTOs for operator expenses in `src/Amani.ImportadosERP.Application/DTOs/DespesaOperadoraListDto.cs`
-- [ ] T026 Update sale DTOs with FormaPagamento, PercentualTaxaOverride and financial feedback fields in `src/Amani.ImportadosERP.Application/DTOs/CriarVendaDto.cs`
-- [ ] T027 Update sale result DTO with financial feedback fields in `src/Amani.ImportadosERP.Application/DTOs/VendaResultDto.cs`
-- [ ] T028 [P] Create frontend payment setting types in `frontend/src/types/payment-settings.ts`
-- [ ] T029 [P] Create frontend operator expense types in `frontend/src/types/operator-expense.ts`
-- [ ] T030 Update sale frontend types with payment method and financial response fields in `frontend/src/types/sale.ts`
-- [ ] T031 Update receivable frontend types with discount and gross settlement fields in `frontend/src/types/receivable.ts`
+- [X] T006 [P] Create `FormaPagamento` enum with Dinheiro, PIX, CartaoDebito, CartaoCredito and Fiado in `src/Amani.ImportadosERP.Domain/Enums/FormaPagamento.cs`
+- [X] T007 [P] Create `ConfiguracaoFormaPagamento` entity with FormaPagamento, PercentualTaxa and AtualizadoEm in `src/Amani.ImportadosERP.Domain/Entities/ConfiguracaoFormaPagamento.cs`
+- [X] T008 [P] Create `DespesaOperadora` entity with VendaId, FormaPagamento, ValorBruto, ValorLiquido, PercentualTaxa and DataRegistro in `src/Amani.ImportadosERP.Domain/Entities/DespesaOperadora.cs`
+- [X] T009 Extend `Venda` with FormaPagamento and PercentualTaxaAplicado invariants in `src/Amani.ImportadosERP.Domain/Entities/Venda.cs`
+- [X] T010 Extend `PagamentoRecebido` with Desconto and ValorBrutoLiquidado invariants in `src/Amani.ImportadosERP.Domain/Entities/PagamentoRecebido.cs`
+- [X] T011 [P] Create Fluent mapping for `ConfiguracaoFormaPagamento` in `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/ConfiguracaoFormaPagamentoMapping.cs`
+- [X] T012 [P] Create Fluent mapping for `DespesaOperadora` in `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/DespesaOperadoraMapping.cs`
+- [X] T013 Update `VendaMapping` for FormaPagamento and PercentualTaxaAplicado in `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/VendaMapping.cs`
+- [X] T014 Update `PagamentoRecebidoMapping` for Desconto and ValorBrutoLiquidado in `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/PagamentoRecebidoMapping.cs`
+- [X] T015 Register new entity mappings in `src/Amani.ImportadosERP.Infra.Data/AppDbContext.cs`
+- [X] T016 [P] Create `IConfiguracaoFormaPagamentoRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IConfiguracaoFormaPagamentoRepository.cs`
+- [X] T017 [P] Create `IDespesaOperadoraRepository` in `src/Amani.ImportadosERP.Application/Interfaces/IDespesaOperadoraRepository.cs`
+- [X] T018 [P] Implement `ConfiguracaoFormaPagamentoRepository` in `src/Amani.ImportadosERP.Infra.Data/Repositories/ConfiguracaoFormaPagamentoRepository.cs`
+- [X] T019 [P] Implement `DespesaOperadoraRepository` with date/payment filters in `src/Amani.ImportadosERP.Infra.Data/Repositories/DespesaOperadoraRepository.cs`
+- [X] T020 Register new repositories in `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T021 Add EF migration for Venda, PagamentoRecebido, ConfiguracaoFormaPagamento and DespesaOperadora schema changes in `src/Amani.ImportadosERP.Infra.Data/Migrations/`
+- [X] T022 Add seed data for default payment method fees in `src/Amani.ImportadosERP.Infra.Data/Migrations/`
+- [X] T023 Update database snapshot after migration in `src/Amani.ImportadosERP.Infra.Data/Migrations/AppDbContextModelSnapshot.cs`
+- [X] T024 [P] Create backend DTOs for payment settings in `src/Amani.ImportadosERP.Application/DTOs/ConfiguracaoFormaPagamentoDto.cs`
+- [X] T025 [P] Create backend DTOs for operator expenses in `src/Amani.ImportadosERP.Application/DTOs/DespesaOperadoraListDto.cs`
+- [X] T026 Update sale DTOs with FormaPagamento, PercentualTaxaOverride and financial feedback fields in `src/Amani.ImportadosERP.Application/DTOs/CriarVendaDto.cs`
+- [X] T027 Update sale result DTO with financial feedback fields in `src/Amani.ImportadosERP.Application/DTOs/VendaResultDto.cs`
+- [X] T028 [P] Create frontend payment setting types in `frontend/src/types/payment-settings.ts`
+- [X] T029 [P] Create frontend operator expense types in `frontend/src/types/operator-expense.ts`
+- [X] T030 Update sale frontend types with payment method and financial response fields in `frontend/src/types/sale.ts`
+- [X] T031 Update receivable frontend types with discount and gross settlement fields in `frontend/src/types/receivable.ts`
 
 **Checkpoint**: Foundation ready. User stories can now be implemented in priority order.
 

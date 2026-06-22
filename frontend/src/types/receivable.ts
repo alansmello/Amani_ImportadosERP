@@ -23,6 +23,8 @@ export type ReceivablesByClient = {
 export type PaymentDetail = {
   id: string;
   valor: number;
+  desconto: number;
+  valorBrutoLiquidado: number;
   dataPagamento: string;
 };
 
@@ -52,6 +54,7 @@ export type UpdateReceivablePayload = {
 
 export type RegisterPaymentPayload = {
   valor: number;
+  desconto?: number;
 };
 
 export type CreateReceivableResponse = {
