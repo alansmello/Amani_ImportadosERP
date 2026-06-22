@@ -134,7 +134,7 @@ export function ReceivableForm(props: ReceivableFormProps) {
     setSubmitError(null);
 
     try {
-      if (isEdit && props.mode === "edit") {
+      if (props.mode === "edit") {
         const payload: UpdateReceivablePayload = {
           valor: Number(draft.valor),
           dataVencimento: draft.dataVencimento
@@ -144,7 +144,7 @@ export function ReceivableForm(props: ReceivableFormProps) {
           payload
         });
         props.onUpdated?.();
-      } else if (!isEdit && props.mode !== "edit") {
+      } else {
         const payload: CreateReceivablePayload = {
           clienteId: draft.clienteId,
           valor: Number(draft.valor),
@@ -317,7 +317,7 @@ export function ReceivableForm(props: ReceivableFormProps) {
               {isSubmitting
                 ? "Salvando"
                 : isEdit
-                  ? "Salvar alteracoes"
+                  ? "Salvar alterações"
                   : "Criar conta"}
             </span>
           </Button>

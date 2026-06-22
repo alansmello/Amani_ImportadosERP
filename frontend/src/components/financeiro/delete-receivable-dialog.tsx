@@ -90,7 +90,7 @@ export function DeleteReceivableDialog({
             Valor total: {formatReceivableCurrency(valorTotal)}
           </p>
           <p className="mt-1 text-xs leading-5 text-text-secondary">
-            Esta acao nao pode ser desfeita.
+            Esta ação não pode ser desfeita.
           </p>
         </div>
 
@@ -142,7 +142,7 @@ export function DeleteReceivableDialog({
                 ) : (
                   <Trash2 className="h-4 w-4" aria-hidden />
                 )}
-                <span>{isSubmitting ? "Excluindo" : "Confirmar exclusao"}</span>
+                <span>{isSubmitting ? "Excluindo" : "Confirmar exclusão"}</span>
               </Button>
             </>
           )}

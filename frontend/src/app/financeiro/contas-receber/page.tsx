@@ -89,20 +89,26 @@ export default function ContasReceberPage() {
         }
       />
 
-      <div className="flex gap-0 border-b border-border">
+      <div
+        role="tablist"
+        aria-label="Visualizações de contas a receber"
+        className="flex overflow-x-auto border-b border-border scrollbar-none"
+      >
         <button
+          role="tab"
           type="button"
           className={tabButtonClassName(activeTab === "lista")}
           onClick={() => setActiveTab("lista")}
-          aria-current={activeTab === "lista" ? "page" : undefined}
+          aria-selected={activeTab === "lista"}
         >
           Lista
         </button>
         <button
+          role="tab"
           type="button"
           className={tabButtonClassName(activeTab === "por-cliente")}
           onClick={() => setActiveTab("por-cliente")}
-          aria-current={activeTab === "por-cliente" ? "page" : undefined}
+          aria-selected={activeTab === "por-cliente"}
         >
           Por Cliente
         </button>

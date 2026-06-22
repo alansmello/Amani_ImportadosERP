@@ -49,18 +49,18 @@ export default function EditarContaReceberPage({
       {query.isLoading ? (
         <LoadingState
           title="Carregando conta"
-          description="Aguarde enquanto as informacoes sao carregadas."
+          description="Aguarde enquanto as informações são carregadas."
         />
       ) : query.isError ? (
         <ErrorState
-          title="Nao foi possivel carregar a conta"
-          description="Verifique a conexao e tente novamente."
+          title="Não foi possível carregar a conta"
+          description="Verifique a conexão e tente novamente."
           onRetry={() => void query.refetch()}
         />
       ) : !receivable ? (
         <EmptyState
-          title="Conta nao encontrada"
-          description="A conta solicitada nao foi encontrada. Ela pode ter sido excluida."
+          title="Conta não encontrada"
+          description="A conta solicitada não foi encontrada. Ela pode ter sido excluída."
           variant="empty"
         />
       ) : (

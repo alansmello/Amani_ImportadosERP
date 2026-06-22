@@ -164,9 +164,9 @@
 
 ### Implementation for User Story 7
 
-- [ ] T037 [US7] Revisar e ajustar layout responsivo da lista, filtros e tabs em `frontend/src/app/financeiro/contas-receber/page.tsx`, `frontend/src/components/financeiro/receivables-list.tsx`, `frontend/src/components/financeiro/receivables-filters.tsx` e `frontend/src/components/financeiro/receivables-by-client.tsx`
-- [ ] T038 [US7] Revisar e ajustar layout responsivo do formulário de criação/edição e do modal de pagamento em `frontend/src/app/financeiro/contas-receber/nova/page.tsx`, `frontend/src/app/financeiro/contas-receber/[id]/editar/page.tsx`, `frontend/src/components/financeiro/receivable-form.tsx` e `frontend/src/components/financeiro/receivable-payment-modal.tsx`
-- [ ] T039 [US7] Revisar e ajustar layout responsivo do detalhe por cliente e do diálogo de exclusão em `frontend/src/app/financeiro/contas-receber/cliente/[clienteId]/page.tsx`, `frontend/src/components/financeiro/receivable-client-detail.tsx` e `frontend/src/components/financeiro/delete-receivable-dialog.tsx`
+- [X] T037 [US7] Revisar e ajustar layout responsivo da lista, filtros e tabs em `frontend/src/app/financeiro/contas-receber/page.tsx`, `frontend/src/components/financeiro/receivables-list.tsx`, `frontend/src/components/financeiro/receivables-filters.tsx` e `frontend/src/components/financeiro/receivables-by-client.tsx`
+- [X] T038 [US7] Revisar e ajustar layout responsivo do formulário de criação/edição e do modal de pagamento em `frontend/src/app/financeiro/contas-receber/nova/page.tsx`, `frontend/src/app/financeiro/contas-receber/[id]/editar/page.tsx`, `frontend/src/components/financeiro/receivable-form.tsx` e `frontend/src/components/financeiro/receivable-payment-modal.tsx`
+- [X] T039 [US7] Revisar e ajustar layout responsivo do detalhe por cliente e do diálogo de exclusão em `frontend/src/app/financeiro/contas-receber/cliente/[clienteId]/page.tsx`, `frontend/src/components/financeiro/receivable-client-detail.tsx` e `frontend/src/components/financeiro/delete-receivable-dialog.tsx`
 - [ ] T040 [US7] Validar Mobile First em smartphone (390px), tablet (768px) e desktop (1280px) para os cenários C01, C03, C05, C11 e C12 de `specs/014-financeiro-contas-receber/quickstart.md`
 
 **Checkpoint**: Todas as user stories são independentemente funcionais e responsivas.
@@ -177,13 +177,13 @@
 
 **Purpose**: Validar exclusões de escopo, consistência visual e qualidade de build.
 
-- [ ] T041 [P] Verificar ausência de contas a pagar, conciliação bancária, juros/multa automáticos, cálculo local de saldo/status e dados simulados em `frontend/src/app/financeiro/` e `frontend/src/components/financeiro/`
-- [ ] T042 [P] Atualizar item de navegação de Financeiro se a config usar metadados de prontidão em `frontend/src/config/navigation.ts`
-- [ ] T043 [P] Revisar labels, mensagens de erro, estados vazios e consistência visual Dark Only em `frontend/src/app/financeiro/` e `frontend/src/components/financeiro/`
+- [X] T041 [P] Verificar ausência de contas a pagar, conciliação bancária, juros/multa automáticos, cálculo local de saldo/status e dados simulados em `frontend/src/app/financeiro/` e `frontend/src/components/financeiro/`
+- [X] T042 [P] Atualizar item de navegação de Financeiro se a config usar metadados de prontidão em `frontend/src/config/navigation.ts`
+- [X] T043 [P] Revisar labels, mensagens de erro, estados vazios e consistência visual Dark Only em `frontend/src/app/financeiro/` e `frontend/src/components/financeiro/`
 - [ ] T044 Executar validação completa dos cenários do quickstart em `specs/014-financeiro-contas-receber/quickstart.md`
-- [ ] T045 Executar `npm run lint` em `frontend/`
-- [ ] T046 Executar `npm run typecheck` em `frontend/`
-- [ ] T047 Executar `npm run build` em `frontend/`
+- [X] T045 Executar `npm run lint` em `frontend/`
+- [X] T046 Executar `npm run typecheck` em `frontend/`
+- [X] T047 Executar `npm run build` em `frontend/`
 
 ---
 
