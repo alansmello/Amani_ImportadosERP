@@ -64,8 +64,8 @@
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Criar formulário de criação com seleção de cliente via `useCustomers`, campo de valor e campo de data de vencimento (com aviso informativo para datas no passado), validação local de campos obrigatórios, estado de carregamento durante mutação (botão desabilitado + indicador visual) e feedback de erro do backend sem limpar o formulário em `frontend/src/components/financeiro/receivable-form.tsx`
-- [ ] T016 [US1] Criar rota de nova conta que renderiza o formulário, executa `useCreateReceivable` e navega para a lista após sucesso em `frontend/src/app/financeiro/contas-receber/nova/page.tsx` (depende de T015)
+- [X] T015 [P] [US1] Criar formulário de criação com seleção de cliente via `useCustomers`, campo de valor e campo de data de vencimento (com aviso informativo para datas no passado), validação local de campos obrigatórios, estado de carregamento durante mutação (botão desabilitado + indicador visual) e feedback de erro do backend sem limpar o formulário em `frontend/src/components/financeiro/receivable-form.tsx`
+- [X] T016 [US1] Criar rota de nova conta que renderiza o formulário, executa `useCreateReceivable` e navega para a lista após sucesso em `frontend/src/app/financeiro/contas-receber/nova/page.tsx` (depende de T015)
 - [ ] T017 [US1] Validar criação e validação de campos dos cenários C01 e C02 em `specs/014-financeiro-contas-receber/quickstart.md`
 
 **Checkpoint**: User Story 1 funcional como incremento MVP.
@@ -80,7 +80,7 @@
 
 ### Implementation for User Story 2
 
-- [ ] T018 [P] [US2] Criar modal/bottom-sheet de pagamento com campo de valor, validação de valor positivo, estados de loading/erro/sucesso e fechamento somente após confirmação da fonte oficial em `frontend/src/components/financeiro/receivable-payment-modal.tsx`
+- [X] T018 [P] [US2] Criar modal/bottom-sheet de pagamento com campo de valor, validação de valor positivo, estados de loading/erro/sucesso e fechamento somente após confirmação da fonte oficial em `frontend/src/components/financeiro/receivable-payment-modal.tsx`
 - [ ] T019 [US2] Integrar ação de registrar pagamento no componente de lista e no detalhe por cliente, passando `id` da conta e conectando `useRegisterPayment` com invalidação de cache em `frontend/src/components/financeiro/receivables-list.tsx` e `frontend/src/components/financeiro/receivable-client-detail.tsx` (depende de T018, T027)
 - [ ] T020 [US2] Validar fluxo de pagamento dos cenários C03, C04 e C15 em `specs/014-financeiro-contas-receber/quickstart.md`
 
