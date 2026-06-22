@@ -20,8 +20,8 @@
 
 **Purpose**: Verificar estrutura existente e criar pastas da feature.
 
-- [ ] T001 Verificar placeholder atual em `frontend/src/app/financeiro/page.tsx` e padrões operacionais de referência em `frontend/src/components/vendas/` e `frontend/src/components/compras/`
-- [ ] T002 Criar estrutura de diretórios da feature: `frontend/src/components/financeiro/`, `frontend/src/app/financeiro/contas-receber/nova/`, `frontend/src/app/financeiro/contas-receber/[id]/editar/`, e `frontend/src/app/financeiro/contas-receber/cliente/[clienteId]/`
+- [X] T001 Verificar placeholder atual em `frontend/src/app/financeiro/page.tsx` e padrões operacionais de referência em `frontend/src/components/vendas/` e `frontend/src/components/compras/`
+- [X] T002 Criar estrutura de diretórios da feature: `frontend/src/components/financeiro/`, `frontend/src/app/financeiro/contas-receber/nova/`, `frontend/src/app/financeiro/contas-receber/[id]/editar/`, e `frontend/src/app/financeiro/contas-receber/cliente/[clienteId]/`
 
 ---
 
@@ -33,24 +33,24 @@
 
 ### Backend — Extensão B1: suporte a criação manual com ClienteId
 
-- [ ] T003 Ampliar `CriarContaReceberCommand` com campo `ClienteId` (Guid?, opcional) em `src/Amani.ImportadosERP.Application/Commands/CriarContaReceberCommand.cs`
-- [ ] T004 Adicionar construtor público manual à entidade `ContaReceber(Guid clienteId, decimal valor, DateTime dataVencimento)` com `Origem = "Manual"` em `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs`
-- [ ] T005 Atualizar `CriarContaReceberCommandHandler` para selecionar o construtor correto: usa construtor manual quando `ClienteId` informado, construtor existente com `VendaId` caso contrário, em `src/Amani.ImportadosERP.Application/Commands/Handlers/CriarContaReceberCommandHandler.cs`
+- [X] T003 Ampliar `CriarContaReceberCommand` com campo `ClienteId` (Guid?, opcional) em `src/Amani.ImportadosERP.Application/Commands/CriarContaReceberCommand.cs`
+- [X] T004 Adicionar construtor público manual à entidade `ContaReceber(Guid clienteId, decimal valor, DateTime dataVencimento)` com `Origem = "Manual"` em `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs`
+- [X] T005 Atualizar `CriarContaReceberCommandHandler` para selecionar o construtor correto: usa construtor manual quando `ClienteId` informado, construtor existente com `VendaId` caso contrário, em `src/Amani.ImportadosERP.Application/Commands/Handlers/CriarContaReceberCommandHandler.cs`
 
 ### Backend — Extensão B2: detalhe por cliente enriquecido
 
-- [ ] T006 [P] Criar `PagamentoDetalheDto` com campos `Id` (Guid), `Valor` (decimal) e `DataPagamento` (DateTime) em `src/Amani.ImportadosERP.Application/DTOs/PagamentoDetalheDto.cs`
-- [ ] T007 Estender `ContaReceberDetalheDto` com campos `Status` (string) e `Pagamentos` (List\<PagamentoDetalheDto\>) em `src/Amani.ImportadosERP.Application/DTOs/ContaReceberDetalheDto.cs` (depende de T006)
-- [ ] T008 Atualizar `ObterEmAbertoDetalhePorClienteAsync` no repositório para calcular e preencher `Status` (`saldo <= 0 ? "Pago" : "Pendente"`) e mapear `PagamentoRecebido` para `PagamentoDetalheDto` em cada conta retornada em `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs` (depende de T007)
+- [X] T006 [P] Criar `PagamentoDetalheDto` com campos `Id` (Guid), `Valor` (decimal) e `DataPagamento` (DateTime) em `src/Amani.ImportadosERP.Application/DTOs/PagamentoDetalheDto.cs`
+- [X] T007 Estender `ContaReceberDetalheDto` com campos `Status` (string) e `Pagamentos` (List\<PagamentoDetalheDto\>) em `src/Amani.ImportadosERP.Application/DTOs/ContaReceberDetalheDto.cs` (depende de T006)
+- [X] T008 Atualizar `ObterEmAbertoDetalhePorClienteAsync` no repositório para calcular e preencher `Status` (`saldo <= 0 ? "Pago" : "Pendente"`) e mapear `PagamentoRecebido` para `PagamentoDetalheDto` em cada conta retornada em `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs` (depende de T007)
 
 ### Frontend — Infraestrutura compartilhada
 
-- [ ] T009 [P] Criar tipos explícitos de listagem, por-cliente, detalhe, pagamento individual, payloads e filtros em `frontend/src/types/receivable.ts`
-- [ ] T010 Criar service com métodos `list`, `listByClient`, `getClientDetail`, `create`, `registerPayment`, `update` e `delete` em `frontend/src/services/receivables.ts` (depende de T009)
-- [ ] T011 Criar query keys, queries e mutations com invalidação de `queryKeys.financeiro` após cada mutação em `frontend/src/hooks/use-receivables.ts` (depende de T009, T010)
-- [ ] T012 [P] Criar helpers de formatação para moeda, datas (sem offset UTC→local) e labels de status/origem em `frontend/src/components/financeiro/receivable-formatters.ts`
-- [ ] T013 Adicionar rotas `contasReceber`, `contasReceberNova` e funções auxiliares `contaReceberEditar(id)` e `contaReceberClienteDetalhe(clienteId)` em `frontend/src/config/routes.ts`
-- [ ] T014 Validar constitution gates da F014 em `specs/014-financeiro-contas-receber/plan.md`: extensões B1/B2 sem migration, backend como fonte de status/saldo, Dark Only, Mobile First, sem cálculo local, sem contas a pagar, sem dependência nova
+- [X] T009 [P] Criar tipos explícitos de listagem, por-cliente, detalhe, pagamento individual, payloads e filtros em `frontend/src/types/receivable.ts`
+- [X] T010 Criar service com métodos `list`, `listByClient`, `getClientDetail`, `create`, `registerPayment`, `update` e `delete` em `frontend/src/services/receivables.ts` (depende de T009)
+- [X] T011 Criar query keys, queries e mutations com invalidação de `queryKeys.financeiro` após cada mutação em `frontend/src/hooks/use-receivables.ts` (depende de T009, T010)
+- [X] T012 [P] Criar helpers de formatação para moeda, datas (sem offset UTC→local) e labels de status/origem em `frontend/src/components/financeiro/receivable-formatters.ts`
+- [X] T013 Adicionar rotas `contasReceber`, `contasReceberNova` e funções auxiliares `contaReceberEditar(id)` e `contaReceberClienteDetalhe(clienteId)` em `frontend/src/config/routes.ts`
+- [X] T014 Validar constitution gates da F014 em `specs/014-financeiro-contas-receber/plan.md`: extensões B1/B2 sem migration, backend como fonte de status/saldo, Dark Only, Mobile First, sem cálculo local, sem contas a pagar, sem dependência nova
 
 **Checkpoint**: Fundação pronta. Implementação das user stories pode começar.
 

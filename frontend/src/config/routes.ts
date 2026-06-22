@@ -9,6 +9,8 @@ export const routes = {
   vendasNova: "/vendas/nova",
   estoque: "/estoque",
   financeiro: "/financeiro",
+  contasReceber: "/financeiro/contas-receber",
+  contasReceberNova: "/financeiro/contas-receber/nova",
   configuracoes: "/configuracoes",
   configuracoesImplantacao: "/configuracoes/implantacao"
 } as const;
@@ -30,4 +32,12 @@ export function vendaDetalhe(id: string) {
 
 export function estoqueDetalhe(produtoId: string) {
   return `/estoque/${produtoId}` as const;
+}
+
+export function contaReceberEditar(id: string) {
+  return `/financeiro/contas-receber/${id}/editar` as const;
+}
+
+export function contaReceberClienteDetalhe(clienteId: string) {
+  return `/financeiro/contas-receber/cliente/${clienteId}` as const;
 }
