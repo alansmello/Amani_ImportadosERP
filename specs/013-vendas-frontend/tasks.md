@@ -169,6 +169,123 @@
 
 ## Bug Fixes (Pos-Implementacao)
 
+### BF003 — Data da venda exibida com um dia a menos por conversao UTC para fuso local
+
+**Data**: 2026-06-22
+**Arquivo**: `frontend/src/components/vendas/sale-formatters.ts`
+**Funcao**: `formatSaleDate`
+
+**Sintoma**: Vendas registradas no dia 22/06/2026 eram exibidas na lista e no detalhe
+como 21/06/2026.
+
+**Causa**: O payload de criacao converte a data selecionada para ISO UTC via
+`new Date("2026-06-22").toISOString()`, gerando `"2026-06-22T00:00:00.000Z"`.
+O backend armazena e devolve o valor com timezone UTC (`Z`). Na exibicao,
+`new Date("2026-06-22T00:00:00Z")` e interpretado como meia-noite UTC; ao
+renderizar no navegador em UTC-3, o valor vira `2026-06-21T21:00:00`, e o
+`Intl.DateTimeFormat` exibe `21/06/2026` — um dia a menos.
+
+**Correcao**: Extrair apenas a porcao `YYYY-MM-DD` da string antes de construir o
+objeto `Date`, usando o construtor local `new Date(year, month - 1, day)` que nao
+sofre conversao de fuso:
+
+```ts
+// Antes (sofre offset UTC→local)
+const date = new Date(value);
+
+// Depois (extrai parte da data, sem offset de fuso)
+const datePart = value.slice(0, 10);
+const [year, month, day] = datePart.split("-").map(Number);
+const date = new Date(year, month - 1, day);
+```
+
+**Escopo preservado**: Apenas a funcao de formatacao de display foi alterada.
+Nenhuma alteracao no servico, hook, tipo ou payload de criacao. O backend
+permanece inalterado.
+
+**Validacao**: `npm run typecheck` passa apos a correcao.
+
+- [X] BF003 Corrigir exibicao de data em `sale-formatters.ts` (`formatSaleDate`)
+
+---
+
+### BF002 — Formula de lucro inconsistente entre endpoints de vendas e dashboards
+
+**Data**: 2026-06-22
+**Arquivos**:
+- `src/.../Services/VendaService.cs`
+- `src/.../Queries/Handlers/ObterListaVendasQueryHandler.cs`
+- `src/.../Queries/Handlers/ObterDashboardQueryHandler.cs`
+- `src/.../Infra.Data/Repositories/CustoProdutoRepository.cs`
+
+**Sintoma**: O lucro exibido na tela de Vendas (lista e detalhe) apresentava valores
+inconsistentes em dois cenarios distintos:
+
+1. Vendas com `Desconto` ou `Acrescimo` no item mostravam lucro diferente do dashboard.
+2. Produtos com custo cadastrado (`Produto.Custo`) mas sem historico de movimentacao
+   de estoque com `ValorUnitario` mostravam lucro igual ao preco de venda inteiro
+   (como se o custo fosse zero).
+
+**Causa — Parte 1 (formula divergente)**:
+Os endpoints de vendas usavam a formula bruta
+`(PrecoUnitario - custoMedio) * Quantidade`, ignorando descontos e acrescimos de
+item. Os repositorios de dashboard usavam `ValorLiquidoItem - custoMedio * Quantidade`
+onde `ValorLiquidoItem = item.ValorTotal()` ja considera desconto e acrescimo por item.
+
+**Causa — Parte 2 (custo medio ignorando Produto.Custo)**:
+O `CustoProdutoRepository` so buscava custo em `EstoqueMovimentacoes`
+(movimentacoes `InventarioInicial` ou `Entrada` com `CompraItemId != null` e
+`ValorUnitario != null`). Quando nenhuma movimentacao com custo existia, retornava
+`0m`, fazendo o lucro inflar para o valor cheio de venda. O campo `Produto.Custo`
+(custo cadastrado no produto) era completamente ignorado.
+
+**Correcao — Parte 1**: Unificar a formula nos tres handlers/servicos:
+
+```csharp
+// Antes (formula bruta — ignora desconto/acrescimo do item)
+var lucroItem = (item.PrecoUnitario - custoMedio) * item.Quantidade;
+
+// Depois (formula liquida — consistente com dashboards)
+var lucroItem = item.ValorTotal() - custoMedio * item.Quantidade;
+```
+
+**Correcao — Parte 2**: Adicionar fallback para `Produto.Custo` no repositorio:
+
+```csharp
+// Antes (retornava 0 quando sem movimentacoes com custo)
+if (somaQuantidade == 0) return 0m;
+
+// Depois (fallback para custo cadastrado no produto)
+if (somaQuantidade > 0)
+{
+    return somaValor / somaQuantidade;
+}
+var produto = await _db.Produtos
+    .Where(p => p.Id == produtoId)
+    .Select(p => new { p.Custo })
+    .FirstOrDefaultAsync();
+return produto?.Custo ?? 0m;
+```
+
+**Precedencia do custo medio**:
+1. Custo medio ponderado por movimentacoes (InventarioInicial + Entradas de compra)
+2. Fallback: `Produto.Custo` cadastrado no produto
+3. Ultimo recurso: `0m` (produto nao encontrado)
+
+**Escopo preservado**: O backend continua sendo a unica fonte do lucro oficial.
+Nenhuma regra de negocio foi movida para o frontend. Nenhuma migration necessaria.
+O contrato de `ICustoProdutoRepository` (retorno `decimal`) nao foi alterado.
+
+**Validacao**: Zero erros `CS` no build com `dotnet build --no-restore`. API deve
+ser reiniciada para aplicar as mudancas.
+
+- [X] BF002-1 Corrigir formula em `VendaService.cs` (metodos `CreateAsync` e `ObterPorIdAsync`)
+- [X] BF002-2 Corrigir formula em `ObterListaVendasQueryHandler.cs`
+- [X] BF002-3 Corrigir formula em `ObterDashboardQueryHandler.cs`
+- [X] BF002-4 Adicionar fallback para `Produto.Custo` em `CustoProdutoRepository.cs`
+
+---
+
 ### BF001 — Preco unitario nao atualiza ao trocar produto no item da venda
 
 **Data**: 2026-06-17

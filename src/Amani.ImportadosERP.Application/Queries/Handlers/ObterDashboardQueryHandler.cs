@@ -51,13 +51,11 @@ public sealed class ObterDashboardQueryHandler : IRequestHandler<ObterDashboardQ
             // Aplicar desconto e acrescimo geral da venda
             decimal totalVenda = totalItens + venda.Acrescimo - venda.Desconto;
 
-            // Calcular lucro total da venda
             decimal lucroVenda = 0m;
             foreach (var item in venda.Items)
             {
                 var custoMedio = await _custoRepository.ObterCustoMedioAsync(item.ProdutoId);
-                var lucroItem = (item.PrecoUnitario - custoMedio) * item.Quantidade;
-                lucroVenda += lucroItem;
+                lucroVenda += item.ValorTotal() - custoMedio * item.Quantidade;
             }
 
             vendaComLucro.Add((totalVenda, lucroVenda));
