@@ -1,4 +1,5 @@
 using System;
+using Amani.ImportadosERP.Domain.Enums;
 
 namespace Amani.ImportadosERP.Application.DTOs;
 
@@ -9,4 +10,5 @@ public sealed class VendaListDto
     public DateTime DataVenda { get; set; }
     public decimal TotalVenda { get; set; }
     public decimal Lucro { get; set; }
+    public FormaPagamento FormaPagamento { get; set; }
 }

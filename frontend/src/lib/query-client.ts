@@ -28,6 +28,8 @@ export const queryKeys = {
   vendas: ["vendas"] as const,
   estoque: ["estoque"] as const,
   financeiro: ["financeiro"] as const,
+  despesasOperadora: ["despesas-operadora"] as const,
+  formasPagamento: ["formas-pagamento"] as const,
   implantacao: ["implantacao"] as const,
   configuracoes: ["configuracoes"] as const
 };

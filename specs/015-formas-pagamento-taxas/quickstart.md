@@ -139,3 +139,12 @@ Expected:
 - Existing receivable create/edit/delete list flows still work.
 - Existing stock outflow on sale still works.
 - Existing sales list and sale detail continue to render.
+
+## Implementation validation notes
+
+- 2026-06-22: Backend build for Phase 3/4 implementation passed with
+  `dotnet build Amani_ImportadosERP.sln`.
+- 2026-06-22: Frontend `npm run typecheck` could not be executed in this
+  environment because `npm` and `node` are not available on PATH.
+- 2026-06-22: Manual quickstart scenarios 1, 2, 3 and 7 remain pending because
+  they require API, database migrations and frontend app running together.

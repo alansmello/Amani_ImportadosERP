@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ClipboardCheck, Settings } from "lucide-react";
+import { ArrowRight, ClipboardCheck, Percent, Settings } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +43,31 @@ export default function ConfiguracoesPage() {
             <Button asChild>
               <Link href={routes.configuracoesImplantacao}>
                 <span>Abrir implantacao</span>
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-amani border border-border bg-surface-light text-primary">
+                <Percent className="h-5 w-5" aria-hidden />
+              </div>
+              <Badge variant="success">Operacional</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="min-w-0">
+            <CardTitle>Formas de pagamento</CardTitle>
+            <CardDescription className="mt-2 max-w-2xl break-words">
+              Configure taxas padrao para dinheiro, PIX, cartoes e fiado.
+            </CardDescription>
+          </CardContent>
+          <CardFooter className="flex-col items-stretch tablet:flex-row tablet:justify-end">
+            <Button asChild>
+              <Link href={routes.configuracoesFormasPagamento}>
+                <span>Abrir taxas</span>
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
             </Button>

@@ -82,7 +82,7 @@ public class ContaReceberRepository : IContaReceberRepository
         return contas
             .Select(c =>
             {
-                var saldo = c.Valor - c.Pagamentos.Sum(p => p.Valor);
+                var saldo = c.Valor - c.Pagamentos.Sum(p => p.ValorBrutoLiquidado);
                 var clienteId = ResolverClienteId(c, vendas);
                 if (!clienteId.HasValue) return null;
 
@@ -128,7 +128,7 @@ public class ContaReceberRepository : IContaReceberRepository
         return contas
             .Select(c =>
             {
-                var totalPago = c.Pagamentos.Sum(p => p.Valor);
+                var totalPago = c.Pagamentos.Sum(p => p.ValorBrutoLiquidado);
                 var saldo = c.Valor - totalPago;
 
                 return new ContaReceberDetalheDto
@@ -147,6 +147,8 @@ public class ContaReceberRepository : IContaReceberRepository
                         {
                             Id = p.Id,
                             Valor = p.Valor,
+                            Desconto = p.Desconto,
+                            ValorBrutoLiquidado = p.ValorBrutoLiquidado,
                             DataPagamento = p.DataPagamento
                         })
                         .ToList()

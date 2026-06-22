@@ -71,16 +71,16 @@
 
 ### Implementation for User Story 1
 
-- [ ] T032 [P] [US1] Create payment settings service GET method in `frontend/src/services/payment-settings.ts`
-- [ ] T033 [P] [US1] Create payment settings query hook in `frontend/src/hooks/use-payment-settings.ts`
-- [ ] T034 [P] [US1] Create sale payment modal shell with method selection and override input in `frontend/src/components/vendas/sale-payment-modal.tsx`
-- [ ] T035 [US1] Update sale service payload to send FormaPagamento and PercentualTaxaOverride in `frontend/src/services/sales.ts`
-- [ ] T036 [US1] Update sale form submit flow to open payment modal before calling create in `frontend/src/app/vendas/nova/page.tsx`
-- [ ] T037 [US1] Update sale form validation to block persistence without payment method in `frontend/src/components/vendas/sale-validation.ts`
-- [ ] T038 [US1] Add financial feedback display after sale creation in `frontend/src/app/vendas/nova/page.tsx`
-- [ ] T039 [US1] Add FormaPagamento validation and missing-method error handling in `src/Amani.ImportadosERP.Api/Controllers/VendasController.cs`
-- [ ] T040 [US1] Update `VendaService.CreateAsync` to require FormaPagamento before constructing Venda in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
-- [ ] T041 [US1] Update `VendaMapper` and sale response mapping to include FormaPagamento and financial fields in `src/Amani.ImportadosERP.Application/Mappers/VendaMapper.cs`
+- [X] T032 [P] [US1] Create payment settings service GET method in `frontend/src/services/payment-settings.ts`
+- [X] T033 [P] [US1] Create payment settings query hook in `frontend/src/hooks/use-payment-settings.ts`
+- [X] T034 [P] [US1] Create sale payment modal shell with method selection and override input in `frontend/src/components/vendas/sale-payment-modal.tsx`
+- [X] T035 [US1] Update sale service payload to send FormaPagamento and PercentualTaxaOverride in `frontend/src/services/sales.ts`
+- [X] T036 [US1] Update sale form submit flow to open payment modal before calling create in `frontend/src/app/vendas/nova/page.tsx`
+- [X] T037 [US1] Update sale form validation to block persistence without payment method in `frontend/src/components/vendas/sale-validation.ts`
+- [X] T038 [US1] Add financial feedback display after sale creation in `frontend/src/app/vendas/nova/page.tsx`
+- [X] T039 [US1] Add FormaPagamento validation and missing-method error handling in `src/Amani.ImportadosERP.Api/Controllers/VendasController.cs`
+- [X] T040 [US1] Update `VendaService.CreateAsync` to require FormaPagamento before constructing Venda in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T041 [US1] Update `VendaMapper` and sale response mapping to include FormaPagamento and financial fields in `src/Amani.ImportadosERP.Application/Mappers/VendaMapper.cs`
 - [ ] T042 [US1] Validate quickstart scenario 1 manually, record elapsed time for sale payment selection, and record result in `specs/015-formas-pagamento-taxas/quickstart.md`
 
 **Checkpoint**: US1 is independently functional and sale persistence cannot occur without payment method.
@@ -95,17 +95,17 @@
 
 ### Implementation for User Story 2
 
-- [ ] T043 [P] [US2] Add helper for card fee and net amount calculation in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
-- [ ] T044 [US2] Inject receivable, payment setting and operator expense repositories into `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
-- [ ] T045 [US2] Implement Dinheiro and PIX immediate receivable payment routing in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
-- [ ] T046 [US2] Implement CartaoDebito net payment and DespesaOperadora creation in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
-- [ ] T047 [US2] Implement transactional persistence for sale, stock movements, receivable, payment and operator expense in `src/Amani.ImportadosERP.Application/Services/VendaService.cs` and `src/Amani.ImportadosERP.Infra.Data/`
-- [ ] T048 [US2] Update `ContaReceberRepository` to load sale-created paid accounts with payments for list/detail projections in `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs`
+- [X] T043 [P] [US2] Add helper for card fee and net amount calculation in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T044 [US2] Inject receivable, payment setting and operator expense repositories into `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T045 [US2] Implement Dinheiro and PIX immediate receivable payment routing in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T046 [US2] Implement CartaoDebito net payment and DespesaOperadora creation in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T047 [US2] Implement transactional persistence for sale, stock movements, receivable, payment and operator expense in `src/Amani.ImportadosERP.Application/Services/VendaService.cs` and `src/Amani.ImportadosERP.Infra.Data/`
+- [X] T048 [US2] Update `ContaReceberRepository` to load sale-created paid accounts with payments for list/detail projections in `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs`
 - [ ] T049 [US2] Validate that failures during receivable, payment or operator expense creation do not leave a persisted sale without matching financial records in `specs/015-formas-pagamento-taxas/quickstart.md`
-- [ ] T050 [US2] Update `VendaResultDto` response values for Pago, ValorBruto, ValorLiquido, PercentualTaxaAplicado and DespesaOperadoraId in `src/Amani.ImportadosERP.Application/DTOs/VendaResultDto.cs`
-- [ ] T051 [US2] Add FormaPagamento to `VendaListDto` and sale list mapping in `src/Amani.ImportadosERP.Application/DTOs/VendaListDto.cs`
-- [ ] T052 [US2] Update frontend sale feedback copy for Dinheiro, PIX and Debito in `frontend/src/app/vendas/nova/page.tsx`
-- [ ] T053 [US2] Create operator expense service list method for validation reuse in `frontend/src/services/operator-expenses.ts`
+- [X] T050 [US2] Update `VendaResultDto` response values for Pago, ValorBruto, ValorLiquido, PercentualTaxaAplicado and DespesaOperadoraId in `src/Amani.ImportadosERP.Application/DTOs/VendaResultDto.cs`
+- [X] T051 [US2] Add FormaPagamento to `VendaListDto` and sale list mapping in `src/Amani.ImportadosERP.Application/DTOs/VendaListDto.cs`
+- [X] T052 [US2] Update frontend sale feedback copy for Dinheiro, PIX and Debito in `frontend/src/app/vendas/nova/page.tsx`
+- [X] T053 [US2] Create operator expense service list method for validation reuse in `frontend/src/services/operator-expenses.ts`
 - [ ] T054 [US2] Validate quickstart scenarios 2 and 3 manually and record result in `specs/015-formas-pagamento-taxas/quickstart.md`
 
 **Checkpoint**: US2 is independently functional for immediate payment methods.
@@ -148,25 +148,25 @@
 
 ### Implementation for User Story 4
 
-- [ ] T070 [P] [US4] Create query for listing payment method settings in `src/Amani.ImportadosERP.Application/Queries/ObterConfiguracoesFormasPagamentoQuery.cs`
-- [ ] T071 [P] [US4] Create handler for listing payment method settings in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterConfiguracoesFormasPagamentoQueryHandler.cs`
-- [ ] T072 [P] [US4] Create command for updating payment method fee in `src/Amani.ImportadosERP.Application/Commands/AtualizarConfiguracaoFormaPagamentoCommand.cs`
-- [ ] T073 [P] [US4] Create handler for updating payment method fee in `src/Amani.ImportadosERP.Application/Commands/Handlers/AtualizarConfiguracaoFormaPagamentoCommandHandler.cs`
-- [ ] T074 [US4] Create payment settings controller with GET and PUT actions in `src/Amani.ImportadosERP.Api/Controllers/ConfiguracoesFormasPagamentoController.cs`
-- [ ] T075 [US4] Ensure payment fee editing follows the current ERP access model and does not introduce new authorization roles in `src/Amani.ImportadosERP.Api/Controllers/ConfiguracoesFormasPagamentoController.cs`
-- [ ] T076 [P] [US4] Create query for operator expense listing in `src/Amani.ImportadosERP.Application/Queries/ObterDespesasOperadoraQuery.cs`
-- [ ] T077 [P] [US4] Create handler for operator expense listing in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDespesasOperadoraQueryHandler.cs`
-- [ ] T078 [US4] Create operator expenses controller with date and payment filters in `src/Amani.ImportadosERP.Api/Controllers/DespesasOperadoraController.cs`
-- [ ] T079 [P] [US4] Implement payment settings service GET and PUT methods in `frontend/src/services/payment-settings.ts`
-- [ ] T080 [P] [US4] Implement operator expenses service filters in `frontend/src/services/operator-expenses.ts`
-- [ ] T081 [P] [US4] Implement payment settings mutations in `frontend/src/hooks/use-payment-settings.ts`
-- [ ] T082 [P] [US4] Implement operator expenses query hook in `frontend/src/hooks/use-operator-expenses.ts`
-- [ ] T083 [US4] Create payment fees form with save states in `frontend/src/components/configuracoes/payment-fees-form.tsx`
-- [ ] T084 [US4] Create payment settings page in `frontend/src/app/configuracoes/formas-pagamento/page.tsx`
-- [ ] T085 [US4] Create operator expenses list component in `frontend/src/components/financeiro/operator-expenses-list.tsx`
-- [ ] T086 [US4] Create operator expenses page with filters in `frontend/src/app/financeiro/despesas-operadora/page.tsx`
-- [ ] T087 [US4] Add configuracoesFormasPagamento and despesasOperadora routes in `frontend/src/config/routes.ts`
-- [ ] T088 [US4] Add links to settings and finance navigation surfaces in `frontend/src/config/navigation.ts`
+- [X] T070 [P] [US4] Create query for listing payment method settings in `src/Amani.ImportadosERP.Application/Queries/ObterConfiguracoesFormasPagamentoQuery.cs`
+- [X] T071 [P] [US4] Create handler for listing payment method settings in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterConfiguracoesFormasPagamentoQueryHandler.cs`
+- [X] T072 [P] [US4] Create command for updating payment method fee in `src/Amani.ImportadosERP.Application/Commands/AtualizarConfiguracaoFormaPagamentoCommand.cs`
+- [X] T073 [P] [US4] Create handler for updating payment method fee in `src/Amani.ImportadosERP.Application/Commands/Handlers/AtualizarConfiguracaoFormaPagamentoCommandHandler.cs`
+- [X] T074 [US4] Create payment settings controller with GET and PUT actions in `src/Amani.ImportadosERP.Api/Controllers/ConfiguracoesFormasPagamentoController.cs`
+- [X] T075 [US4] Ensure payment fee editing follows the current ERP access model and does not introduce new authorization roles in `src/Amani.ImportadosERP.Api/Controllers/ConfiguracoesFormasPagamentoController.cs`
+- [X] T076 [P] [US4] Create query for operator expense listing in `src/Amani.ImportadosERP.Application/Queries/ObterDespesasOperadoraQuery.cs`
+- [X] T077 [P] [US4] Create handler for operator expense listing in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDespesasOperadoraQueryHandler.cs`
+- [X] T078 [US4] Create operator expenses controller with date and payment filters in `src/Amani.ImportadosERP.Api/Controllers/DespesasOperadoraController.cs`
+- [X] T079 [P] [US4] Implement payment settings service GET and PUT methods in `frontend/src/services/payment-settings.ts`
+- [X] T080 [P] [US4] Implement operator expenses service filters in `frontend/src/services/operator-expenses.ts`
+- [X] T081 [P] [US4] Implement payment settings mutations in `frontend/src/hooks/use-payment-settings.ts`
+- [X] T082 [P] [US4] Implement operator expenses query hook in `frontend/src/hooks/use-operator-expenses.ts`
+- [X] T083 [US4] Create payment fees form with save states in `frontend/src/components/configuracoes/payment-fees-form.tsx`
+- [X] T084 [US4] Create payment settings page in `frontend/src/app/configuracoes/formas-pagamento/page.tsx`
+- [X] T085 [US4] Create operator expenses list component in `frontend/src/components/financeiro/operator-expenses-list.tsx`
+- [X] T086 [US4] Create operator expenses page with filters in `frontend/src/app/financeiro/despesas-operadora/page.tsx`
+- [X] T087 [US4] Add configuracoesFormasPagamento and despesasOperadora routes in `frontend/src/config/routes.ts`
+- [X] T088 [US4] Add links to settings and finance navigation surfaces in `frontend/src/config/navigation.ts`
 - [ ] T089 [US4] Validate quickstart scenario 7 manually, record elapsed time for fee update plus sale validation, and record result in `specs/015-formas-pagamento-taxas/quickstart.md`
 
 **Checkpoint**: US4 is independently functional for fee configuration and operator expense visibility.

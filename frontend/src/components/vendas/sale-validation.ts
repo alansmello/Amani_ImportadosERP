@@ -218,6 +218,21 @@ export function buildCreateSalePayload(draft: SaleDraft): CreateSalePayload {
   };
 }
 
+export function attachSalePaymentPayload(
+  payload: CreateSalePayload,
+  payment: Pick<CreateSalePayload, "formaPagamento" | "percentualTaxaOverride">
+): CreateSalePayload {
+  if (!payment.formaPagamento) {
+    throw new Error("Forma de pagamento obrigatoria.");
+  }
+
+  return {
+    ...payload,
+    formaPagamento: payment.formaPagamento,
+    percentualTaxaOverride: payment.percentualTaxaOverride ?? null
+  };
+}
+
 export function getSaleValidationMessage(
   errors: SaleValidationError[],
   field: string,

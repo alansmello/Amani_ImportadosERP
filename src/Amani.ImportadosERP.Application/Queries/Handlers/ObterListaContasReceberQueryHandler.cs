@@ -23,7 +23,7 @@ public sealed class ObterListaContasReceberQueryHandler : IRequestHandler<ObterL
 
         return contas.Select(c =>
         {
-            var totalPago = c.Pagamentos.Sum(p => p.Valor);
+            var totalPago = c.Pagamentos.Sum(p => p.ValorBrutoLiquidado);
             var saldo = c.Valor - totalPago;
 
             return new ContaReceberListDto

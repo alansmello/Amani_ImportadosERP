@@ -5,9 +5,14 @@ import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 
 import { SaleItemEditor } from "@/components/vendas/sale-item-editor";
+import {
+  SalePaymentModal,
+  type SalePaymentSelection
+} from "@/components/vendas/sale-payment-modal";
 import { SaleSummary } from "@/components/vendas/sale-summary";
 import {
   buildCreateSalePayload,
+  attachSalePaymentPayload,
   consolidateSaleItems,
   createEmptySaleDraft,
   createEmptySaleItemDraft,
@@ -37,6 +42,7 @@ import type { Customer } from "@/types/customer";
 import type { Product } from "@/types/product";
 import type {
   CreateSalePayload,
+  CreateSaleResponse,
   SaleDraft,
   SaleItemDraft,
   SaleValidationError
@@ -80,6 +86,9 @@ export function SaleForm({ onCreated }: SaleFormProps) {
   const [errors, setErrors] = useState<SaleValidationError[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [pendingPayload, setPendingPayload] =
+    useState<CreateSalePayload | null>(null);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
   const customers = customersQuery.data ?? EMPTY_CUSTOMERS;
   const products = productsQuery.data ?? EMPTY_PRODUCTS;
@@ -210,10 +219,45 @@ export function SaleForm({ onCreated }: SaleFormProps) {
     setSuccessMessage(null);
   }
 
-  async function submitSale(payload: CreateSalePayload) {
-    const response = await createSale.mutateAsync(payload);
-    setSuccessMessage("Venda registrada pela fonte oficial.");
+  function buildFinancialSuccessMessage(response: CreateSaleResponse) {
+    if (response.mensagemFinanceira) {
+      return response.mensagemFinanceira;
+    }
+
+    if (response.statusFinanceiro === "Pago") {
+      return "Recebido imediatamente.";
+    }
+
+    return "Conta a receber gerada.";
+  }
+
+  async function submitSale(
+    payload: CreateSalePayload,
+    payment: SalePaymentSelection
+  ) {
+    const response = await createSale.mutateAsync({
+      ...attachSalePaymentPayload(payload, payment)
+    });
+    setSuccessMessage(
+      `Venda registrada. ${buildFinancialSuccessMessage(response)}`
+    );
+    setPaymentModalOpen(false);
+    setPendingPayload(null);
     onCreated?.(response.id);
+  }
+
+  async function handlePaymentConfirm(payment: SalePaymentSelection) {
+    if (!pendingPayload) {
+      setSubmitError("Revise a venda antes de confirmar o pagamento.");
+      return;
+    }
+
+    try {
+      await submitSale(pendingPayload, payment);
+    } catch (error) {
+      const apiError = toApiError(error);
+      setSubmitError(apiError.message);
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -239,7 +283,8 @@ export function SaleForm({ onCreated }: SaleFormProps) {
     }
 
     try {
-      await submitSale(buildCreateSalePayload(consolidatedDraft));
+      setPendingPayload(buildCreateSalePayload(consolidatedDraft));
+      setPaymentModalOpen(true);
     } catch (error) {
       const apiError = toApiError(error);
       setSubmitError(apiError.message);
@@ -278,8 +323,9 @@ export function SaleForm({ onCreated }: SaleFormProps) {
   }
 
   return (
-    <Card>
-      <form onSubmit={handleSubmit} noValidate>
+    <>
+      <Card>
+        <form onSubmit={handleSubmit} noValidate>
         <CardHeader>
           <CardTitle>Registrar venda</CardTitle>
           <CardDescription>
@@ -468,7 +514,15 @@ export function SaleForm({ onCreated }: SaleFormProps) {
             <span>{isSubmitting ? "Registrando" : "Registrar venda"}</span>
           </Button>
         </CardFooter>
-      </form>
-    </Card>
+        </form>
+      </Card>
+
+      <SalePaymentModal
+        open={paymentModalOpen}
+        onOpenChange={setPaymentModalOpen}
+        onConfirm={handlePaymentConfirm}
+        isSubmitting={isSubmitting}
+      />
+    </>
   );
 }

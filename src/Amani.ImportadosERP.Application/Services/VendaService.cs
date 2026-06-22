@@ -7,6 +7,7 @@ using Amani.ImportadosERP.Application.DTOs.Response;
 using Amani.ImportadosERP.Application.Interfaces;
 using Amani.ImportadosERP.Application.Mappers;
 using Amani.ImportadosERP.Domain.Entities;
+using Amani.ImportadosERP.Domain.Enums;
 
 namespace Amani.ImportadosERP.Application.Services;
 
@@ -16,18 +17,52 @@ public class VendaService
     private readonly IEstoqueMovimentacaoRepository _estoqueRepository;
     private readonly IEstoqueConsultaRepository _estoqueConsulta;
     private readonly ICustoProdutoRepository _custoRepository;
+    private readonly IContaReceberRepository _contaReceberRepository;
+    private readonly IConfiguracaoFormaPagamentoRepository _configuracaoFormaPagamentoRepository;
+    private readonly IDespesaOperadoraRepository _despesaOperadoraRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public VendaService(IVendaRepository vendaRepository, IEstoqueMovimentacaoRepository estoqueRepository, IEstoqueConsultaRepository estoqueConsulta, ICustoProdutoRepository custoRepository)
+    public VendaService(
+        IVendaRepository vendaRepository,
+        IEstoqueMovimentacaoRepository estoqueRepository,
+        IEstoqueConsultaRepository estoqueConsulta,
+        ICustoProdutoRepository custoRepository,
+        IContaReceberRepository contaReceberRepository,
+        IConfiguracaoFormaPagamentoRepository configuracaoFormaPagamentoRepository,
+        IDespesaOperadoraRepository despesaOperadoraRepository,
+        IUnitOfWork unitOfWork)
     {
         _vendaRepository = vendaRepository;
         _estoqueRepository = estoqueRepository;
         _estoqueConsulta = estoqueConsulta;
         _custoRepository = custoRepository;
+        _contaReceberRepository = contaReceberRepository;
+        _configuracaoFormaPagamentoRepository = configuracaoFormaPagamentoRepository;
+        _despesaOperadoraRepository = despesaOperadoraRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<VendaResultDto> CreateAsync(CriarVendaDto dto)
     {
-        var venda = new Venda(dto.ClienteId, dto.DataVenda ?? DateTime.UtcNow, dto.Desconto, dto.Acrescimo);
+        if (!dto.FormaPagamento.HasValue)
+        {
+            throw new InvalidOperationException("Forma de pagamento obrigatoria");
+        }
+
+        if (dto.PercentualTaxaOverride < 0)
+        {
+            throw new InvalidOperationException("Taxa invalida");
+        }
+
+        var formaPagamento = dto.FormaPagamento.Value;
+        var percentualTaxa = await ResolverPercentualTaxaAsync(formaPagamento, dto.PercentualTaxaOverride);
+        var venda = new Venda(
+            dto.ClienteId,
+            dto.DataVenda ?? DateTime.UtcNow,
+            dto.Desconto,
+            dto.Acrescimo,
+            formaPagamento,
+            EhCartao(formaPagamento) ? percentualTaxa : null);
 
         foreach (var item in dto.Items)
         {
@@ -41,11 +76,27 @@ public class VendaService
         }
 
         var movimentacoes = BuildMovimentacoes(venda);
+        var valorBruto = venda.Total();
+        var valorLiquido = CalcularValorLiquido(valorBruto, formaPagamento, percentualTaxa);
+        var contaReceber = new ContaReceber(venda.Id, valorBruto, ObterVencimentoInicial(venda));
+        PagamentoRecebido? pagamentoInicial = CriarPagamentoInicial(contaReceber.Id, formaPagamento, valorBruto, valorLiquido);
+        DespesaOperadora? despesaOperadora = CriarDespesaOperadora(venda, formaPagamento, valorBruto, valorLiquido, percentualTaxa);
 
-        // Persist venda and related stock movements as a single logical operation.
-        // For true atomicity the repositories should expose a UnitOfWork/transaction;
-        // this method is prepared for that future change.
-        await SaveVendaAndMovementsAsync(venda, movimentacoes);
+        await _unitOfWork.ExecuteInTransactionAsync(async () =>
+        {
+            await SaveVendaAndMovementsAsync(venda, movimentacoes);
+            await _contaReceberRepository.AdicionarAsync(contaReceber);
+
+            if (pagamentoInicial != null)
+            {
+                await _contaReceberRepository.AdicionarPagamentoAsync(pagamentoInicial);
+            }
+
+            if (despesaOperadora != null)
+            {
+                await _despesaOperadoraRepository.AdicionarAsync(despesaOperadora);
+            }
+        });
 
         decimal lucroTotal = 0m;
         foreach (var item in venda.Items)
@@ -54,7 +105,103 @@ public class VendaService
             lucroTotal += item.ValorTotal() - custoMedio * item.Quantidade;
         }
 
-        return new VendaResultDto { Id = venda.Id, Lucro = lucroTotal };
+        return new VendaResultDto
+        {
+            Id = venda.Id,
+            Lucro = lucroTotal,
+            FormaPagamento = formaPagamento,
+            StatusFinanceiro = pagamentoInicial != null ? "Pago" : "Pendente",
+            ContaReceberId = contaReceber.Id,
+            ValorBruto = valorBruto,
+            ValorLiquido = valorLiquido,
+            PercentualTaxaAplicado = EhCartao(formaPagamento) ? percentualTaxa : null,
+            DespesaOperadoraId = despesaOperadora?.Id,
+            MensagemFinanceira = pagamentoInicial != null
+                ? "Recebido imediatamente"
+                : "Conta a receber gerada"
+        };
+    }
+
+    private async Task<decimal> ResolverPercentualTaxaAsync(FormaPagamento formaPagamento, decimal? percentualTaxaOverride)
+    {
+        if (!EhCartao(formaPagamento))
+        {
+            if (percentualTaxaOverride > 0)
+            {
+                throw new InvalidOperationException("Taxa invalida");
+            }
+
+            return 0m;
+        }
+
+        if (percentualTaxaOverride.HasValue)
+        {
+            return percentualTaxaOverride.Value;
+        }
+
+        var configuracao = await _configuracaoFormaPagamentoRepository.ObterPorFormaAsync(formaPagamento);
+        return configuracao?.PercentualTaxa ?? 0m;
+    }
+
+    private static bool EhCartao(FormaPagamento formaPagamento)
+    {
+        return formaPagamento is FormaPagamento.CartaoDebito or FormaPagamento.CartaoCredito;
+    }
+
+    private static decimal CalcularValorLiquido(decimal valorBruto, FormaPagamento formaPagamento, decimal percentualTaxa)
+    {
+        if (formaPagamento != FormaPagamento.CartaoDebito)
+        {
+            return valorBruto;
+        }
+
+        var valorLiquido = decimal.Round(valorBruto * (1 - percentualTaxa / 100), 2, MidpointRounding.AwayFromZero);
+        if (valorLiquido <= 0)
+        {
+            throw new InvalidOperationException("Taxa invalida");
+        }
+
+        return valorLiquido;
+    }
+
+    private static DateTime ObterVencimentoInicial(Venda venda)
+    {
+        return venda.FormaPagamento switch
+        {
+            FormaPagamento.CartaoCredito => ProximoDiaUtil(venda.DataVenda),
+            _ => venda.DataVenda
+        };
+    }
+
+    private static DateTime ProximoDiaUtil(DateTime data)
+    {
+        var proximoDia = data.Date.AddDays(1);
+        while (proximoDia.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+        {
+            proximoDia = proximoDia.AddDays(1);
+        }
+
+        return DateTime.SpecifyKind(proximoDia, DateTimeKind.Utc);
+    }
+
+    private static PagamentoRecebido? CriarPagamentoInicial(Guid contaReceberId, FormaPagamento formaPagamento, decimal valorBruto, decimal valorLiquido)
+    {
+        return formaPagamento switch
+        {
+            FormaPagamento.Dinheiro or FormaPagamento.PIX => new PagamentoRecebido(contaReceberId, valorBruto, 0m, valorBruto),
+            FormaPagamento.CartaoDebito => new PagamentoRecebido(contaReceberId, valorLiquido, 0m, valorBruto),
+            _ => null
+        };
+    }
+
+    private static DespesaOperadora? CriarDespesaOperadora(Venda venda, FormaPagamento formaPagamento, decimal valorBruto, decimal valorLiquido, decimal percentualTaxa)
+    {
+        if (formaPagamento != FormaPagamento.CartaoDebito || valorLiquido >= valorBruto)
+        {
+            return null;
+        }
+
+        return new DespesaOperadora(venda.Id, formaPagamento, valorBruto, valorLiquido, percentualTaxa);
     }
 
     private IEnumerable<EstoqueMovimentacao> BuildMovimentacoes(Venda venda)
