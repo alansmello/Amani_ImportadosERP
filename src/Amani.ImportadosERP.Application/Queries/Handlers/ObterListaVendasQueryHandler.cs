@@ -37,14 +37,11 @@ public sealed class ObterListaVendasQueryHandler : IRequestHandler<ObterListaVen
             // Aplicar desconto e acrescimo geral da venda
             decimal totalVenda = totalItens + venda.Acrescimo - venda.Desconto;
 
-            // Calcular lucro total da venda
             decimal lucroTotal = 0m;
             foreach (var item in venda.Items)
             {
                 var custoMedio = await _custoRepository.ObterCustoMedioAsync(item.ProdutoId);
-                var lucroItem = (item.PrecoUnitario - custoMedio) * item.Quantidade;
-               
-                lucroTotal += lucroItem;
+                lucroTotal += item.ValorTotal() - custoMedio * item.Quantidade;
             }
 
             // Mapear entidade para DTO

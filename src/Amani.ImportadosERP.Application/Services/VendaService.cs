@@ -47,13 +47,11 @@ public class VendaService
         // this method is prepared for that future change.
         await SaveVendaAndMovementsAsync(venda, movimentacoes);
 
-        // Calcular lucro por item usando custo médio
         decimal lucroTotal = 0m;
         foreach (var item in venda.Items)
         {
             var custoMedio = await _custoRepository.ObterCustoMedioAsync(item.ProdutoId);
-            var lucroItem = (item.PrecoUnitario - custoMedio) * item.Quantidade;
-            lucroTotal += lucroItem;
+            lucroTotal += item.ValorTotal() - custoMedio * item.Quantidade;
         }
 
         return new VendaResultDto { Id = venda.Id, Lucro = lucroTotal };
@@ -82,13 +80,11 @@ public class VendaService
         var venda = await _vendaRepository.ObterPorIdAsync(id);
         if (venda == null) return null;
 
-        // Calcular lucro para retornar no DTO
         decimal lucroTotal = 0m;
         foreach (var item in venda.Items)
         {
             var custoMedio = await _custoRepository.ObterCustoMedioAsync(item.ProdutoId);
-            var lucroItem = (item.PrecoUnitario - custoMedio) * item.Quantidade;
-            lucroTotal += lucroItem;
+            lucroTotal += item.ValorTotal() - custoMedio * item.Quantidade;
         }
 
         return VendaMapper.ToResponse(venda, lucroTotal);

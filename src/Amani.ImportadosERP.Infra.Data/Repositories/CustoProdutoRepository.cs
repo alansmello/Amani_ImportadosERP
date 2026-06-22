@@ -29,10 +29,19 @@ public class CustoProdutoRepository : ICustoProdutoRepository
             .ToListAsync();
 
         var somaQuantidade = entradas.Sum(e => e.Quantidade);
-        if (somaQuantidade == 0) return 0m;
 
-        var somaValor = entradas.Sum(e => (e.ValorUnitario ?? 0m) * e.Quantidade);
+        if (somaQuantidade > 0)
+        {
+            var somaValor = entradas.Sum(e => (e.ValorUnitario ?? 0m) * e.Quantidade);
+            return somaValor / somaQuantidade;
+        }
 
-        return somaValor / somaQuantidade;
+        // Fallback: sem movimentações com custo registrado, usa o custo cadastrado no produto
+        var produto = await _db.Produtos
+            .Where(p => p.Id == produtoId)
+            .Select(p => new { p.Custo })
+            .FirstOrDefaultAsync();
+
+        return produto?.Custo ?? 0m;
     }
 }

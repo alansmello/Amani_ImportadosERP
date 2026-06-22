@@ -274,6 +274,34 @@ O `/speckit-tasks` deve gerar tarefas explicitas para:
 
 ## Bug Fixes
 
+### BF002 — Lucro oficial inconsistente: formula divergente e custo medio ignorando Produto.Custo (2026-06-22)
+
+**Sintoma**: O lucro exibido na tela de Vendas divergia dos dashboards e em produtos
+sem historico de movimentacao de estoque o lucro era igual ao preco de venda inteiro.
+
+**Causa raiz**:
+- **Formula divergente**: endpoints de vendas usavam `(PrecoUnitario - custo) * Qtd`
+  (bruta); dashboards usavam `ValorTotal() - custo * Qtd` (liquida, com desconto/acrescimo).
+- **Custo medio zerado**: `CustoProdutoRepository` retornava `0` quando nao havia
+  `EstoqueMovimentacao` com `ValorUnitario`, ignorando `Produto.Custo`.
+
+**Correcao**:
+1. Unificar formula para `item.ValorTotal() - custoMedio * item.Quantidade` em
+   `VendaService`, `ObterListaVendasQueryHandler` e `ObterDashboardQueryHandler`.
+2. Adicionar fallback em `CustoProdutoRepository`: quando nao ha movimentacoes com
+   custo, usar `Produto.Custo`; retornar `0m` apenas se o produto nao existir.
+
+**Arquivos alterados**:
+- `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterListaVendasQueryHandler.cs`
+- `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardQueryHandler.cs`
+- `src/Amani.ImportadosERP.Infra.Data/Repositories/CustoProdutoRepository.cs`
+
+**Invariantes preservadas**: backend como fonte unica de lucro; nenhuma migration;
+contrato `ICustoProdutoRepository` (`decimal`) inalterado; frontend sem alteracao.
+
+---
+
 ### BF001 — Preco unitario nao atualiza ao trocar produto (2026-06-17)
 
 **Arquivo**: `frontend/src/components/vendas/sale-form.tsx` — funcao `updateItem`

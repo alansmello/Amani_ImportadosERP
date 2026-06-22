@@ -28,7 +28,16 @@ export function formatSaleDate(value: string | null | undefined) {
     return "-";
   }
 
-  const date = new Date(value);
+  // Extract YYYY-MM-DD portion before constructing the Date to avoid UTC midnight
+  // shifting the displayed day when the browser converts to local time (e.g. UTC-3).
+  const datePart = value.slice(0, 10);
+  const [year, month, day] = datePart.split("-").map(Number);
+
+  if (!year || !month || !day) {
+    return "-";
+  }
+
+  const date = new Date(year, month - 1, day);
 
   if (Number.isNaN(date.getTime())) {
     return "-";
