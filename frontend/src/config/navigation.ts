@@ -92,12 +92,12 @@ export const navigationItems = [
   {
     id: "financeiro",
     label: "Financeiro",
-    href: routes.financeiro,
+    href: routes.contasReceber,
     icon: CreditCard,
     desktopVisible: true,
     mobileVisible: false,
     group: "more",
-    status: "placeholder"
+    status: "ready"
   },
   {
     id: "configuracoes",

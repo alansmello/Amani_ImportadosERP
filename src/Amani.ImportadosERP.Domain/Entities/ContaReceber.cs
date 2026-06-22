@@ -33,6 +33,22 @@ public sealed class ContaReceber : BaseEntity
         Pagamentos = new List<PagamentoRecebido>();
     }
 
+    public static ContaReceber CriarManual(Guid clienteId, decimal valor, DateTime dataVencimento)
+    {
+        if (clienteId == Guid.Empty) throw new ArgumentException("ClienteId e obrigatorio", nameof(clienteId));
+        if (valor <= 0) throw new ArgumentException("Valor invalido", nameof(valor));
+        if (dataVencimento == default) throw new ArgumentException("DataVencimento e obrigatoria", nameof(dataVencimento));
+
+        var conta = new ContaReceber();
+        conta.VendaId = null;
+        conta.ClienteId = clienteId;
+        conta.Valor = valor;
+        conta.DataVencimento = DateTime.SpecifyKind(dataVencimento.Date, DateTimeKind.Utc);
+        conta.Origem = "Manual";
+        conta.Pagamentos = new List<PagamentoRecebido>();
+        return conta;
+    }
+
     private ContaReceber(Guid clienteId, decimal valor, DateTime dataVencimento, string origem)
     {
         if (clienteId == Guid.Empty) throw new ArgumentException("ClienteId e obrigatorio", nameof(clienteId));

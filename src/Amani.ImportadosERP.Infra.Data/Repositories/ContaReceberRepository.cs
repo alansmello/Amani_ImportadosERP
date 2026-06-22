@@ -140,7 +140,16 @@ public class ContaReceberRepository : IContaReceberRepository
                     ValorTotal = c.Valor,
                     TotalPago = totalPago,
                     Saldo = saldo,
-                    DataVencimento = c.DataVencimento
+                    DataVencimento = c.DataVencimento,
+                    Status = saldo <= 0 ? "Pago" : "Pendente",
+                    Pagamentos = c.Pagamentos
+                        .Select(p => new PagamentoDetalheDto
+                        {
+                            Id = p.Id,
+                            Valor = p.Valor,
+                            DataPagamento = p.DataPagamento
+                        })
+                        .ToList()
                 };
             })
             .Where(x => x.Saldo > 0)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Amani.ImportadosERP.Application.DTOs;
 
@@ -12,4 +13,6 @@ public sealed class ContaReceberDetalheDto
     public decimal TotalPago { get; set; }
     public decimal Saldo { get; set; }
     public DateTime DataVencimento { get; set; }
+    public string Status { get; set; } = null!;
+    public List<PagamentoDetalheDto> Pagamentos { get; set; } = new();
 }
