@@ -21,24 +21,14 @@ public sealed class CriarContaReceberCommandHandler : IRequestHandler<CriarConta
         if (request.Valor <= 0)
             throw new Exception("Valor inválido");
 
-        ContaReceber conta;
+        if (!request.ClienteId.HasValue || request.ClienteId.Value == Guid.Empty)
+            throw new Exception("ClienteId e obrigatorio para criacao de conta a receber manual");
 
-        if (request.ClienteId.HasValue && request.ClienteId.Value != Guid.Empty)
-        {
-            conta = ContaReceber.CriarManual(
-                request.ClienteId.Value,
-                request.Valor,
-                request.DataVencimento
-            );
-        }
-        else
-        {
-            conta = new ContaReceber(
-                request.VendaId,
-                request.Valor,
-                request.DataVencimento
-            );
-        }
+        var conta = ContaReceber.CriarManual(
+            request.ClienteId.Value,
+            request.Valor,
+            request.DataVencimento
+        );
 
         await _repository.AdicionarAsync(conta);
 

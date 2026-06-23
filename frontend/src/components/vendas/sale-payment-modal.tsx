@@ -43,8 +43,12 @@ function formatPercent(value: number) {
   return `${value.toFixed(2).replace(".", ",")}%`;
 }
 
-function isCardMethod(method: PaymentMethod) {
-  return method === "CartaoDebito" || method === "CartaoCredito";
+function isDebitoMethod(method: PaymentMethod) {
+  return method === "CartaoDebito";
+}
+
+function isCreditoMethod(method: PaymentMethod) {
+  return method === "CartaoCredito";
 }
 
 function methodButtonClassName(active: boolean) {
@@ -75,7 +79,8 @@ export function SalePaymentModal({
       ),
     [settingsQuery.data, formaPagamento]
   );
-  const showCardFields = isCardMethod(formaPagamento);
+  const showDebitoOverride = isDebitoMethod(formaPagamento);
+  const showCreditoInfo = isCreditoMethod(formaPagamento);
 
   async function handleConfirm() {
     setError(null);
@@ -91,7 +96,7 @@ export function SalePaymentModal({
 
     await onConfirm({
       formaPagamento,
-      percentualTaxaOverride: showCardFields ? override : null
+      percentualTaxaOverride: showDebitoOverride ? override : null
     });
   }
 
@@ -136,6 +141,7 @@ export function SalePaymentModal({
                   (setting) => setting.formaPagamento === method.value
                 );
 
+                const showFee = isDebitoMethod(method.value);
                 return (
                   <button
                     key={method.value}
@@ -154,15 +160,18 @@ export function SalePaymentModal({
                       {method.label}
                     </span>
                     <span className="mt-1 text-xs">
-                      Taxa configurada:{" "}
-                      {formatPercent(methodSetting?.percentualTaxa ?? 0)}
+                      {showFee
+                        ? `Taxa configurada: ${formatPercent(methodSetting?.percentualTaxa ?? 0)}`
+                        : isCreditoMethod(method.value)
+                          ? "Taxa registrada no recebimento"
+                          : "Sem taxa de operadora"}
                     </span>
                   </button>
                 );
               })}
             </div>
 
-            {showCardFields ? (
+            {showDebitoOverride ? (
               <div className="grid gap-2">
                 <label
                   className="text-sm font-medium text-text-primary"
@@ -184,10 +193,15 @@ export function SalePaymentModal({
                   disabled={isSubmitting}
                 />
                 <p className="text-xs leading-5 text-text-secondary">
-                  Deixe em branco para usar a taxa configurada. O valor liquido
-                  final sera confirmado pela API.
+                  Deixe em branco para usar a taxa configurada. O custo de
+                  operadora sera registrado automaticamente.
                 </p>
               </div>
+            ) : showCreditoInfo ? (
+              <p className="rounded-amani border border-border bg-surface-light px-4 py-3 text-sm leading-6 text-text-secondary">
+                A taxa sera capturada no momento do recebimento. Informe o valor
+                liquido que entrou na conta ao registrar o pagamento.
+              </p>
             ) : (
               <p className="rounded-amani border border-border bg-surface-light px-4 py-3 text-sm leading-6 text-text-secondary">
                 Esta forma de pagamento nao possui taxa de operadora.

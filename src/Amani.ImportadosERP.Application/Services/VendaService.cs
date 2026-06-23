@@ -62,7 +62,7 @@ public class VendaService
             dto.Desconto,
             dto.Acrescimo,
             formaPagamento,
-            EhCartao(formaPagamento) ? percentualTaxa : null);
+            EhCartaoDebito(formaPagamento) ? percentualTaxa : null);
 
         foreach (var item in dto.Items)
         {
@@ -78,7 +78,7 @@ public class VendaService
         var movimentacoes = BuildMovimentacoes(venda);
         var valorBruto = venda.Total();
         var valorLiquido = CalcularValorLiquido(valorBruto, formaPagamento, percentualTaxa);
-        var contaReceber = new ContaReceber(venda.Id, valorBruto, ObterVencimentoInicial(venda));
+        var contaReceber = new ContaReceber(venda.Id, venda.ClienteId, valorBruto, ObterVencimentoInicial(venda));
         PagamentoRecebido? pagamentoInicial = CriarPagamentoInicial(contaReceber.Id, formaPagamento, valorBruto, valorLiquido);
         DespesaOperadora? despesaOperadora = CriarDespesaOperadora(venda, formaPagamento, valorBruto, valorLiquido, percentualTaxa);
 
@@ -114,7 +114,7 @@ public class VendaService
             ContaReceberId = contaReceber.Id,
             ValorBruto = valorBruto,
             ValorLiquido = valorLiquido,
-            PercentualTaxaAplicado = EhCartao(formaPagamento) ? percentualTaxa : null,
+            PercentualTaxaAplicado = EhCartaoDebito(formaPagamento) ? percentualTaxa : null,
             DespesaOperadoraId = despesaOperadora?.Id,
             MensagemFinanceira = pagamentoInicial != null
                 ? "Recebido imediatamente"
@@ -124,11 +124,11 @@ public class VendaService
 
     private async Task<decimal> ResolverPercentualTaxaAsync(FormaPagamento formaPagamento, decimal? percentualTaxaOverride)
     {
-        if (!EhCartao(formaPagamento))
+        if (!EhCartaoDebito(formaPagamento))
         {
             if (percentualTaxaOverride > 0)
             {
-                throw new InvalidOperationException("Taxa invalida");
+                throw new InvalidOperationException("Taxa invalida para esta forma de pagamento");
             }
 
             return 0m;
@@ -143,9 +143,9 @@ public class VendaService
         return configuracao?.PercentualTaxa ?? 0m;
     }
 
-    private static bool EhCartao(FormaPagamento formaPagamento)
+    private static bool EhCartaoDebito(FormaPagamento formaPagamento)
     {
-        return formaPagamento is FormaPagamento.CartaoDebito or FormaPagamento.CartaoCredito;
+        return formaPagamento == FormaPagamento.CartaoDebito;
     }
 
     private static decimal CalcularValorLiquido(decimal valorBruto, FormaPagamento formaPagamento, decimal percentualTaxa)

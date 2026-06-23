@@ -19,14 +19,15 @@ public sealed class ContaReceber : BaseEntity
         Pagamentos = new List<PagamentoRecebido>();
     }
 
-    public ContaReceber(Guid vendaId, decimal valor, DateTime dataVencimento)
+    public ContaReceber(Guid vendaId, Guid clienteId, decimal valor, DateTime dataVencimento)
     {
         if (vendaId == Guid.Empty) throw new ArgumentException("VendaId e obrigatorio", nameof(vendaId));
+        if (clienteId == Guid.Empty) throw new ArgumentException("ClienteId e obrigatorio", nameof(clienteId));
         if (valor <= 0) throw new ArgumentException("Valor invalido", nameof(valor));
         if (dataVencimento == default) throw new ArgumentException("DataVencimento e obrigatoria", nameof(dataVencimento));
 
         VendaId = vendaId;
-        ClienteId = null;
+        ClienteId = clienteId;
         Valor = valor;
         DataVencimento = DateTime.SpecifyKind(dataVencimento.Date, DateTimeKind.Utc);
         Origem = "Venda";

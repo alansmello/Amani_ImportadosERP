@@ -1,6 +1,7 @@
 "use client";
 
-import { LoaderCircle, PackagePlus, Plus, Save } from "lucide-react";
+import Link from "next/link";
+import { ExternalLink, LoaderCircle, PackagePlus, Plus, Save } from "lucide-react";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 
@@ -32,6 +33,7 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { routes } from "@/config/routes";
 import { useCustomers } from "@/hooks/use-customers";
 import { useProducts } from "@/hooks/use-products";
 import { useCreateSale } from "@/hooks/use-sales";
@@ -238,11 +240,13 @@ export function SaleForm({ onCreated }: SaleFormProps) {
     const response = await createSale.mutateAsync({
       ...attachSalePaymentPayload(payload, payment)
     });
+    setPaymentModalOpen(false);
+    setPendingPayload(null);
+    setDraft(buildInitialDraft());
+    setErrors([]);
     setSuccessMessage(
       `Venda registrada. ${buildFinancialSuccessMessage(response)}`
     );
-    setPaymentModalOpen(false);
-    setPendingPayload(null);
     onCreated?.(response.id);
   }
 
@@ -354,9 +358,20 @@ export function SaleForm({ onCreated }: SaleFormProps) {
 
           <div className="grid gap-5 tablet:grid-cols-2">
             <div className="grid gap-2">
-              <label className={fieldLabelClassName} htmlFor="sale-customer">
-                Cliente
-              </label>
+              <div className="flex items-center justify-between gap-2">
+                <label className={fieldLabelClassName} htmlFor="sale-customer">
+                  Cliente
+                </label>
+                <Link
+                  href={routes.clientesNovo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
+                >
+                  <ExternalLink className="h-3 w-3" aria-hidden />
+                  <span>Cadastrar cliente</span>
+                </Link>
+              </div>
               <select
                 id="sale-customer"
                 className={cn(selectClassName)}

@@ -53,13 +53,15 @@ type PaymentModalState = {
   receivableId: string;
   clienteName: string;
   saldo: number;
+  formaPagamento?: string | null;
 };
 
 const CLOSED_MODAL: PaymentModalState = {
   open: false,
   receivableId: "",
   clienteName: "",
-  saldo: 0
+  saldo: 0,
+  formaPagamento: null
 };
 
 function resolveClienteName(
@@ -213,7 +215,8 @@ export function ReceivablesList({
                                 open: true,
                                 receivableId: receivable.id,
                                 clienteName,
-                                saldo: receivable.saldo
+                                saldo: receivable.saldo,
+                                formaPagamento: receivable.formaPagamento
                               })
                             }
                           >
@@ -258,6 +261,7 @@ export function ReceivablesList({
         receivableId={paymentModal.receivableId}
         clienteName={paymentModal.clienteName}
         saldo={paymentModal.saldo}
+        formaPagamento={paymentModal.formaPagamento}
       />
     </>
   );

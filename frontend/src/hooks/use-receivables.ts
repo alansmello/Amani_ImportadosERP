@@ -66,9 +66,14 @@ export function useRegisterPayment() {
       payload: RegisterPaymentPayload;
     }) => receivablesService.registerPayment(id, payload),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: receivableQueryKeys.all
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: receivableQueryKeys.all
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.despesasOperadora
+        })
+      ]);
     }
   });
 }

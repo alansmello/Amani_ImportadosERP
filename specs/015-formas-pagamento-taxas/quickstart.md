@@ -144,7 +144,55 @@ Expected:
 
 - 2026-06-22: Backend build for Phase 3/4 implementation passed with
   `dotnet build Amani_ImportadosERP.sln`.
-- 2026-06-22: Frontend `npm run typecheck` could not be executed in this
-  environment because `npm` and `node` are not available on PATH.
-- 2026-06-22: Manual quickstart scenarios 1, 2, 3 and 7 remain pending because
-  they require API, database migrations and frontend app running together.
+- 2026-06-22 (session 2): Fixed TypeScript error — `NavigationModuleId` was
+  missing `"formas-pagamento"` and `"despesas-operadora"` union members in
+  `frontend/src/types/navigation.ts`. Added both.
+- 2026-06-22 (session 2): `npm run lint` — PASS (0 errors, 0 warnings).
+- 2026-06-22 (session 2): `npm run typecheck` — PASS after fix above.
+- 2026-06-22 (session 2): `npm run build` — PASS. 22 routes generated including
+  `/configuracoes/formas-pagamento` and `/financeiro/despesas-operadora`.
+- 2026-06-22 (session 2): F013 regression check — `sales-list.tsx` and
+  `vendas/page.tsx` unchanged. New `formaPagamento` field is optional on
+  `SaleListItem`; no breaking change.
+- 2026-06-22 (session 2): F014 regression check — `contas-receber/page.tsx`
+  unchanged. `use-receivables.ts` adds `despesasOperadora` cache invalidation on
+  payment registration; backward compatible.
+- 2026-06-22 (session 2): Manual quickstart scenarios 1–8 require API, database
+  migrations and frontend app running together and remain pending for runtime
+  validation by the team.
+- 2026-06-22 (session 3): Bugfix — `ContaReceber` criada por venda nao persistia
+  `ClienteId`, causando exibicao "—" e falha no filtro por nome na tela de contas
+  a receber. Correcao aplicada em:
+  - `src/Amani.ImportadosERP.Domain/Entities/ContaReceber.cs` — construtor de
+    venda agora recebe `Guid clienteId` obrigatório (Opção A).
+  - `src/Amani.ImportadosERP.Application/Services/VendaService.cs` — passa
+    `venda.ClienteId` ao instanciar `ContaReceber`.
+  - `src/Amani.ImportadosERP.Application/Commands/Handlers/CriarContaReceberCommandHandler.cs`
+    — else branch que criava conta sem clienteId substituído por exceção explícita;
+    `CriarManual` é agora o único caminho válido por esse handler.
+  Contas ja gravadas no banco sem `ClienteId` devem ser atualizadas manualmente
+  via SQL: `UPDATE contas_receber c SET "ClienteId" = v."ClienteId" FROM vendas v
+  WHERE c."VendaId" = v."Id" AND c."ClienteId" IS NULL;`
+- 2026-06-22 (session 3): Modal de pagamento em contas a receber agora detecta
+  `formaPagamento` da conta. Para CartaoCredito exibe UI simplificada: somente
+  "valor liquido recebido na conta"; `valorBrutoLiquidado` e fixado no saldo atual
+  automaticamente; custo de operadora e calculado ao vivo como preview.
+- 2026-06-22 (session 3): Formulario de venda reseta automaticamente apos
+  confirmacao bem-sucedida, prevenindo re-submissao acidental.
+- 2026-06-22 (session 3): Taxa pre-fixada de operadora agora se aplica apenas ao
+  CartaoDebito. CartaoCredito nao usa configuracao de taxa na criacao da venda;
+  o percentual e calculado a partir dos valores no momento do recebimento.
+  Arquivos alterados:
+  - `src/Amani.ImportadosERP.Application/Services/VendaService.cs` — `EhCartao`
+    renomeado para `EhCartaoDebito`; lookup de taxa e override aplicados apenas
+    para CartaoDebito.
+  - `src/Amani.ImportadosERP.Application/Commands/Handlers/RegistrarPagamentoCommandHandler.cs`
+    — calcula `percentualTaxa` a partir de `taxaOperadora / valorBrutoLiquidado`
+    quando nao fornecido explicitamente, removendo obrigatoriedade do campo.
+  - `frontend/src/components/configuracoes/payment-fees-form.tsx` — exibe apenas
+    CartaoDebito; descricao atualizada para refletir comportamento.
+  - `frontend/src/components/vendas/sale-payment-modal.tsx` — override de taxa
+    disponivel apenas para CartaoDebito; CartaoCredito exibe aviso informativo.
+  - `frontend/src/components/vendas/sale-form.tsx` — atalho "Cadastrar cliente"
+    (abre em nova aba) adicionado ao lado do campo de selecao de cliente.
+  - `frontend/src/config/routes.ts` — adicionada rota `clientesNovo`.

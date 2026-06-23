@@ -22,31 +22,85 @@ type ReceivablePaymentModalProps = {
   receivableId: string;
   clienteName?: string;
   saldo?: number;
+  formaPagamento?: string | null;
 };
 
 type FormDraft = {
   valor: string;
+  desconto: string;
+  valorBrutoLiquidado: string;
+  percentualTaxaOperadora: string;
 };
 
 type FormErrors = {
   valor?: string;
+  desconto?: string;
+  valorBrutoLiquidado?: string;
+  percentualTaxaOperadora?: string;
 };
 
 const fieldLabelClassName = "text-sm font-medium text-text-primary";
 const fieldErrorClassName = "text-xs font-medium leading-5 text-danger";
 
 function buildInitialDraft(): FormDraft {
-  return { valor: "" };
+  return {
+    valor: "",
+    desconto: "",
+    valorBrutoLiquidado: "",
+    percentualTaxaOperadora: ""
+  };
+}
+
+function parseDecimal(value: string) {
+  return Number(value.replace(",", "."));
+}
+
+function validateCreditDraft(draft: FormDraft): FormErrors {
+  const errors: FormErrors = {};
+  const valor = parseDecimal(draft.valor);
+
+  if (!draft.valor.trim()) {
+    errors.valor = "Informe o valor liquido recebido na conta.";
+  } else if (isNaN(valor) || valor <= 0) {
+    errors.valor = "O valor deve ser maior que zero.";
+  }
+
+  return errors;
 }
 
 function validateDraft(draft: FormDraft): FormErrors {
   const errors: FormErrors = {};
-  const valor = Number(draft.valor);
+  const valor = parseDecimal(draft.valor);
+  const desconto = draft.desconto.trim() ? parseDecimal(draft.desconto) : 0;
+  const valorBrutoLiquidado = draft.valorBrutoLiquidado.trim()
+    ? parseDecimal(draft.valorBrutoLiquidado)
+    : undefined;
+  const percentualTaxaOperadora = draft.percentualTaxaOperadora.trim()
+    ? parseDecimal(draft.percentualTaxaOperadora)
+    : undefined;
 
   if (!draft.valor.trim()) {
     errors.valor = "Informe o valor do pagamento.";
   } else if (isNaN(valor) || valor <= 0) {
     errors.valor = "O valor deve ser maior que zero.";
+  }
+
+  if (!Number.isFinite(desconto) || desconto < 0) {
+    errors.desconto = "O desconto deve ser maior ou igual a zero.";
+  }
+
+  if (
+    valorBrutoLiquidado !== undefined &&
+    (!Number.isFinite(valorBrutoLiquidado) || valorBrutoLiquidado <= 0)
+  ) {
+    errors.valorBrutoLiquidado = "Informe um valor bruto valido.";
+  }
+
+  if (
+    percentualTaxaOperadora !== undefined &&
+    (!Number.isFinite(percentualTaxaOperadora) || percentualTaxaOperadora < 0)
+  ) {
+    errors.percentualTaxaOperadora = "Informe uma taxa valida.";
   }
 
   return errors;
@@ -61,9 +115,11 @@ export function ReceivablePaymentModal({
   onOpenChange,
   receivableId,
   clienteName,
-  saldo
+  saldo,
+  formaPagamento
 }: ReceivablePaymentModalProps) {
   const registerPayment = useRegisterPayment();
+  const isCartaoCredito = formaPagamento === "CartaoCredito";
 
   const [draft, setDraft] = useState<FormDraft>(() => buildInitialDraft());
   const [errors, setErrors] = useState<FormErrors>({});
@@ -79,14 +135,16 @@ export function ReceivablePaymentModal({
     }
   }, [open]);
 
-  function updateValor(value: string) {
-    setDraft({ valor: value });
+  function updateDraftField(field: keyof FormDraft, value: string) {
+    setDraft((current) => ({ ...current, [field]: value }));
     setErrors({});
     setSubmitError(null);
   }
 
   async function handleConfirm() {
-    const validationErrors = validateDraft(draft);
+    const validationErrors = isCartaoCredito
+      ? validateCreditDraft(draft)
+      : validateDraft(draft);
     setErrors(validationErrors);
 
     if (hasErrors(validationErrors)) {
@@ -96,10 +154,30 @@ export function ReceivablePaymentModal({
     setSubmitError(null);
 
     try {
-      await registerPayment.mutateAsync({
-        id: receivableId,
-        payload: { valor: Number(draft.valor) }
-      });
+      if (isCartaoCredito) {
+        await registerPayment.mutateAsync({
+          id: receivableId,
+          payload: {
+            valor: parseDecimal(draft.valor),
+            desconto: 0,
+            valorBrutoLiquidado: saldo
+          }
+        });
+      } else {
+        await registerPayment.mutateAsync({
+          id: receivableId,
+          payload: {
+            valor: parseDecimal(draft.valor),
+            desconto: draft.desconto.trim() ? parseDecimal(draft.desconto) : 0,
+            valorBrutoLiquidado: draft.valorBrutoLiquidado.trim()
+              ? parseDecimal(draft.valorBrutoLiquidado)
+              : undefined,
+            percentualTaxaOperadora: draft.percentualTaxaOperadora.trim()
+              ? parseDecimal(draft.percentualTaxaOperadora)
+              : undefined
+          }
+        });
+      }
       onOpenChange(false);
     } catch (error) {
       const apiError = toApiError(error);
@@ -112,14 +190,20 @@ export function ReceivablePaymentModal({
     onOpenChange(nextOpen);
   }
 
+  const valorLiquidoPreview =
+    isCartaoCredito && draft.valor.trim() && saldo !== undefined
+      ? saldo - parseDecimal(draft.valor)
+      : null;
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-h-[calc(100vh-2rem)] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Registrar pagamento</DialogTitle>
           <DialogDescription>
-            Informe o valor recebido. O status e saldo serao atualizados pela
-            fonte oficial apos confirmacao.
+            {isCartaoCredito
+              ? "Informe o valor liquido que entrou na conta. A diferenca sera registrada como custo de operadora."
+              : "Informe o valor recebido. O status e saldo serao atualizados pela fonte oficial apos confirmacao."}
           </DialogDescription>
         </DialogHeader>
 
@@ -132,7 +216,8 @@ export function ReceivablePaymentModal({
             ) : null}
             {saldo !== undefined ? (
               <p className="mt-1 text-xs leading-5 text-text-secondary">
-                Saldo atual: R$ {saldo.toFixed(2).replace(".", ",")}
+                {isCartaoCredito ? "Valor bruto a receber" : "Saldo atual"}:{" "}
+                R$ {saldo.toFixed(2).replace(".", ",")}
               </p>
             ) : null}
           </div>
@@ -145,32 +230,171 @@ export function ReceivablePaymentModal({
           </div>
         ) : null}
 
-        <div className="grid gap-2">
-          <label className={fieldLabelClassName} htmlFor="payment-valor">
-            Valor pago (R$)
-          </label>
-          <Input
-            id="payment-valor"
-            type="number"
-            min="0.01"
-            step="0.01"
-            inputMode="decimal"
-            placeholder="0,00"
-            value={draft.valor}
-            onChange={(e) => updateValor(e.target.value)}
-            disabled={isSubmitting}
-            aria-invalid={Boolean(errors.valor)}
-            aria-describedby={
-              errors.valor ? "payment-valor-error" : undefined
-            }
-            autoFocus
-          />
-          {errors.valor ? (
-            <p id="payment-valor-error" className={fieldErrorClassName}>
-              {errors.valor}
-            </p>
-          ) : null}
-        </div>
+        {isCartaoCredito ? (
+          <>
+            <div className="grid gap-2">
+              <label className={fieldLabelClassName} htmlFor="payment-valor">
+                Valor liquido recebido na conta (R$)
+              </label>
+              <Input
+                id="payment-valor"
+                type="number"
+                min="0.01"
+                step="0.01"
+                inputMode="decimal"
+                placeholder="0,00"
+                value={draft.valor}
+                onChange={(e) => updateDraftField("valor", e.target.value)}
+                disabled={isSubmitting}
+                aria-invalid={Boolean(errors.valor)}
+                aria-describedby={
+                  errors.valor ? "payment-valor-error" : "payment-valor-help"
+                }
+                autoFocus
+              />
+              <p id="payment-valor-help" className="text-xs leading-5 text-text-secondary">
+                Informe o valor que efetivamente caiu na conta, apos a taxa da operadora.
+              </p>
+              {errors.valor ? (
+                <p id="payment-valor-error" className={fieldErrorClassName}>
+                  {errors.valor}
+                </p>
+              ) : null}
+            </div>
+
+            {valorLiquidoPreview !== null && valorLiquidoPreview > 0 ? (
+              <div className="rounded-amani border border-border bg-surface-light px-4 py-3 text-sm leading-6">
+                <p className="text-text-secondary">
+                  Custo de operadora (calculado automaticamente):{" "}
+                  <span className="font-semibold text-warning">
+                    R$ {valorLiquidoPreview.toFixed(2).replace(".", ",")}
+                  </span>
+                </p>
+              </div>
+            ) : null}
+          </>
+        ) : (
+          <>
+            <div className="grid gap-2">
+              <label className={fieldLabelClassName} htmlFor="payment-valor">
+                Valor pago (R$)
+              </label>
+              <Input
+                id="payment-valor"
+                type="number"
+                min="0.01"
+                step="0.01"
+                inputMode="decimal"
+                placeholder="0,00"
+                value={draft.valor}
+                onChange={(e) => updateDraftField("valor", e.target.value)}
+                disabled={isSubmitting}
+                aria-invalid={Boolean(errors.valor)}
+                aria-describedby={
+                  errors.valor ? "payment-valor-error" : undefined
+                }
+                autoFocus
+              />
+              {errors.valor ? (
+                <p id="payment-valor-error" className={fieldErrorClassName}>
+                  {errors.valor}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="grid gap-2">
+              <label className={fieldLabelClassName} htmlFor="payment-discount">
+                Desconto (R$)
+              </label>
+              <Input
+                id="payment-discount"
+                type="number"
+                min="0"
+                step="0.01"
+                inputMode="decimal"
+                placeholder="0,00"
+                value={draft.desconto}
+                onChange={(e) => updateDraftField("desconto", e.target.value)}
+                disabled={isSubmitting}
+                aria-invalid={Boolean(errors.desconto)}
+                aria-describedby={
+                  errors.desconto ? "payment-discount-error" : undefined
+                }
+              />
+              {errors.desconto ? (
+                <p id="payment-discount-error" className={fieldErrorClassName}>
+                  {errors.desconto}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="grid gap-4 rounded-amani border border-border bg-surface-light p-4 tablet:grid-cols-2">
+              <div className="grid gap-2">
+                <label className={fieldLabelClassName} htmlFor="payment-gross-settled">
+                  Valor bruto liquidado (R$)
+                </label>
+                <Input
+                  id="payment-gross-settled"
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  inputMode="decimal"
+                  placeholder="Use em recebimento de c"
+                  value={draft.valorBrutoLiquidado}
+                  onChange={(e) =>
+                    updateDraftField("valorBrutoLiquidado", e.target.value)
+                  }
+                  disabled={isSubmitting}
+                  aria-invalid={Boolean(errors.valorBrutoLiquidado)}
+                  aria-describedby={
+                    errors.valorBrutoLiquidado
+                      ? "payment-gross-settled-error"
+                      : "payment-gross-settled-help"
+                  }
+                />
+                <p id="payment-gross-settled-help" className="text-xs leading-5 text-text-secondary">
+                  Para credito, informe o bruto fechado quando o valor recebido for
+                  liquido de taxa.
+                </p>
+                {errors.valorBrutoLiquidado ? (
+                  <p id="payment-gross-settled-error" className={fieldErrorClassName}>
+                    {errors.valorBrutoLiquidado}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="grid gap-2">
+                <label className={fieldLabelClassName} htmlFor="payment-operator-fee">
+                  Taxa operadora (%)
+                </label>
+                <Input
+                  id="payment-operator-fee"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  inputMode="decimal"
+                  placeholder="Ex.: 3,49"
+                  value={draft.percentualTaxaOperadora}
+                  onChange={(e) =>
+                    updateDraftField("percentualTaxaOperadora", e.target.value)
+                  }
+                  disabled={isSubmitting}
+                  aria-invalid={Boolean(errors.percentualTaxaOperadora)}
+                  aria-describedby={
+                    errors.percentualTaxaOperadora
+                      ? "payment-operator-fee-error"
+                      : undefined
+                  }
+                />
+                {errors.percentualTaxaOperadora ? (
+                  <p id="payment-operator-fee-error" className={fieldErrorClassName}>
+                    {errors.percentualTaxaOperadora}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+          </>
+        )}
 
         <DialogFooter className="gap-2 tablet:gap-0">
           <Button

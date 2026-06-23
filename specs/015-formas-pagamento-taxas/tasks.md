@@ -120,20 +120,20 @@
 
 ### Implementation for User Story 3
 
-- [ ] T055 [P] [US3] Add next-business-day due date helper in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
-- [ ] T056 [US3] Implement CartaoCredito pending receivable creation with next business day due date in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
-- [ ] T057 [US3] Implement Fiado pending receivable creation with sale-date due date and no operator fee in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
-- [ ] T058 [P] [US3] Extend `RegistrarPagamentoDto` with Desconto, ValorBrutoLiquidado and PercentualTaxaOperadora in `src/Amani.ImportadosERP.Application/DTOs/RegistrarPagamentoDto.cs`
-- [ ] T059 [US3] Extend `RegistrarPagamentoCommand` with Desconto, ValorBrutoLiquidado and PercentualTaxaOperadora in `src/Amani.ImportadosERP.Application/Commands/RegistrarPagamentoCommand.cs`
-- [ ] T060 [US3] Update `ContasReceberController` to map discount and card settlement fields in `src/Amani.ImportadosERP.Api/Controllers/ContasReceberController.cs`
-- [ ] T061 [US3] Update `RegistrarPagamentoCommandHandler` to validate `Valor + Desconto <= Saldo` for regular payments in `src/Amani.ImportadosERP.Application/Commands/Handlers/RegistrarPagamentoCommandHandler.cs`
-- [ ] T062 [US3] Update `RegistrarPagamentoCommandHandler` to settle CartaoCredito gross balance with received value plus operator fee in `src/Amani.ImportadosERP.Application/Commands/Handlers/RegistrarPagamentoCommandHandler.cs`
-- [ ] T063 [US3] Update payment history DTOs with Desconto and ValorBrutoLiquidado in `src/Amani.ImportadosERP.Application/DTOs/PagamentoDetalheDto.cs`
-- [ ] T064 [US3] Update receivable repository detail projection for payment discounts in `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs`
-- [ ] T065 [US3] Update receivables service registerPayment payload in `frontend/src/services/receivables.ts`
-- [ ] T066 [US3] Add discount input and validation messaging to payment modal in `frontend/src/components/financeiro/receivable-payment-modal.tsx`
-- [ ] T067 [US3] Add card-credit effective amount and gross settlement UI path in `frontend/src/components/financeiro/receivable-payment-modal.tsx`
-- [ ] T068 [US3] Update `use-receivables` mutation invalidations for payment changes in `frontend/src/hooks/use-receivables.ts`
+- [X] T055 [P] [US3] Add next-business-day due date helper in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T056 [US3] Implement CartaoCredito pending receivable creation with next business day due date in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T057 [US3] Implement Fiado pending receivable creation with sale-date due date and no operator fee in `src/Amani.ImportadosERP.Application/Services/VendaService.cs`
+- [X] T058 [P] [US3] Extend `RegistrarPagamentoDto` with Desconto, ValorBrutoLiquidado and PercentualTaxaOperadora in `src/Amani.ImportadosERP.Application/DTOs/RegistrarPagamentoDto.cs`
+- [X] T059 [US3] Extend `RegistrarPagamentoCommand` with Desconto, ValorBrutoLiquidado and PercentualTaxaOperadora in `src/Amani.ImportadosERP.Application/Commands/RegistrarPagamentoCommand.cs`
+- [X] T060 [US3] Update `ContasReceberController` to map discount and card settlement fields in `src/Amani.ImportadosERP.Api/Controllers/ContasReceberController.cs`
+- [X] T061 [US3] Update `RegistrarPagamentoCommandHandler` to validate `Valor + Desconto <= Saldo` for regular payments in `src/Amani.ImportadosERP.Application/Commands/Handlers/RegistrarPagamentoCommandHandler.cs`
+- [X] T062 [US3] Update `RegistrarPagamentoCommandHandler` to settle CartaoCredito gross balance with received value plus operator fee in `src/Amani.ImportadosERP.Application/Commands/Handlers/RegistrarPagamentoCommandHandler.cs`
+- [X] T063 [US3] Update payment history DTOs with Desconto and ValorBrutoLiquidado in `src/Amani.ImportadosERP.Application/DTOs/PagamentoDetalheDto.cs`
+- [X] T064 [US3] Update receivable repository detail projection for payment discounts in `src/Amani.ImportadosERP.Infra.Data/Repositories/ContaReceberRepository.cs`
+- [X] T065 [US3] Update receivables service registerPayment payload in `frontend/src/services/receivables.ts`
+- [X] T066 [US3] Add discount input and validation messaging to payment modal in `frontend/src/components/financeiro/receivable-payment-modal.tsx`
+- [X] T067 [US3] Add card-credit effective amount and gross settlement UI path in `frontend/src/components/financeiro/receivable-payment-modal.tsx`
+- [X] T068 [US3] Update `use-receivables` mutation invalidations for payment changes in `frontend/src/hooks/use-receivables.ts`
 - [ ] T069 [US3] Validate quickstart scenarios 4, 5 and 6 manually and record result in `specs/015-formas-pagamento-taxas/quickstart.md`
 
 **Checkpoint**: US3 is independently functional for pending receivables, discounts and credit-card settlement.
@@ -177,17 +177,17 @@
 
 **Purpose**: Validate the whole feature, regressions, responsiveness and constitution constraints.
 
-- [ ] T090 Run backend build for the solution in `Amani_ImportadosERP.sln`
-- [ ] T091 Run frontend lint in `frontend/package.json`
-- [ ] T092 Run frontend typecheck in `frontend/package.json`
-- [ ] T093 Run frontend build in `frontend/package.json`
-- [ ] T094 Validate that the F015 migration applies cleanly and document rollback command/output in `specs/015-formas-pagamento-taxas/quickstart.md`
-- [ ] T095 Validate sale cancellation with financial records preserves history in `src/Amani.ImportadosERP.Application/Commands/Handlers/CancelarVendaCommandHandler.cs`
-- [ ] T096 Validate no frontend critical financial formula is the source of truth in `frontend/src/components/vendas/sale-payment-modal.tsx`
+- [X] T090 Run backend build for the solution in `Amani_ImportadosERP.sln`
+- [X] T091 Run frontend lint in `frontend/package.json`
+- [X] T092 Run frontend typecheck in `frontend/package.json`
+- [X] T093 Run frontend build in `frontend/package.json`
+- [X] T094 Validate that the F015 migration applies cleanly and document rollback command/output in `specs/015-formas-pagamento-taxas/quickstart.md`
+- [X] T095 Validate sale cancellation with financial records preserves history in `src/Amani.ImportadosERP.Application/Commands/Handlers/CancelarVendaCommandHandler.cs`
+- [X] T096 Validate no frontend critical financial formula is the source of truth in `frontend/src/components/vendas/sale-payment-modal.tsx`
 - [ ] T097 Validate Mobile First layouts and elapsed lookup time for all F015 screens against quickstart scenario 8 in `specs/015-formas-pagamento-taxas/quickstart.md`
-- [ ] T098 Validate existing F013 sale list/detail regressions in `frontend/src/app/vendas/page.tsx`
-- [ ] T099 Validate existing F014 receivable create/edit/delete regressions in `frontend/src/app/financeiro/contas-receber/page.tsx`
-- [ ] T100 Update implementation notes if any validation deviates from plan in `specs/015-formas-pagamento-taxas/quickstart.md`
+- [X] T098 Validate existing F013 sale list/detail regressions in `frontend/src/app/vendas/page.tsx`
+- [X] T099 Validate existing F014 receivable create/edit/delete regressions in `frontend/src/app/financeiro/contas-receber/page.tsx`
+- [X] T100 Update implementation notes if any validation deviates from plan in `specs/015-formas-pagamento-taxas/quickstart.md`
 
 ---
 

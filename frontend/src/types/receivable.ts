@@ -7,6 +7,7 @@ export type ReceivableListItem = {
   vendaId: string | null;
   clienteId: string | null;
   origem: string;
+  formaPagamento?: string | null;
   valorTotal: number;
   totalPago: number;
   saldo: number;
@@ -55,6 +56,8 @@ export type UpdateReceivablePayload = {
 export type RegisterPaymentPayload = {
   valor: number;
   desconto?: number;
+  valorBrutoLiquidado?: number;
+  percentualTaxaOperadora?: number;
 };
 
 export type CreateReceivableResponse = {
