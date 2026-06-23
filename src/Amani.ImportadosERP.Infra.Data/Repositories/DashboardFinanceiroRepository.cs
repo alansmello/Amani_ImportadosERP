@@ -70,7 +70,7 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
     {
         return await _db.Despesas
             .AsNoTracking()
-            .Where(d => d.Data >= dataInicial && d.Data <= dataFinal)
+            .Where(d => d.DataCompetencia >= dataInicial && d.DataCompetencia <= dataFinal)
             .SumAsync(d => d.Valor);
     }
 

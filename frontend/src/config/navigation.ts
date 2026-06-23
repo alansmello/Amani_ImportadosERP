@@ -3,6 +3,7 @@ import {
   Boxes,
   ClipboardList,
   CreditCard,
+  ReceiptText,
   Percent,
   Home,
   MoreHorizontal,
@@ -96,6 +97,16 @@ export const navigationItems = [
     href: routes.contasReceber,
     icon: CreditCard,
     desktopVisible: true,
+    mobileVisible: false,
+    group: "more",
+    status: "ready"
+  },
+  {
+    id: "despesas",
+    label: "Despesas",
+    href: routes.despesas,
+    icon: ReceiptText,
+    desktopVisible: false,
     mobileVisible: false,
     group: "more",
     status: "ready"

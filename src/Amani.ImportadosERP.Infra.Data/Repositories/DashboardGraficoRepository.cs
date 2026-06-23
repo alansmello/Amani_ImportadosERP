@@ -121,7 +121,7 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
                 join categoria in _db.CategoriaDespesas.AsNoTracking()
                     on despesa.CategoriaDespesaId equals categoria.Id into categorias
                 from categoria in categorias.DefaultIfEmpty()
-                where despesa.Data >= dataInicial && despesa.Data <= dataFinal
+                where despesa.DataCompetencia >= dataInicial && despesa.DataCompetencia <= dataFinal
                 select new
                 {
                     Categoria = categoria != null ? categoria.Nome : "Sem categoria",

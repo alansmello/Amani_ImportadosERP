@@ -28,22 +28,31 @@ public class DespesaRepository : IDespesaRepository
     public async Task<Despesa?> ObterPorIdAsync(Guid id)
     {
         if (id == Guid.Empty) return null;
-        return await _db.Despesas.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
+        return await _db.Despesas
+            .AsNoTracking()
+            .Include(d => d.CategoriaDespesa)
+            .FirstOrDefaultAsync(d => d.Id == id);
     }
 
     public async Task<List<Despesa>> ObterComFiltrosAsync(DateTime? dataInicio, DateTime? dataFim, Guid? categoriaId)
     {
-        var query = _db.Despesas.AsNoTracking().AsQueryable();
+        var query = _db.Despesas
+            .AsNoTracking()
+            .Include(d => d.CategoriaDespesa)
+            .AsQueryable();
 
         if (dataInicio.HasValue)
-            query = query.Where(d => d.Data >= dataInicio.Value);
+            query = query.Where(d => d.DataCompetencia >= dataInicio.Value);
 
         if (dataFim.HasValue)
-            query = query.Where(d => d.Data <= dataFim.Value);
+            query = query.Where(d => d.DataCompetencia <= dataFim.Value);
 
         if (categoriaId.HasValue)
             query = query.Where(d => d.CategoriaDespesaId == categoriaId.Value);
 
-        return await query.ToListAsync();
+        return await query
+            .OrderByDescending(d => d.DataCompetencia)
+            .ThenBy(d => d.Descricao)
+            .ToListAsync();
     }
 }

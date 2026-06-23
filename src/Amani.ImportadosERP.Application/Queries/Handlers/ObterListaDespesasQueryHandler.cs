@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -29,10 +28,13 @@ public sealed class ObterListaDespesasQueryHandler : IRequestHandler<ObterListaD
         return despesas.Select(d => new DespesaListDto
         {
             Id = d.Id,
-            Data = d.Data,
+            DataCompetencia = d.DataCompetencia,
             Valor = d.Valor,
             Descricao = d.Descricao,
-            CategoriaId = d.CategoriaDespesaId
+            CategoriaId = d.CategoriaDespesaId,
+            CategoriaNome = d.CategoriaDespesa?.Nome ?? "Categoria nao encontrada",
+            CategoriaAtiva = d.CategoriaDespesa?.Ativa ?? false,
+            FormaPagamento = d.FormaPagamento
         }).ToList();
     }
 }

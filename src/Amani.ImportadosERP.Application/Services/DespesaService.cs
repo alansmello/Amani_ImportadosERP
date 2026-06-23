@@ -17,7 +17,13 @@ public class DespesaService
 
     public async Task<Guid> CreateAsync(CriarDespesaDto dto)
     {
-        var despesa = new Despesa(dto.Descricao, dto.Valor, dto.Data ?? DateTime.UtcNow, dto.CategoriaDespesaId);
+        var despesa = new Despesa(
+            dto.Descricao,
+            dto.Valor,
+            dto.DataCompetencia ?? DateTime.UtcNow,
+            dto.CategoriaDespesaId,
+            dto.FormaPagamento
+        );
         await _despesaRepository.AdicionarAsync(despesa);
         return despesa.Id;
     }
