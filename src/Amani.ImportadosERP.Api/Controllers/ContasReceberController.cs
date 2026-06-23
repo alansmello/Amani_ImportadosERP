@@ -45,10 +45,20 @@ public class ContasReceberController : ControllerBase
         var command = new RegistrarPagamentoCommand
         {
             ContaReceberId = id,
-            Valor = dto.Valor
+            Valor = dto.Valor,
+            Desconto = dto.Desconto,
+            ValorBrutoLiquidado = dto.ValorBrutoLiquidado,
+            PercentualTaxaOperadora = dto.PercentualTaxaOperadora
         };
 
-        await _mediator.Send(command);
+        try
+        {
+            await _mediator.Send(command);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
 
         return Ok();
     }

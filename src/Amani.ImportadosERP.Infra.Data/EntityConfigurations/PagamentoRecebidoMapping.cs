@@ -19,6 +19,15 @@ public class PagamentoRecebidoMapping : IEntityTypeConfiguration<PagamentoRecebi
             .IsRequired()
             .HasPrecision(18, 2);
 
+        builder.Property(x => x.Desconto)
+            .IsRequired()
+            .HasPrecision(18, 2)
+            .HasDefaultValue(0m);
+
+        builder.Property(x => x.ValorBrutoLiquidado)
+            .IsRequired()
+            .HasPrecision(18, 2);
+
         builder.Property(x => x.DataPagamento)
             .IsRequired();
     }

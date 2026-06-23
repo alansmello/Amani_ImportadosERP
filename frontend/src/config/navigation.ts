@@ -3,6 +3,7 @@ import {
   Boxes,
   ClipboardList,
   CreditCard,
+  Percent,
   Home,
   MoreHorizontal,
   Package,
@@ -105,6 +106,26 @@ export const navigationItems = [
     href: routes.configuracoes,
     icon: Settings,
     desktopVisible: true,
+    mobileVisible: false,
+    group: "more",
+    status: "ready"
+  },
+  {
+    id: "formas-pagamento",
+    label: "Taxas de pagamento",
+    href: routes.configuracoesFormasPagamento,
+    icon: Percent,
+    desktopVisible: false,
+    mobileVisible: false,
+    group: "more",
+    status: "ready"
+  },
+  {
+    id: "despesas-operadora",
+    label: "Taxas operadora",
+    href: routes.despesasOperadora,
+    icon: CreditCard,
+    desktopVisible: false,
     mobileVisible: false,
     group: "more",
     status: "ready"

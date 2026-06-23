@@ -36,7 +36,9 @@ export function useCreateSale() {
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: saleQueryKeys.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.estoque })
+        queryClient.invalidateQueries({ queryKey: queryKeys.estoque }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.financeiro }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.despesasOperadora })
       ]);
     }
   });

@@ -1,6 +1,7 @@
 export const routes = {
   dashboard: "/",
   clientes: "/clientes",
+  clientesNovo: "/clientes/novo",
   fornecedores: "/fornecedores",
   produtos: "/produtos",
   compras: "/compras",
@@ -11,7 +12,9 @@ export const routes = {
   financeiro: "/financeiro",
   contasReceber: "/financeiro/contas-receber",
   contasReceberNova: "/financeiro/contas-receber/nova",
+  despesasOperadora: "/financeiro/despesas-operadora",
   configuracoes: "/configuracoes",
+  configuracoesFormasPagamento: "/configuracoes/formas-pagamento",
   configuracoesImplantacao: "/configuracoes/implantacao"
 } as const;
 

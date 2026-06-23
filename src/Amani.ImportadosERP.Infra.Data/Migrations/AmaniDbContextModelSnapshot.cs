@@ -291,6 +291,38 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.ToTable("compra_item_recebimentos", (string)null);
                 });
 
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ConfiguracaoFormaPagamento", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("AtualizadoEm")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FormaPagamento")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<decimal>("PercentualTaxa")
+                        .HasPrecision(9, 4)
+                        .HasColumnType("numeric(9,4)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormaPagamento")
+                        .IsUnique();
+
+                    b.ToTable("configuracoes_formas_pagamento", (string)null);
+                });
+
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ContaReceber", b =>
                 {
                     b.Property<Guid>("Id")
@@ -362,6 +394,48 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.HasIndex("CategoriaDespesaId");
 
                     b.ToTable("despesas", (string)null);
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.DespesaOperadora", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataRegistro")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FormaPagamento")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<decimal>("PercentualTaxa")
+                        .HasPrecision(9, 4)
+                        .HasColumnType("numeric(9,4)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("ValorBruto")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<decimal>("ValorLiquido")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<Guid>("VendaId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VendaId");
+
+                    b.ToTable("despesas_operadora", (string)null);
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.EstoqueMovimentacao", b =>
@@ -486,10 +560,20 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Property<DateTime>("DataPagamento")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("Desconto")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasDefaultValue(0m);
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<decimal>("ValorBrutoLiquidado")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
@@ -574,6 +658,15 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)")
                         .HasDefaultValue(0m);
+
+                    b.Property<string>("FormaPagamento")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<decimal?>("PercentualTaxaAplicado")
+                        .HasPrecision(9, 4)
+                        .HasColumnType("numeric(9,4)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -703,6 +796,17 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .HasForeignKey("CategoriaDespesaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.DespesaOperadora", b =>
+                {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.Venda", "Venda")
+                        .WithMany()
+                        .HasForeignKey("VendaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Venda");
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.EstoqueMovimentacao", b =>

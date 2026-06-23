@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
@@ -10,12 +9,6 @@ import { SaleForm } from "@/components/vendas/sale-form";
 import { routes } from "@/config/routes";
 
 export default function NovaVendaPage() {
-  const router = useRouter();
-
-  function handleCreated() {
-    router.push(routes.vendas);
-  }
-
   return (
     <main className="space-y-6">
       <PageHeader
@@ -31,7 +24,7 @@ export default function NovaVendaPage() {
         }
       />
 
-      <SaleForm onCreated={handleCreated} />
+      <SaleForm />
     </main>
   );
 }

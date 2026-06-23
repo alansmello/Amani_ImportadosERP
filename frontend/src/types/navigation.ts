@@ -10,6 +10,8 @@ export type NavigationModuleId =
   | "estoque"
   | "financeiro"
   | "configuracoes"
+  | "formas-pagamento"
+  | "despesas-operadora"
   | "mais";
 
 export type NavigationGroup = "main" | "more";

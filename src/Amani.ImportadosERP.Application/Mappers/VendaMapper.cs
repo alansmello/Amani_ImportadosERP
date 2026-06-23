@@ -19,6 +19,8 @@ public static class VendaMapper
             Acrescimo = venda.Acrescimo,
             Total = venda.Total(),
             Lucro = lucro,
+            FormaPagamento = venda.FormaPagamento,
+            PercentualTaxaAplicado = venda.PercentualTaxaAplicado,
             Items = venda.Items.Select(i => new VendaItemResponseDto
             {
                 Id = i.Id,

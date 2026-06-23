@@ -1,3 +1,5 @@
+import type { PaymentMethod } from "./payment-settings";
+
 export type SaleFilters = {
   dataInicio?: string;
   dataFim?: string;
@@ -10,6 +12,7 @@ export type SaleListItem = {
   dataVenda: string;
   totalVenda: number;
   lucro: number;
+  formaPagamento?: PaymentMethod;
 };
 
 export type SaleItem = {
@@ -30,6 +33,8 @@ export type Sale = {
   acrescimo: number;
   total: number;
   lucro: number;
+  formaPagamento?: PaymentMethod;
+  percentualTaxaAplicado?: number | null;
   items: SaleItem[];
 };
 
@@ -46,12 +51,22 @@ export type CreateSalePayload = {
   dataVenda?: string | null;
   desconto: number;
   acrescimo: number;
+  formaPagamento?: PaymentMethod;
+  percentualTaxaOverride?: number | null;
   items: CreateSaleItemPayload[];
 };
 
 export type CreateSaleResponse = {
   id: string;
   lucro: number;
+  formaPagamento?: PaymentMethod;
+  statusFinanceiro?: string;
+  contaReceberId?: string | null;
+  valorBruto?: number;
+  valorLiquido?: number;
+  percentualTaxaAplicado?: number | null;
+  despesaOperadoraId?: string | null;
+  mensagemFinanceira?: string | null;
 };
 
 export type SaleItemDraft = {

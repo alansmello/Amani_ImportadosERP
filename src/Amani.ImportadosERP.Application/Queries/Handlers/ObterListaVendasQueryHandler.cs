@@ -51,7 +51,8 @@ public sealed class ObterListaVendasQueryHandler : IRequestHandler<ObterListaVen
                 ClienteId = venda.ClienteId,
                 DataVenda = venda.DataVenda,
                 TotalVenda = totalVenda,
-                Lucro = lucroTotal
+                Lucro = lucroTotal,
+                FormaPagamento = venda.FormaPagamento
             });
         }
 
