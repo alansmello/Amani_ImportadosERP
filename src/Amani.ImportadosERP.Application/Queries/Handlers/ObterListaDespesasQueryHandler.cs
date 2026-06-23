@@ -20,8 +20,8 @@ public sealed class ObterListaDespesasQueryHandler : IRequestHandler<ObterListaD
     public async Task<List<DespesaListDto>> Handle(ObterListaDespesasQuery request, CancellationToken cancellationToken)
     {
         var despesas = await _despesaRepository.ObterComFiltrosAsync(
-            request.DataInicio,
-            request.DataFim,
+            request.DataCompetenciaInicio,
+            request.DataCompetenciaFim,
             request.CategoriaId
         );
 

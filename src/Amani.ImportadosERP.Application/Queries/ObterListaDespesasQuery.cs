@@ -7,7 +7,7 @@ namespace Amani.ImportadosERP.Application.Queries;
 
 public sealed class ObterListaDespesasQuery : IRequest<List<DespesaListDto>>
 {
-    public DateTime? DataInicio { get; set; }
-    public DateTime? DataFim { get; set; }
+    public DateTime? DataCompetenciaInicio { get; set; }
+    public DateTime? DataCompetenciaFim { get; set; }
     public Guid? CategoriaId { get; set; }
 }

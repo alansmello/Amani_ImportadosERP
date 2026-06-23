@@ -72,14 +72,14 @@
 
 **Independent Test**: Create expenses in different categories and dates, filter by month/category, and verify only matching rows appear within 30 seconds.
 
-- [ ] T035 [US3] Update `ObterListaDespesasQuery` with `DataCompetencia` naming and category filter semantics in `src/Amani.ImportadosERP.Application/Queries/ObterListaDespesasQuery.cs`
-- [ ] T036 [US3] Update `ObterListaDespesasQueryHandler` to return category name, category active flag, and payment method in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterListaDespesasQueryHandler.cs`
-- [ ] T037 [US3] Update `DespesasController` list action to reject invalid date ranges and filter by competence/occurrence date in `src/Amani.ImportadosERP.Api/Controllers/DespesasController.cs`
-- [ ] T038 [P] [US3] Create expense filters component in `frontend/src/components/financeiro/expense-filters.tsx`
-- [ ] T039 [P] [US3] Create expenses list component in `frontend/src/components/financeiro/expenses-list.tsx`
-- [ ] T040 [US3] Create expenses list route in `frontend/src/app/financeiro/despesas/page.tsx`
-- [ ] T041 [US3] Connect backend filters to frontend query params and React Query keys in `frontend/src/hooks/use-expenses.ts` and `frontend/src/services/expenses.ts`
-- [ ] T042 [US3] Add empty, loading, retryable error, and clear-filter states in `frontend/src/components/financeiro/expenses-list.tsx` and `frontend/src/components/financeiro/expense-filters.tsx`
+- [X] T035 [US3] Update `ObterListaDespesasQuery` with `DataCompetencia` naming and category filter semantics in `src/Amani.ImportadosERP.Application/Queries/ObterListaDespesasQuery.cs`
+- [X] T036 [US3] Update `ObterListaDespesasQueryHandler` to return category name, category active flag, and payment method in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterListaDespesasQueryHandler.cs`
+- [X] T037 [US3] Update `DespesasController` list action to reject invalid date ranges and filter by competence/occurrence date in `src/Amani.ImportadosERP.Api/Controllers/DespesasController.cs`
+- [X] T038 [P] [US3] Create expense filters component in `frontend/src/components/financeiro/expense-filters.tsx`
+- [X] T039 [P] [US3] Create expenses list component in `frontend/src/components/financeiro/expenses-list.tsx`
+- [X] T040 [US3] Create expenses list route in `frontend/src/app/financeiro/despesas/page.tsx`
+- [X] T041 [US3] Connect backend filters to frontend query params and React Query keys in `frontend/src/hooks/use-expenses.ts` and `frontend/src/services/expenses.ts`
+- [X] T042 [US3] Add empty, loading, retryable error, and clear-filter states in `frontend/src/components/financeiro/expenses-list.tsx` and `frontend/src/components/financeiro/expense-filters.tsx`
 
 ## Phase 6: User Story 4 - Refletir despesas no financeiro gerencial (Priority: P3)
 
@@ -87,12 +87,12 @@
 
 **Independent Test**: Create an operational expense in a known period and verify financial views include it in expense totals without merging it into operator expense listings.
 
-- [ ] T043 [US4] Identify current dashboard/financial expense aggregation paths in `src/Amani.ImportadosERP.Application/Queries/` and `src/Amani.ImportadosERP.Infra.Data/Repositories/`
-- [ ] T044 [US4] Map exact financial/dashboard query handlers that consume expense totals in `src/Amani.ImportadosERP.Application/Queries/Handlers/`
-- [ ] T045 [US4] Update the mapped financial/dashboard query handlers to include operational expenses by `DataCompetencia` in `src/Amani.ImportadosERP.Application/Queries/Handlers/`
-- [ ] T046 [US4] Ensure operator expenses remain separate from operational expenses in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDespesasOperadoraQueryHandler.cs` and `src/Amani.ImportadosERP.Api/Controllers/DespesasOperadoraController.cs`
-- [ ] T047 [US4] Update frontend financial/dashboard data types if expense totals changed in `frontend/src/types/` and `frontend/src/services/dashboard.ts`
-- [ ] T048 [US4] Validate frontend financial/dashboard rendering after operational expense creation in `frontend/src/app/page.tsx` and `frontend/src/app/financeiro/page.tsx`
+- [X] T043 [US4] Identify current dashboard/financial expense aggregation paths in `src/Amani.ImportadosERP.Application/Queries/` and `src/Amani.ImportadosERP.Infra.Data/Repositories/`
+- [X] T044 [US4] Map exact financial/dashboard query handlers that consume expense totals in `src/Amani.ImportadosERP.Application/Queries/Handlers/`
+- [X] T045 [US4] Update the mapped financial/dashboard query handlers to include operational expenses by `DataCompetencia` in `src/Amani.ImportadosERP.Application/Queries/Handlers/`
+- [X] T046 [US4] Ensure operator expenses remain separate from operational expenses in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDespesasOperadoraQueryHandler.cs` and `src/Amani.ImportadosERP.Api/Controllers/DespesasOperadoraController.cs`
+- [X] T047 [US4] Update frontend financial/dashboard data types if expense totals changed in `frontend/src/types/` and `frontend/src/services/dashboard.ts`
+- [X] T048 [US4] Validate frontend financial/dashboard rendering after operational expense creation in `frontend/src/app/page.tsx` and `frontend/src/app/financeiro/page.tsx`
 
 ## Final Phase: Polish & Cross-Cutting Concerns
 

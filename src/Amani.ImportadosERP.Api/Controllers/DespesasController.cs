@@ -50,6 +50,11 @@ public class DespesasController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] Guid? categoriaId)
     {
+        if (dataInicio.HasValue && dataFim.HasValue && dataInicio.Value.Date > dataFim.Value.Date)
+        {
+            return BadRequest(new { error = "Periodo invalido: dataInicio deve ser menor ou igual a dataFim." });
+        }
+
         DateTime? dataInicioUtc = dataInicio.HasValue
             ? new DateTime(
                 dataInicio.Value.Year,
@@ -72,8 +77,8 @@ public class DespesasController : ControllerBase
 
         var query = new ObterListaDespesasQuery
         {
-            DataInicio = dataInicioUtc,
-            DataFim = dataFimUtc,
+            DataCompetenciaInicio = dataInicioUtc,
+            DataCompetenciaFim = dataFimUtc,
             CategoriaId = categoriaId
         };
 
