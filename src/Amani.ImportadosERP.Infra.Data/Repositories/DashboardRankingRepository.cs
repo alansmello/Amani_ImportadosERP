@@ -142,6 +142,42 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
             .ToList();
     }
 
+    public async Task<IReadOnlyCollection<RankingClienteDto>> ObterClientesMaisValiososAsync(
+        DateTime dataInicial,
+        DateTime dataFinal,
+        int limite)
+    {
+        var vendas = await VendasConfirmadasNoPeriodo(dataInicial, dataFinal)
+            .Include(v => v.Items)
+            .ToListAsync();
+
+        var agregados = vendas
+            .GroupBy(v => v.ClienteId)
+            .Select(g => new RankingClienteAgregado(
+                g.Key,
+                g.Count(),
+                g.Sum(v => v.Total())))
+            .ToList();
+
+        var clientes = await ObterClientesAsync(agregados.Select(a => a.ClienteId).ToList());
+
+        return agregados
+            .Select(a => CriarRankingCliente(
+                "ClientesMaiorFaturamento",
+                a.ClienteId,
+                ObterNomeCliente(clientes, a.ClienteId),
+                a.Quantidade,
+                a.ValorFinanceiro,
+                "ValorFinanceiroDescQuantidadeDescNomeAscIdAsc"))
+            .OrderByDescending(r => r.ValorFinanceiro ?? 0m)
+            .ThenByDescending(r => r.Quantidade)
+            .ThenBy(r => r.ClienteNome)
+            .ThenBy(r => r.ClienteId)
+            .Take(limite)
+            .Select((r, index) => ComPosicao(r, index + 1))
+            .ToList();
+    }
+
     private IQueryable<Venda> VendasConfirmadasNoPeriodo(DateTime dataInicial, DateTime dataFinal)
     {
         return _db.Vendas
@@ -163,6 +199,20 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
             .Where(p => produtoIds.Contains(p.Id))
             .Select(p => new ProdutoResumo(p.Id, p.Nome))
             .ToDictionaryAsync(p => p.Id);
+    }
+
+    private async Task<IReadOnlyDictionary<Guid, ClienteResumo>> ObterClientesAsync(IReadOnlyCollection<Guid> clienteIds)
+    {
+        if (!clienteIds.Any())
+        {
+            return new Dictionary<Guid, ClienteResumo>();
+        }
+
+        return await _db.Clientes
+            .AsNoTracking()
+            .Where(c => clienteIds.Contains(c.Id))
+            .Select(c => new ClienteResumo(c.Id, c.Nome))
+            .ToDictionaryAsync(c => c.Id);
     }
 
     private async Task<IReadOnlyDictionary<Guid, decimal>> ObterCustosMediosAsync(
@@ -284,6 +334,31 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
         return ranking;
     }
 
+    private static RankingClienteDto CriarRankingCliente(
+        string tipoRanking,
+        Guid clienteId,
+        string clienteNome,
+        int quantidade,
+        decimal? valorFinanceiro,
+        string criterioOrdenacao)
+    {
+        return new RankingClienteDto
+        {
+            TipoRanking = tipoRanking,
+            ClienteId = clienteId,
+            ClienteNome = clienteNome,
+            Quantidade = quantidade,
+            ValorFinanceiro = valorFinanceiro,
+            CriterioOrdenacao = criterioOrdenacao
+        };
+    }
+
+    private static RankingClienteDto ComPosicao(RankingClienteDto ranking, int posicao)
+    {
+        ranking.Posicao = posicao;
+        return ranking;
+    }
+
     private static string ObterNomeProduto(IReadOnlyDictionary<Guid, ProdutoResumo> produtos, Guid produtoId)
     {
         return produtos.TryGetValue(produtoId, out var produto)
@@ -291,6 +366,15 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
             : produtoId.ToString();
     }
 
+    private static string ObterNomeCliente(IReadOnlyDictionary<Guid, ClienteResumo> clientes, Guid clienteId)
+    {
+        return clientes.TryGetValue(clienteId, out var cliente)
+            ? cliente.Nome
+            : clienteId.ToString();
+    }
+
     private sealed record RankingAgregado(Guid ProdutoId, int Quantidade, decimal ValorFinanceiro);
     private sealed record ProdutoResumo(Guid Id, string Nome);
+    private sealed record RankingClienteAgregado(Guid ClienteId, int Quantidade, decimal ValorFinanceiro);
+    private sealed record ClienteResumo(Guid Id, string Nome);
 }
