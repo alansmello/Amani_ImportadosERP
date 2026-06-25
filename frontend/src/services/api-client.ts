@@ -1,4 +1,8 @@
 import { ApiError, getApiErrorMessageFromBody } from "@/services/errors";
+import {
+  clearStoredAuthSession,
+  refreshStoredAuthSessionIdleExpiration
+} from "@/services/auth-storage";
 import type { ApiRequestOptions } from "@/types/api";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
@@ -52,6 +56,11 @@ export async function apiClient<TData>(
     requestHeaders.set("Content-Type", "application/json");
   }
 
+  const session = refreshStoredAuthSessionIdleExpiration();
+  if (session && !requestHeaders.has("Authorization")) {
+    requestHeaders.set("Authorization", `${session.tokenType} ${session.accessToken}`);
+  }
+
   const response = await fetch(buildUrl(path), {
     ...init,
     headers: requestHeaders,
@@ -62,6 +71,13 @@ export async function apiClient<TData>(
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      clearStoredAuthSession();
+      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+        window.location.assign("/login");
+      }
+    }
+
     throw new ApiError({
       status: response.status,
       message: await parseErrorMessage(response)
