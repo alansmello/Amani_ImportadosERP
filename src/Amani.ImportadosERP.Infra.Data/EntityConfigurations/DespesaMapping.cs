@@ -11,10 +11,17 @@ public class DespesaMapping : IEntityTypeConfiguration<Despesa>
         builder.ToTable("despesas");
         builder.HasKey(d => d.Id);
         builder.Property(d => d.Descricao).IsRequired().HasMaxLength(250);
-        builder.Property(d => d.Valor).IsRequired().HasPrecision(18,2);
-        builder.Property(d => d.Data).IsRequired();
+        builder.Property(d => d.Valor).IsRequired().HasPrecision(18, 2);
+        builder.Property(d => d.DataCompetencia).IsRequired();
         builder.Property(d => d.CategoriaDespesaId).IsRequired();
+        builder.Property(d => d.FormaPagamento)
+            .IsRequired()
+            .HasConversion<string>()
+            .HasMaxLength(30);
 
-        builder.HasOne<CategoriaDespesa>().WithMany().HasForeignKey(d => d.CategoriaDespesaId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(d => d.CategoriaDespesa)
+            .WithMany()
+            .HasForeignKey(d => d.CategoriaDespesaId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

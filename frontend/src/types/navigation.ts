@@ -9,6 +9,7 @@ export type NavigationModuleId =
   | "vendas"
   | "estoque"
   | "financeiro"
+  | "despesas"
   | "configuracoes"
   | "formas-pagamento"
   | "despesas-operadora"

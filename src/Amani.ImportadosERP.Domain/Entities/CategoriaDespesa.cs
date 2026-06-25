@@ -6,19 +6,60 @@ namespace Amani.ImportadosERP.Domain.Entities;
 public sealed class CategoriaDespesa : BaseEntity
 {
     public string Nome { get; private set; }
+    public string NomeNormalizado { get; private set; }
+    public string? Descricao { get; private set; }
+    public bool Ativa { get; private set; }
 
-    public CategoriaDespesa(string nome)
+    public CategoriaDespesa(string nome, string? descricao = null)
     {
-        if (string.IsNullOrWhiteSpace(nome)) throw new ArgumentException("Nome é obrigatório", nameof(nome));
-        Nome = nome.Trim();
+        Nome = NormalizarNomeObrigatorio(nome);
+        NomeNormalizado = NormalizarNomeParaComparacao(Nome);
+        Descricao = NormalizarDescricao(descricao);
+        Ativa = true;
     }
 
-    protected CategoriaDespesa() { }
+    protected CategoriaDespesa()
+    {
+        Nome = string.Empty;
+        NomeNormalizado = string.Empty;
+        Ativa = true;
+    }
+
+    public void Atualizar(string nome, string? descricao = null)
+    {
+        Nome = NormalizarNomeObrigatorio(nome);
+        NomeNormalizado = NormalizarNomeParaComparacao(Nome);
+        Descricao = NormalizarDescricao(descricao);
+        Touch();
+    }
 
     public void AtualizarNome(string nome)
     {
-        if (string.IsNullOrWhiteSpace(nome)) throw new ArgumentException("Nome é obrigatório", nameof(nome));
-        Nome = nome.Trim();
+        Atualizar(nome, Descricao);
+    }
+
+    public void Inativar()
+    {
+        if (!Ativa) return;
+        Ativa = false;
         Touch();
+    }
+
+    private static string NormalizarNomeObrigatorio(string nome)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new ArgumentException("Nome e obrigatorio", nameof(nome));
+
+        return nome.Trim();
+    }
+
+    public static string NormalizarNomeParaComparacao(string nome)
+    {
+        return NormalizarNomeObrigatorio(nome).ToUpperInvariant();
+    }
+
+    private static string? NormalizarDescricao(string? descricao)
+    {
+        return string.IsNullOrWhiteSpace(descricao) ? null : descricao.Trim();
     }
 }

@@ -50,10 +50,24 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("Ativa")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
                     b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("NomeNormalizado")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
@@ -62,6 +76,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NomeNormalizado")
+                        .IsUnique();
 
                     b.ToTable("categoria_despesas", (string)null);
                 });
@@ -374,13 +391,18 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("Data")
+                    b.Property<DateTime>("DataCompetencia")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
+
+                    b.Property<string>("FormaPagamento")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -791,11 +813,13 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.Despesa", b =>
                 {
-                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CategoriaDespesa", null)
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CategoriaDespesa", "CategoriaDespesa")
                         .WithMany()
                         .HasForeignKey("CategoriaDespesaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("CategoriaDespesa");
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.DespesaOperadora", b =>

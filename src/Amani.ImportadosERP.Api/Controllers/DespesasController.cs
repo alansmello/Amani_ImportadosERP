@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Amani.ImportadosERP.Application.Commands;
+using Amani.ImportadosERP.Application.DTOs;
 using Amani.ImportadosERP.Application.Queries;
 
 namespace Amani.ImportadosERP.Api.Controllers;
@@ -19,17 +20,41 @@ public class DespesasController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CriarDespesaCommand command)
+    public async Task<IActionResult> Create([FromBody] CriarDespesaDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var id = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetAll), new { id }, new { id });
+        try
+        {
+            var id = await _mediator.Send(new CriarDespesaCommand
+            {
+                DataCompetencia = dto.DataCompetencia ?? DateTime.UtcNow,
+                Valor = dto.Valor,
+                Descricao = dto.Descricao,
+                CategoriaDespesaId = dto.CategoriaDespesaId,
+                FormaPagamento = dto.FormaPagamento
+            });
+
+            return CreatedAtAction(nameof(GetAll), new { id }, new { id });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] Guid? categoriaId)
     {
+        if (dataInicio.HasValue && dataFim.HasValue && dataInicio.Value.Date > dataFim.Value.Date)
+        {
+            return BadRequest(new { error = "Periodo invalido: dataInicio deve ser menor ou igual a dataFim." });
+        }
+
         DateTime? dataInicioUtc = dataInicio.HasValue
             ? new DateTime(
                 dataInicio.Value.Year,
@@ -52,8 +77,8 @@ public class DespesasController : ControllerBase
 
         var query = new ObterListaDespesasQuery
         {
-            DataInicio = dataInicioUtc,
-            DataFim = dataFimUtc,
+            DataCompetenciaInicio = dataInicioUtc,
+            DataCompetenciaFim = dataFimUtc,
             CategoriaId = categoriaId
         };
 
