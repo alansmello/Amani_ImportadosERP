@@ -26,10 +26,10 @@
 
 **Purpose**: Prepare dependencies and shared feature structure.
 
-- [ ] T001 Add `recharts` dependency to `frontend/package.json` and update `frontend/package-lock.json`
-- [ ] T002 [P] Create dashboard component barrel or folder baseline in `frontend/src/components/dashboard/`
-- [ ] T003 [P] Confirm `queryKeys.dashboard` remains available for dashboard queries in `frontend/src/lib/query-client.ts`
-- [ ] T004 [P] Verify Recharts dependency rationale is preserved in `specs/017-dashboard-gerencial-financeiro/research.md` and referenced in `specs/017-dashboard-gerencial-financeiro/plan.md`
+- [X] T001 Add `recharts` dependency to `frontend/package.json` and update `frontend/package-lock.json`
+- [X] T002 [P] Create dashboard component barrel or folder baseline in `frontend/src/components/dashboard/`
+- [X] T003 [P] Confirm `queryKeys.dashboard` remains available for dashboard queries in `frontend/src/lib/query-client.ts`
+- [X] T004 [P] Verify Recharts dependency rationale is preserved in `specs/017-dashboard-gerencial-financeiro/research.md` and referenced in `specs/017-dashboard-gerencial-financeiro/plan.md`
 
 ---
 
@@ -39,15 +39,15 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T005 Create dashboard DTO and filter types in `frontend/src/types/dashboard.ts`
-- [ ] T006 Implement period query serialization helpers for month/year/range filters in `frontend/src/services/dashboard.ts`
-- [ ] T007 Implement dashboard service methods for `/api/dashboard-gerencial/financeiro`, `/api/dashboard-gerencial/operacional`, `/api/dashboard-gerencial/rankings`, `/api/dashboard-gerencial/alertas`, `/api/dashboard-gerencial/graficos`, and `/api/dashboard-financeiro` in `frontend/src/services/dashboard.ts`
-- [ ] T008 Implement stable dashboard query keys by normalized period and section in `frontend/src/hooks/use-dashboard.ts`
-- [ ] T009 Implement React Query hooks for financial KPIs, operational summary, rankings, alerts, graph series, and financial snapshot in `frontend/src/hooks/use-dashboard.ts`
-- [ ] T010 [P] Implement currency, date, quantity, severity, and label formatters without metric formulas in `frontend/src/components/dashboard/dashboard-formatters.ts`
-- [ ] T011 [P] Implement reusable loading, empty, error, and incomplete-data section states in `frontend/src/components/dashboard/dashboard-section-state.tsx`
-- [ ] T012 Validate contract field names against backend DTOs in `src/Amani.ImportadosERP.Application/DTOs/DashboardFinanceiroDto.cs` and `src/Amani.ImportadosERP.Application/DTOs/Dashboards/*.cs`
-- [ ] T013 Validate dashboard endpoint paths and supported filters against `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs` and `src/Amani.ImportadosERP.Api/Controllers/DashboardFinanceiroController.cs`
+- [X] T005 Create dashboard DTO and filter types in `frontend/src/types/dashboard.ts`
+- [X] T006 Implement period query serialization helpers for month/year/range filters in `frontend/src/services/dashboard.ts`
+- [X] T007 Implement dashboard service methods for `/api/dashboard-gerencial/financeiro`, `/api/dashboard-gerencial/operacional`, `/api/dashboard-gerencial/rankings`, `/api/dashboard-gerencial/alertas`, `/api/dashboard-gerencial/graficos`, and `/api/dashboard-financeiro` in `frontend/src/services/dashboard.ts`
+- [X] T008 Implement stable dashboard query keys by normalized period and section in `frontend/src/hooks/use-dashboard.ts`
+- [X] T009 Implement React Query hooks for financial KPIs, operational summary, rankings, alerts, graph series, and financial snapshot in `frontend/src/hooks/use-dashboard.ts`
+- [X] T010 [P] Implement currency, date, quantity, severity, and label formatters without metric formulas in `frontend/src/components/dashboard/dashboard-formatters.ts`
+- [X] T011 [P] Implement reusable loading, empty, error, and incomplete-data section states in `frontend/src/components/dashboard/dashboard-section-state.tsx`
+- [X] T012 Validate contract field names against backend DTOs in `src/Amani.ImportadosERP.Application/DTOs/DashboardFinanceiroDto.cs` and `src/Amani.ImportadosERP.Application/DTOs/Dashboards/*.cs`
+- [X] T013 Validate dashboard endpoint paths and supported filters against `src/Amani.ImportadosERP.Api/Controllers/DashboardGerencialController.cs` and `src/Amani.ImportadosERP.Api/Controllers/DashboardFinanceiroController.cs`
 
 **Checkpoint**: Foundation ready. User story implementation can now begin.
 
