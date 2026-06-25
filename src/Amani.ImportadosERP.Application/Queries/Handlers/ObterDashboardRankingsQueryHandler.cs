@@ -47,13 +47,20 @@ public sealed class ObterDashboardRankingsQueryHandler
             filtros.DataReferencia,
             limite);
 
+        var clientesMaiorFaturamento = await _repository.ObterClientesMaisValiososAsync(
+            filtros.DataInicial,
+            filtros.DataFinal,
+            limite);
+
         return new DashboardRankingsDto
         {
             FiltrosAplicados = filtros,
             Rankings = maisVendidos
+                .Cast<object>()
                 .Concat(maisLucrativos.Rankings)
                 .Concat(maiorEstoque)
                 .Concat(menorEstoque)
+                .Concat(clientesMaiorFaturamento)
                 .ToList(),
             Avisos = maisLucrativos.Avisos
         };

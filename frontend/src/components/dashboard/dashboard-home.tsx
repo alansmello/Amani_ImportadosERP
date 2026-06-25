@@ -1,14 +1,17 @@
 "use client";
 
-import { BarChart3, Bell, ListOrdered, PackageCheck } from "lucide-react";
+import { PackageCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { DashboardAlerts } from "@/components/dashboard/dashboard-alerts";
+import { DashboardChartSection } from "@/components/dashboard/dashboard-chart-section";
 import { DashboardKpiGrid } from "@/components/dashboard/dashboard-kpi-grid";
 import {
   formatDashboardDate,
   formatDashboardQuantity
 } from "@/components/dashboard/dashboard-formatters";
 import { DashboardPeriodFilter } from "@/components/dashboard/dashboard-period-filter";
+import { DashboardRankingList } from "@/components/dashboard/dashboard-ranking-list";
 import { DashboardSectionState } from "@/components/dashboard/dashboard-section-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
@@ -221,34 +224,30 @@ export function DashboardHome() {
           isStaleForPeriod={Boolean(operational.data && !operationalMatch)}
           onRetry={() => void operational.refetch()}
         />
-        <SourceStatusCard
-          title="Rankings"
-          description="Consulta oficial preparada para os rankings da proxima etapa."
-          icon={ListOrdered}
-          countLabel="itens retornados"
-          count={rankingsMatch ? rankings.data?.rankings.length : undefined}
+      </section>
+
+      <section className="grid gap-4 desktop:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
+        <DashboardRankingList
+          rankings={rankingsMatch ? rankings.data?.rankings : undefined}
+          notices={rankingsMatch ? rankings.data?.avisos : undefined}
           isLoading={rankings.isLoading}
           isError={rankings.isError}
           isStaleForPeriod={Boolean(rankings.data && !rankingsMatch)}
           onRetry={() => void rankings.refetch()}
         />
-        <SourceStatusCard
-          title="Alertas"
-          description="Fonte de alertas carregada para o periodo aplicado."
-          icon={Bell}
-          countLabel="alertas retornados"
-          count={alertsMatch ? alerts.data?.alertas.length : undefined}
+        <DashboardAlerts
+          alerts={alertsMatch ? alerts.data?.alertas : undefined}
           isLoading={alerts.isLoading}
           isError={alerts.isError}
           isStaleForPeriod={Boolean(alerts.data && !alertsMatch)}
           onRetry={() => void alerts.refetch()}
         />
-        <SourceStatusCard
-          title="Graficos"
-          description="Series oficiais consultadas sem recalcular pontos no cliente."
-          icon={BarChart3}
-          countLabel="series retornadas"
-          count={chartsMatch ? charts.data?.graficos.length : undefined}
+      </section>
+
+      <section>
+        <DashboardChartSection
+          series={chartsMatch ? charts.data?.graficos : undefined}
+          notices={chartsMatch ? charts.data?.avisos : undefined}
           isLoading={charts.isLoading}
           isError={charts.isError}
           isStaleForPeriod={Boolean(charts.data && !chartsMatch)}

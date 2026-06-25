@@ -163,7 +163,7 @@ export type DashboardManagementSummary = {
   filtrosAplicados: DashboardAppliedFilter;
   financeiro?: DashboardFinancialKpis | null;
   operacional?: DashboardOperationalSummary | null;
-  rankings: DashboardProductRanking[];
+  rankings: DashboardRanking[];
   alertas: DashboardAlert[];
   graficos: DashboardChartSeries[];
   avisos: IncompleteDataNotice[];

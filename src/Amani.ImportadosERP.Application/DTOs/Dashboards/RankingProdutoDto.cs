@@ -15,6 +15,6 @@ public sealed class RankingProdutoDto
 public sealed class DashboardRankingsDto
 {
     public DashboardFiltroAplicadoDto FiltrosAplicados { get; set; } = new();
-    public IReadOnlyCollection<RankingProdutoDto> Rankings { get; set; } = Array.Empty<RankingProdutoDto>();
+    public IReadOnlyCollection<object> Rankings { get; set; } = Array.Empty<object>();
     public IReadOnlyCollection<AvisoDadoIncompletoDto> Avisos { get; set; } = Array.Empty<AvisoDadoIncompletoDto>();
 }

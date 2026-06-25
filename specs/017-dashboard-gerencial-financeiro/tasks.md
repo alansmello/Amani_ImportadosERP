@@ -101,17 +101,17 @@
 
 ### Implementation for User Story 3
 
-- [ ] T028 [P] [US3] Create ranking list component grouped by official `tipoRanking` in `frontend/src/components/dashboard/dashboard-ranking-list.tsx`
-- [ ] T029 [P] [US3] Create alerts component with severity, entity, reason, values, and reference date in `frontend/src/components/dashboard/dashboard-alerts.tsx`
-- [ ] T030 [US3] Wire official product rankings data with `limiteRankings` into `frontend/src/components/dashboard/dashboard-ranking-list.tsx`
-- [ ] T031 [US3] Add official customer ranking DTO contract in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/RankingClienteDto.cs`
-- [ ] T032 [US3] Extend dashboard ranking repository interface for customer rankings in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardRankingRepository.cs`
-- [ ] T033 [US3] Implement customer ranking aggregation in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardRankingRepository.cs`
-- [ ] T034 [US3] Extend dashboard ranking query handler to return customer rankings in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardRankingsQueryHandler.cs`
-- [ ] T035 [US3] Render official customer rankings without local derivation in `frontend/src/components/dashboard/dashboard-ranking-list.tsx`
-- [ ] T036 [US3] Wire official alert data and empty-alert state into `frontend/src/components/dashboard/dashboard-alerts.tsx`
-- [ ] T037 [US3] Add rankings and alerts sections to the dashboard home layout in `frontend/src/components/dashboard/dashboard-home.tsx`
-- [ ] T038 [US3] Render ranking and alert incomplete-data notices without changing values in `frontend/src/components/dashboard/dashboard-home.tsx`
+- [X] T028 [P] [US3] Create ranking list component grouped by official `tipoRanking` in `frontend/src/components/dashboard/dashboard-ranking-list.tsx`
+- [X] T029 [P] [US3] Create alerts component with severity, entity, reason, values, and reference date in `frontend/src/components/dashboard/dashboard-alerts.tsx`
+- [X] T030 [US3] Wire official product rankings data with `limiteRankings` into `frontend/src/components/dashboard/dashboard-ranking-list.tsx`
+- [X] T031 [US3] Add official customer ranking DTO contract in `src/Amani.ImportadosERP.Application/DTOs/Dashboards/RankingClienteDto.cs`
+- [X] T032 [US3] Extend dashboard ranking repository interface for customer rankings in `src/Amani.ImportadosERP.Application/Interfaces/IDashboardRankingRepository.cs`
+- [X] T033 [US3] Implement customer ranking aggregation in `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardRankingRepository.cs`
+- [X] T034 [US3] Extend dashboard ranking query handler to return customer rankings in `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardRankingsQueryHandler.cs`
+- [X] T035 [US3] Render official customer rankings without local derivation in `frontend/src/components/dashboard/dashboard-ranking-list.tsx`
+- [X] T036 [US3] Wire official alert data and empty-alert state into `frontend/src/components/dashboard/dashboard-alerts.tsx`
+- [X] T037 [US3] Add rankings and alerts sections to the dashboard home layout in `frontend/src/components/dashboard/dashboard-home.tsx`
+- [X] T038 [US3] Render ranking and alert incomplete-data notices without changing values in `frontend/src/components/dashboard/dashboard-home.tsx`
 
 **Checkpoint**: User Story 3 works with official product/customer rankings and alert data.
 
@@ -125,12 +125,12 @@
 
 ### Implementation for User Story 4
 
-- [ ] T039 [P] [US4] Create chart section component using Recharts primitives in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
-- [ ] T040 [US4] Map `DashboardChartSeries` and `DashboardChartPoint` DTOs to chart props without recalculating totals in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
-- [ ] T041 [US4] Implement responsive chart sizing and tooltip labels for smartphone, tablet, and desktop in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
-- [ ] T042 [US4] Add graph empty state for missing or insufficient `pontos` in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
-- [ ] T043 [US4] Render graph incomplete-data notices from `avisos` in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
-- [ ] T044 [US4] Add graph sections to the dashboard home layout after KPI, ranking, and alert sections in `frontend/src/components/dashboard/dashboard-home.tsx`
+- [X] T039 [P] [US4] Create chart section component using Recharts primitives in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
+- [X] T040 [US4] Map `DashboardChartSeries` and `DashboardChartPoint` DTOs to chart props without recalculating totals in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
+- [X] T041 [US4] Implement responsive chart sizing and tooltip labels for smartphone, tablet, and desktop in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
+- [X] T042 [US4] Add graph empty state for missing or insufficient `pontos` in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
+- [X] T043 [US4] Render graph incomplete-data notices from `avisos` in `frontend/src/components/dashboard/dashboard-chart-section.tsx`
+- [X] T044 [US4] Add graph sections to the dashboard home layout after KPI, ranking, and alert sections in `frontend/src/components/dashboard/dashboard-home.tsx`
 
 **Checkpoint**: All user stories are independently functional.
 

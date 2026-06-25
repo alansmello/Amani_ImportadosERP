@@ -22,4 +22,9 @@ public interface IDashboardRankingRepository
     Task<IReadOnlyCollection<RankingProdutoDto>> ObterProdutosComMenorEstoqueAsync(
         DateTime dataReferencia,
         int limite);
+
+    Task<IReadOnlyCollection<RankingClienteDto>> ObterClientesMaisValiososAsync(
+        DateTime dataInicial,
+        DateTime dataFinal,
+        int limite);
 }
