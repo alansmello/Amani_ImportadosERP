@@ -106,7 +106,7 @@ export const navigationItems = [
     label: "Despesas",
     href: routes.despesas,
     icon: ReceiptText,
-    desktopVisible: false,
+    desktopVisible: true,
     mobileVisible: false,
     group: "more",
     status: "ready"

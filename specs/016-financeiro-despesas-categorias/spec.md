@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-23
 
-**Status**: Draft
+**Status**: Implemented
 
 **Input**: User description: "Feature 016 de docs/roadmap/RoadMap_AmaniERP.md - Financeiro: Despesas + Categorias de Despesa."
 
@@ -99,6 +99,7 @@ Como gestor da Amani, quero que despesas lancadas e categorizadas estejam dispon
 
 ### Functional Requirements
 
+- **FR-000**: The Finance area MUST expose access to operational expenses through the `/financeiro` hub, desktop navigation entry "Despesas", and direct routes for list, create, and category management.
 - **FR-001**: System MUST allow users to create expense categories with name, optional description and active status.
 - **FR-002**: System MUST allow users to list expense categories, distinguishing categories available for new operational expense classification from inactive categories retained for history.
 - **FR-003**: System MUST allow users to view the details of a single expense category.

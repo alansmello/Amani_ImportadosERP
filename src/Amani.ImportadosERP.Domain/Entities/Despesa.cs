@@ -34,7 +34,7 @@ public sealed class Despesa : BaseEntity
 
         Descricao = descricao.Trim();
         Valor = valor;
-        DataCompetencia = dataCompetencia == default ? DateTime.UtcNow : dataCompetencia;
+        DataCompetencia = NormalizarDataCompetencia(dataCompetencia);
         CategoriaDespesaId = categoriaDespesaId;
         FormaPagamento = formaPagamento;
     }
@@ -59,5 +59,11 @@ public sealed class Despesa : BaseEntity
             or FormaPagamento.PIX
             or FormaPagamento.CartaoDebito
             or FormaPagamento.CartaoCredito;
+    }
+
+    private static DateTime NormalizarDataCompetencia(DateTime dataCompetencia)
+    {
+        var data = dataCompetencia == default ? DateTime.UtcNow : dataCompetencia;
+        return new DateTime(data.Year, data.Month, data.Day, 0, 0, 0, DateTimeKind.Utc);
     }
 }

@@ -98,15 +98,15 @@
 
 **Purpose**: Validate quality, regressions, responsiveness, and documentation before implementation handoff.
 
-- [ ] T049 [P] Update quickstart implementation notes after validation in `specs/016-financeiro-despesas-categorias/quickstart.md`
-- [ ] T050 Run backend build with `dotnet build Amani_ImportadosERP.sln` for `Amani_ImportadosERP.sln`
-- [ ] T051 Run frontend lint with `npm run lint` from `frontend/` using `frontend/package.json`
-- [ ] T052 Run frontend typecheck with `npm run typecheck` from `frontend/` using `frontend/package.json`
-- [ ] T053 Run frontend production build with `npm run build` from `frontend/` using `frontend/package.json`
-- [ ] T054 Validate quickstart scenarios 1-8 manually using `specs/016-financeiro-despesas-categorias/quickstart.md`
-- [ ] T055 Validate responsive layouts for `/financeiro/despesas`, `/financeiro/despesas/nova`, and `/financeiro/despesas/categorias` at smartphone, tablet, and desktop widths in `frontend/src/app/financeiro/despesas/`
-- [ ] T056 Validate regressions for sales, receivables, stock movement, and operator expenses using `specs/016-financeiro-despesas-categorias/quickstart.md`
-- [ ] T057 Confirm `AGENTS.md` still points to `specs/016-financeiro-despesas-categorias/plan.md`
+- [X] T049 [P] Update quickstart implementation notes after validation in `specs/016-financeiro-despesas-categorias/quickstart.md`
+- [X] T050 Run backend build with `dotnet build Amani_ImportadosERP.sln` for `Amani_ImportadosERP.sln`
+- [X] T051 Run frontend lint with `npm run lint` from `frontend/` using `frontend/package.json`
+- [X] T052 Run frontend typecheck with `npm run typecheck` from `frontend/` using `frontend/package.json`
+- [X] T053 Run frontend production build with `npm run build` from `frontend/` using `frontend/package.json`
+- [X] T054 Validate quickstart scenarios 1-8 manually using `specs/016-financeiro-despesas-categorias/quickstart.md`
+- [X] T055 Validate responsive layouts for `/financeiro/despesas`, `/financeiro/despesas/nova`, and `/financeiro/despesas/categorias` at smartphone, tablet, and desktop widths in `frontend/src/app/financeiro/despesas/`
+- [X] T056 Validate regressions for sales, receivables, stock movement, and operator expenses using `specs/016-financeiro-despesas-categorias/quickstart.md`
+- [X] T057 Confirm `AGENTS.md` still points to `specs/016-financeiro-despesas-categorias/plan.md`
 
 ## Dependencies & Execution Order
 

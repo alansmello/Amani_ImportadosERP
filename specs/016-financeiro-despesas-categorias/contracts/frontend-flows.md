@@ -2,13 +2,17 @@
 
 ## Routes
 
+- `/financeiro`: finance hub with cards for receivables, operational expenses,
+  and operator fees.
 - `/financeiro/despesas`: list operational expenses with filters.
 - `/financeiro/despesas/nova`: create operational expense.
 - `/financeiro/despesas/categorias`: manage expense categories.
 
 ## Navigation
 
-- Finance module must expose an entry for "Despesas".
+- Finance module must expose an entry for "Despesas" in desktop navigation.
+- Finance hub must expose a card for "Despesas".
+- Mobile navigation must keep "Despesas" reachable from the "Mais" menu.
 - Category management should be reachable from the expenses flow without forcing
   the user to leave the finance context.
 

@@ -151,10 +151,12 @@ src/Amani.ImportadosERP.Infra.Data/
 
 frontend/src/
 |-- app/
-|   `-- financeiro/despesas/
-|       |-- page.tsx                          # lista/filtros
-|       |-- nova/page.tsx                     # criar despesa
-|       `-- categorias/page.tsx               # gerir categorias
+|   `-- financeiro/
+|       |-- page.tsx                          # hub financeiro
+|       `-- despesas/
+|           |-- page.tsx                      # lista/filtros
+|           |-- nova/page.tsx                 # criar despesa
+|           `-- categorias/page.tsx           # gerir categorias
 |-- components/financeiro/
 |   |-- expenses-list.tsx                     # novo
 |   |-- expense-form.tsx                      # novo
@@ -175,7 +177,9 @@ frontend/src/
 **Structure Decision**: Full stack dentro da estrutura existente. Backend segue
 Clean Architecture, com regras em Domain/Application, persistencia em Infra.Data
 e controllers finos. Frontend segue padrao service/hook/type/component das
-features financeiras F014/F015.
+features financeiras F014/F015. A rota `/financeiro` atua como hub de acesso
+para contas a receber, despesas operacionais e taxas de operadora; a feature de
+despesas tambem fica exposta diretamente na navegacao desktop como "Despesas".
 
 ## Phase 0 Research Summary
 

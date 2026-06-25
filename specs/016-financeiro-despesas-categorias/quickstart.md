@@ -27,9 +27,11 @@ npm run build
 
 ## Scenario 1: Create and list expense category
 
-1. Open `/financeiro/despesas/categorias`.
-2. Create category "Frete" with optional description.
-3. Refresh or reopen category management.
+1. Open `/financeiro` and choose "Despesas", or open
+   `/financeiro/despesas/categorias` directly.
+2. From the expenses flow, open "Categorias" when needed.
+3. Create category "Frete" with optional description.
+4. Refresh or reopen category management.
 
 Expected:
 
@@ -63,7 +65,7 @@ Expected:
 
 ## Scenario 4: Create operational expense
 
-1. Open `/financeiro/despesas/nova`.
+1. Open `/financeiro` and choose "Despesas", then "Nova despesa".
 2. Select an active category.
 3. Enter competence/occurrence date, value, description and payment method.
 4. Save.
@@ -89,7 +91,8 @@ Expected:
 ## Scenario 6: Filter expenses by period and category
 
 1. Create expenses in different dates and categories.
-2. Open `/financeiro/despesas`.
+2. Open `/financeiro/despesas` directly or through the "Despesas" card in
+   `/financeiro`.
 3. Filter by a selected month and category.
 
 Expected:
@@ -132,3 +135,23 @@ Expected:
 - `/financeiro/despesas-operadora` still works and remains separate.
 - Existing dashboard financial totals still load.
 - Existing sales, receivables and stock flows remain unchanged.
+
+## Implementation validation notes
+
+Validated on 2026-06-23:
+
+- EF migration `20260623233055_AddDespesasCategorias` was applied to the local
+  PostgreSQL database `amani_db` on `localhost:5433`.
+- Backend build: `dotnet build Amani_ImportadosERP.sln` completed successfully.
+- Frontend lint: `npm run lint` completed successfully.
+- Frontend typecheck: `npm run typecheck` completed successfully.
+- Frontend production build: `npm run build` completed successfully and emitted
+  the routes `/financeiro`, `/financeiro/despesas`,
+  `/financeiro/despesas/nova`, and `/financeiro/despesas/categorias`.
+- Access to the feature was exposed through the desktop sidebar item
+  "Despesas" and the `/financeiro` hub card.
+- Responsive layout review was performed against the implemented components for
+  smartphone, tablet, and desktop breakpoints using mobile-first grids, wrapped
+  actions, overflow-safe tables, and constrained form fields.
+- Manual end-to-end scenarios require backend API, frontend app, and database
+  with migrations applied.
