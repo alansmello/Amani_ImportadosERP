@@ -136,3 +136,7 @@ Expected:
 - Auditoria visual: a home usa grids responsivos para 360px, 768px e 1280px,
   preserva Dark Theme por tokens locais e evita sobreposicao com `min-w-0`,
   `break-words`, alturas estaveis de grafico e eixos compactos do Recharts.
+- Correcao de alertas operacionais: `EstoqueBaixo` exibe `valorAtual` e
+  `limiteAplicado` como quantidades em unidades, sem `R$`; alertas de dias e
+  ocorrencias usam a unidade textual correspondente. A alteracao e apenas de
+  formatacao visual e nao altera os valores oficiais retornados pela API.

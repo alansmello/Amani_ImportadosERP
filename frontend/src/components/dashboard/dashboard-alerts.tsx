@@ -6,6 +6,7 @@ import {
   formatDashboardCurrency,
   formatDashboardDateTime,
   formatDashboardLabel,
+  formatDashboardQuantity,
   formatDashboardSeverity
 } from "@/components/dashboard/dashboard-formatters";
 import { DashboardSectionState } from "@/components/dashboard/dashboard-section-state";
@@ -39,6 +40,27 @@ function severityVariant(severity: string) {
   }
 
   return "info";
+}
+
+function formatAlertValue(alert: DashboardAlert, value: number) {
+  const normalizedType = alert.tipoAlerta.toLowerCase();
+
+  if (normalizedType.includes("estoquebaixo")) {
+    return `${formatDashboardQuantity(value)} un.`;
+  }
+
+  if (
+    normalizedType.includes("produtosemmovimentacao") ||
+    normalizedType.includes("compraemtransitoantigo")
+  ) {
+    return `${formatDashboardQuantity(value)} dia(s)`;
+  }
+
+  if (normalizedType.includes("perdarecorrente")) {
+    return `${formatDashboardQuantity(value)} ocorrencia(s)`;
+  }
+
+  return formatDashboardCurrency(value);
 }
 
 export function DashboardAlerts({
@@ -120,8 +142,8 @@ export function DashboardAlerts({
               {alert.motivo}
             </p>
             <div className="mt-3 grid gap-2 text-xs text-text-secondary tablet:grid-cols-3">
-              <span>Atual: {formatDashboardCurrency(alert.valorAtual)}</span>
-              <span>Limite: {formatDashboardCurrency(alert.limiteAplicado)}</span>
+              <span>Atual: {formatAlertValue(alert, alert.valorAtual)}</span>
+              <span>Limite: {formatAlertValue(alert, alert.limiteAplicado)}</span>
               <span>{formatDashboardDateTime(alert.dataReferencia)}</span>
             </div>
           </article>

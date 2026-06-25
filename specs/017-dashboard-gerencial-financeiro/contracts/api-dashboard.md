@@ -139,6 +139,11 @@ UI behavior:
 - Ordenar apenas se o backend nao retornar prioridade visual clara; nesse caso
   usar severidade declarada, sem alterar conteudo ou valores.
 - Ausencia de alertas e estado vazio positivo.
+- `EstoqueBaixo` deve exibir `valorAtual` e `limiteAplicado` como quantidade
+  de unidades, sem prefixo monetario.
+- Alertas operacionais conhecidos que representam dias ou ocorrencias devem
+  formatar somente a unidade visual correspondente; a UI nao recalcula os
+  valores retornados pela API.
 
 ## GET /api/dashboard-gerencial/graficos
 
