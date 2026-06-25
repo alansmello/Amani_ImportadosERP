@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Amani.ImportadosERP.Application.Interfaces;
 using MediatR;
+using Amani.ImportadosERP.Infra.IoC.Services;
 
 namespace Amani.ImportadosERP.Infra.IoC;
 
@@ -38,9 +39,14 @@ public static class DependencyInjection
         services.AddScoped<IDashboardRankingRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardRankingRepository>();
         services.AddScoped<IDashboardAlertaRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardAlertaRepository>();
         services.AddScoped<IDashboardGraficoRepository, Amani.ImportadosERP.Infra.Data.Repositories.DashboardGraficoRepository>();
+        services.AddScoped<IUsuarioRepository, Amani.ImportadosERP.Infra.Data.Repositories.UsuarioRepository>();
+        services.AddScoped<IEventoAutenticacaoRepository, Amani.ImportadosERP.Infra.Data.Repositories.EventoAutenticacaoRepository>();
         services.AddScoped<IUnitOfWork, Amani.ImportadosERP.Infra.Data.Repositories.UnitOfWork>();
 
         // Services
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<Amani.ImportadosERP.Application.Services.AuthService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.ClienteService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.FornecedorService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.CategoriaService>();

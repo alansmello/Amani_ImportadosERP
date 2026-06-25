@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
 
 import { mobileNavigationItems, moreNavigationItems } from "@/config/navigation";
+import { routes } from "@/config/routes";
+import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/cn";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -30,6 +34,13 @@ function isMoreActive(pathname: string) {
 
 export function MobileBottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  async function handleLogout() {
+    await logout();
+    router.replace(routes.login);
+  }
 
   return (
     <nav
@@ -91,6 +102,17 @@ export function MobileBottomNav() {
                         </DialogClose>
                       );
                     })}
+                    <DialogClose asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="w-full justify-start px-3"
+                        onClick={handleLogout}
+                      >
+                        <LogOut className="h-4 w-4 shrink-0" aria-hidden />
+                        <span className="truncate">Sair</span>
+                      </Button>
+                    </DialogClose>
                   </div>
                 </DialogContent>
               </Dialog>

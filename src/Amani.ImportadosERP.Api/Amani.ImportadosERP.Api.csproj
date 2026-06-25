@@ -5,12 +5,14 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1591</NoWarn>
+    <UserSecretsId>amani-importados-erp-api</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Amani.ImportadosERP.Application\Amani.ImportadosERP.Application.csproj" />
     <ProjectReference Include="..\Amani.ImportadosERP.Infra.IoC\Amani.ImportadosERP.Infra.IoC.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
   </ItemGroup>
 </Project>
