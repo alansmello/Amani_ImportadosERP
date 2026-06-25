@@ -114,3 +114,25 @@ Expected:
 - `queryKeys.dashboard` e usado para cache/invalidation da feature.
 - Ranking de clientes, quando exibido, vem de contrato oficial de backend; nao
   ha derivacao local a partir de vendas ou recebiveis.
+
+## Implementation Notes
+
+- Recharts esta instalado no frontend e e usado somente em
+  `dashboard-chart-section.tsx` para renderizar `ResponsiveContainer`,
+  `LineChart` e `BarChart`. Series, pontos, unidades, totais e avisos continuam
+  sendo propriedade da API; o componente apenas mapeia rotulos e formata valores.
+- Ranking de clientes agora faz parte do contrato oficial do backend por meio de
+  `RankingClienteDto` e de
+  `IDashboardRankingRepository.ObterClientesMaisValiososAsync`. O payload de
+  rankings pode conter itens de produto e cliente; o frontend renderiza clientes
+  apenas quando `clienteId` e `clienteNome` sao retornados pela API.
+- Validacao de 2026-06-25: `npm run lint`, `npm run typecheck`,
+  `npm run build` e `dotnet build Amani_ImportadosERP.sln` foram executados com
+  sucesso apos a implementacao dos componentes e do contrato backend.
+- Auditoria de formulas: componentes, hooks e service de dashboard nao calculam
+  faturamento, lucro, despesas, recebiveis, severidade, ranking, totais de series
+  ou pontos de grafico. O unico agrupamento local em rankings organiza itens por
+  `tipoRanking` ja retornado pela API.
+- Auditoria visual: a home usa grids responsivos para 360px, 768px e 1280px,
+  preserva Dark Theme por tokens locais e evita sobreposicao com `min-w-0`,
+  `break-words`, alturas estaveis de grafico e eixos compactos do Recharts.

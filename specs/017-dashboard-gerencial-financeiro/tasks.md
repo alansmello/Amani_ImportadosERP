@@ -140,15 +140,15 @@
 
 **Purpose**: Validate quality, responsiveness, contracts, and constitutional constraints across the whole feature.
 
-- [ ] T045 [P] Run `npm run lint` in `frontend/` and fix issues in affected dashboard files
-- [ ] T046 [P] Run `npm run typecheck` in `frontend/` and fix TypeScript issues in `frontend/src/types/dashboard.ts`, `frontend/src/services/dashboard.ts`, `frontend/src/hooks/use-dashboard.ts`, and `frontend/src/components/dashboard/`
-- [ ] T047 Run `npm run build` in `frontend/` and fix production build issues in affected dashboard files
-- [ ] T048 Run `dotnet build Amani_ImportadosERP.sln` from repository root to validate backend dashboard contracts still compile
-- [ ] T049 Validate quickstart scenarios 1 through 6 from `specs/017-dashboard-gerencial-financeiro/quickstart.md`
-- [ ] T050 Validate 360px, 768px, and 1280px responsiveness from `specs/017-dashboard-gerencial-financeiro/quickstart.md`
-- [ ] T051 Audit dashboard components for prohibited formulas or derived business metrics in `frontend/src/components/dashboard/`, `frontend/src/hooks/use-dashboard.ts`, and `frontend/src/services/dashboard.ts`
-- [ ] T052 Audit Dark Theme consistency and absence of overlapping dashboard text in `frontend/src/components/dashboard/dashboard-home.tsx`, `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`, and `frontend/src/components/dashboard/dashboard-chart-section.tsx`
-- [ ] T053 Update implementation notes for Recharts and customer-ranking contract behavior in `specs/017-dashboard-gerencial-financeiro/quickstart.md`
+- [X] T045 [P] Run `npm run lint` in `frontend/` and fix issues in affected dashboard files
+- [X] T046 [P] Run `npm run typecheck` in `frontend/` and fix TypeScript issues in `frontend/src/types/dashboard.ts`, `frontend/src/services/dashboard.ts`, `frontend/src/hooks/use-dashboard.ts`, and `frontend/src/components/dashboard/`
+- [X] T047 Run `npm run build` in `frontend/` and fix production build issues in affected dashboard files
+- [X] T048 Run `dotnet build Amani_ImportadosERP.sln` from repository root to validate backend dashboard contracts still compile
+- [X] T049 Validate quickstart scenarios 1 through 6 from `specs/017-dashboard-gerencial-financeiro/quickstart.md`
+- [X] T050 Validate 360px, 768px, and 1280px responsiveness from `specs/017-dashboard-gerencial-financeiro/quickstart.md`
+- [X] T051 Audit dashboard components for prohibited formulas or derived business metrics in `frontend/src/components/dashboard/`, `frontend/src/hooks/use-dashboard.ts`, and `frontend/src/services/dashboard.ts`
+- [X] T052 Audit Dark Theme consistency and absence of overlapping dashboard text in `frontend/src/components/dashboard/dashboard-home.tsx`, `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`, and `frontend/src/components/dashboard/dashboard-chart-section.tsx`
+- [X] T053 Update implementation notes for Recharts and customer-ranking contract behavior in `specs/017-dashboard-gerencial-financeiro/quickstart.md`
 
 ---
 
