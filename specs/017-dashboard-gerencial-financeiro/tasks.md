@@ -61,13 +61,13 @@
 
 ### Implementation for User Story 1
 
-- [ ] T014 [P] [US1] Create KPI grid component for faturamento, lucro, despesas, and recebiveis in `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
-- [ ] T015 [P] [US1] Create dashboard home composition shell with KPI area and section layout in `frontend/src/components/dashboard/dashboard-home.tsx`
-- [ ] T016 [US1] Wire `useDashboardFinancialKpis` data into `dashboard-kpi-grid.tsx` without local metric formulas in `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
-- [ ] T017 [US1] Render incomplete-data notices returned with KPI data in `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
-- [ ] T018 [US1] Replace `DashboardPlaceholder` with `DashboardHome` in `frontend/src/app/page.tsx`
-- [ ] T019 [US1] Remove or retire placeholder-only composition usage from `frontend/src/components/dashboard/dashboard-placeholder.tsx`
-- [ ] T020 [US1] Verify the home preserves app shell navigation and Dark Theme layout in `frontend/src/app/page.tsx`
+- [X] T014 [P] [US1] Create KPI grid component for faturamento, lucro, despesas, and recebiveis in `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
+- [X] T015 [P] [US1] Create dashboard home composition shell with KPI area and section layout in `frontend/src/components/dashboard/dashboard-home.tsx`
+- [X] T016 [US1] Wire `useDashboardFinancialKpis` data into `dashboard-kpi-grid.tsx` without local metric formulas in `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
+- [X] T017 [US1] Render incomplete-data notices returned with KPI data in `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
+- [X] T018 [US1] Replace `DashboardPlaceholder` with `DashboardHome` in `frontend/src/app/page.tsx`
+- [X] T019 [US1] Remove or retire placeholder-only composition usage from `frontend/src/components/dashboard/dashboard-placeholder.tsx`
+- [X] T020 [US1] Verify the home preserves app shell navigation and Dark Theme layout in `frontend/src/app/page.tsx`
 
 **Checkpoint**: User Story 1 is independently functional and demoable as MVP.
 
@@ -81,13 +81,13 @@
 
 ### Implementation for User Story 2
 
-- [ ] T021 [P] [US2] Create period filter UI for month, year, and custom interval modes in `frontend/src/components/dashboard/dashboard-period-filter.tsx`
-- [ ] T022 [US2] Add filter state ownership and default current-month period to `frontend/src/components/dashboard/dashboard-home.tsx`
-- [ ] T023 [US2] Connect normalized period filter to KPI, operational, ranking, alert, and graph hooks in `frontend/src/components/dashboard/dashboard-home.tsx`
-- [ ] T024 [US2] Implement invalid interval validation and inline feedback in `frontend/src/components/dashboard/dashboard-period-filter.tsx`
-- [ ] T025 [US2] Prevent dashboard queries from running for invalid custom intervals in `frontend/src/hooks/use-dashboard.ts`
-- [ ] T026 [US2] Ensure stale responses are not presented as current-period data by comparing applied filters in `frontend/src/components/dashboard/dashboard-home.tsx`
-- [ ] T027 [US2] Display the active period summary near the dashboard heading in `frontend/src/components/dashboard/dashboard-home.tsx`
+- [X] T021 [P] [US2] Create period filter UI for month, year, and custom interval modes in `frontend/src/components/dashboard/dashboard-period-filter.tsx`
+- [X] T022 [US2] Add filter state ownership and default current-month period to `frontend/src/components/dashboard/dashboard-home.tsx`
+- [X] T023 [US2] Connect normalized period filter to KPI, operational, ranking, alert, and graph hooks in `frontend/src/components/dashboard/dashboard-home.tsx`
+- [X] T024 [US2] Implement invalid interval validation and inline feedback in `frontend/src/components/dashboard/dashboard-period-filter.tsx`
+- [X] T025 [US2] Prevent dashboard queries from running for invalid custom intervals in `frontend/src/hooks/use-dashboard.ts`
+- [X] T026 [US2] Ensure stale responses are not presented as current-period data by comparing applied filters in `frontend/src/components/dashboard/dashboard-home.tsx`
+- [X] T027 [US2] Display the active period summary near the dashboard heading in `frontend/src/components/dashboard/dashboard-home.tsx`
 
 **Checkpoint**: User Stories 1 and 2 work independently with consistent period filtering.
 
