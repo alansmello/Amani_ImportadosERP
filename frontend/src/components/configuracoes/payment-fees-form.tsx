@@ -101,10 +101,10 @@ export function PaymentFeesForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Taxa do cartao de debito</CardTitle>
+        <CardTitle>Taxas de operadora</CardTitle>
         <CardDescription>
-          A taxa padrao e aplicada automaticamente em vendas no cartao de debito.
-          Para cartao de credito, a taxa e registrada no momento do recebimento.
+          Configure as taxas padrao por forma de pagamento. Taxas com operadora
+          sao aplicadas automaticamente nos calculos de receita liquida.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
@@ -122,7 +122,7 @@ export function PaymentFeesForm() {
         ) : null}
 
         <div className="grid gap-4">
-          {settings.filter((s) => s.formaPagamento === "CartaoDebito").map((setting) => {
+          {settings.map((setting) => {
             const isSaving =
               updateSetting.isPending &&
               updateSetting.variables?.formaPagamento === setting.formaPagamento;

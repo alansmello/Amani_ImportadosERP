@@ -1,13 +1,12 @@
 "use client";
 
-import { AlertCircle, Edit3, LoaderCircle, Save, Tag, ToggleLeft, ToggleRight, X } from "lucide-react";
+import { AlertCircle, Edit3, LoaderCircle, Save, Tag, Trash2, X } from "lucide-react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,42 +17,32 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
-  useCreateExpenseCategory,
-  useExpenseCategories,
-  useInactivateExpenseCategory,
-  useReactivateExpenseCategory,
-  useUpdateExpenseCategory
-} from "@/hooks/use-expense-categories";
-import { cn } from "@/lib/cn";
+  useCategories,
+  useCreateCategory,
+  useRemoveCategory,
+  useUpdateCategory
+} from "@/hooks/use-categories";
 import { toApiError } from "@/services/errors";
-import type { ExpenseCategory } from "@/types/expense-category";
+import type { Category } from "@/types/category";
 
 type CategoryDraft = {
   nome: string;
-  descricao: string;
 };
 
 type CategoryErrors = {
   nome?: string;
 };
 
-const initialDraft: CategoryDraft = {
-  nome: "",
-  descricao: ""
-};
+const initialDraft: CategoryDraft = { nome: "" };
 
 const fieldLabelClassName = "text-sm font-medium text-text-primary";
 const fieldErrorClassName = "text-xs font-medium leading-5 text-danger";
-const textareaClassName =
-  "flex min-h-24 w-full rounded-amani border border-border bg-surface px-3 py-2 text-sm text-text-primary transition-colors placeholder:text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-danger aria-[invalid=true]:focus-visible:ring-danger";
 
 function validateDraft(draft: CategoryDraft): CategoryErrors {
   const errors: CategoryErrors = {};
-
   if (!draft.nome.trim()) {
     errors.nome = "Informe o nome da categoria.";
   }
-
   return errors;
 }
 
@@ -61,23 +50,18 @@ function hasErrors(errors: CategoryErrors) {
   return Object.values(errors).some(Boolean);
 }
 
-type ConfirmingToggle = { id: string; action: "inativar" | "reativar" } | null;
-
-export function ExpenseCategoriesManager() {
-  const categoriesQuery = useExpenseCategories(true);
-  const createCategory = useCreateExpenseCategory();
-  const updateCategory = useUpdateExpenseCategory();
-  const inactivateCategory = useInactivateExpenseCategory();
-  const reactivateCategory = useReactivateExpenseCategory();
+export function ProductCategoriesManager() {
+  const categoriesQuery = useCategories();
+  const createCategory = useCreateCategory();
+  const updateCategory = useUpdateCategory();
+  const removeCategory = useRemoveCategory();
 
   const [draft, setDraft] = useState<CategoryDraft>(initialDraft);
-  const [editingCategory, setEditingCategory] = useState<ExpenseCategory | null>(
-    null
-  );
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [errors, setErrors] = useState<CategoryErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [inactivationError, setInactivationError] = useState<string | null>(null);
-  const [confirmingToggle, setConfirmingToggle] = useState<ConfirmingToggle>(null);
+  const [removeError, setRemoveError] = useState<string | null>(null);
+  const [confirmingRemoveId, setConfirmingRemoveId] = useState<string | null>(null);
 
   const categories = categoriesQuery.data ?? [];
   const isSubmitting = createCategory.isPending || updateCategory.isPending;
@@ -96,14 +80,12 @@ export function ExpenseCategoriesManager() {
     setSubmitError(null);
   }
 
-  function startEdit(category: ExpenseCategory) {
+  function startEdit(category: Category) {
     setEditingCategory(category);
-    setDraft({
-      nome: category.nome,
-      descricao: category.descricao ?? ""
-    });
+    setDraft({ nome: category.nome });
     setErrors({});
     setSubmitError(null);
+    setConfirmingRemoveId(null);
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -112,17 +94,12 @@ export function ExpenseCategoriesManager() {
     const validationErrors = validateDraft(draft);
     setErrors(validationErrors);
 
-    if (hasErrors(validationErrors)) {
-      return;
-    }
+    if (hasErrors(validationErrors)) return;
 
     setSubmitError(null);
 
     try {
-      const payload = {
-        nome: draft.nome.trim(),
-        descricao: draft.descricao.trim() || null
-      };
+      const payload = { nome: draft.nome.trim() };
 
       if (editingId) {
         await updateCategory.mutateAsync({ id: editingId, payload });
@@ -136,22 +113,18 @@ export function ExpenseCategoriesManager() {
     }
   }
 
-  async function handleConfirmToggle(toggle: NonNullable<ConfirmingToggle>) {
-    setInactivationError(null);
-    setConfirmingToggle(null);
+  async function handleConfirmRemove(id: string) {
+    setRemoveError(null);
+    setConfirmingRemoveId(null);
 
     try {
-      if (toggle.action === "inativar") {
-        await inactivateCategory.mutateAsync(toggle.id);
-      } else {
-        await reactivateCategory.mutateAsync(toggle.id);
-      }
+      await removeCategory.mutateAsync(id);
 
-      if (editingId === toggle.id) {
+      if (editingId === id) {
         resetForm();
       }
     } catch (error) {
-      setInactivationError(toApiError(error).message);
+      setRemoveError(toApiError(error).message);
     }
   }
 
@@ -159,7 +132,7 @@ export function ExpenseCategoriesManager() {
     return (
       <LoadingState
         title="Carregando categorias"
-        description="Aguarde enquanto as categorias de despesa sao carregadas."
+        description="Aguarde enquanto as categorias de produto sao carregadas."
       />
     );
   }
@@ -193,40 +166,22 @@ export function ExpenseCategoriesManager() {
             ) : null}
 
             <div className="grid gap-2">
-              <label className={fieldLabelClassName} htmlFor="category-name">
+              <label className={fieldLabelClassName} htmlFor="product-category-name">
                 Nome
               </label>
               <Input
-                id="category-name"
+                id="product-category-name"
                 value={draft.nome}
                 onChange={(event) => updateField("nome", event.target.value)}
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.nome)}
-                aria-describedby={errors.nome ? "category-name-error" : undefined}
+                aria-describedby={errors.nome ? "product-category-name-error" : undefined}
               />
               {errors.nome ? (
-                <p id="category-name-error" className={fieldErrorClassName}>
+                <p id="product-category-name-error" className={fieldErrorClassName}>
                   {errors.nome}
                 </p>
               ) : null}
-            </div>
-
-            <div className="grid gap-2">
-              <label
-                className={fieldLabelClassName}
-                htmlFor="category-description"
-              >
-                Descricao
-              </label>
-              <textarea
-                id="category-description"
-                className={cn(textareaClassName)}
-                value={draft.descricao}
-                onChange={(event) =>
-                  updateField("descricao", event.target.value)
-                }
-                disabled={isSubmitting}
-              />
             </div>
           </CardContent>
 
@@ -257,10 +212,10 @@ export function ExpenseCategoriesManager() {
       </form>
 
       <section className="grid gap-4">
-        {inactivationError ? (
+        {removeError ? (
           <div className="flex items-start gap-2 rounded-amani border border-danger bg-surface-light px-4 py-3 text-sm leading-6 text-danger">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-            <span>{inactivationError}</span>
+            <span>{removeError}</span>
           </div>
         ) : null}
 
@@ -268,7 +223,7 @@ export function ExpenseCategoriesManager() {
           <EmptyState
             variant="empty"
             title="Nenhuma categoria cadastrada"
-            description="Cadastre a primeira categoria para liberar lancamentos de despesas."
+            description="Cadastre a primeira categoria para classifica-la nos produtos."
             icon={<Tag className="h-5 w-5" aria-hidden />}
           />
         ) : (
@@ -277,38 +232,24 @@ export function ExpenseCategoriesManager() {
               <Card key={category.id}>
                 <CardContent className="flex min-w-0 flex-col gap-4 p-4 tablet:flex-row tablet:items-center tablet:justify-between">
                   <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="break-words text-base font-semibold text-text-primary">
-                        {category.nome}
-                      </h2>
-                      <Badge variant={category.ativa ? "success" : "neutral"}>
-                        {category.ativa ? "Ativa" : "Inativa"}
-                      </Badge>
-                    </div>
-                    {category.descricao ? (
-                      <p className="mt-1 break-words text-sm leading-6 text-text-secondary">
-                        {category.descricao}
-                      </p>
-                    ) : null}
+                    <h2 className="break-words text-base font-semibold text-text-primary">
+                      {category.nome}
+                    </h2>
                   </div>
 
                   <div className="flex shrink-0 flex-col gap-2 tablet:flex-row">
-                    {confirmingToggle?.id === category.id ? (
+                    {confirmingRemoveId === category.id ? (
                       <>
                         <span className="self-center text-sm text-text-secondary">
-                          {confirmingToggle.action === "inativar"
-                            ? "Inativar?"
-                            : "Reativar?"}
+                          Remover?
                         </span>
                         <Button
                           type="button"
-                          variant={confirmingToggle.action === "inativar" ? "ghost" : "secondary"}
-                          onClick={() => void handleConfirmToggle(confirmingToggle)}
-                          disabled={
-                            inactivateCategory.isPending || reactivateCategory.isPending
-                          }
+                          variant="destructive"
+                          onClick={() => void handleConfirmRemove(category.id)}
+                          disabled={removeCategory.isPending}
                         >
-                          {inactivateCategory.isPending || reactivateCategory.isPending ? (
+                          {removeCategory.isPending ? (
                             <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden />
                           ) : null}
                           <span>Confirmar</span>
@@ -316,12 +257,9 @@ export function ExpenseCategoriesManager() {
                         <Button
                           type="button"
                           variant="secondary"
-                          onClick={() => setConfirmingToggle(null)}
-                          disabled={
-                            inactivateCategory.isPending || reactivateCategory.isPending
-                          }
+                          onClick={() => setConfirmingRemoveId(null)}
+                          disabled={removeCategory.isPending}
                         >
-                          <X className="h-4 w-4" aria-hidden />
                           <span>Cancelar</span>
                         </Button>
                       </>
@@ -331,36 +269,20 @@ export function ExpenseCategoriesManager() {
                           type="button"
                           variant="secondary"
                           onClick={() => startEdit(category)}
-                          disabled={isSubmitting}
+                          disabled={isSubmitting || removeCategory.isPending}
                         >
                           <Edit3 className="h-4 w-4" aria-hidden />
                           <span>Editar</span>
                         </Button>
-                        {category.ativa ? (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() =>
-                              setConfirmingToggle({ id: category.id, action: "inativar" })
-                            }
-                            disabled={isSubmitting}
-                          >
-                            <ToggleRight className="h-4 w-4" aria-hidden />
-                            <span>Inativar</span>
-                          </Button>
-                        ) : (
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={() =>
-                              setConfirmingToggle({ id: category.id, action: "reativar" })
-                            }
-                            disabled={isSubmitting}
-                          >
-                            <ToggleLeft className="h-4 w-4" aria-hidden />
-                            <span>Reativar</span>
-                          </Button>
-                        )}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => setConfirmingRemoveId(category.id)}
+                          disabled={isSubmitting || removeCategory.isPending}
+                        >
+                          <Trash2 className="h-4 w-4" aria-hidden />
+                          <span>Remover</span>
+                        </Button>
                       </>
                     )}
                   </div>

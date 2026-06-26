@@ -76,3 +76,16 @@ export function useInactivateExpenseCategory() {
     }
   });
 }
+
+export function useReactivateExpenseCategory() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => expenseCategoriesService.reactivate(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: expenseCategoriesQueryKeys.all
+      });
+    }
+  });
+}

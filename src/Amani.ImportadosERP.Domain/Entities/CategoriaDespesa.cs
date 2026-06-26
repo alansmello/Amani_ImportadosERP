@@ -45,6 +45,13 @@ public sealed class CategoriaDespesa : BaseEntity
         Touch();
     }
 
+    public void Reativar()
+    {
+        if (Ativa) return;
+        Ativa = true;
+        Touch();
+    }
+
     private static string NormalizarNomeObrigatorio(string nome)
     {
         if (string.IsNullOrWhiteSpace(nome))

@@ -49,4 +49,28 @@ public class CategoriaRepository : ICategoriaRepository
     {
         await _db.SaveChangesAsync();
     }
+
+    public async Task RemoverAsync(Guid id)
+    {
+        var categoria = await _db.Categorias.FirstOrDefaultAsync(c => c.Id == id);
+
+        if (categoria == null)
+            throw new KeyNotFoundException($"Categoria {id} nao encontrada.");
+
+        _db.Categorias.Remove(categoria);
+
+        try
+        {
+            await _db.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex) when (
+            ex.InnerException?.Message.Contains("foreign key") == true
+            || ex.InnerException?.Message.Contains("violates") == true
+            || ex.InnerException?.Message.Contains("FK_") == true
+            || ex.InnerException?.Message.Contains("23503") == true)
+        {
+            throw new InvalidOperationException(
+                "Nao e possivel remover esta categoria pois ela possui produtos vinculados.", ex);
+        }
+    }
 }

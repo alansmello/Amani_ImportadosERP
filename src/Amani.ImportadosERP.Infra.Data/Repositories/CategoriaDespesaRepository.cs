@@ -56,4 +56,15 @@ public class CategoriaDespesaRepository : ICategoriaDespesaRepository
         _db.CategoriaDespesas.Update(categoria);
         await _db.SaveChangesAsync();
     }
+
+    public async Task ReativarAsync(Guid id)
+    {
+        var categoria = await _db.CategoriaDespesas.FirstOrDefaultAsync(c => c.Id == id);
+
+        if (categoria == null)
+            throw new KeyNotFoundException("Categoria de despesa nao encontrada.");
+
+        categoria.Reativar();
+        await _db.SaveChangesAsync();
+    }
 }
