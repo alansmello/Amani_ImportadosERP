@@ -39,5 +39,11 @@ export const expenseCategoriesService = {
     await apiClient<void>(`${BASE_PATH}/${id}/inativar`, {
       method: "POST"
     });
+  },
+
+  async reactivate(id: string) {
+    await apiClient<void>(`${BASE_PATH}/${id}/reativar`, {
+      method: "POST"
+    });
   }
 };

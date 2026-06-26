@@ -46,6 +46,11 @@ public class CategoriaService
         return true;
     }
 
+    public async Task RemoverAsync(Guid id)
+    {
+        await _categoriaRepository.RemoverAsync(id);
+    }
+
     private static CategoriaDto ToDto(Categoria categoria)
     {
         return new CategoriaDto

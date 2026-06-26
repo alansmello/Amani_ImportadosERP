@@ -12,4 +12,5 @@ public interface ICategoriaDespesaRepository
     Task<CategoriaDespesa?> ObterPorNomeNormalizadoAsync(string nomeNormalizado);
     Task<List<CategoriaDespesa>> ListarAsync(bool incluirInativas);
     Task AtualizarAsync(CategoriaDespesa categoria);
+    Task ReativarAsync(Guid id);
 }

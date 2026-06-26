@@ -114,4 +114,22 @@ public class CategoriasDespesaController : ControllerBase
             return NotFound();
         }
     }
+
+    [HttpPost("{id:guid}/reativar")]
+    public async Task<IActionResult> Reactivate(Guid id)
+    {
+        try
+        {
+            await _mediator.Send(new ReativarCategoriaDespesaCommand
+            {
+                Id = id
+            });
+
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+    }
 }
