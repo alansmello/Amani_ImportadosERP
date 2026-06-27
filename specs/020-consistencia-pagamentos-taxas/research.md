@@ -94,3 +94,15 @@
 - Adicionar biblioteca de formulários: rejeitado porque o formulário é pequeno e a dependência não remove complexidade real.
 - Introduzir suíte de testes nesta feature: rejeitado por decisão explícita do responsável.
 
+## Decision: Total de taxas da tela de operadora deve ser agregado no backend
+
+**Decision**: A consulta de despesas de operadora passará a retornar, além dos itens filtrados, um resumo agregado com o total de taxas (`valorTaxa`) para o mesmo recorte de período e forma. O frontend exibirá esse total sem recalcular métricas críticas no cliente.
+
+**Rationale**: O princípio constitucional define o backend como fonte das regras e métricas críticas. Centralizar o consolidado no backend evita divergência de arredondamento entre clientes, elimina risco de total parcial em evoluções com paginação e mantém consistência entre listagem e resumo.
+
+**Alternatives considered**:
+
+- Somar no frontend os itens já carregados: rejeitado por risco de divergência monetária e por acoplar a métrica ao volume/paginação da UI.
+- Criar endpoint separado apenas para o total: rejeitado por duplicar filtros e aumentar acoplamento entre duas consultas sincronizadas.
+- Não exibir total consolidado: rejeitado porque mantém conferência manual e maior risco operacional diário.
+

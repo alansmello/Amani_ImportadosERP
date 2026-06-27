@@ -11,7 +11,7 @@
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: pode executar em paralelo porque altera arquivos diferentes e não depende de tarefa incompleta.
-- **[Story]**: história correspondente da especificação (`US1`, `US2`, `US3`).
+- **[Story]**: história correspondente da especificação (`US1`, `US2`, `US3`, `US4`).
 - Tarefas de Setup, Foundational e Polish não recebem rótulo de história.
 
 ## Phase 1: Setup (Shared Infrastructure)
@@ -69,6 +69,7 @@
 - [X] T014 [P] [US2] Criar a migration somente de dados com `Up` zerando taxas fora do Débito, `Down` sem inventar valores anteriores e snapshot inalterado em `src/Amani.ImportadosERP.Infra.Data/Migrations/20260626223710_NormalizeNonDebitPaymentFees.cs`, `src/Amani.ImportadosERP.Infra.Data/Migrations/20260626223710_NormalizeNonDebitPaymentFees.Designer.cs` e `src/Amani.ImportadosERP.Infra.Data/Migrations/AmaniDbContextModelSnapshot.cs`
 - [X] T015 [US2] Confirmar que o endpoint traduz formas inválidas e violações da nova regra em respostas 400 sem regra de negócio no controller em `src/Amani.ImportadosERP.Api/Controllers/ConfiguracoesFormasPagamentoController.cs`
 - [X] T016 [P] [US2] Refatorar a aba de taxas para renderizar input/salvar somente no Débito e textos informativos para Dinheiro, PIX, Crédito e Fiado em `frontend/src/components/configuracoes/payment-fees-form.tsx`
+- [X] T033 [US2] Remover na aba de taxas o texto de "Taxa fixa" para `CartaoCredito`, mantendo apenas a mensagem informativa de taxa apurada no recebimento em `frontend/src/components/configuracoes/payment-fees-form.tsx`
 - [ ] T017 [US2] Executar e registrar o cenário 5, incluindo normalização, limites de Débito, recusa das demais formas e atualização válida concluída em até 30 segundos, conforme `specs/020-consistencia-pagamentos-taxas/quickstart.md`
 
 **Checkpoint**: US2 funciona isoladamente; configuração e persistência expressam que somente Débito possui taxa padrão.
@@ -91,14 +92,35 @@
 
 ---
 
-## Phase 6: Polish & Cross-Cutting Concerns
+## Phase 6: User Story 4 — Consolidar total de taxas filtradas (Priority: P3)
+
+**Goal**: exibir na tela de despesas de operadora o total de taxas calculado no backend para o mesmo filtro aplicado na listagem.
+
+**Independent Test**: aplicar filtros (ambas, Débito, Crédito e vazio), validar que o total exibido bate com a soma das linhas do mesmo recorte.
+
+### Implementation for User Story 4
+
+- [X] T021 [P] [US4] Criar DTOs de resposta com `itens` e `resumo.totalTaxas` em `src/Amani.ImportadosERP.Application/DTOs/DespesaOperadoraResumoDto.cs` e `src/Amani.ImportadosERP.Application/DTOs/DespesaOperadoraConsultaDto.cs`
+- [X] T022 [US4] Adicionar consulta agregada por filtro no repositório em `src/Amani.ImportadosERP.Application/Interfaces/IDespesaOperadoraRepository.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/DespesaOperadoraRepository.cs`
+- [X] T023 [US4] Atualizar handler para retornar listagem + resumo consolidado em `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDespesasOperadoraQueryHandler.cs`
+- [X] T024 [US4] Ajustar endpoint para novo contrato de saída em `src/Amani.ImportadosERP.Api/Controllers/DespesasOperadoraController.cs`
+- [X] T025 [P] [US4] Atualizar tipos e serviço frontend para contrato com resumo em `frontend/src/types/operator-expense.ts` e `frontend/src/services/operator-expenses.ts`
+- [X] T026 [US4] Exibir total consolidado de taxas no componente de listagem em `frontend/src/components/financeiro/operator-expenses-list.tsx`
+- [X] T027 [US4] Garantir atualização consistente do total ao trocar filtros na página em `frontend/src/app/financeiro/despesas-operadora/page.tsx` e `frontend/src/hooks/use-operator-expenses.ts`
+- [ ] T028 [US4] Executar e registrar cenário 8 em `specs/020-consistencia-pagamentos-taxas/quickstart.md`
+
+**Checkpoint**: US4 funciona isoladamente; total consolidado acompanha filtros e corresponde às linhas exibidas.
+
+---
+
+## Phase 7: Polish & Cross-Cutting Concerns
 
 **Purpose**: validar integração, responsividade, migrations e conformidade antes de considerar a feature concluída.
 
-- [X] T021 [P] Executar `dotnet build Amani_ImportadosERP.sln` e registrar o resultado em `specs/020-consistencia-pagamentos-taxas/quickstart.md`
-- [X] T022 [P] Executar `npm run lint`, `npm run typecheck` e `npm run build` em `frontend/` e registrar os resultados em `specs/020-consistencia-pagamentos-taxas/quickstart.md`
-- [ ] T023 Validar o cenário 7 em smartphone, tablet e desktop, incluindo bloqueio de confirmação repetida, e registrar evidências em `specs/020-consistencia-pagamentos-taxas/quickstart.md`
-- [X] T024 Revisar migration, contratos, preservação do histórico, gates constitucionais e ausência de alterações em estoque/compras/custo médio usando `specs/020-consistencia-pagamentos-taxas/plan.md` e `specs/020-consistencia-pagamentos-taxas/contracts/`
+- [X] T029 [P] Executar `dotnet build Amani_ImportadosERP.sln` e registrar o resultado em `specs/020-consistencia-pagamentos-taxas/quickstart.md`
+- [X] T030 [P] Executar `npm run lint`, `npm run typecheck` e `npm run build` em `frontend/` e registrar os resultados em `specs/020-consistencia-pagamentos-taxas/quickstart.md`
+- [ ] T031 Validar o cenário 7 em smartphone, tablet e desktop, incluindo bloqueio de confirmação repetida, e registrar evidências em `specs/020-consistencia-pagamentos-taxas/quickstart.md`
+- [X] T032 Revisar migration, contratos, preservação do histórico, gates constitucionais e ausência de alterações em estoque/compras/custo médio usando `specs/020-consistencia-pagamentos-taxas/plan.md` e `specs/020-consistencia-pagamentos-taxas/contracts/`
 
 ---
 
@@ -111,7 +133,8 @@
 - **US1 (Phase 3)**: depende de T002–T003; entrega o MVP financeiro.
 - **US2 (Phase 4)**: depende de T002–T003; pode avançar em paralelo com US1 após a fundação.
 - **US3 (Phase 5)**: depende da fundação; a validação final deve ocorrer após US1 e US2 para cobrir regressões integradas.
-- **Polish (Phase 6)**: depende das histórias incluídas no release.
+- **US4 (Phase 6)**: depende da fundação e pode avançar após contratos alinhados; valida agregado operacional de despesas.
+- **Polish (Phase 7)**: depende das histórias incluídas no release.
 
 ### User Story Dependency Graph
 
@@ -120,8 +143,9 @@ Setup
   └── Foundational
       ├── US1: Crédito consistente (MVP)
       ├── US2: Taxa somente no Débito
-      └── US3: Preservação das demais formas
-              └── Validação integrada após US1 + US2
+      ├── US3: Preservação das demais formas
+      └── US4: Total consolidado de taxas por filtro
+              └── Validação integrada após US1 + US2 + US3
 ```
 
 ### Within Each User Story
@@ -129,6 +153,7 @@ Setup
 - **US1**: contrato/projeção e handler antes do controller; tipos antes da integração do modal; implementação antes dos cenários manuais.
 - **US2**: invariável de domínio antes do handler; handler antes da validação do endpoint; migration e UI podem avançar em paralelo; implementação antes do cenário manual.
 - **US3**: ajustes de Venda e modal podem avançar em paralelo; regressão somente após ambos.
+- **US4**: DTO/repositório antes do handler e endpoint; frontend após contrato; implementação antes do cenário manual.
 - Nenhuma tarefa de teste automatizado deve ser adicionada sem nova autorização.
 
 ### Parallel Opportunities
@@ -138,17 +163,17 @@ Setup
 - Em US1, T004, T005, T007 e T010 alteram arquivos independentes e podem avançar em paralelo.
 - Em US2, T012, T014 e T016 podem avançar em paralelo; T013 depende de T012.
 - Em US3, T018 e T019 podem executar em paralelo.
-- T021 e T022 podem executar em paralelo depois da integração.
+- Em US4, T021 e T025 podem executar em paralelo enquanto T022 prepara agregação no repositório.
+- T029 e T030 podem executar em paralelo depois da integração.
 
 ---
 
-## Parallel Example: User Story 1
+## Parallel Example: User Story 4
 
 ```text
-Task T004: projetar FormaPagamento no detalhe por cliente.
-Task T005: implementar liquidação integral e despesa derivada no handler.
-Task T007: alinhar o tipo frontend do detalhe.
-Task T010: ampliar invalidação dos caches financeiros.
+Task T021: criar DTOs de consulta/resumo de despesas.
+Task T025: alinhar tipos e serviço frontend para o novo contrato.
+Task T026: preparar exibição de total consolidado na listagem.
 ```
 
 ## Parallel Example: User Story 2
@@ -157,13 +182,6 @@ Task T010: ampliar invalidação dos caches financeiros.
 Task T012: reforçar invariantes da configuração no Domain.
 Task T014: criar migration de normalização dos dados legados.
 Task T016: tornar somente Débito editável na interface.
-```
-
-## Parallel Example: User Story 3
-
-```text
-Task T018: preservar o roteamento financeiro na criação da Venda.
-Task T019: preservar a seleção das formas e regra visual no modal da Venda.
 ```
 
 ---
@@ -176,7 +194,7 @@ Task T019: preservar a seleção das formas e regra visual no modal da Venda.
 2. Concluir T002–T003.
 3. Implementar T004–T010.
 4. Parar e validar T011 pelos dois acessos.
-5. Somente então avançar para configuração e regressões.
+5. Somente então avançar para configuração, regressões e consolidação de despesas.
 
 ### Incremental Delivery
 
@@ -184,7 +202,8 @@ Task T019: preservar a seleção das formas e regra visual no modal da Venda.
 2. **US1**: corrigir o risco financeiro atual e validar isoladamente.
 3. **US2**: restringir a configuração e normalizar dados legados.
 4. **US3**: confirmar que as demais formas permanecem corretas.
-5. **Polish**: executar builds, responsividade e revisão constitucional.
+5. **US4**: entregar total consolidado por filtro com cálculo no backend.
+6. **Polish**: executar builds, responsividade e revisão constitucional.
 
 ### Suggested Commit Boundaries
 
@@ -193,6 +212,7 @@ Task T019: preservar a seleção das formas e regra visual no modal da Venda.
 3. Modal unificado e invalidação de consultas.
 4. Taxa exclusiva de Débito e migration de dados.
 5. Regressões de Venda e validação final.
+6. Resumo consolidado de despesas (backend + frontend).
 
 ---
 

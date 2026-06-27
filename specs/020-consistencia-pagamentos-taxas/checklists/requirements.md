@@ -33,4 +33,5 @@
 
 - Validation completed in one review iteration.
 - No clarification marker was required because the roadmap already fixes the critical business decisions: only Debit has a configurable rate, Credit is settled in full, and automated test infrastructure is outside this feature.
+- Scope updated on 2026-06-26 to include consolidated operator fee total in the filtered expenses view, mantendo linguagem de negócio e critérios mensuráveis.
 

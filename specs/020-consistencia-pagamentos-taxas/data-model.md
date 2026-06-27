@@ -135,6 +135,21 @@ Campo adicionado:
 
 Os demais campos e a coleção de pagamentos permanecem compatíveis.
 
+### ConsultaDespesasOperadora
+
+Projeção de leitura para a tela de despesas de operadora, com recorte por período e forma de pagamento.
+
+Componentes da projeção:
+
+- `Itens`: lista de `DespesaOperadora` já filtrada e ordenada.
+- `Resumo.TotalTaxas`: soma de `ValorTaxa` dos itens do mesmo recorte.
+
+Invariantes da projeção:
+
+- O total consolidado deve corresponder exatamente à soma dos itens retornados para o mesmo filtro.
+- Em ausência de itens no recorte, `Resumo.TotalTaxas` deve ser zero.
+- O total não altera histórico financeiro; é derivado apenas para leitura.
+
 ## Matriz de estado financeiro
 
 | Forma | Estado após Venda | Ação posterior | Resultado |

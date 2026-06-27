@@ -20,7 +20,7 @@ public sealed class DespesaOperadoraRepository : IDespesaOperadoraRepository
         await _db.DespesasOperadora.AddAsync(despesa);
     }
 
-    public async Task<IReadOnlyList<DespesaOperadora>> ObterComFiltrosAsync(DateTime? dataInicio, DateTime? dataFim, FormaPagamento? formaPagamento)
+    public async Task<(IReadOnlyList<DespesaOperadora> Itens, decimal TotalTaxas)> ObterConsultaComFiltrosAsync(DateTime? dataInicio, DateTime? dataFim, FormaPagamento? formaPagamento)
     {
         var query = _db.DespesasOperadora.AsNoTracking();
 
@@ -39,9 +39,15 @@ public sealed class DespesaOperadoraRepository : IDespesaOperadoraRepository
             query = query.Where(x => x.FormaPagamento == formaPagamento.Value);
         }
 
-        return await query
+        var totalTaxas = await query
+            .Select(x => (decimal?)(x.ValorBruto - x.ValorLiquido))
+            .SumAsync() ?? 0m;
+
+        var itens = await query
             .OrderByDescending(x => x.DataRegistro)
             .ToListAsync();
+
+        return (itens, totalTaxas);
     }
 
     public async Task SalvarAsync()

@@ -106,7 +106,8 @@ export default function DespesasOperadoraPage() {
       </Card>
 
       <OperatorExpensesList
-        expenses={expensesQuery.data ?? []}
+        expenses={expensesQuery.data?.itens ?? []}
+        totalTaxas={expensesQuery.data?.resumo.totalTaxas ?? 0}
         isLoading={expensesQuery.isLoading}
         isError={expensesQuery.isError}
         onRetry={() => void expensesQuery.refetch()}

@@ -209,6 +209,8 @@ export function PaymentFeesForm() {
                       <span>{isSaving ? "Salvando" : "Salvar"}</span>
                     </Button>
                   </>
+                ) : setting.formaPagamento === "CartaoCredito" ? (
+                  <div className="tablet:col-span-2" />
                 ) : (
                   <div className="tablet:col-span-2">
                     <p className="text-sm text-text-secondary">

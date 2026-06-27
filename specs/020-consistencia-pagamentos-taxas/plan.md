@@ -6,7 +6,7 @@
 
 ## Summary
 
-Unificar o pagamento de contas a receber para que o detalhe por cliente carregue o mesmo contexto de forma de pagamento já disponível na lista geral. Para Cartão de Crédito, o backend passará a exigir liquidação integral do saldo bruto, desconto zero e percentual efetivo derivado da diferença entre bruto e líquido; pagamento e despesa permanecem transacionais. A configuração de taxas será restringida ao Cartão de Débito, com normalização dos percentuais legados das demais formas por migration somente de dados. O frontend continuará usando um único modal, removerá os campos legados de percentual/bruto do fluxo simples e exibirá somente Débito como configuração editável.
+Unificar o pagamento de contas a receber para que o detalhe por cliente carregue o mesmo contexto de forma de pagamento já disponível na lista geral. Para Cartão de Crédito, o backend passará a exigir liquidação integral do saldo bruto, desconto zero e percentual efetivo derivado da diferença entre bruto e líquido; pagamento e despesa permanecem transacionais. A configuração de taxas será restringida ao Cartão de Débito, com normalização dos percentuais legados das demais formas por migration somente de dados. A consulta de despesas de operadora passará a retornar resumo consolidado de taxas no backend, mantendo consistência com os filtros aplicados na listagem. O frontend continuará usando um único modal, removerá os campos legados de percentual/bruto do fluxo simples, exibirá somente Débito como configuração editável e mostrará o total consolidado de taxas sem cálculo manual no cliente.
 
 ## Technical Context
 
@@ -22,11 +22,11 @@ Unificar o pagamento de contas a receber para que o detalhe por cliente carregue
 
 **Project Type**: Aplicação web full stack em monorepo, com backend Clean Architecture em `src/` e frontend Next.js em `frontend/`
 
-**Performance Goals**: pagamento refletido nas consultas relacionadas em até 2 segundos após confirmação em ambiente local; atualização de taxa de Débito concluída em até 30 segundos pelo usuário; recebimento de Crédito concluído em até 60 segundos
+**Performance Goals**: pagamento refletido nas consultas relacionadas em até 2 segundos após confirmação em ambiente local; atualização de taxa de Débito concluída em até 30 segundos pelo usuário; recebimento de Crédito concluído em até 60 segundos; total consolidado de taxas visível em até 10 segundos após aplicação do filtro
 
 **Constraints**: backend é a fonte da consistência financeira; Crédito aceita somente liquidação integral; somente Débito possui taxa configurável; históricos financeiros não podem ser reescritos; sem nova dependência e sem novo framework de testes
 
-**Scale/Scope**: alteração localizada em dois contratos financeiros existentes, um handler de pagamento, regra de configuração, uma migration de dados e aproximadamente dez componentes/tipos/hooks frontend; volume operacional atual de ERP de pequeno negócio, sem consultas analíticas novas
+**Scale/Scope**: alteração localizada em contratos financeiros existentes, handlers de pagamento e configuração, uma migration de dados, consulta agregada de despesas de operadora e componentes/tipos/hooks frontend relacionados; volume operacional atual de ERP de pequeno negócio com agregação por filtro em leitura operacional
 
 ## Constitution Check
 
@@ -40,7 +40,7 @@ Unificar o pagamento de contas a receber para que o detalhe por cliente carregue
 - **Contratos de API e DTOs**: PASS — DTOs explícitos serão estendidos/reduzidos deliberadamente; entidades não serão expostas e não haverá AutoMapper.
 - **Persistência e mapeamentos**: PASS — Repository Pattern e transação existente são preservados; migration altera somente dados de configuração e não reescreve histórico.
 - **Backend como fonte das regras**: PASS — saldo integral, elegibilidade da taxa, despesa e percentual efetivo são validados/calculados no backend; frontend apresenta somente prévia.
-- **Analytics e escalabilidade**: PASS — nenhum dashboard é alterado; a forma de pagamento será projetada apenas para as vendas relacionadas, sem carregar histórico global adicional.
+- **Analytics e escalabilidade**: PASS — a tela de despesas passa a usar agregação de taxa no backend para o mesmo filtro da listagem, sem transferir cálculo consolidado crítico para o frontend.
 - **Mobile First**: PASS — modal e configuração serão validados em smartphone, tablet e desktop.
 - **Experiência operacional**: PASS — Crédito terá um único campo financeiro editável e comportamento idêntico nos dois acessos.
 - **Priorização do produto**: PASS — corrige fluxo financeiro operacional antes de novos recursos.
@@ -62,7 +62,8 @@ specs/020-consistencia-pagamentos-taxas/
 ├── quickstart.md
 ├── contracts/
 │   ├── contas-receber.md
-│   └── configuracoes-formas-pagamento.md
+│   ├── configuracoes-formas-pagamento.md
+│   └── despesas-operadora.md
 └── checklists/
     └── requirements.md
 ```
@@ -84,36 +85,48 @@ src/
 │   │       └── AtualizarConfiguracaoFormaPagamentoCommandHandler.cs
 │   ├── Services/
 │   │   └── VendaService.cs
+│   ├── Queries/
+│   │   ├── ObterDespesasOperadoraQuery.cs
+│   │   └── Handlers/
+│   │       └── ObterDespesasOperadoraQueryHandler.cs
 │   └── DTOs/
 │       ├── RegistrarPagamentoDto.cs
-│       └── ContaReceberDetalheDto.cs
+│       ├── ContaReceberDetalheDto.cs
+│       └── DespesaOperadoraListDto.cs
 ├── Amani.ImportadosERP.Infra.Data/
-│   ├── Repositories/ContaReceberRepository.cs
+│   ├── Repositories/
+│   │   ├── ContaReceberRepository.cs
+│   │   └── DespesaOperadoraRepository.cs
 │   └── Migrations/
-│       ├── 20260626000000_NormalizeNonDebitPaymentFees.cs
-│       └── 20260626000000_NormalizeNonDebitPaymentFees.Designer.cs
+│       ├── 20260626223710_NormalizeNonDebitPaymentFees.cs
+│       └── 20260626223710_NormalizeNonDebitPaymentFees.Designer.cs
 └── Amani.ImportadosERP.Api/
     └── Controllers/
         ├── ContasReceberController.cs
-        └── ConfiguracoesFormasPagamentoController.cs
+        ├── ConfiguracoesFormasPagamentoController.cs
+        └── DespesasOperadoraController.cs
 
 frontend/src/
 ├── components/
 │   ├── financeiro/
 │   │   ├── receivable-payment-modal.tsx
 │   │   ├── receivable-client-detail.tsx
-│   │   └── receivables-list.tsx
+│   │   ├── receivables-list.tsx
+│   │   └── operator-expenses-list.tsx
 │   ├── configuracoes/payment-fees-form.tsx
 │   └── vendas/sale-payment-modal.tsx
 ├── hooks/
 │   ├── use-receivables.ts
-│   └── use-payment-settings.ts
+│   ├── use-payment-settings.ts
+│   └── use-operator-expenses.ts
 ├── services/
 │   ├── receivables.ts
-│   └── payment-settings.ts
+│   ├── payment-settings.ts
+│   └── operator-expenses.ts
 └── types/
     ├── receivable.ts
-    └── payment-settings.ts
+    ├── payment-settings.ts
+    └── operator-expense.ts
 ```
 
 **Structure Decision**: preservar a aplicação web full stack existente. A mudança atravessa Domain, Application, Infra.Data, API e Frontend somente onde necessário; não haverá projeto, camada ou dependência adicional.

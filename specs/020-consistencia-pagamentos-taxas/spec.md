@@ -63,6 +63,24 @@ Como operador financeiro, quero que os fluxos já corretos de pagamento simples 
 3. **Given** uma venda Fiado, **When** um pagamento posterior é registrado, **Then** o usuário informa valor e, quando aplicável, desconto, sem campos de taxa de operadora.
 4. **Given** uma conta criada manualmente sem venda vinculada, **When** o pagamento é registrado, **Then** o fluxo permanece simples e não permite gerar despesa de operadora.
 
+---
+
+### User Story 4 - Consolidar total de taxas filtradas (Priority: P3)
+
+Como responsável financeiro, quero visualizar na consulta de despesas de operadora o total de taxas correspondente exatamente ao filtro aplicado, para fechar conferências sem somas manuais.
+
+**Why this priority**: A tela já lista as despesas, mas a conferência ainda depende de cálculo manual. Expor o consolidado reduz erro operacional e acelera a análise diária.
+
+**Independent Test**: Pode ser validado aplicando filtros de período e forma (Débito, Crédito e ambos), comparando o total exibido com a soma das linhas retornadas para o mesmo filtro.
+
+**Acceptance Scenarios**:
+
+1. **Given** a tela de despesas de operadora com qualquer filtro ativo, **When** os resultados são carregados, **Then** o sistema exibe o total de taxas correspondente ao mesmo conjunto de despesas mostrado na listagem.
+2. **Given** o filtro de forma definido como ambas as formas, **When** existem despesas de Débito e Crédito no período, **Then** o total exibido contempla a soma das duas formas sem divergência com as linhas apresentadas.
+3. **Given** o filtro de forma definido como apenas Débito ou apenas Crédito, **When** os resultados são carregados, **Then** o total exibido considera somente a forma selecionada.
+4. **Given** mudança de período ou forma, **When** a consulta é atualizada, **Then** o total é recalculado e apresentado com o mesmo recorte aplicado à lista.
+5. **Given** que não há despesas para o filtro atual, **When** a tela apresenta estado vazio, **Then** o total de taxas exibido é zero.
+
 ### Edge Cases
 
 - Valor líquido de Crédito exatamente igual ao bruto resulta em despesa de operadora zero e liquidação integral.
@@ -73,6 +91,8 @@ Como operador financeiro, quero que os fluxos já corretos de pagamento simples 
 - Duplo acionamento da confirmação enquanto a primeira operação está em processamento não deve gerar dois pagamentos.
 - Uma conta de Crédito já liquidada não pode aceitar novo pagamento.
 - O cálculo da despesa não pode resultar em valor negativo.
+- O total consolidado de taxas não pode divergir da soma das linhas exibidas para o mesmo filtro.
+- A alteração de filtro durante carregamento não pode manter total de um recorte anterior.
 
 ## Requirements *(mandatory)*
 
@@ -105,6 +125,11 @@ Como operador financeiro, quero que os fluxos já corretos de pagamento simples 
 - **FR-025**: O sistema MUST impedir confirmações simultâneas do mesmo pagamento na interação do usuário.
 - **FR-026**: Mensagens de validação e resultado MUST explicar em linguagem operacional o valor inválido, a exigência de liquidação integral ou a restrição de taxa aplicável.
 - **FR-027**: Os fluxos alterados MUST permanecer utilizáveis em smartphone, tablet e desktop, mantendo legibilidade do bruto, líquido, despesa e ação de confirmação.
+- **FR-028**: A consulta de despesas de operadora MUST disponibilizar um resumo consolidado de taxas calculado no backend para o mesmo filtro aplicado à listagem.
+- **FR-029**: O resumo consolidado MUST refletir exatamente o período e a forma selecionados pelo usuário, sem incluir registros fora do recorte exibido.
+- **FR-030**: Quando o filtro contemplar Débito e Crédito, o resultado MUST considerar ambas as formas no total consolidado.
+- **FR-031**: Quando o filtro contemplar apenas uma forma, o resultado MUST considerar somente a forma selecionada no total consolidado.
+- **FR-032**: Em ausência de despesas no filtro atual, o resumo consolidado MUST retornar total igual a zero.
 
 ### Key Entities
 
@@ -126,6 +151,8 @@ Como operador financeiro, quero que os fluxos já corretos de pagamento simples 
 - **SC-006**: A taxa de Débito válida pode ser consultada e atualizada em até 30 segundos, com confirmação clara do resultado.
 - **SC-007**: Os cenários de regressão de Dinheiro, PIX, Débito, Crédito, Fiado e conta manual produzem o status, saldo e despesa esperados sem inconsistência.
 - **SC-008**: Todos os cenários críticos definidos nesta especificação podem ser concluídos em smartphone, tablet e desktop sem ocultar valores ou ações obrigatórias.
+- **SC-009**: Em 100% dos filtros aplicados na tela de despesas de operadora, o total consolidado exibido corresponde exatamente à soma das despesas retornadas para o mesmo recorte.
+- **SC-010**: O usuário consegue identificar o total de taxas do recorte filtrado sem cálculo manual adicional em até 10 segundos após o carregamento dos dados.
 
 ## Assumptions
 
@@ -138,4 +165,5 @@ Como operador financeiro, quero que os fluxos já corretos de pagamento simples 
 - A normalização de taxas antigas muda somente configurações futuras; registros financeiros históricos permanecem imutáveis.
 - A validação desta feature seguirá os comandos de qualidade existentes e roteiros manuais, sem introduzir infraestrutura nova de testes automatizados, conforme decisão registrada no roadmap.
 - A experiência deve preservar Mobile First, Dark Theme, linguagem operacional e o backend como fonte da consistência financeira.
+- O consolidado de taxas da tela de despesas de operadora é uma visão de leitura baseada exclusivamente nos registros já persistidos, sem reprocessar ou alterar histórico financeiro.
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ using MediatR;
 namespace Amani.ImportadosERP.Application.Queries.Handlers;
 
 public sealed class ObterDespesasOperadoraQueryHandler
-    : IRequestHandler<ObterDespesasOperadoraQuery, List<DespesaOperadoraListDto>>
+    : IRequestHandler<ObterDespesasOperadoraQuery, DespesaOperadoraConsultaDto>
 {
     private readonly IDespesaOperadoraRepository _repository;
 
@@ -20,7 +19,7 @@ public sealed class ObterDespesasOperadoraQueryHandler
         _repository = repository;
     }
 
-    public async Task<List<DespesaOperadoraListDto>> Handle(
+    public async Task<DespesaOperadoraConsultaDto> Handle(
         ObterDespesasOperadoraQuery request,
         CancellationToken cancellationToken)
     {
@@ -35,23 +34,30 @@ public sealed class ObterDespesasOperadoraQueryHandler
             throw new InvalidOperationException("Forma de pagamento invalida para despesa de operadora");
         }
 
-        var despesas = await _repository.ObterComFiltrosAsync(
+        var (itens, totalTaxas) = await _repository.ObterConsultaComFiltrosAsync(
             request.DataInicio,
             request.DataFim,
             request.FormaPagamento);
 
-        return despesas
-            .Select(x => new DespesaOperadoraListDto
+        return new DespesaOperadoraConsultaDto
+        {
+            Itens = itens
+                .Select(x => new DespesaOperadoraListDto
+                {
+                    Id = x.Id,
+                    VendaId = x.VendaId,
+                    FormaPagamento = x.FormaPagamento,
+                    ValorBruto = x.ValorBruto,
+                    ValorLiquido = x.ValorLiquido,
+                    PercentualTaxa = x.PercentualTaxa,
+                    ValorTaxa = x.ValorTaxa,
+                    DataRegistro = x.DataRegistro
+                })
+                .ToList(),
+            Resumo = new DespesaOperadoraResumoDto
             {
-                Id = x.Id,
-                VendaId = x.VendaId,
-                FormaPagamento = x.FormaPagamento,
-                ValorBruto = x.ValorBruto,
-                ValorLiquido = x.ValorLiquido,
-                PercentualTaxa = x.PercentualTaxa,
-                ValorTaxa = x.ValorTaxa,
-                DataRegistro = x.DataRegistro
-            })
-            .ToList();
+                TotalTaxas = totalTaxas
+            }
+        };
     }
 }

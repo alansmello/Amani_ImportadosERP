@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Validar manualmente a consistência entre os dois acessos ao pagamento, a liquidação integral de Crédito, a restrição de taxa ao Débito e a ausência de regressão nas demais formas.
+Validar manualmente a consistência entre os dois acessos ao pagamento, a liquidação integral de Crédito, a restrição de taxa ao Débito, o total consolidado de taxas em despesas de operadora e a ausência de regressão nas demais formas.
 
 Referências:
 
@@ -10,6 +10,7 @@ Referências:
 - [Modelo de dados](./data-model.md)
 - [Contrato de Contas a Receber](./contracts/contas-receber.md)
 - [Contrato de Configurações](./contracts/configuracoes-formas-pagamento.md)
+- [Contrato de Despesas de Operadora](./contracts/despesas-operadora.md)
 
 ## Pré-requisitos
 
@@ -144,6 +145,23 @@ Resultado esperado: normalização somente de dados, sem mudança de schema e se
 Repetir os cenários principais em larguras de smartphone, tablet e desktop. Durante uma confirmação, tentar acionar o botão novamente.
 
 Resultado esperado: valores e ações permanecem legíveis, o modal cabe na viewport com rolagem quando necessária e a ação fica bloqueada enquanto o pagamento está em processamento.
+
+## Cenário 8 — Total consolidado de taxas por filtro
+
+1. Abrir `/financeiro/despesas-operadora` sem filtro de forma e aplicar um período com despesas de Débito e Crédito.
+2. Registrar o total consolidado exibido.
+3. Somar manualmente os valores de despesa listados para confirmar equivalência.
+4. Repetir aplicando filtro apenas `CartaoDebito`.
+5. Repetir aplicando filtro apenas `CartaoCredito`.
+6. Aplicar um período sem despesas.
+
+Resultado esperado:
+
+- a tela exibe o resumo com o rótulo `Total de taxas`;
+- o total consolidado corresponde à soma das linhas exibidas no mesmo recorte;
+- no filtro sem forma, o total contempla Débito e Crédito;
+- nos filtros por forma, o total contempla somente a forma selecionada;
+- quando não houver itens, o total exibido é zero.
 
 ## Evidências a registrar
 
