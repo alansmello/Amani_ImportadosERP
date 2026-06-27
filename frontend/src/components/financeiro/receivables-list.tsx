@@ -53,7 +53,7 @@ type PaymentModalState = {
   receivableId: string;
   clienteName: string;
   saldo: number;
-  formaPagamento?: string | null;
+  formaPagamento?: ReceivableListItem["formaPagamento"];
 };
 
 const CLOSED_MODAL: PaymentModalState = {

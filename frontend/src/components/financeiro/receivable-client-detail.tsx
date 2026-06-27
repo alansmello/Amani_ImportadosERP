@@ -44,12 +44,14 @@ type PaymentModalState = {
   open: boolean;
   receivableId: string;
   saldo: number;
+  formaPagamento?: ReceivableClientDetail["formaPagamento"];
 };
 
 const CLOSED_MODAL: PaymentModalState = {
   open: false,
   receivableId: "",
-  saldo: 0
+  saldo: 0,
+  formaPagamento: null
 };
 
 function StatusBadge({ status }: { status: string }) {
@@ -172,7 +174,8 @@ export function ReceivableClientDetail({
                             setPaymentModal({
                               open: true,
                               receivableId: conta.contaId,
-                              saldo: conta.saldo
+                              saldo: conta.saldo,
+                              formaPagamento: conta.formaPagamento
                             })
                           }
                         >
@@ -243,6 +246,7 @@ export function ReceivableClientDetail({
         receivableId={paymentModal.receivableId}
         clienteName={clienteName}
         saldo={paymentModal.saldo}
+        formaPagamento={paymentModal.formaPagamento}
       />
     </>
   );

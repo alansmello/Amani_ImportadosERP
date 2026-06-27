@@ -20,9 +20,22 @@ public sealed class ConfiguracaoFormaPagamento : BaseEntity
 
     public void AtualizarTaxa(decimal percentualTaxa)
     {
-        if (percentualTaxa < 0)
+        if (FormaPagamento != FormaPagamento.CartaoDebito)
         {
-            throw new ArgumentException("Percentual de taxa nao pode ser negativo", nameof(percentualTaxa));
+            if (percentualTaxa != 0)
+            {
+                throw new ArgumentException("Somente cartao de debito possui taxa configuravel", nameof(percentualTaxa));
+            }
+
+            PercentualTaxa = 0;
+            AtualizadoEm = DateTime.UtcNow;
+            Touch();
+            return;
+        }
+
+        if (percentualTaxa < 0 || percentualTaxa >= 100)
+        {
+            throw new ArgumentException("Percentual de taxa invalido para cartao de debito", nameof(percentualTaxa));
         }
 
         PercentualTaxa = percentualTaxa;

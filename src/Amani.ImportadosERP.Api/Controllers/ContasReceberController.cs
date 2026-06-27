@@ -47,8 +47,7 @@ public class ContasReceberController : ControllerBase
             ContaReceberId = id,
             Valor = dto.Valor,
             Desconto = dto.Desconto,
-            ValorBrutoLiquidado = dto.ValorBrutoLiquidado,
-            PercentualTaxaOperadora = dto.PercentualTaxaOperadora
+            ValorBrutoLiquidado = dto.ValorBrutoLiquidado
         };
 
         try

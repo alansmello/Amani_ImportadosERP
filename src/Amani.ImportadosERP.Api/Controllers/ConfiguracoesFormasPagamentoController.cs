@@ -48,6 +48,10 @@ public sealed class ConfiguracoesFormasPagamentoController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     public sealed class AtualizarConfiguracaoFormaPagamentoRequest

@@ -113,11 +113,15 @@ public class ContaReceberRepository : IContaReceberRepository
     {
         if (clienteId == Guid.Empty) return new List<ContaReceberDetalheDto>();
 
-        var vendaIds = await _context.Vendas
+        var vendasDoCliente = await _context.Vendas
             .AsNoTracking()
             .Where(v => v.ClienteId == clienteId)
-            .Select(v => v.Id)
+            .Select(v => new { v.Id, v.FormaPagamento })
             .ToListAsync();
+
+        var vendaIds = vendasDoCliente.Select(v => v.Id).ToList();
+        var formaPagamentoPorVenda = vendasDoCliente
+            .ToDictionary(v => v.Id, v => v.FormaPagamento.ToString());
 
         var contas = await _context.ContasReceber
             .AsNoTracking()
@@ -130,6 +134,10 @@ public class ContaReceberRepository : IContaReceberRepository
             {
                 var totalPago = c.Pagamentos.Sum(p => p.ValorBrutoLiquidado);
                 var saldo = c.Valor - totalPago;
+                var formaPagamento = c.VendaId.HasValue
+                    && formaPagamentoPorVenda.TryGetValue(c.VendaId.Value, out var forma)
+                        ? forma
+                        : null;
 
                 return new ContaReceberDetalheDto
                 {
@@ -137,6 +145,7 @@ public class ContaReceberRepository : IContaReceberRepository
                     VendaId = c.VendaId,
                     ClienteId = c.ClienteId,
                     Origem = c.Origem,
+                    FormaPagamento = formaPagamento,
                     ValorTotal = c.Valor,
                     TotalPago = totalPago,
                     Saldo = saldo,
