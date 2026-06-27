@@ -89,8 +89,11 @@ export function SalePaymentModal({
       ? Number(percentualTaxaOverride.replace(",", "."))
       : null;
 
-    if (override !== null && (!Number.isFinite(override) || override < 0)) {
-      setError("Informe uma taxa valida ou deixe o campo em branco.");
+    if (
+      override !== null &&
+      (!Number.isFinite(override) || override < 0 || override >= 100)
+    ) {
+      setError("Informe uma taxa valida para debito entre 0 e menor que 100.");
       return;
     }
 
@@ -183,6 +186,7 @@ export function SalePaymentModal({
                   id="sale-payment-fee-override"
                   type="number"
                   min="0"
+                  max="99.99"
                   step="0.01"
                   inputMode="decimal"
                   placeholder={String(selectedSetting?.percentualTaxa ?? 0)}

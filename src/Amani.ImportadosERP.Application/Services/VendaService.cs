@@ -49,12 +49,8 @@ public class VendaService
             throw new InvalidOperationException("Forma de pagamento obrigatoria");
         }
 
-        if (dto.PercentualTaxaOverride < 0)
-        {
-            throw new InvalidOperationException("Taxa invalida");
-        }
-
         var formaPagamento = dto.FormaPagamento.Value;
+        ValidarOverrideParaForma(formaPagamento, dto.PercentualTaxaOverride);
         var percentualTaxa = await ResolverPercentualTaxaAsync(formaPagamento, dto.PercentualTaxaOverride);
         var venda = new Venda(
             dto.ClienteId,
@@ -126,21 +122,42 @@ public class VendaService
     {
         if (!EhCartaoDebito(formaPagamento))
         {
-            if (percentualTaxaOverride > 0)
-            {
-                throw new InvalidOperationException("Taxa invalida para esta forma de pagamento");
-            }
-
             return 0m;
         }
 
         if (percentualTaxaOverride.HasValue)
         {
+            ValidarTaxaDebito(percentualTaxaOverride.Value);
             return percentualTaxaOverride.Value;
         }
 
         var configuracao = await _configuracaoFormaPagamentoRepository.ObterPorFormaAsync(formaPagamento);
-        return configuracao?.PercentualTaxa ?? 0m;
+        var percentualConfigurado = configuracao?.PercentualTaxa ?? 0m;
+        ValidarTaxaDebito(percentualConfigurado);
+        return percentualConfigurado;
+    }
+
+    private static void ValidarOverrideParaForma(FormaPagamento formaPagamento, decimal? percentualTaxaOverride)
+    {
+        if (!percentualTaxaOverride.HasValue)
+        {
+            return;
+        }
+
+        if (!EhCartaoDebito(formaPagamento))
+        {
+            throw new InvalidOperationException("Taxa invalida para esta forma de pagamento");
+        }
+
+        ValidarTaxaDebito(percentualTaxaOverride.Value);
+    }
+
+    private static void ValidarTaxaDebito(decimal percentualTaxa)
+    {
+        if (percentualTaxa < 0 || percentualTaxa >= 100)
+        {
+            throw new InvalidOperationException("Taxa de debito invalida");
+        }
     }
 
     private static bool EhCartaoDebito(FormaPagamento formaPagamento)

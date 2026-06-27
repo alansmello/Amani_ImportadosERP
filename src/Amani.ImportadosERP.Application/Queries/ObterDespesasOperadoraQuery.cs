@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using Amani.ImportadosERP.Application.DTOs;
 using Amani.ImportadosERP.Domain.Enums;
 using MediatR;
 
 namespace Amani.ImportadosERP.Application.Queries;
 
-public sealed class ObterDespesasOperadoraQuery : IRequest<List<DespesaOperadoraListDto>>
+public sealed class ObterDespesasOperadoraQuery : IRequest<DespesaOperadoraConsultaDto>
 {
     public DateTime? DataInicio { get; set; }
     public DateTime? DataFim { get; set; }

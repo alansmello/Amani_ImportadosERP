@@ -1,3 +1,5 @@
+import type { PaymentMethod } from "@/types/payment-settings";
+
 export type ReceivableStatus = "Pendente" | "Pago";
 
 export type ReceivableOrigin = "Venda" | "Manual" | "SaldoInicial" | "ImplantacaoInicial";
@@ -7,7 +9,7 @@ export type ReceivableListItem = {
   vendaId: string | null;
   clienteId: string | null;
   origem: string;
-  formaPagamento?: string | null;
+  formaPagamento?: PaymentMethod | null;
   valorTotal: number;
   totalPago: number;
   saldo: number;
@@ -34,6 +36,7 @@ export type ReceivableClientDetail = {
   vendaId: string | null;
   clienteId: string | null;
   origem: string;
+  formaPagamento?: PaymentMethod | null;
   valorTotal: number;
   totalPago: number;
   saldo: number;
@@ -57,7 +60,6 @@ export type RegisterPaymentPayload = {
   valor: number;
   desconto?: number;
   valorBrutoLiquidado?: number;
-  percentualTaxaOperadora?: number;
 };
 
 export type CreateReceivableResponse = {

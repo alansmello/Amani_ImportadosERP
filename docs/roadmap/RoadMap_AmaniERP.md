@@ -4,7 +4,7 @@
 
 # **1. Diagnóstico do estado atual**
 
-## **1.1 Backend (`src/`) — maduro e à frente do frontend**
+## **1.1 Backend (`src/`) — maduro e integrado ao frontend**
 
 Arquitetura confirmada: Clean Architecture + DDD Lite, .NET 8, EF Core (Npgsql) + Fluent API, Repository Pattern, MediatR (Commands/Queries), DTOs explícitos sem AutoMapper. A regra constitucional **estoque por movimentações** está respeitada (não há campo fixo de saldo; `EstoqueConsultaRepository.ObterSaldoAsync` calcula entradas − saídas).
 
@@ -18,39 +18,45 @@ Endpoints já implementados e funcionais:
 | Fornecedores | CRUD | OK |
 | Compras | criar, obter, `recebimentos`, `perdas`, `em-transito`, `produtos-pendentes`, listar | OK (recebimento parcial + perdas + transação) |
 | Vendas | criar (valida estoque + calcula lucro por custo médio), obter, listar, `dashboard`, `cancelar` | OK |
-| Despesas | criar, listar | Parcial (sem update/delete; ver lacuna G2) |
+| Despesas | criar, listar | Operacional (update/delete permanecem no backlog) |
+| Categorias de despesa | criar, listar, atualizar, inativar, reativar | OK |
 | Contas a Receber | criar, `pagamentos`, listar, `por-cliente`, detalhe por cliente, update, delete | OK |
+| Configurações de pagamento | listar e atualizar taxas | Funcional, com regra a restringir em F020 |
 | Implantação | `inventario-inicial`, `saldo-inicial-caixa`, `contas-receber-iniciais` | OK |
 | Dashboard Gerencial | consolidado, `financeiro`, `operacional`, `rankings`, `alertas`, `graficos` | OK (consultas agregadas via repositories de leitura) |
 | Dashboard Financeiro | `GET` | OK |
 
 ## **1.2 Frontend (`frontend/`) — Next.js 15 / React 19 / Tailwind, Dark Only, Mobile First**
 
-- **Implementado de verdade:** Produtos (lista, novo, detalhe, editar), Clientes (lista, novo, detalhe, editar, inativar) e Compras/Recebimentos F011 (lista, filtros, nova compra, detalhe, recebimentos, perdas e pendências). Design System completo (`app-shell`, `desktop-sidebar`, `mobile-bottom-nav`, estados loading/error/empty, UI base, TanStack Query).
-- **Service pronto sem tela:** `services/suppliers.ts` existe, mas não há página de Fornecedores.
-- **Apenas placeholders (`EmptyState`):** Dashboard (home), Vendas, Estoque, Financeiro, Configurações.
+- **Fluxo operacional implementado:** Produtos, Clientes, Fornecedores, Implantação Inicial, Compras/Recebimentos, Estoque, Vendas, Contas a Receber, Despesas, Dashboard, Autenticação e Configurações.
+- **Infraestrutura disponível:** Design System local, `app-shell`, navegação responsiva, estados loading/error/empty, TanStack Query, API client autenticado e componentes de modal baseados em Radix Dialog.
+- **Estado atual do refinamento:** os módulos estão funcionais, porém existem divergências de UX entre telas, identificadores técnicos expostos, navegação de retorno baseada em links fixos, cadastro auxiliar que interrompe fluxos e uma inconsistência financeira entre os dois acessos ao pagamento de contas a receber.
 
-## **1.3 Features concluídas (specs 001–014)**
+## **1.3 Features concluídas (specs 001–019)**
 
-001 Cadastros base · 002 Implantação inicial · 003 Mercadorias em trânsito/recebimento parcial · 004 Dashboards gerenciais · 005 Frontend base (Design System) · 006 Produtos (frontend) · 007 Clientes (frontend) · 008 Consulta de Estoque (backend) · 009 Fornecedores (frontend) · 010 Implantação Inicial (frontend) · 011 Compras e Recebimentos (frontend) · 012 Estoque (frontend) · 013 Vendas (frontend) · 014 Financeiro: Contas a Receber (frontend).
+001 Cadastros base · 002 Implantação inicial · 003 Mercadorias em trânsito/recebimento parcial · 004 Dashboards gerenciais · 005 Frontend base · 006 Produtos · 007 Clientes · 008 Consulta de Estoque · 009 Fornecedores · 010 Implantação Inicial · 011 Compras e Recebimentos · 012 Estoque · 013 Vendas · 014 Contas a Receber · 015 Formas de Pagamento e Taxas · 016 Despesas e Categorias · 017 Dashboard Gerencial/Financeiro · 018 Autenticação e Autorização · 019 Configurações e Categorias.
 
-## **1.4 A lacuna central do MVP**
+## **1.4 Situação atual do produto**
 
-> *O backend já consegue operar o negócio inteiro (comprar → receber → estoque → vender → financeiro → dashboard), mas o frontend só expõe cadastro de produtos e clientes. **O caminho para o MVP é, majoritariamente, superfície de frontend sobre endpoints que já existem**, mais alguns pequenos preenchimentos de lacuna no backend.*
-> 
+> *O MVP operacional e gerencial está implementado de ponta a ponta. A etapa seguinte não é abertura de novos módulos, mas correção de consistência financeira e refinamento dos fluxos de maior frequência. As próximas features devem preservar os contratos existentes sempre que possível, manter regras críticas no backend e ser pequenas o suficiente para validação isolada.*
 
-## **1.5 Lacunas técnicas detectadas no backend (confirmadas em código)**
+## **1.5 Lacunas e inconsistências atuais confirmadas em código**
 
-- **G1 — Consulta de estoque não exposta:** `IEstoqueConsultaRepository` só é usado internamente por `VendaService`. Não há controller para ler saldo nem histórico de movimentações. Bloqueia a tela de Estoque e o saldo no detalhe do produto.
-- **G2 — Categorias de despesa sem endpoint:** `CriarDespesaCommand` exige `CategoriaDespesaId`, mas existe entidade `CategoriaDespesa` sem nenhum controller de criar/listar. Bloqueia o lançamento de despesas pelo frontend.
-- **G3 — Sem autenticação/autorização** em toda a stack.
-- **G4 (menor):** Despesas sem update/delete; Produtos sem inativar/excluir.
+- **G5 — Contexto financeiro divergente:** a listagem principal de Contas a Receber fornece `FormaPagamento` ao modal, mas o detalhe por cliente não fornece. Cartão de crédito acessado por `Clientes → Ver contas → Pagamento` cai no formulário legado.
+- **G6 — Configuração de taxas incoerente:** a interface permite editar taxa para Dinheiro, PIX, Crédito e Fiado, embora apenas Débito utilize configuração automática na venda. A taxa de Crédito é apurada pelo valor líquido no recebimento e as demais são ignoradas.
+- **G7 — Identificadores técnicos expostos:** GUIDs aparecem na lista/detalhe de Fornecedor e nos detalhes de Cliente e Produto, sem utilidade operacional.
+- **G8 — Fornecedor sem telefone:** domínio, DTOs, API e frontend de Fornecedor possuem apenas nome; exibir telefone exige alteração full stack e migration nullable.
+- **G9 — Cadastros auxiliares interrompem fluxos:** Compra e Produto não permitem criar suas referências no próprio formulário; Venda abre o cadastro oficial de Cliente em outra aba.
+- **G10 — Inclusão de itens da Venda visualmente pesada:** cada item mantém um card aberto. O resumo não lista nome e valor de cada produto.
+- **G11 — Consolidação ambígua de produto duplicado:** a implementação atual soma quantidades, mas pode descartar silenciosamente preço, desconto e acréscimo do segundo item.
+- **G12 — Navegação de retorno fixa:** páginas de criação, edição e detalhe apontam para uma rota pai predeterminada, em vez de considerar a origem real do usuário.
+- **G13 (remanescente):** Despesas continuam sem update/delete e Produtos/Fornecedores sem inativação; estes itens permanecem fora de F020–F022.
 
 ---
 
-# **2. Features propostas (até o MVP)**
+# **2. Features do produto**
 
-> *Numeração seguindo o padrão Spec Kit (a última concluída é 014).*
+> *F008–F019 estão concluídas e seus textos abaixo registram o escopo histórico original. F020–F022 são as próximas features aprovadas e deverão originar specs, planos e tasks independentes. Para taxas e pagamentos, as decisões da F020 substituem qualquer premissa anterior incompatível das F015/F019.*
 > 
 
 ---
@@ -239,6 +245,7 @@ Endpoints já implementados e funcionais:
 
 ## **F019 — Configurações e Categorias (refinamento, frontend)**
 
+- **Status:** Concluída.
 - **Objetivo:** Centralizar gestão de apoio: categorias de produto, categorias de despesa, taxas de formas de pagamento e preferências.
 - **Escopo exato:** Página Configurações real com CRUD de categorias e gestão de taxas (endpoints prontos em F015 e F016).
 - **O que entra:** Gestão de categorias de produto (`/api/categorias`) e de despesa (F016), taxas de operadora por forma de pagamento (F015), atalhos para implantação.
@@ -247,60 +254,331 @@ Endpoints já implementados e funcionais:
 - **Prioridade:** Baixa-média (refinamento).
 - **Risco técnico:** Baixo.
 - **Ordem sugerida:** 12º.
-- **Critérios de aceite:** CRUD de categorias funcional; taxas editáveis; responsivo; sem regra no cliente.
+- **Critérios de aceite histórico:** CRUD de categorias funcional; configurações de taxa disponíveis; responsivo; sem regra financeira calculada no cliente.
+- **Débito técnico identificado após conclusão:** a tela expõe edição de taxas para formas que não consomem essa configuração. A correção e a regra vigente estão formalizadas na F020.
 - **Impacto:** `frontend/src/app/configuracoes/**` (substituir placeholder), `components/configuracoes/**`, `services/categories.ts` (estender).
+
+---
+
+## **F020 — Consistência de Pagamentos e Revisão de Taxas de Operadora (backend + frontend)**
+
+- **Status:** Aprovada para especificação.
+- **Prioridade:** Crítica; deve ser executada antes dos demais refinamentos por corrigir divergência em um fluxo financeiro já disponível aos usuários.
+- **Objetivo:** Garantir que o registro de pagamento tenha o mesmo contrato, os mesmos campos e a mesma regra financeira independentemente do caminho de acesso, e tornar a configuração de taxas coerente com o comportamento efetivo do backend.
+- **Problema confirmado:** a lista principal de Contas a Receber inclui `FormaPagamento` e abre o fluxo simplificado de Crédito. O detalhe por cliente não inclui esse dado e, por isso, abre o ramo legado do mesmo modal, com desconto, valor bruto liquidado e percentual manual.
+
+### **Decisões de negócio aprovadas**
+
+1. **Somente Cartão de Débito possui taxa configurável.**
+2. Dinheiro, PIX e Fiado devem operar com taxa zero e não devem permitir edição de taxa.
+3. Cartão de Crédito não usa taxa previamente configurada: a despesa é apurada no recebimento pela diferença entre o valor bruto integral e o valor líquido efetivamente creditado.
+4. Pagamento de venda em Cartão de Crédito permite **apenas liquidação integral**; pagamento parcial fica fora do escopo.
+5. O fluxo acessado por `Clientes → Ver contas → Pagamento` deve ser idêntico ao fluxo da lista principal de Contas a Receber.
+6. Deve existir apenas um componente de pagamento e uma única regra de construção de payload por forma de pagamento.
+
+### **Escopo funcional**
+
+- Incluir `FormaPagamento` no DTO de detalhe da conta por cliente e preencher o valor a partir da venda vinculada.
+- Repassar o contexto financeiro completo ao modal compartilhado em todos os pontos de entrada.
+- Para Crédito, solicitar apenas o valor líquido recebido, exibir o valor bruto integral e a prévia da despesa de operadora.
+- No backend, validar que o bruto liquidado corresponde a todo o saldo restante da conta de Crédito; rejeitar tentativa de liquidação parcial.
+- Manter `Desconto = 0` no recebimento de Crédito e calcular a despesa como `saldo bruto integral − valor líquido recebido`.
+- Derivar o percentual efetivo da taxa a partir dos valores bruto e líquido; percentual informado pelo frontend não deve ser necessário no fluxo aprovado.
+- Para contas manuais ou formas sem operadora, manter pagamento simples com valor e desconto, sem campos de taxa de operadora.
+- Exibir somente Débito como taxa editável na Configuração. Crédito deve aparecer, se necessário para compreensão, apenas como informação: “taxa apurada no recebimento”.
+- Rejeitar no backend taxa diferente de zero para Dinheiro, PIX, Crédito e Fiado.
+- Validar a taxa de Débito no intervalo `0 <= taxa < 100`.
+- Normalizar configurações persistidas de formas não editáveis para zero. Como já existe Crédito com valor inicial de 3,49%, prever **migration exclusivamente de dados**, sem alteração de schema, caso a pesquisa da spec confirme banco já migrado em ambientes reais.
+- Preservar a geração automática de pagamento e despesa de operadora no Débito.
+- Invalidar consultas de contas, detalhe por cliente e despesas de operadora após pagamento bem-sucedido.
+
+### **Fora do escopo**
+
+- Pagamento parcial de Cartão de Crédito.
+- Parcelamento de cartão.
+- Conciliação bancária automática.
+- Estorno de pagamento ou de despesa de operadora.
+- Idempotência geral da API de pagamentos, salvo proteção local contra duplo clique já existente.
+- Alteração das regras de Dinheiro, PIX, Débito e Fiado na criação da venda além da restrição de configuração de taxa.
+
+### **Arquivos e contratos provavelmente impactados**
+
+- Backend: `ContaReceberDetalheDto`, query/repository de detalhe por cliente, `RegistrarPagamentoCommandHandler`, configuração/handler de formas de pagamento e migration de normalização de dados.
+- Frontend: `types/receivable.ts`, `receivable-client-detail.tsx`, `receivable-payment-modal.tsx`, `receivables-list.tsx`, `payment-fees-form.tsx`, hooks de recebíveis e configurações.
+- Nenhuma nova entidade é prevista.
+
+### **Riscos e controles**
+
+- **Despesa excessiva por digitação incorreta:** mostrar bruto, líquido e diferença antes da confirmação; backend valida líquido positivo e não superior ao bruto.
+- **Saldo residual indevido:** backend exige liquidação integral do bruto para Crédito.
+- **Regra divergente entre telas:** todos os pontos de entrada devem fornecer o mesmo contexto e usar o mesmo modal.
+- **Configuração sem efeito:** backend e frontend devem impedir taxa configurável fora do Débito.
+- **Regressão no Débito:** validar que pagamento líquido imediato e despesa automática continuam transacionais.
+
+### **Critérios mínimos de aceite**
+
+- O mesmo recebível de Crédito apresenta exatamente o mesmo formulário pelos dois caminhos.
+- Crédito aceita somente liquidação integral e gera uma despesa igual à diferença bruto − líquido.
+- Dinheiro, PIX, Crédito e Fiado não aceitam taxa configurável.
+- Débito continua usando a taxa padrão ou override permitido na venda, conforme contrato da F015.
+- O histórico e o saldo são atualizados após o pagamento sem refresh manual.
+- `dotnet build`, `npm run lint`, `npm run typecheck` e `npm run build` concluídos com sucesso.
+- Validação manual dos cinco meios de pagamento e dos dois caminhos de acesso ao recebimento.
+
+---
+
+## **F021 — Cadastros Auxiliares, Fornecedores e Navegação Contextual (backend + frontend)**
+
+- **Status:** Aprovada para especificação após F020.
+- **Prioridade:** Alta para produtividade operacional.
+- **Objetivo:** Reduzir interrupções nos cadastros de Compra e Produto, substituir identificadores técnicos por informação útil e padronizar o retorno à origem real do usuário.
+
+### **Decisões de negócio aprovadas**
+
+1. Fornecedor passa a possuir **telefone opcional**.
+2. GUIDs devem ser removidos das telas operacionais de Fornecedor, Cliente e Produto.
+3. Nova Compra deve permitir cadastrar Fornecedor em modal sem abandonar o rascunho.
+4. Novo Produto deve permitir cadastrar Categoria e Fornecedor em modais.
+5. O botão Voltar deve priorizar a origem interna real, com fallback seguro para a rota pai.
+6. Os modais rápidos não substituem as telas oficiais de cadastro.
+
+### **Escopo funcional — Fornecedor e identificadores**
+
+- Adicionar `Telefone` nullable à entidade Fornecedor, DTOs de criação/atualização/consulta, serviço, mapeamento EF e contrato frontend.
+- Criar migration de schema com coluna nullable para preservar fornecedores existentes.
+- Aplicar trim, tamanho máximo e validação consistente no backend; não exigir unicidade do telefone.
+- Incluir telefone nos formulários oficial e rápido.
+- Substituir a coluna `Identificador` da listagem por `Telefone`, exibindo “Não informado” quando vazio.
+- Remover GUID do cabeçalho e do card de detalhe do Fornecedor.
+- Remover GUID dos cabeçalhos de detalhe de Cliente e Produto.
+- Substituir fallbacks de GUID abreviado por mensagens operacionais, como “Cliente não encontrado” ou “Referência indisponível”.
+- Manter IDs internamente em rotas, keys, payloads e relações; a remoção é apenas da apresentação ao usuário.
+
+### **Escopo funcional — Cadastros rápidos**
+
+- Criar modal compartilhado de Fornecedor, reutilizável em Nova Compra e Novo Produto.
+- Criar modal simples de Categoria de Produto com o mesmo contrato de nome já usado em Configurações.
+- Após salvar, inserir/atualizar o cache da entidade, atualizar o select e selecionar automaticamente o registro criado.
+- Preservar todos os campos já preenchidos no formulário hospedeiro durante abertura, erro, cancelamento e sucesso do modal.
+- Manter o formulário de Nova Compra acessível quando ainda não existe fornecedor; ausência de produto continua bloqueando a compra.
+- Manter a ação de criar Categoria acessível quando ainda não existe categoria; a ausência inicial não pode esconder o próprio atalho de correção.
+- Exibir erros reais retornados pela API dentro do modal.
+- Evitar duplicação de validação: campos e normalização devem ser compartilhados com o cadastro oficial quando viável.
+
+### **Escopo funcional — Navegação contextual**
+
+- Criar componente compartilhado de retorno com origem interna e `fallbackHref` obrigatório.
+- Registrar apenas caminhos internos do ERP; não permitir retorno fornecido por URL externa.
+- Para links controlados entre módulos, aceitar origem explícita validada (`returnTo`) quando necessário.
+- Em acesso direto, refresh ou ausência de histórico interno, usar o fallback sem retirar o usuário do ERP.
+- Substituir os links fixos “Voltar” nas páginas de criação, edição e detalhe por esse padrão compartilhado.
+- Não alterar ações de cancelar dentro de modais, que continuam fechando o modal.
+
+### **Fora do escopo**
+
+- Novos campos de fornecedor além de telefone.
+- Inativação ou exclusão de fornecedor.
+- Máscara dependente de país ou integração com WhatsApp.
+- Cadastro rápido de Produto dentro da Compra.
+- Cadastro rápido de Cliente na Venda, reservado para F022.
+- Breadcrumbs completos ou redesign da navegação principal.
+
+### **Arquivos e contratos provavelmente impactados**
+
+- Backend: `Fornecedor`, `FornecedorDto`, `CriarFornecedorDto`, `AtualizarFornecedorDto`, `FornecedorService`, `FornecedorMapping` e nova migration.
+- Frontend de Fornecedor: tipos, service, hooks, fields, form, tabela e detalhe.
+- Compra: `purchase-form.tsx` e estados de referência vazia.
+- Produto: página de criação, form, fields, hooks de Categoria/Fornecedor.
+- Compartilhados: novos modais de cadastro rápido e componente/hook de navegação contextual.
+- Rotas de criação, edição e detalhe que atualmente renderizam links fixos de retorno.
+
+### **Riscos e controles**
+
+- **Migration em dados existentes:** coluna nullable e sem default obrigatório.
+- **Select desatualizado:** usar a resposta da mutation para selecionar imediatamente e sincronizar o cache.
+- **Perda de rascunho:** modal não deve desmontar o formulário hospedeiro.
+- **Retorno para fora do ERP:** somente histórico interno conhecido ou fallback validado.
+- **Escopo global de navegação:** migrar e validar rota por rota, mantendo fallback explícito.
+
+### **Critérios mínimos de aceite**
+
+- Fornecedor existente sem telefone continua válido.
+- Novo/editar fornecedor persiste e exibe telefone.
+- Nenhum GUID de Fornecedor, Cliente ou Produto aparece nas telas operacionais mapeadas.
+- Fornecedor criado na Compra fica selecionado sem perder itens ou valores já preenchidos.
+- Categoria/Fornecedor criados no Produto ficam selecionados sem perder os demais campos.
+- Botão Voltar retorna à origem interna quando disponível e ao fallback em acesso direto.
+- `dotnet build`, `npm run lint`, `npm run typecheck` e `npm run build` concluídos com sucesso.
+- Validação manual em smartphone, tablet e desktop.
+
+---
+
+## **F022 — Refinamento do Fluxo de Nova Venda (frontend, preservando API existente)**
+
+- **Status:** Aprovada para especificação após F021.
+- **Prioridade:** Alta para produtividade e clareza no principal fluxo comercial.
+- **Objetivo:** Permitir cadastro rápido de Cliente e substituir múltiplos cards de item por um único compositor, mantendo o resumo como fonte visual dos itens incluídos e preservando cálculos, validações e payload atuais.
+
+### **Decisões de negócio aprovadas**
+
+1. Cadastro rápido de Cliente ocorre em modal dentro da Nova Venda.
+2. O editor de item deve ser único e limpo após cada inclusão.
+3. Produto já incluído deve ser **bloqueado**, não consolidado automaticamente.
+4. Itens incluídos devem aparecer no resumo com nome e valor e permanecer editáveis/removíveis.
+5. O contrato de criação de Venda e a validação oficial de estoque continuam no backend.
+
+### **Escopo funcional — Cliente**
+
+- Substituir o link para `/clientes/novo` em outra aba por ação “Cadastrar cliente” em modal.
+- Reutilizar o contrato oficial: nome obrigatório, email e telefone opcionais.
+- Atualizar cache/lista após criação e selecionar automaticamente o novo Cliente.
+- Preservar data, ajustes gerais, itens e qualquer outro rascunho da venda.
+- Manter a tela oficial de Cliente disponível na navegação normal.
+
+### **Escopo funcional — Compositor de item**
+
+- Separar estado do item em edição do array de itens confirmados.
+- Renderizar um único formulário com Produto, Quantidade, Preço Unitário, Desconto e Acréscimo.
+- Preencher o preço padrão ao selecionar o Produto, preservando a possibilidade de edição permitida atualmente.
+- Validar o item isoladamente antes de incluí-lo.
+- Ao clicar em “Incluir item”, adicionar o item ao resumo e reiniciar o editor com valores iniciais.
+- Se o Produto já estiver no resumo, bloquear a inclusão e orientar o usuário a editar o item existente.
+- Não executar a consolidação atual que soma quantidade e pode descartar preço/desconto/acréscimo.
+- Permitir editar um item já incluído carregando-o de volta no compositor ou por interação equivalente claramente definida na spec.
+- Permitir remover item do resumo com feedback imediato.
+
+### **Escopo funcional — Resumo e envio**
+
+- Exibir por item: nome do Produto, quantidade, preço unitário e valor líquido do item.
+- Manter subtotal, desconto geral, acréscimo geral e total preenchido.
+- Calcular no frontend somente a prévia visual já existente; backend permanece fonte oficial do total, estoque, custo médio e lucro.
+- Validar a Venda somente com os itens confirmados; conteúdo incompleto no compositor não deve ser enviado silenciosamente.
+- Preservar o payload de `CriarVendaDto` e o modal financeiro pós-venda.
+- Manter mensagem consultiva de estoque no frontend e validação definitiva no backend.
+- Após sucesso, limpar cliente, rascunho, compositor e resumo conforme comportamento atual.
+
+### **Fora do escopo**
+
+- Alterar regras de estoque, custo médio, lucro ou movimentações.
+- Split de pagamento, parcelamento ou múltiplas formas na mesma venda.
+- Produtos repetidos com preços diferentes.
+- Edição da Venda após confirmação.
+- Cadastro rápido de Produto durante a Venda.
+- Alteração de contratos ou migrations no backend, salvo gap descoberto e aprovado durante a especificação.
+
+### **Arquivos e contratos provavelmente impactados**
+
+- `sale-form.tsx`, `sale-item-editor.tsx`, `sale-summary.tsx`, `sale-validation.ts` e tipos de draft da Venda.
+- Hooks e componentes de Cliente para o modal rápido.
+- Possível extração de componentes `quick-customer-dialog`, `sale-item-composer` e `sale-items-summary`.
+- Services e endpoints de Venda não devem mudar no cenário aprovado.
+
+### **Riscos e controles**
+
+- **Divergência entre item em edição e itens confirmados:** estados separados e envio restrito ao resumo.
+- **Perda de ajustes ao editar:** edição deve substituir explicitamente o item, nunca consolidar parcialmente.
+- **Produto duplicado:** bloqueio antes de inserir no array.
+- **Cálculo visual divergente:** reutilizar as mesmas funções puras de prévia e tratar o backend como resultado oficial.
+- **Regressão no pagamento:** modal financeiro é aberto somente após validação completa do novo draft.
+- **Estoque desatualizado:** alerta consultivo no frontend; rejeição oficial continua na API.
+
+### **Critérios mínimos de aceite**
+
+- Cliente criado no modal fica selecionado e o rascunho permanece intacto.
+- Existe somente um editor de item visível.
+- “Incluir item” valida, adiciona ao resumo e limpa o editor.
+- Produto duplicado é bloqueado com mensagem clara.
+- Resumo mostra nome, quantidade, preço e valor de cada item e permite editar/remover.
+- Payload final contém exatamente os itens confirmados e mantém o contrato atual.
+- Venda com estoque insuficiente continua sendo rejeitada pela API com mensagem compreensível.
+- Fluxos de Dinheiro, PIX, Débito, Crédito e Fiado continuam acessíveis após montar a venda.
+- `npm run lint`, `npm run typecheck` e `npm run build` concluídos com sucesso.
+- Validação manual em smartphone, tablet e desktop.
+
+---
+
+## **Diretriz de testes aprovada para F020–F022**
+
+- Não adicionar framework, dependência, projeto ou infraestrutura nova de testes automatizados nesta sequência de features.
+- Não criar suíte Vitest, React Testing Library, Playwright ou projeto xUnit como parte de F020–F022.
+- A validação obrigatória será composta por builds, lint, typecheck e roteiros manuais detalhados nas respectivas `quickstart.md`.
+- A ausência de infraestrutura automatizada deve ser registrada nas specs e nos planos como decisão explícita, sem bloquear a implementação aprovada.
+- Testes automatizados poderão ser propostos novamente em feature futura, mediante nova autorização.
 
 ---
 
 # **3. Roadmap recomendado por fases**
 
-### **Fase 1 — Essencial para usar o sistema (operação ponta a ponta)**
+### **Fase 1 — Operação ponta a ponta (concluída)**
 
-Objetivo: a Amani consegue lançar dados iniciais, comprar, receber, ver estoque e vender.
+F008 Consulta de Estoque · F009 Fornecedores · F010 Implantação Inicial · F011 Compras e Recebimentos · F012 Estoque · F013 Vendas.
 
-1. **F008** Consulta de Estoque (backend)
-2. **F009** Fornecedores (frontend)
-3. **F010** Implantação Inicial (frontend)
-4. **F011** Compras e Recebimentos (frontend)
-5. **F012** Estoque (frontend)
-6. **F013** Vendas (frontend)
+### **Fase 2 — Gestão e preparação para uso real (concluída)**
 
-> *Ao fim da Fase 1 já existe um **MVP operacional**: cadastra, semeia estoque/caixa, compra→recebe→estoca→vende com validação de saldo e lucro.*
-> 
+F014 Contas a Receber · F015 Formas de Pagamento e Taxas · F016 Despesas e Categorias · F017 Dashboard Gerencial/Financeiro · F018 Autenticação e Autorização.
 
-### **Fase 2 — Importante para gestão**
+### **Fase 3 — Configuração e refinamento inicial (F019 concluída)**
 
-1. **F014** Contas a Receber (frontend) ✅ *concluída*
-2. **F015** Formas de Pagamento na Venda + Taxas de Operadora (backend + frontend) ← **próxima**
-3. **F016** Despesas + Categorias de Despesa (backend G2 + frontend)
-4. **F017** Dashboard Gerencial/Financeiro (frontend)
-5. **F018** Autenticação e Autorização (full stack)
+F019 centralizou Categorias de Produto, Categorias de Despesa, Taxas de Operadora e atalhos de Implantação na página de Configurações.
 
-> *Ao fim da Fase 2 o sistema está **pronto para uso real em produção** com controle financeiro completo (formas de pagamento, despesas, recebíveis), visão gerencial e acesso protegido.*
-> 
+### **Fase 4 — Correção e refinamento operacional aprovado (próxima)**
 
-### **Fase 3 — Refinamento**
+Ordem obrigatória para reduzir risco e facilitar validação:
 
-1. **F019** Configurações e Categorias
-- Detalhe de Produto exibindo saldo + custo médio (depende de F008)
-- Paginação e busca server-side nas listas (hoje busca é local)
-- Melhor leitura de `{ error }` no `api-client.ts`
-- Update/delete de Despesas e inativação de Produto/Fornecedor (G4)
+1. **F020 — Consistência de Pagamentos e Revisão de Taxas de Operadora**
+   - Motivo da precedência: corrige comportamento financeiro divergente já exposto ao usuário.
+   - Gate de saída: Crédito consistente nos dois caminhos, apenas Débito configurável e liquidação integral validada pelo backend.
+2. **F021 — Cadastros Auxiliares, Fornecedores e Navegação Contextual**
+   - Motivo da posição: cria componentes e padrões reutilizáveis sem alterar o contrato de Venda.
+   - Gate de saída: telefone opcional migrado, GUIDs removidos, modais de Compra/Produto funcionais e retorno contextual padronizado.
+3. **F022 — Refinamento do Fluxo de Nova Venda**
+   - Motivo da posição: altera o componente de maior interação somente depois da estabilização financeira e dos padrões de cadastro rápido.
+   - Gate de saída: Cliente rápido, compositor único, duplicidade bloqueada, resumo editável e payload preservado.
 
-### **Fase 4 — Futuro pós-MVP**
+### **Fase 5 — Backlog pós-refinamento (não aprovado para execução nesta decisão)**
 
-- Relatórios exportáveis (PDF/Excel) e drill-down
-- Contas a pagar / fluxo de caixa projetado
-- Parcelamento de cartão de crédito (múltiplas parcelas)
-- Perfis e permissões granulares; multi-usuário avançado
-- Integrações com marketplaces e emissão fiscal
-- Devolução de venda, multi-depósito, estoque mínimo com alertas automáticos
-- PWA/offline para operação em viagem (reforça Princípio VIII Mobile First)
+- Detalhe de Produto exibindo saldo e custo médio.
+- Paginação e busca server-side nas listas.
+- Update/delete de Despesas e inativação de Produto/Fornecedor.
+- Relatórios exportáveis e drill-down.
+- Contas a pagar e fluxo de caixa projetado.
+- Parcelamento de Cartão de Crédito.
+- Estorno/cancelamento de pagamento e conciliação bancária.
+- Perfis e permissões granulares.
+- Integrações com marketplaces e emissão fiscal.
+- Devolução de Venda, multi-depósito e estoque mínimo.
+- PWA/offline.
+- Infraestrutura de testes automatizados, somente mediante nova autorização.
 
 ---
 
 ## **Observações de conformidade**
 
-- Todas as features de Fase 1–2 **reaproveitam endpoints existentes**; as únicas adições de backend são **F008** (consulta de estoque), **G2 em F016** (categorias de despesa) e **F015** (formas de pagamento + taxas de operadora) — todas dentro de Clean Architecture/DDD Lite/Fluent API.
-- **Estoque continua por movimentações** em todas as propostas: F008 só lê e agrega; F011/F013 geram movimentações; nenhuma introduz campo fixo de saldo.
-- Frontend permanece sem regra crítica de negócio (lucro, custo médio, métricas, taxas de cartão e validações vêm do backend), respeitando os Princípios VI e VII.
+- **F020–F022 são features independentes:** cada uma deve possuir diretório Spec Kit próprio, spec, plan, research/data-model/contracts quando aplicáveis, tasks e quickstart.
+- **Não agrupar as três em uma única feature:** a separação isola correção financeira, infraestrutura de UX/cadastros e refatoração da Venda.
+- **Backend como fonte oficial:** taxa, liquidação, despesa de operadora, estoque, custo médio, lucro e validações críticas permanecem no backend.
+- **Estoque por movimentações preservado:** nenhuma feature aprovada altera saldo fixo, custo médio ou geração de movimentações.
+- **Migrations controladas:** F020 pode exigir migration somente de dados para zerar taxas não aplicáveis; F021 exige migration de schema nullable para telefone de Fornecedor; F022 não prevê migration.
+- **Compatibilidade:** contratos existentes devem ser estendidos de forma retrocompatível quando possível. Alterações incompatíveis exigem justificativa explícita no plano.
+- **Mobile First e Dark Theme:** todos os modais, resumos, tabelas e estados devem ser validados nos breakpoints já adotados.
+- **Testes:** por decisão do responsável em 26/06/2026, não será adicionada infraestrutura automatizada em F020–F022; builds e roteiros manuais completos são obrigatórios.
+
+---
+
+# **4. Registro da decisão de 26/06/2026**
+
+Decisões aprovadas para orientar diretamente as próximas especificações:
+
+| **Tema** | **Decisão aprovada** | **Feature** |
+| --- | --- | --- |
+| Organização | Dividir o trabalho em três features independentes | F020–F022 |
+| Telefone do Fornecedor | Campo opcional | F021 |
+| GUIDs na interface | Remover de Fornecedor, Cliente e Produto | F021 |
+| Produto duplicado na Venda | Bloquear inclusão duplicada | F022 |
+| Crédito em Contas a Receber | Somente liquidação integral | F020 |
+| Taxa configurável | Somente Cartão de Débito | F020 |
+| Infraestrutura automatizada de testes | Não autorizada para estas features | F020–F022 |
+
+## **Próximo passo previsto**
+
+Após a revisão deste roadmap, iniciar a fase de especificação pela **F020 — Consistência de Pagamentos e Revisão de Taxas de Operadora**. Nenhuma implementação deve começar antes da conclusão e revisão da sequência `spec → clarify (se necessário) → plan → tasks` da respectiva feature.

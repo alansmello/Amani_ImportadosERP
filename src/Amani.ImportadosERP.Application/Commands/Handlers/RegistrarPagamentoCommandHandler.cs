@@ -31,58 +31,79 @@ public sealed class RegistrarPagamentoCommandHandler : IRequestHandler<Registrar
     public async Task<Unit> Handle(RegistrarPagamentoCommand request, CancellationToken cancellationToken)
     {
         if (request.Valor <= 0)
-            throw new Exception("Valor invalido");
+            throw new InvalidOperationException("Valor recebido deve ser maior que zero");
 
         if (request.Desconto < 0)
-            throw new Exception("Desconto invalido");
+            throw new InvalidOperationException("Desconto nao pode ser negativo");
 
         if (request.ValorBrutoLiquidado.HasValue && request.ValorBrutoLiquidado.Value <= 0)
-            throw new Exception("Valor bruto liquidado invalido");
-
-        if (request.PercentualTaxaOperadora.HasValue && request.PercentualTaxaOperadora.Value < 0)
-            throw new Exception("Percentual de taxa invalido");
+            throw new InvalidOperationException("Valor bruto liquidado deve ser maior que zero");
 
         var conta = await _repository.ObterPorIdAsync(request.ContaReceberId);
         if (conta == null)
-            throw new Exception("Conta nao encontrada");
+            throw new InvalidOperationException("Conta nao encontrada");
 
         var totalLiquidado = conta.Pagamentos.Sum(p => p.ValorBrutoLiquidado);
         var saldoRestante = conta.Valor - totalLiquidado;
-        var valorBrutoLiquidado = request.ValorBrutoLiquidado ?? request.Valor + request.Desconto;
-        var taxaOperadora = valorBrutoLiquidado - request.Valor - request.Desconto;
+        if (saldoRestante <= 0)
+            throw new InvalidOperationException("Conta ja esta integralmente liquidada");
+
+        Venda? venda = null;
+        if (conta.VendaId.HasValue)
+        {
+            venda = await _vendaRepository.ObterPorIdAsync(conta.VendaId.Value);
+        }
+
+        var isCartaoCredito = venda?.FormaPagamento == FormaPagamento.CartaoCredito;
+        decimal valorBrutoLiquidado;
+        DespesaOperadora? despesaOperadora = null;
+
+        if (isCartaoCredito)
+        {
+            if (request.Desconto != 0)
+                throw new InvalidOperationException("Desconto nao e permitido no recebimento de cartao de credito");
+
+            if (!request.ValorBrutoLiquidado.HasValue
+                || request.ValorBrutoLiquidado.Value != saldoRestante)
+            {
+                throw new InvalidOperationException("Cartao de credito exige liquidacao integral do saldo");
+            }
+
+            valorBrutoLiquidado = saldoRestante;
+            if (request.Valor > valorBrutoLiquidado)
+                throw new InvalidOperationException("Valor liquido recebido nao pode exceder o saldo bruto");
+
+            var valorTaxa = valorBrutoLiquidado - request.Valor;
+            if (valorTaxa > 0)
+            {
+                var percentualTaxa = decimal.Round(
+                    valorTaxa / valorBrutoLiquidado * 100,
+                    4,
+                    MidpointRounding.AwayFromZero);
+
+                despesaOperadora = new DespesaOperadora(
+                    venda!.Id,
+                    FormaPagamento.CartaoCredito,
+                    valorBrutoLiquidado,
+                    request.Valor,
+                    percentualTaxa);
+            }
+        }
+        else
+        {
+            var valorSimples = request.Valor + request.Desconto;
+            if (request.ValorBrutoLiquidado.HasValue
+                && request.ValorBrutoLiquidado.Value != valorSimples)
+            {
+                throw new InvalidOperationException(
+                    "Valor bruto liquidado deve corresponder ao pagamento mais o desconto");
+            }
+
+            valorBrutoLiquidado = valorSimples;
+        }
 
         if (valorBrutoLiquidado > saldoRestante)
-            throw new Exception("Pagamento, desconto e taxa excedem o saldo");
-
-        if (taxaOperadora < 0)
-            throw new Exception("Valor bruto liquidado nao pode ser menor que valor mais desconto");
-
-        DespesaOperadora? despesaOperadora = null;
-        if (taxaOperadora > 0)
-        {
-            if (!conta.VendaId.HasValue)
-                throw new Exception("Taxa de operadora exige conta vinculada a venda");
-
-            var venda = await _vendaRepository.ObterPorIdAsync(conta.VendaId.Value);
-            if (venda == null || venda.FormaPagamento != FormaPagamento.CartaoCredito)
-                throw new Exception("Taxa de operadora no recebimento permitida apenas para cartao de credito");
-
-            var percentualTaxa = request.PercentualTaxaOperadora
-                ?? venda.PercentualTaxaAplicado
-                ?? (valorBrutoLiquidado > 0
-                    ? decimal.Round(taxaOperadora / valorBrutoLiquidado * 100, 4, MidpointRounding.AwayFromZero)
-                    : 0m);
-
-            if (percentualTaxa < 0)
-                throw new Exception("Percentual de taxa invalido");
-
-            despesaOperadora = new DespesaOperadora(
-                venda.Id,
-                FormaPagamento.CartaoCredito,
-                valorBrutoLiquidado,
-                request.Valor,
-                percentualTaxa);
-        }
+            throw new InvalidOperationException("Pagamento e desconto excedem o saldo restante");
 
         var pagamento = new PagamentoRecebido(
             conta.Id,

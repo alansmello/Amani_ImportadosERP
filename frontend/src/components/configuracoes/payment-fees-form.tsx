@@ -31,6 +31,14 @@ const methodLabels: Record<PaymentMethod, string> = {
   Fiado: "Fiado"
 };
 
+const methodDescriptions: Record<PaymentMethod, string> = {
+  Dinheiro: "Sem taxa de operadora configuravel para esta forma.",
+  PIX: "Sem taxa de operadora configuravel para esta forma.",
+  CartaoDebito: "Unica forma com taxa padrao configuravel (0 <= taxa < 100).",
+  CartaoCredito: "Taxa apurada no recebimento; nao configuravel nesta tela.",
+  Fiado: "Sem taxa de operadora configuravel para esta forma."
+};
+
 function buildDraft(settings: PaymentMethodSettings[]): DraftMap {
   return Object.fromEntries(
     settings.map((setting) => [
@@ -54,14 +62,24 @@ export function PaymentFeesForm() {
   }, [settingsQuery.data]);
 
   async function handleSave(setting: PaymentMethodSettings) {
+    if (setting.formaPagamento !== "CartaoDebito") {
+      setError("Somente cartao de debito possui taxa configuravel.");
+      setMessage(null);
+      return;
+    }
+
     setMessage(null);
     setError(null);
 
     const rawValue = draft[setting.formaPagamento] ?? "";
     const percentualTaxa = Number(rawValue.replace(",", "."));
 
-    if (!Number.isFinite(percentualTaxa) || percentualTaxa < 0) {
-      setError("Informe uma taxa valida maior ou igual a zero.");
+    if (
+      !Number.isFinite(percentualTaxa) ||
+      percentualTaxa < 0 ||
+      percentualTaxa >= 100
+    ) {
+      setError("Informe uma taxa valida para debito entre 0 e menor que 100.");
       return;
     }
 
@@ -123,7 +141,9 @@ export function PaymentFeesForm() {
 
         <div className="grid gap-4">
           {settings.map((setting) => {
+            const isEditable = setting.formaPagamento === "CartaoDebito";
             const isSaving =
+              isEditable &&
               updateSetting.isPending &&
               updateSetting.variables?.formaPagamento === setting.formaPagamento;
 
@@ -140,45 +160,64 @@ export function PaymentFeesForm() {
                     Atualizado em{" "}
                     {new Date(setting.atualizadoEm).toLocaleString("pt-BR")}
                   </p>
+                  <p className="mt-1 text-xs leading-5 text-text-secondary">
+                    {methodDescriptions[setting.formaPagamento]}
+                  </p>
                 </div>
 
-                <div className="grid gap-2">
-                  <label
-                    className="text-xs font-medium text-text-secondary"
-                    htmlFor={`fee-${setting.formaPagamento}`}
-                  >
-                    Taxa (%)
-                  </label>
-                  <Input
-                    id={`fee-${setting.formaPagamento}`}
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    inputMode="decimal"
-                    value={draft[setting.formaPagamento] ?? ""}
-                    onChange={(event) =>
-                      setDraft((current) => ({
-                        ...current,
-                        [setting.formaPagamento]: event.target.value
-                      }))
-                    }
-                    disabled={isSaving}
-                  />
-                </div>
+                {isEditable ? (
+                  <>
+                    <div className="grid gap-2">
+                      <label
+                        className="text-xs font-medium text-text-secondary"
+                        htmlFor={`fee-${setting.formaPagamento}`}
+                      >
+                        Taxa (%)
+                      </label>
+                      <Input
+                        id={`fee-${setting.formaPagamento}`}
+                        type="number"
+                        min="0"
+                        max="99.99"
+                        step="0.01"
+                        inputMode="decimal"
+                        value={draft[setting.formaPagamento] ?? ""}
+                        onChange={(event) =>
+                          setDraft((current) => ({
+                            ...current,
+                            [setting.formaPagamento]: event.target.value
+                          }))
+                        }
+                        disabled={isSaving}
+                      />
+                    </div>
 
-                <Button
-                  type="button"
-                  onClick={() => void handleSave(setting)}
-                  disabled={isSaving}
-                  className="w-full tablet:w-auto"
-                >
-                  {isSaving ? (
-                    <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden />
-                  ) : (
-                    <Save className="h-4 w-4" aria-hidden />
-                  )}
-                  <span>{isSaving ? "Salvando" : "Salvar"}</span>
-                </Button>
+                    <Button
+                      type="button"
+                      onClick={() => void handleSave(setting)}
+                      disabled={isSaving}
+                      className="w-full tablet:w-auto"
+                    >
+                      {isSaving ? (
+                        <LoaderCircle
+                          className="h-4 w-4 animate-spin"
+                          aria-hidden
+                        />
+                      ) : (
+                        <Save className="h-4 w-4" aria-hidden />
+                      )}
+                      <span>{isSaving ? "Salvando" : "Salvar"}</span>
+                    </Button>
+                  </>
+                ) : setting.formaPagamento === "CartaoCredito" ? (
+                  <div className="tablet:col-span-2" />
+                ) : (
+                  <div className="tablet:col-span-2">
+                    <p className="text-sm text-text-secondary">
+                      Taxa fixa em <strong>{setting.percentualTaxa.toFixed(2)}%</strong>.
+                    </p>
+                  </div>
+                )}
               </div>
             );
           })}

@@ -1,7 +1,7 @@
 import { apiClient } from "@/services/api-client";
 import type {
-  OperatorExpense,
-  OperatorExpenseFilters
+  OperatorExpenseFilters,
+  OperatorExpenseQueryResult
 } from "@/types/operator-expense";
 
 const OPERATOR_EXPENSES_PATH = "/api/despesas-operadora";
@@ -27,6 +27,6 @@ function buildOperatorExpensesPath(filters: OperatorExpenseFilters = {}) {
 
 export const operatorExpensesService = {
   list(filters: OperatorExpenseFilters = {}) {
-    return apiClient<OperatorExpense[]>(buildOperatorExpensesPath(filters));
+    return apiClient<OperatorExpenseQueryResult>(buildOperatorExpensesPath(filters));
   }
 };

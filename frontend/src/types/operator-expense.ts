@@ -11,6 +11,15 @@ export type OperatorExpense = {
   dataRegistro: string;
 };
 
+export type OperatorExpenseSummary = {
+  totalTaxas: number;
+};
+
+export type OperatorExpenseQueryResult = {
+  itens: OperatorExpense[];
+  resumo: OperatorExpenseSummary;
+};
+
 export type OperatorExpenseFilters = {
   dataInicio?: string;
   dataFim?: string;

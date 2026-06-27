@@ -22,9 +22,14 @@ public sealed class AtualizarConfiguracaoFormaPagamentoCommandHandler
         AtualizarConfiguracaoFormaPagamentoCommand request,
         CancellationToken cancellationToken)
     {
-        if (request.PercentualTaxa < 0)
+        if (request.FormaPagamento != Domain.Enums.FormaPagamento.CartaoDebito)
         {
-            throw new InvalidOperationException("Percentual de taxa invalido");
+            throw new InvalidOperationException("Somente cartao de debito possui taxa configuravel");
+        }
+
+        if (request.PercentualTaxa < 0 || request.PercentualTaxa >= 100)
+        {
+            throw new InvalidOperationException("Percentual de taxa invalido para cartao de debito");
         }
 
         var configuracao = await _repository.ObterPorFormaAsync(request.FormaPagamento);
