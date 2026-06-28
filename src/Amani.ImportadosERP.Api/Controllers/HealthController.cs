@@ -5,12 +5,18 @@ namespace Amani.ImportadosERP.Api.Controllers;
 
 [ApiController]
 [Route("api/health")]
+[AllowAnonymous]
 public sealed class HealthController : ControllerBase
 {
-    [AllowAnonymous]
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(new { status = "Healthy" });
+        return Ok(new
+        {
+            status = "ok",
+            app = "Amani ERP",
+            environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
+            timestamp = DateTime.UtcNow
+        });
     }
 }
