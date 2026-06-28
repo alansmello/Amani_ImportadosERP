@@ -1,8 +1,9 @@
 "use client";
 
-import { CheckCircle2, CircleAlert } from "lucide-react";
+import { CheckCircle2, CircleAlert, Pencil, Trash2 } from "lucide-react";
 
 import { formatSaleCurrency } from "@/components/vendas/sale-formatters";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,11 +11,16 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
+import type { Product } from "@/types/product";
 import type { SaleDraft } from "@/types/sale";
 
 type SaleSummaryProps = {
   draft: SaleDraft;
+  products: Product[];
   canSubmit: boolean;
+  disabled?: boolean;
+  onEditItem?: (itemId: string) => void;
+  onRemoveItem?: (itemId: string) => void;
 };
 
 function parseDraftNumber(value: string) {
@@ -35,25 +41,35 @@ function calculateItemPreview(item: SaleDraft["items"][number]) {
 
   return quantity * price - discount + increase;
 }
-
-function calculatePreviewTotal(draft: SaleDraft) {
-  const itemsTotal = draft.items.reduce(
+export function SaleSummary({
+  draft,
+  products,
+  canSubmit,
+  disabled = false,
+  onEditItem,
+  onRemoveItem
+}: SaleSummaryProps) {
+  const itemsSubtotal = draft.items.reduce(
+    (total, item) =>
+      total + getSafeNumber(item.quantidade) * getSafeNumber(item.precoUnitario),
+    0
+  );
+  const itemsDiscountTotal = draft.items.reduce(
+    (total, item) => total + getSafeNumber(item.desconto),
+    0
+  );
+  const itemsIncreaseTotal = draft.items.reduce(
+    (total, item) => total + getSafeNumber(item.acrescimo),
+    0
+  );
+  const itemsNetTotal = draft.items.reduce(
     (total, item) => total + calculateItemPreview(item),
     0
   );
-
-  return (
-    itemsTotal - getSafeNumber(draft.desconto) + getSafeNumber(draft.acrescimo)
-  );
-}
-
-export function SaleSummary({ draft, canSubmit }: SaleSummaryProps) {
-  const itemsTotal = draft.items.reduce(
-    (total, item) => total + calculateItemPreview(item),
-    0
-  );
-  const previewTotal = calculatePreviewTotal(draft);
+  const previewTotal =
+    itemsNetTotal - getSafeNumber(draft.desconto) + getSafeNumber(draft.acrescimo);
   const itemCount = draft.items.length;
+  const productsById = new Map(products.map((product) => [product.id, product.nome]));
 
   return (
     <Card className="bg-surface-light">
@@ -64,15 +80,103 @@ export function SaleSummary({ draft, canSubmit }: SaleSummaryProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <p className="text-xs font-medium uppercase tracking-wide text-text-secondary">
+            Itens confirmados
+          </p>
+          {draft.items.length === 0 ? (
+            <div className="rounded-amani border border-dashed border-border bg-surface px-3 py-3 text-xs text-text-secondary">
+              Nenhum item confirmado ainda. Use o compositor ao lado para incluir.
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {draft.items.map((item, index) => {
+                const quantity = getSafeNumber(item.quantidade);
+                const price = getSafeNumber(item.precoUnitario);
+                const net = calculateItemPreview(item);
+                const productName =
+                  productsById.get(item.produtoId) ?? "Produto nao encontrado";
+
+                return (
+                  <div
+                    key={item.id}
+                    className="rounded-amani border border-border bg-surface px-3 py-3"
+                  >
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium text-text-primary">
+                            {index + 1}. {productName}
+                          </p>
+                          <p className="mt-1 text-xs leading-5 text-text-secondary">
+                            {quantity} x {formatSaleCurrency(price)}
+                          </p>
+                        </div>
+                        <p className="text-sm font-semibold text-text-primary">
+                          {formatSaleCurrency(net)}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-end gap-2">
+                        {onEditItem ? (
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            disabled={disabled}
+                            onClick={() => onEditItem(item.id)}
+                          >
+                            <Pencil className="h-4 w-4" aria-hidden />
+                            <span>Editar</span>
+                          </Button>
+                        ) : null}
+                        {onRemoveItem ? (
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            disabled={disabled}
+                            onClick={() => onRemoveItem(item.id)}
+                          >
+                            <Trash2 className="h-4 w-4" aria-hidden />
+                            <span>Remover</span>
+                          </Button>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
         <dl className="grid gap-3 text-sm">
           <div className="flex items-center justify-between gap-4">
             <dt className="text-text-secondary">Itens</dt>
             <dd className="font-medium text-text-primary">{itemCount}</dd>
           </div>
           <div className="flex items-center justify-between gap-4">
-            <dt className="text-text-secondary">Subtotal dos itens</dt>
+            <dt className="text-text-secondary">Subtotal bruto dos itens</dt>
             <dd className="font-medium text-text-primary">
-              {formatSaleCurrency(itemsTotal)}
+              {formatSaleCurrency(itemsSubtotal)}
+            </dd>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <dt className="text-text-secondary">Descontos dos itens</dt>
+            <dd className="font-medium text-text-primary">
+              {formatSaleCurrency(itemsDiscountTotal)}
+            </dd>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <dt className="text-text-secondary">Acrescimos dos itens</dt>
+            <dd className="font-medium text-text-primary">
+              {formatSaleCurrency(itemsIncreaseTotal)}
+            </dd>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <dt className="text-text-secondary">Subtotal liquido dos itens</dt>
+            <dd className="font-medium text-text-primary">
+              {formatSaleCurrency(itemsNetTotal)}
             </dd>
           </div>
           <div className="flex items-center justify-between gap-4">

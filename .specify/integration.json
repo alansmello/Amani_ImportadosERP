@@ -3,18 +3,18 @@
   "integration_state_schema": 1,
   "installed_integrations": [
     "codex",
-    "agy"
+    "cursor-agent"
   ],
   "integration_settings": {
     "codex": {
       "script": "ps",
       "invoke_separator": "-"
     },
-    "agy": {
+    "cursor-agent": {
       "script": "ps",
       "invoke_separator": "-"
     }
   },
-  "integration": "agy",
-  "default_integration": "agy"
+  "integration": "cursor-agent",
+  "default_integration": "cursor-agent"
 }

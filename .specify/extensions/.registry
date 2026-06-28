@@ -8,14 +8,14 @@
       "enabled": true,
       "priority": 10,
       "registered_commands": {
-        "agy": [
+        "codex": [
           "speckit.git.feature",
           "speckit.git.validate",
           "speckit.git.remote",
           "speckit.git.initialize",
           "speckit.git.commit"
         ],
-        "codex": [
+        "cursor-agent": [
           "speckit.git.feature",
           "speckit.git.validate",
           "speckit.git.remote",
@@ -33,10 +33,10 @@
       "enabled": true,
       "priority": 10,
       "registered_commands": {
-        "agy": [
+        "codex": [
           "speckit.agent-context.update"
         ],
-        "codex": [
+        "cursor-agent": [
           "speckit.agent-context.update"
         ]
       },
