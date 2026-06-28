@@ -28,26 +28,11 @@ function hasReference(id: string, references: ExistingReference[]) {
   return references.some((reference) => reference.id === id);
 }
 
-function createDraftItemId() {
+export function createDraftItemId() {
   return (
     globalThis.crypto?.randomUUID?.() ??
     `sale-item-${Date.now()}-${Math.random().toString(36).slice(2)}`
   );
-}
-
-function sumNumericText(current: string, addition: string) {
-  const currentValue = parseNumber(current);
-  const additionValue = parseNumber(addition);
-
-  if (!Number.isFinite(currentValue)) {
-    return addition;
-  }
-
-  if (!Number.isFinite(additionValue)) {
-    return current;
-  }
-
-  return String(currentValue + additionValue);
 }
 
 export function createEmptySaleItemDraft(): SaleItemDraft {
@@ -67,37 +52,94 @@ export function createEmptySaleDraft(): SaleDraft {
     dataVenda: "",
     desconto: "",
     acrescimo: "",
-    items: [createEmptySaleItemDraft()]
+    items: []
   };
 }
 
+/**
+ * Retorna os itens as-is, sem consolidar quantidades de itens com mesmo produto.
+ * Conforme F022, produtos duplicados são bloqueados no compositor e não mesclados.
+ */
 export function consolidateSaleItems(items: SaleItemDraft[]) {
-  const consolidated = new Map<string, SaleItemDraft>();
-  const result: SaleItemDraft[] = [];
+  return items;
+}
 
-  for (const item of items) {
-    const itemCopy = { ...item };
+export function hasDuplicateProduct(
+  produtoId: string,
+  existingItems: SaleItemDraft[]
+) {
+  return existingItems.some((existing) => existing.produtoId === produtoId);
+}
 
-    if (!item.produtoId) {
-      result.push(itemCopy);
-      continue;
-    }
+export function validateSaleItemDraft(
+  item: SaleItemDraft,
+  products: ExistingReference[] = [],
+  existingItems: SaleItemDraft[] = [],
+  isEditing: boolean = false
+): SaleValidationError[] {
+  const errors: SaleValidationError[] = [];
 
-    const existing = consolidated.get(item.produtoId);
-
-    if (!existing) {
-      consolidated.set(item.produtoId, itemCopy);
-      result.push(itemCopy);
-      continue;
-    }
-
-    existing.quantidade = sumNumericText(
-      existing.quantidade,
-      itemCopy.quantidade
-    );
+  if (!item.produtoId) {
+    errors.push({
+      field: "produtoId",
+      itemId: item.id,
+      message: "Selecione um produto."
+    });
+  } else if (products.length > 0 && !hasReference(item.produtoId, products)) {
+    errors.push({
+      field: "produtoId",
+      itemId: item.id,
+      message: "Produto nao encontrado na lista carregada."
+    });
+  } else if (!isEditing && hasDuplicateProduct(item.produtoId, existingItems)) {
+    errors.push({
+      field: "produtoId",
+      itemId: item.id,
+      message: "Este produto ja foi adicionado. Edite o item na lista do resumo se desejar alterar."
+    });
   }
 
-  return result;
+  const quantidade = parseNumber(item.quantidade);
+  if (
+    !Number.isFinite(quantidade) ||
+    quantidade <= 0 ||
+    !Number.isInteger(quantidade)
+  ) {
+    errors.push({
+      field: "quantidade",
+      itemId: item.id,
+      message: "Informe uma quantidade inteira maior que zero."
+    });
+  }
+
+  const precoUnitario = parseNumber(item.precoUnitario);
+  if (!Number.isFinite(precoUnitario) || precoUnitario < 0) {
+    errors.push({
+      field: "precoUnitario",
+      itemId: item.id,
+      message: "Informe um preco unitario maior ou igual a zero."
+    });
+  }
+
+  const itemDesconto = parseOptionalNonNegative(item.desconto);
+  if (!Number.isFinite(itemDesconto) || itemDesconto < 0) {
+    errors.push({
+      field: "desconto",
+      itemId: item.id,
+      message: "Informe um desconto valido ou deixe em branco."
+    });
+  }
+
+  const itemAcrescimo = parseOptionalNonNegative(item.acrescimo);
+  if (!Number.isFinite(itemAcrescimo) || itemAcrescimo < 0) {
+    errors.push({
+      field: "acrescimo",
+      itemId: item.id,
+      message: "Informe um acrescimo valido ou deixe em branco."
+    });
+  }
+
+  return errors;
 }
 
 export function validateSaleDraft(
@@ -106,7 +148,6 @@ export function validateSaleDraft(
   clients: ExistingReference[] = []
 ) {
   const errors: SaleValidationError[] = [];
-  const consolidatedItems = consolidateSaleItems(draft.items);
 
   if (!draft.clienteId) {
     errors.push({
@@ -120,7 +161,7 @@ export function validateSaleDraft(
     });
   }
 
-  if (consolidatedItems.length === 0) {
+  if (draft.items.length === 0) {
     errors.push({
       field: "items",
       message: "Adicione ao menos um item a venda."
@@ -143,60 +184,10 @@ export function validateSaleDraft(
     });
   }
 
-  for (const item of consolidatedItems) {
-    if (!item.produtoId) {
-      errors.push({
-        field: "produtoId",
-        itemId: item.id,
-        message: "Selecione um produto."
-      });
-    } else if (products.length > 0 && !hasReference(item.produtoId, products)) {
-      errors.push({
-        field: "produtoId",
-        itemId: item.id,
-        message: "Produto nao encontrado na lista carregada."
-      });
-    }
-
-    const quantidade = parseNumber(item.quantidade);
-    if (
-      !Number.isFinite(quantidade) ||
-      quantidade <= 0 ||
-      !Number.isInteger(quantidade)
-    ) {
-      errors.push({
-        field: "quantidade",
-        itemId: item.id,
-        message: "Informe uma quantidade inteira maior que zero."
-      });
-    }
-
-    const precoUnitario = parseNumber(item.precoUnitario);
-    if (!Number.isFinite(precoUnitario) || precoUnitario < 0) {
-      errors.push({
-        field: "precoUnitario",
-        itemId: item.id,
-        message: "Informe um preco unitario maior ou igual a zero."
-      });
-    }
-
-    const itemDesconto = parseOptionalNonNegative(item.desconto);
-    if (!Number.isFinite(itemDesconto) || itemDesconto < 0) {
-      errors.push({
-        field: "desconto",
-        itemId: item.id,
-        message: "Informe um desconto valido ou deixe em branco."
-      });
-    }
-
-    const itemAcrescimo = parseOptionalNonNegative(item.acrescimo);
-    if (!Number.isFinite(itemAcrescimo) || itemAcrescimo < 0) {
-      errors.push({
-        field: "acrescimo",
-        itemId: item.id,
-        message: "Informe um acrescimo valido ou deixe em branco."
-      });
-    }
+  // Valida cada item existente no rascunho
+  for (const item of draft.items) {
+    const itemErrors = validateSaleItemDraft(item, products, [], true);
+    errors.push(...itemErrors);
   }
 
   return errors;
@@ -208,7 +199,7 @@ export function buildCreateSalePayload(draft: SaleDraft): CreateSalePayload {
     dataVenda: draft.dataVenda ? new Date(draft.dataVenda).toISOString() : null,
     desconto: parseOptionalNonNegative(draft.desconto),
     acrescimo: parseOptionalNonNegative(draft.acrescimo),
-    items: consolidateSaleItems(draft.items).map((item) => ({
+    items: draft.items.map((item) => ({
       produtoId: item.produtoId,
       quantidade: parseNumber(item.quantidade),
       precoUnitario: parseNumber(item.precoUnitario),

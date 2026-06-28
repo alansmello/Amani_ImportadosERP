@@ -1,23 +1,23 @@
 "use client";
 
-import { ExternalLink, LoaderCircle, PackagePlus, Plus, Save } from "lucide-react";
+import { LoaderCircle, PackagePlus, Save, UserPlus } from "lucide-react";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 
-import { SaleItemEditor } from "@/components/vendas/sale-item-editor";
+import { QuickCustomerDialog } from "@/components/clientes/quick-customer-dialog";
+import { SaleItemComposer } from "@/components/vendas/sale-item-composer";
 import {
   SalePaymentModal,
   type SalePaymentSelection
 } from "@/components/vendas/sale-payment-modal";
-import { ContextualLink } from "@/components/layout/contextual-link";
 import { SaleSummary } from "@/components/vendas/sale-summary";
 import {
-  buildCreateSalePayload,
   attachSalePaymentPayload,
-  consolidateSaleItems,
+  buildCreateSalePayload,
   createEmptySaleDraft,
   createEmptySaleItemDraft,
   getSaleValidationMessage,
+  validateSaleItemDraft,
   validateSaleDraft
 } from "@/components/vendas/sale-validation";
 import { EmptyState } from "@/components/states/empty-state";
@@ -33,7 +33,6 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { routes } from "@/config/routes";
 import { useCustomers } from "@/hooks/use-customers";
 import { useProducts } from "@/hooks/use-products";
 import { useCreateSale } from "@/hooks/use-sales";
@@ -91,6 +90,13 @@ export function SaleForm({ onCreated }: SaleFormProps) {
   const [pendingPayload, setPendingPayload] =
     useState<CreateSalePayload | null>(null);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [quickCustomerOpen, setQuickCustomerOpen] = useState(false);
+  const [composerItem, setComposerItem] = useState<SaleItemDraft>(() =>
+    createEmptySaleItemDraft()
+  );
+  const [editingBackupItem, setEditingBackupItem] = useState<SaleItemDraft | null>(
+    null
+  );
 
   const customers = customersQuery.data ?? EMPTY_CUSTOMERS;
   const products = productsQuery.data ?? EMPTY_PRODUCTS;
@@ -154,68 +160,125 @@ export function SaleForm({ onCreated }: SaleFormProps) {
     setSuccessMessage(null);
   }
 
-  function updateItem(
-    itemId: string,
+  function handleQuickCustomerSuccess(customer: Customer) {
+    setDraft((currentDraft) => ({
+      ...currentDraft,
+      clienteId: customer.id
+    }));
+    setErrors((currentErrors) =>
+      currentErrors.filter((error) => error.field !== "clienteId")
+    );
+    setSubmitError(null);
+    setSuccessMessage(null);
+  }
+
+  function updateComposerField(
     field: keyof Omit<SaleItemDraft, "id">,
     value: string
   ) {
-    setDraft((currentDraft) => {
-      const items = currentDraft.items.map((item) => {
-        if (item.id !== itemId) {
-          return item;
+    setComposerItem((currentItem) => {
+      const nextItem = { ...currentItem, [field]: value };
+
+      if (field === "produtoId" && value) {
+        const selectedProduct = products.find((product) => product.id === value);
+        if (selectedProduct) {
+          nextItem.precoUnitario = String(selectedProduct.precoVenda);
         }
+      }
 
-        const nextItem = { ...item, [field]: value };
-
-        if (field === "produtoId" && value) {
-          const product = products.find(
-            (availableProduct) => availableProduct.id === value
-          );
-
-          if (product) {
-            nextItem.precoUnitario = String(product.precoVenda);
-          }
-        }
-
-        return nextItem;
-      });
-
-      return {
-        ...currentDraft,
-        items:
-          field === "produtoId" ? consolidateSaleItems(items) : items
-      };
+      return nextItem;
     });
     setErrors((currentErrors) =>
       currentErrors.filter(
         (error) =>
           error.field !== "items" &&
-          !(error.itemId === itemId && error.field === field)
+          !(error.itemId === composerItem.id && error.field === field)
       )
     );
     setSubmitError(null);
     setSuccessMessage(null);
   }
 
-  function addItem() {
-    setDraft((currentDraft) => ({
-      ...currentDraft,
-      items: [...currentDraft.items, createEmptySaleItemDraft()]
-    }));
-    setErrors((currentErrors) =>
-      currentErrors.filter((error) => error.field !== "items")
-    );
-    setSubmitError(null);
-    setSuccessMessage(null);
-  }
-
-  function removeItem(itemId: string) {
+  function removeConfirmedItem(itemId: string) {
     setDraft((currentDraft) => ({
       ...currentDraft,
       items: currentDraft.items.filter((item) => item.id !== itemId)
     }));
     setErrors((currentErrors) =>
       currentErrors.filter((error) => error.itemId !== itemId)
+    );
+    setSubmitError(null);
+    setSuccessMessage(null);
+  }
+
+  function startItemEdit(itemId: string) {
+    const itemToEdit = draft.items.find((item) => item.id === itemId);
+    if (!itemToEdit) {
+      return;
+    }
+
+    setDraft((currentDraft) => ({
+      ...currentDraft,
+      items: currentDraft.items.filter((item) => item.id !== itemId)
+    }));
+    setComposerItem(itemToEdit);
+    setEditingBackupItem(itemToEdit);
+    setErrors((currentErrors) =>
+      currentErrors.filter(
+        (error) => error.itemId !== itemId && error.field !== "items"
+      )
+    );
+    setSubmitError(null);
+    setSuccessMessage(null);
+  }
+
+  function cancelItemEdit() {
+    if (!editingBackupItem) {
+      return;
+    }
+
+    setDraft((currentDraft) => ({
+      ...currentDraft,
+      items: [...currentDraft.items, editingBackupItem]
+    }));
+    setComposerItem(createEmptySaleItemDraft());
+    setEditingBackupItem(null);
+    setErrors((currentErrors) =>
+      currentErrors.filter((error) => error.itemId !== editingBackupItem.id)
+    );
+    setSubmitError(null);
+    setSuccessMessage(null);
+  }
+
+  function includeComposerItem() {
+    const itemErrors = validateSaleItemDraft(
+      composerItem,
+      referenceProducts,
+      draft.items
+    );
+
+    if (itemErrors.length > 0) {
+      setErrors((currentErrors) => {
+        const remainingErrors = currentErrors.filter(
+          (error) =>
+            error.field !== "items" &&
+            error.itemId !== composerItem.id
+        );
+        return [...remainingErrors, ...itemErrors];
+      });
+      return;
+    }
+
+    setDraft((currentDraft) => ({
+      ...currentDraft,
+      items: [...currentDraft.items, composerItem]
+    }));
+    setComposerItem(createEmptySaleItemDraft());
+    setEditingBackupItem(null);
+    setErrors((currentErrors) =>
+      currentErrors.filter(
+        (error) => error.itemId !== composerItem.id && error.field !== "items"
+      )
     );
     setSubmitError(null);
     setSuccessMessage(null);
@@ -243,6 +306,8 @@ export function SaleForm({ onCreated }: SaleFormProps) {
     setPaymentModalOpen(false);
     setPendingPayload(null);
     setDraft(buildInitialDraft());
+    setComposerItem(createEmptySaleItemDraft());
+    setEditingBackupItem(null);
     setErrors([]);
     setSuccessMessage(
       `Venda registrada. ${buildFinancialSuccessMessage(response)}`
@@ -269,14 +334,8 @@ export function SaleForm({ onCreated }: SaleFormProps) {
     setSubmitError(null);
     setSuccessMessage(null);
 
-    const consolidatedDraft = {
-      ...draft,
-      items: consolidateSaleItems(draft.items)
-    };
-    setDraft(consolidatedDraft);
-
     const validationErrors = validateSaleDraft(
-      consolidatedDraft,
+      draft,
       referenceProducts,
       referenceCustomers
     );
@@ -287,7 +346,7 @@ export function SaleForm({ onCreated }: SaleFormProps) {
     }
 
     try {
-      setPendingPayload(buildCreateSalePayload(consolidatedDraft));
+      setPendingPayload(buildCreateSalePayload(draft));
       setPaymentModalOpen(true);
     } catch (error) {
       const apiError = toApiError(error);
@@ -362,15 +421,17 @@ export function SaleForm({ onCreated }: SaleFormProps) {
                 <label className={fieldLabelClassName} htmlFor="sale-customer">
                   Cliente
                 </label>
-                <ContextualLink
-                  href={routes.clientesNovo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setQuickCustomerOpen(true)}
+                  disabled={isSubmitting}
+                  className="h-auto px-0 text-xs text-primary underline-offset-4 hover:underline"
                 >
-                  <ExternalLink className="h-3 w-3" aria-hidden />
-                  <span>Cadastrar cliente</span>
-                </ContextualLink>
+                  <UserPlus className="h-3 w-3" aria-hidden />
+                  <span>Cadastrar cliente rapido</span>
+                </Button>
               </div>
               <select
                 id="sale-customer"
@@ -474,49 +535,38 @@ export function SaleForm({ onCreated }: SaleFormProps) {
 
           <div className="grid gap-6 desktop:grid-cols-[minmax(0,1fr)_minmax(280px,360px)] desktop:items-start">
             <div className="space-y-4">
-              <div className="flex flex-col gap-3 tablet:flex-row tablet:items-center tablet:justify-between">
-                <div className="min-w-0">
-                  <h3 className="text-sm font-semibold text-text-primary">
-                    Itens da venda
-                  </h3>
-                  <p className="mt-1 text-xs leading-5 text-text-secondary">
-                    Informe produtos, quantidades, precos e ajustes por item.
-                  </p>
-                </div>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={addItem}
-                  disabled={isSubmitting}
-                  className="w-full tablet:w-auto"
-                >
-                  <Plus className="h-4 w-4" aria-hidden />
-                  <span>Adicionar item</span>
-                </Button>
+              <div className="min-w-0">
+                <h3 className="text-sm font-semibold text-text-primary">
+                  Itens da venda
+                </h3>
+                <p className="mt-1 text-xs leading-5 text-text-secondary">
+                  Componha um item por vez e confirme para adicionar ao resumo.
+                </p>
               </div>
 
               <FieldError message={itemsError} />
 
-              <div className="grid gap-4">
-                {draft.items.map((item, index) => (
-                  <SaleItemEditor
-                    key={item.id}
-                    item={item}
-                    index={index}
-                    products={products}
-                    stockByProductId={stockByProductId}
-                    errors={errors}
-                    disabled={isSubmitting}
-                    canRemove={draft.items.length > 1}
-                    onChange={updateItem}
-                    onRemove={removeItem}
-                  />
-                ))}
-              </div>
+              <SaleItemComposer
+                item={composerItem}
+                products={products}
+                stockByProductId={stockByProductId}
+                errors={errors}
+                disabled={isSubmitting}
+                isEditing={Boolean(editingBackupItem)}
+                onChange={updateComposerField}
+                onInclude={includeComposerItem}
+                onCancelEdit={editingBackupItem ? cancelItemEdit : undefined}
+              />
             </div>
 
-            <SaleSummary draft={draft} canSubmit={canSubmit} />
+            <SaleSummary
+              draft={draft}
+              products={products}
+              canSubmit={canSubmit}
+              disabled={isSubmitting}
+              onEditItem={startItemEdit}
+              onRemoveItem={removeConfirmedItem}
+            />
           </div>
         </CardContent>
         <CardFooter className="flex-col items-stretch tablet:flex-row tablet:justify-end">
@@ -531,6 +581,12 @@ export function SaleForm({ onCreated }: SaleFormProps) {
         </CardFooter>
         </form>
       </Card>
+
+      <QuickCustomerDialog
+        open={quickCustomerOpen}
+        onOpenChange={setQuickCustomerOpen}
+        onSuccess={handleQuickCustomerSuccess}
+      />
 
       <SalePaymentModal
         open={paymentModalOpen}

@@ -122,7 +122,7 @@ export function DashboardKpiGrid({
               {formatDashboardCurrency(data[field])}
             </p>
             <CardDescription className="mt-3">
-              Fonte oficial atualizada em{" "}
+              Dados oficiais do periodo ate{" "}
               {formatDashboardDate(data.filtrosAplicados.dataReferencia)}
             </CardDescription>
           </CardContent>
