@@ -1,0 +1,17 @@
+.git
+.gitignore
+.cursor
+.specify
+**/bin
+**/obj
+**/.vs
+**/.vscode
+**/node_modules
+frontend/.next
+frontend/dist
+frontend/build
+frontend/coverage
+*.log
+.env*
+Dockerfile*
+.dockerignore
