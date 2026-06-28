@@ -22,6 +22,23 @@ builder.Logging.AddDebug();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHostedService<AdminUserProvisioningHostedService>();
+
+var frontendUrl = builder.Configuration["FrontendUrl"];
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        if (!string.IsNullOrWhiteSpace(frontendUrl))
+        {
+            policy
+                .WithOrigins(frontendUrl)
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+    });
+});
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -113,6 +130,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+app.UseCors("FrontendPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
