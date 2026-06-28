@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { Building2, Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { SupplierTable } from "@/components/fornecedores/supplier-table";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
@@ -40,10 +40,10 @@ export default function FornecedoresPage() {
         description="Gerencie os fornecedores reais usados nos fluxos operacionais de compras."
         actions={
           <Button asChild>
-            <Link href="/fornecedores/novo">
+            <ContextualLink href="/fornecedores/novo">
               <Plus className="h-4 w-4" aria-hidden />
               <span>Novo Fornecedor</span>
-            </Link>
+            </ContextualLink>
           </Button>
         }
       />

@@ -9,13 +9,19 @@ import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
 import { Button } from "@/components/ui/button";
 import {
+  CategoryFormFields,
+  emptyCategoryFormValues,
+  type CategoryFormErrors,
+  type CategoryFormValues,
+  validateCategoryValues
+} from "@/components/produtos/category-form-fields";
+import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import {
   useCategories,
   useCreateCategory,
@@ -25,28 +31,7 @@ import {
 import { toApiError } from "@/services/errors";
 import type { Category } from "@/types/category";
 
-type CategoryDraft = {
-  nome: string;
-};
-
-type CategoryErrors = {
-  nome?: string;
-};
-
-const initialDraft: CategoryDraft = { nome: "" };
-
-const fieldLabelClassName = "text-sm font-medium text-text-primary";
-const fieldErrorClassName = "text-xs font-medium leading-5 text-danger";
-
-function validateDraft(draft: CategoryDraft): CategoryErrors {
-  const errors: CategoryErrors = {};
-  if (!draft.nome.trim()) {
-    errors.nome = "Informe o nome da categoria.";
-  }
-  return errors;
-}
-
-function hasErrors(errors: CategoryErrors) {
+function hasErrors(errors: CategoryFormErrors) {
   return Object.values(errors).some(Boolean);
 }
 
@@ -56,9 +41,9 @@ export function ProductCategoriesManager() {
   const updateCategory = useUpdateCategory();
   const removeCategory = useRemoveCategory();
 
-  const [draft, setDraft] = useState<CategoryDraft>(initialDraft);
+  const [draft, setDraft] = useState<CategoryFormValues>(emptyCategoryFormValues);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [errors, setErrors] = useState<CategoryErrors>({});
+  const [errors, setErrors] = useState<CategoryFormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [removeError, setRemoveError] = useState<string | null>(null);
   const [confirmingRemoveId, setConfirmingRemoveId] = useState<string | null>(null);
@@ -67,14 +52,14 @@ export function ProductCategoriesManager() {
   const isSubmitting = createCategory.isPending || updateCategory.isPending;
   const editingId = editingCategory?.id;
 
-  function updateField(field: keyof CategoryDraft, value: string) {
+  function updateField(field: keyof CategoryFormValues, value: string) {
     setDraft((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: undefined }));
     setSubmitError(null);
   }
 
   function resetForm() {
-    setDraft(initialDraft);
+    setDraft(emptyCategoryFormValues);
     setEditingCategory(null);
     setErrors({});
     setSubmitError(null);
@@ -91,15 +76,15 @@ export function ProductCategoriesManager() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const validationErrors = validateDraft(draft);
-    setErrors(validationErrors);
+    const validation = validateCategoryValues(draft);
+    setErrors(validation.errors);
 
-    if (hasErrors(validationErrors)) return;
+    if (hasErrors(validation.errors)) return;
 
     setSubmitError(null);
 
     try {
-      const payload = { nome: draft.nome.trim() };
+      const payload = validation.payload;
 
       if (editingId) {
         await updateCategory.mutateAsync({ id: editingId, payload });
@@ -165,24 +150,12 @@ export function ProductCategoriesManager() {
               </div>
             ) : null}
 
-            <div className="grid gap-2">
-              <label className={fieldLabelClassName} htmlFor="product-category-name">
-                Nome
-              </label>
-              <Input
-                id="product-category-name"
-                value={draft.nome}
-                onChange={(event) => updateField("nome", event.target.value)}
-                disabled={isSubmitting}
-                aria-invalid={Boolean(errors.nome)}
-                aria-describedby={errors.nome ? "product-category-name-error" : undefined}
-              />
-              {errors.nome ? (
-                <p id="product-category-name-error" className={fieldErrorClassName}>
-                  {errors.nome}
-                </p>
-              ) : null}
-            </div>
+            <CategoryFormFields
+              values={draft}
+              errors={errors}
+              disabled={isSubmitting}
+              onChange={updateField}
+            />
           </CardContent>
 
           <CardFooter className="flex flex-col gap-3 tablet:flex-row">

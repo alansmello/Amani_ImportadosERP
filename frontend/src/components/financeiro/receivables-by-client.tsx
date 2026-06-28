@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { ArrowRight, Users } from "lucide-react";
 
 import {
@@ -102,12 +102,12 @@ export function ReceivablesByClient({
                 </TableCell>
                 <TableCell className="text-right">
                   <Button asChild variant="secondary" size="sm">
-                    <Link
+                    <ContextualLink
                       href={contaReceberClienteDetalhe(item.clienteId)}
                     >
                       <span>Ver contas</span>
                       <ArrowRight className="h-4 w-4" aria-hidden />
-                    </Link>
+                    </ContextualLink>
                   </Button>
                 </TableCell>
               </TableRow>

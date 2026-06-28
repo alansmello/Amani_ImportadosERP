@@ -1,6 +1,8 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { cn } from "@/lib/cn";
 import type { Category } from "@/types/category";
 import type { Supplier } from "@/types/supplier";
@@ -21,6 +23,9 @@ type ProductFormFieldsProps = {
   categories: Category[];
   suppliers: Supplier[];
   disabled?: boolean;
+  allowQuickCreate?: boolean;
+  onCreateCategory?: () => void;
+  onCreateSupplier?: () => void;
   onChange: (field: keyof ProductFormValues, value: string) => void;
 };
 
@@ -44,6 +49,9 @@ export function ProductFormFields({
   categories,
   suppliers,
   disabled = false,
+  allowQuickCreate = false,
+  onCreateCategory,
+  onCreateSupplier,
   onChange
 }: ProductFormFieldsProps) {
   return (
@@ -114,9 +122,17 @@ export function ProductFormFields({
 
       <div className="grid gap-5 tablet:grid-cols-2">
         <div className="grid gap-2">
-          <label className={fieldLabelClassName} htmlFor="product-category">
-            Categoria
-          </label>
+          <div className="flex flex-col gap-2 tablet:flex-row tablet:items-center tablet:justify-between">
+            <label className={fieldLabelClassName} htmlFor="product-category">
+              Categoria
+            </label>
+            {allowQuickCreate ? (
+              <Button type="button" variant="secondary" size="sm" onClick={onCreateCategory} disabled={disabled}>
+                <Plus className="h-4 w-4" aria-hidden />
+                <span>Cadastrar categoria</span>
+              </Button>
+            ) : null}
+          </div>
           <select
             id="product-category"
             className={cn(selectClassName)}
@@ -146,9 +162,17 @@ export function ProductFormFields({
         </div>
 
         <div className="grid gap-2">
-          <label className={fieldLabelClassName} htmlFor="product-supplier">
-            Fornecedor
-          </label>
+          <div className="flex flex-col gap-2 tablet:flex-row tablet:items-center tablet:justify-between">
+            <label className={fieldLabelClassName} htmlFor="product-supplier">
+              Fornecedor
+            </label>
+            {allowQuickCreate ? (
+              <Button type="button" variant="secondary" size="sm" onClick={onCreateSupplier} disabled={disabled}>
+                <Plus className="h-4 w-4" aria-hidden />
+                <span>Cadastrar fornecedor</span>
+              </Button>
+            ) : null}
+          </div>
           <select
             id="product-supplier"
             className={cn(selectClassName)}

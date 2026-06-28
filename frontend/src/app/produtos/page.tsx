@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { Package, Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { ProductTable } from "@/components/produtos/product-table";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
@@ -80,10 +80,10 @@ export default function ProdutosPage() {
         description="Gerencie o catalogo operacional de produtos com dados reais da API."
         actions={
           <Button asChild>
-            <Link href="/produtos/novo">
+            <ContextualLink href="/produtos/novo">
               <Plus className="h-4 w-4" aria-hidden />
               <span>Novo Produto</span>
-            </Link>
+            </ContextualLink>
           </Button>
         }
       />

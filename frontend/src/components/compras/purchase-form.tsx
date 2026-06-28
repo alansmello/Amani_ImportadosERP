@@ -10,6 +10,7 @@ import {
   validatePurchaseDraft
 } from "@/components/compras/purchase-validation";
 import { PurchaseItemEditor } from "@/components/compras/purchase-item-editor";
+import { SupplierQuickCreateDialog } from "@/components/fornecedores/supplier-quick-create-dialog";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
@@ -95,10 +96,10 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
   const products = productsQuery.data ?? EMPTY_PRODUCTS;
   const isLoadingSupportLists = suppliersQuery.isLoading || productsQuery.isLoading;
   const hasSupportListError = suppliersQuery.isError || productsQuery.isError;
-  const hasNoSupportData =
+  const hasNoProducts =
     !isLoadingSupportLists &&
     !hasSupportListError &&
-    (suppliers.length === 0 || products.length === 0);
+    products.length === 0;
 
   const isSubmitting = createPurchase.isPending;
   const supplierError = getPurchaseValidationMessage(errors, "fornecedorId");
@@ -226,11 +227,11 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
     );
   }
 
-  if (hasNoSupportData) {
+  if (hasNoProducts) {
     return (
       <EmptyState
-        title="Referencias obrigatorias indisponiveis"
-        description="Cadastre ao menos um fornecedor e um produto antes de registrar compras."
+        title="Produtos indisponiveis"
+        description="Cadastre ao menos um produto antes de registrar compras."
         badgeLabel="Dependencia obrigatoria"
         variant="empty"
         icon={<PackagePlus className="h-5 w-5" aria-hidden />}
@@ -239,6 +240,7 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
   }
 
   return (
+    <>
     <Card>
       <form onSubmit={handleSubmit} noValidate>
         <CardHeader>
@@ -263,9 +265,17 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
 
           <div className="grid gap-5 tablet:grid-cols-2">
             <div className="grid gap-2">
-              <label className={fieldLabelClassName} htmlFor="purchase-supplier">
-                Fornecedor
-              </label>
+              <div className="flex flex-col gap-2 tablet:flex-row tablet:items-center tablet:justify-between">
+                <label className={fieldLabelClassName} htmlFor="purchase-supplier">
+                  Fornecedor
+                </label>
+                <SupplierQuickCreateDialog
+                  disabled={isSubmitting}
+                  onCreated={(supplier) =>
+                    updateDraftField("fornecedorId", supplier.id)
+                  }
+                />
+              </div>
               <select
                 id="purchase-supplier"
                 className={cn(selectClassName)}
@@ -429,5 +439,6 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
         </CardFooter>
       </form>
     </Card>
+    </>
   );
 }

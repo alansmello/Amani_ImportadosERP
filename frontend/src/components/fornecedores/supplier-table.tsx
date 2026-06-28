@@ -36,8 +36,8 @@ export function SupplierTable({ suppliers }: SupplierTableProps) {
                   <CardTitle className="truncate leading-6">
                     {supplier.nome}
                   </CardTitle>
-                  <p className="mt-1 break-all text-sm text-text-secondary">
-                    ID: {supplier.id}
+                  <p className="mt-1 break-words text-sm text-text-secondary">
+                    {supplier.telefone?.trim() || "Nao informado"}
                   </p>
                 </div>
               </div>
@@ -54,7 +54,7 @@ export function SupplierTable({ suppliers }: SupplierTableProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
-              <TableHead>Identificador</TableHead>
+              <TableHead>Telefone</TableHead>
               <TableHead className="w-52">Acoes</TableHead>
             </TableRow>
           </TableHeader>
@@ -62,8 +62,8 @@ export function SupplierTable({ suppliers }: SupplierTableProps) {
             {suppliers.map((supplier) => (
               <TableRow key={supplier.id}>
                 <TableCell className="font-medium">{supplier.nome}</TableCell>
-                <TableCell className="break-all text-text-secondary">
-                  {supplier.id}
+                <TableCell className="break-words text-text-secondary">
+                  {supplier.telefone?.trim() || "Nao informado"}
                 </TableCell>
                 <TableCell>
                   <SupplierActions supplierId={supplier.id} />

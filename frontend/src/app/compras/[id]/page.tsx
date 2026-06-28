@@ -1,15 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 
 import { PurchaseDetail } from "@/components/compras/purchase-detail";
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
-import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { useProducts } from "@/hooks/use-products";
 import {
@@ -55,12 +53,7 @@ export default function CompraDetalhePage() {
         title="Detalhe da compra"
         description="Consulte itens, pendencias, recebimentos e perdas registrados pela fonte oficial."
         actions={
-          <Button asChild variant="secondary">
-            <Link href={routes.compras}>
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton fallbackHref={routes.compras} />
         }
       />
 

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ExternalLink, LoaderCircle, PackagePlus, Plus, Save } from "lucide-react";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
@@ -10,6 +9,7 @@ import {
   SalePaymentModal,
   type SalePaymentSelection
 } from "@/components/vendas/sale-payment-modal";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { SaleSummary } from "@/components/vendas/sale-summary";
 import {
   buildCreateSalePayload,
@@ -362,7 +362,7 @@ export function SaleForm({ onCreated }: SaleFormProps) {
                 <label className={fieldLabelClassName} htmlFor="sale-customer">
                   Cliente
                 </label>
-                <Link
+                <ContextualLink
                   href={routes.clientesNovo}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -370,7 +370,7 @@ export function SaleForm({ onCreated }: SaleFormProps) {
                 >
                   <ExternalLink className="h-3 w-3" aria-hidden />
                   <span>Cadastrar cliente</span>
-                </Link>
+                </ContextualLink>
               </div>
               <select
                 id="sale-customer"

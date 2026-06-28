@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/query-client";
 import { suppliersService } from "@/services/suppliers";
-import type { SupplierPayload } from "@/types/supplier";
+import type { Supplier, SupplierPayload } from "@/types/supplier";
 
 export const supplierQueryKeys = {
   all: queryKeys.fornecedores,
@@ -32,7 +32,20 @@ export function useCreateSupplier() {
 
   return useMutation({
     mutationFn: (payload: SupplierPayload) => suppliersService.create(payload),
-    onSuccess: async () => {
+    onSuccess: async (supplier) => {
+      queryClient.setQueryData<Supplier[]>(supplierQueryKeys.list, (current) => {
+        const suppliers = current ?? [];
+        const existingIndex = suppliers.findIndex((item) => item.id === supplier.id);
+
+        if (existingIndex < 0) {
+          return [...suppliers, supplier];
+        }
+
+        return suppliers.map((item) =>
+          item.id === supplier.id ? supplier : item
+        );
+      });
+      queryClient.setQueryData(supplierQueryKeys.detail(supplier.id), supplier);
       await queryClient.invalidateQueries({ queryKey: supplierQueryKeys.all });
     }
   });

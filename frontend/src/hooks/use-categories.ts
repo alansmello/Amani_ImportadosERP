@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { categoriesService } from "@/services/categories";
 import type {
+  Category,
   CreateCategoryPayload,
   UpdateCategoryPayload
 } from "@/types/category";
@@ -26,7 +27,14 @@ export function useCreateCategory() {
   return useMutation({
     mutationFn: (payload: CreateCategoryPayload) =>
       categoriesService.create(payload),
-    onSuccess: async () => {
+    onSuccess: async (category) => {
+      queryClient.setQueryData<Category[]>(categoryQueryKeys.list, (current) => {
+        const categories = current ?? [];
+        const exists = categories.some((item) => item.id === category.id);
+        return exists
+          ? categories.map((item) => (item.id === category.id ? category : item))
+          : [...categories, category];
+      });
       await queryClient.invalidateQueries({ queryKey: categoryQueryKeys.all });
     }
   });

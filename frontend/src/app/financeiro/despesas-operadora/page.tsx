@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft, FilterX } from "lucide-react";
+import { FilterX } from "lucide-react";
 import { useState } from "react";
 
 import { OperatorExpensesList } from "@/components/financeiro/operator-expenses-list";
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -40,12 +40,7 @@ export default function DespesasOperadoraPage() {
         title="Despesas de operadora"
         description="Consulte taxas de cartao registradas pelo roteamento financeiro das vendas."
         actions={
-          <Button asChild variant="secondary">
-            <Link href={routes.contasReceber}>
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton fallbackHref={routes.financeiro} />
         }
       />
 

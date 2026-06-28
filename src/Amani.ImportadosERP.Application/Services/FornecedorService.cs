@@ -19,7 +19,7 @@ public class FornecedorService
 
     public async Task<FornecedorDto> CreateAsync(CriarFornecedorDto dto)
     {
-        var fornecedor = new Fornecedor(dto.Nome);
+        var fornecedor = new Fornecedor(dto.Nome, dto.Telefone);
         await _fornecedorRepository.AdicionarAsync(fornecedor);
         return ToDto(fornecedor);
     }
@@ -41,7 +41,7 @@ public class FornecedorService
         var fornecedor = await _fornecedorRepository.ObterPorIdParaAtualizarAsync(id);
         if (fornecedor == null) return false;
 
-        fornecedor.AtualizarNome(dto.Nome);
+        fornecedor.Atualizar(dto.Nome, dto.Telefone);
         await _fornecedorRepository.SalvarAsync();
         return true;
     }
@@ -51,7 +51,8 @@ public class FornecedorService
         return new FornecedorDto
         {
             Id = fornecedor.Id,
-            Nome = fornecedor.Nome
+            Nome = fornecedor.Nome,
+            Telefone = fornecedor.Telefone
         };
     }
 }

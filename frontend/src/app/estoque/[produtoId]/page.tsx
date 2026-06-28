@@ -1,18 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, PackageSearch } from "lucide-react";
+import { PackageSearch } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { StockMovementDetail } from "@/components/estoque/stock-movement-detail";
 import { StockMovementFilters } from "@/components/estoque/stock-movement-filters";
 import { StockMovementList } from "@/components/estoque/stock-movement-list";
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
-import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { useProducts } from "@/hooks/use-products";
 import { useStockMovements } from "@/hooks/use-stock";
@@ -53,12 +52,7 @@ export default function EstoqueProdutoPage() {
         title="Historico de estoque"
         description="Movimentacoes oficiais, origem e saldo atual do produto."
         actions={
-          <Button asChild variant="secondary">
-            <Link href={routes.estoque}>
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton fallbackHref={routes.estoque} />
         }
       />
 

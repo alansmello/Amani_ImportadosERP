@@ -1,12 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { ReceivableForm } from "@/components/financeiro/receivable-form";
-import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 
 export default function NovaContaReceberPage() {
@@ -22,12 +20,7 @@ export default function NovaContaReceberPage() {
         title="Nova conta a receber"
         description="Registre uma conta a receber informando cliente, valor e data de vencimento."
         actions={
-          <Button asChild variant="secondary">
-            <Link href={routes.contasReceber}>
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton fallbackHref={routes.contasReceber} />
         }
       />
 

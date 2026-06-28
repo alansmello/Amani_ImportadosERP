@@ -1,16 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, UserX } from "lucide-react";
+import { UserX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { CustomerForm } from "@/components/clientes/customer-form";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
-import { Button } from "@/components/ui/button";
 import { useCustomer, useUpdateCustomer } from "@/hooks/use-customers";
 import { ApiError } from "@/services/errors";
 import type { CustomerPayload } from "@/types/customer";
@@ -66,12 +65,9 @@ export default function EditarClientePage() {
         title="Editar cliente"
         description="Atualize os campos permitidos pelo contrato real de cliente."
         actions={
-          <Button asChild variant="secondary">
-            <Link href={customerId ? `/clientes/${customerId}` : "/clientes"}>
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton
+            fallbackHref={customerId ? `/clientes/${customerId}` : "/clientes"}
+          />
         }
       />
 

@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { mobileNavigationItems, moreNavigationItems } from "@/config/navigation";
 import { routes } from "@/config/routes";
 import { useAuth } from "@/hooks/use-auth";
@@ -86,7 +86,7 @@ export function MobileBottomNav() {
 
                       return (
                         <DialogClose key={moreItem.id} asChild>
-                          <Link
+                          <ContextualLink
                             href={moreItem.href}
                             aria-current={moreActive ? "page" : undefined}
                             className={cn(
@@ -98,7 +98,7 @@ export function MobileBottomNav() {
                           >
                             <MoreIcon className="h-4 w-4 shrink-0" aria-hidden />
                             <span className="truncate">{moreItem.label}</span>
-                          </Link>
+                          </ContextualLink>
                         </DialogClose>
                       );
                     })}
@@ -130,10 +130,10 @@ export function MobileBottomNav() {
                 active ? "shadow-sm" : undefined
               )}
             >
-              <Link href={item.href}>
+              <ContextualLink href={item.href}>
                 <Icon className="h-5 w-5 shrink-0" aria-hidden />
                 <span className="max-w-full truncate">{item.label}</span>
-              </Link>
+              </ContextualLink>
             </Button>
           );
         })}

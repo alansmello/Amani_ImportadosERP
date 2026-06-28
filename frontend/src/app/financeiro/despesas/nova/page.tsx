@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Tags } from "lucide-react";
+import { Tags } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { ExpenseForm } from "@/components/financeiro/expense-form";
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 
@@ -23,12 +24,7 @@ export default function NovaDespesaPage() {
         description="Registre uma despesa operacional com categoria ativa, data, valor e forma de pagamento."
         actions={
           <div className="flex flex-col gap-2 tablet:flex-row">
-            <Button asChild variant="secondary">
-              <Link href={routes.despesas}>
-                <ArrowLeft className="h-4 w-4" aria-hidden />
-                <span>Voltar</span>
-              </Link>
-            </Button>
+            <ContextualBackButton fallbackHref={routes.despesas} />
             <Button asChild variant="secondary">
               <Link href={routes.despesasCategorias}>
                 <Tags className="h-4 w-4" aria-hidden />

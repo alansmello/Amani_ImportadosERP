@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 
 export type SupplierFormValues = {
   nome: string;
+  telefone: string;
 };
 
 export type SupplierFormErrors = Partial<Record<keyof SupplierFormValues, string>>;
@@ -51,10 +52,35 @@ export function SupplierFormFields({
           autoComplete="organization"
         />
         <p id="supplier-name-help" className={fieldHelpClassName}>
-          Unico campo editavel do fornecedor nesta etapa.
+          Use o nome comercial reconhecido na operacao.
         </p>
         <div id="supplier-name-error">
           <FieldError message={errors.nome} />
+        </div>
+      </div>
+
+      <div className="grid gap-2">
+        <label className={fieldLabelClassName} htmlFor="supplier-phone">
+          Telefone
+        </label>
+        <Input
+          id="supplier-phone"
+          type="tel"
+          value={values.telefone}
+          onChange={(event) => onChange("telefone", event.target.value)}
+          disabled={disabled}
+          maxLength={50}
+          aria-invalid={Boolean(errors.telefone)}
+          aria-describedby={
+            errors.telefone ? "supplier-phone-error" : "supplier-phone-help"
+          }
+          autoComplete="tel"
+        />
+        <p id="supplier-phone-help" className={fieldHelpClassName}>
+          Opcional. Aceita ate 50 caracteres.
+        </p>
+        <div id="supplier-phone-error">
+          <FieldError message={errors.telefone} />
         </div>
       </div>
     </div>

@@ -1,14 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { use } from "react";
-import { ArrowLeft } from "lucide-react";
 
 import { ReceivableClientDetail } from "@/components/financeiro/receivable-client-detail";
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
-import { Button } from "@/components/ui/button";
 import { useCustomers } from "@/hooks/use-customers";
 import { useReceivableClientDetail } from "@/hooks/use-receivables";
 import { routes } from "@/config/routes";
@@ -29,7 +27,7 @@ export default function ClienteContasReceberPage({
 
   const clienteName =
     customers.find((c) => c.id === clienteId)?.nome ??
-    clienteId.slice(0, 8) + "…";
+    "Cliente nao encontrado";
 
   const isLoading = query.isLoading || customersQuery.isLoading;
   const isError = query.isError || customersQuery.isError;
@@ -45,12 +43,7 @@ export default function ClienteContasReceberPage({
         title={isLoading ? "Contas do cliente" : `Contas de ${clienteName}`}
         description="Contas em aberto, saldos e historico de pagamentos."
         actions={
-          <Button asChild variant="secondary">
-            <Link href={routes.contasReceber}>
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton fallbackHref={routes.contasReceber} />
         }
       />
 

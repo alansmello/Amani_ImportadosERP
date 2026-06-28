@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { desktopNavigationItems } from "@/config/navigation";
 import { routes } from "@/config/routes";
 import { useAuth } from "@/hooks/use-auth";
@@ -59,10 +59,10 @@ export function DesktopSidebar() {
                 active ? "shadow-sm" : undefined
               )}
             >
-              <Link href={item.href}>
+              <ContextualLink href={item.href}>
                 <Icon className="h-4 w-4 shrink-0" aria-hidden />
                 <span className="truncate">{item.label}</span>
-              </Link>
+              </ContextualLink>
             </Button>
           );
         })}

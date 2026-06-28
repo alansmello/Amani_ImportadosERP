@@ -9,6 +9,8 @@ import {
   type ProductFormErrors,
   type ProductFormValues
 } from "@/components/produtos/product-form-fields";
+import { CategoryQuickCreateDialog } from "@/components/produtos/category-quick-create-dialog";
+import { SupplierQuickCreateDialog } from "@/components/fornecedores/supplier-quick-create-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -124,6 +126,8 @@ export function ProductForm({
   const [values, setValues] = useState<ProductFormValues>(initialValues);
   const [errors, setErrors] = useState<ProductFormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+  const [supplierDialogOpen, setSupplierDialogOpen] = useState(false);
 
   useEffect(() => {
     setValues(initialValues);
@@ -170,6 +174,7 @@ export function ProductForm({
   }
 
   return (
+    <>
     <Card>
       <form onSubmit={handleSubmit} noValidate>
         <CardHeader>
@@ -195,6 +200,9 @@ export function ProductForm({
             categories={categories}
             suppliers={suppliers}
             disabled={isSubmitting}
+            allowQuickCreate={isCreateMode}
+            onCreateCategory={() => setCategoryDialogOpen(true)}
+            onCreateSupplier={() => setSupplierDialogOpen(true)}
             onChange={updateField}
           />
         </CardContent>
@@ -213,5 +221,20 @@ export function ProductForm({
         </CardFooter>
       </form>
     </Card>
+    {isCreateMode ? (
+      <>
+        <CategoryQuickCreateDialog
+          open={categoryDialogOpen}
+          onOpenChange={setCategoryDialogOpen}
+          onCreated={(category) => updateField("categoriaId", category.id)}
+        />
+        <SupplierQuickCreateDialog
+          open={supplierDialogOpen}
+          onOpenChange={setSupplierDialogOpen}
+          onCreated={(supplier) => updateField("fornecedorId", supplier.id)}
+        />
+      </>
+    ) : null}
+    </>
   );
 }

@@ -65,7 +65,7 @@ export function StockFilters({
               onChange={(event) =>
                 updateFilters({ ...filters, busca: event.target.value })
               }
-              placeholder="Produto, codigo ou identificador"
+              placeholder="Nome do produto"
               className="pl-10"
               disabled={disabled}
             />

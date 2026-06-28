@@ -1,17 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 
 import { CancelSaleDialog } from "@/components/vendas/cancel-sale-dialog";
 import { SaleDetail } from "@/components/vendas/sale-detail";
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
-import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { useCustomers } from "@/hooks/use-customers";
 import { useProducts } from "@/hooks/use-products";
@@ -49,12 +47,7 @@ export default function VendaDetalhePage() {
         title="Detalhe da venda"
         description="Consulte itens, totais e lucro oficial retornado pelo backend."
         actions={
-          <Button asChild variant="secondary">
-            <Link href={routes.vendas}>
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton fallbackHref={routes.vendas} />
         }
       />
 

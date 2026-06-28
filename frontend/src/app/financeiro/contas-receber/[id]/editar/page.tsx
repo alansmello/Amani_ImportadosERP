@@ -1,16 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 
 import { ReceivableForm } from "@/components/financeiro/receivable-form";
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
-import { Button } from "@/components/ui/button";
 import { useReceivables } from "@/hooks/use-receivables";
 import { routes } from "@/config/routes";
 
@@ -37,12 +35,7 @@ export default function EditarContaReceberPage({
         title="Editar conta a receber"
         description="Altere o valor ou a data de vencimento da conta."
         actions={
-          <Button asChild variant="secondary">
-            <Link href={routes.contasReceber}>
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton fallbackHref={routes.contasReceber} />
         }
       />
 

@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { CreditCard, ReceiptText, WalletCards } from "lucide-react";
 
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { PageHeader } from "@/components/layout/page-header";
 import {
   Card,
@@ -45,7 +45,11 @@ export default function FinanceiroPage() {
           const Icon = item.icon;
 
           return (
-            <Link key={item.href} href={item.href} className="block min-w-0">
+            <ContextualLink
+              key={item.href}
+              href={item.href}
+              className="block min-w-0"
+            >
               <Card className="h-full transition-colors hover:border-primary">
                 <CardHeader>
                   <div className="flex h-10 w-10 items-center justify-center rounded-amani border border-border bg-surface-light text-primary">
@@ -59,7 +63,7 @@ export default function FinanceiroPage() {
                   </CardDescription>
                 </CardContent>
               </Card>
-            </Link>
+            </ContextualLink>
           );
         })}
       </section>
