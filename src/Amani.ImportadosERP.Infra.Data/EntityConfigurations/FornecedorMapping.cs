@@ -11,5 +11,6 @@ public class FornecedorMapping : IEntityTypeConfiguration<Fornecedor>
         builder.ToTable("fornecedores");
         builder.HasKey(f => f.Id);
         builder.Property(f => f.Nome).IsRequired().HasMaxLength(150);
+        builder.Property(f => f.Telefone).HasMaxLength(Fornecedor.TelefoneMaxLength);
     }
 }

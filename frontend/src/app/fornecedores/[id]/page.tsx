@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Building2, Edit3 } from "lucide-react";
+import { Building2, Edit3 } from "lucide-react";
 
 import { SupplierDetails } from "@/components/fornecedores/supplier-details";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
@@ -12,6 +13,7 @@ import { LoadingState } from "@/components/states/loading-state";
 import { Button } from "@/components/ui/button";
 import { useSupplier } from "@/hooks/use-suppliers";
 import { ApiError } from "@/services/errors";
+import { routes } from "@/config/routes";
 
 function getParamValue(value: string | string[] | undefined) {
   if (Array.isArray(value)) {
@@ -42,12 +44,7 @@ export default function FornecedorDetalhePage() {
         description="Consulte os campos reais do fornecedor carregados da API."
         actions={
           <div className="flex flex-wrap gap-2">
-            <Button asChild variant="secondary">
-              <Link href="/fornecedores">
-                <ArrowLeft className="h-4 w-4" aria-hidden />
-                <span>Voltar</span>
-              </Link>
-            </Button>
+            <ContextualBackButton fallbackHref={routes.fornecedores} />
             {supplier ? (
               <Button asChild>
                 <Link href={`/fornecedores/${supplier.id}/editar`}>

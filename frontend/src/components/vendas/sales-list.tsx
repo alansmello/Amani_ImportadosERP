@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 
 import {
@@ -102,10 +102,10 @@ export function SalesList({
                 </TableCell>
                 <TableCell className="text-right">
                   <Button asChild variant="secondary" size="sm">
-                    <Link href={vendaDetalhe(sale.id)}>
+                    <ContextualLink href={vendaDetalhe(sale.id)}>
                       <span>Detalhe</span>
                       <ArrowRight className="h-4 w-4" aria-hidden />
-                    </Link>
+                    </ContextualLink>
                   </Button>
                 </TableCell>
               </TableRow>

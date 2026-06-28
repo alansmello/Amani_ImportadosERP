@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
 import { SalesFilters } from "@/components/vendas/sales-filters";
 import { SalesList } from "@/components/vendas/sales-list";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { PageHeader } from "@/components/layout/page-header";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
@@ -46,10 +46,10 @@ export default function VendasPage() {
         description="Consulte vendas por periodo e cliente, abra detalhes e registre uma nova venda."
         actions={
           <Button asChild>
-            <Link href={vendasNova()}>
+            <ContextualLink href={vendasNova()}>
               <Plus className="h-4 w-4" aria-hidden />
               <span>Nova venda</span>
-            </Link>
+            </ContextualLink>
           </Button>
         }
       />

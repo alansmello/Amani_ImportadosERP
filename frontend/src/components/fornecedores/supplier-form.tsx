@@ -33,22 +33,29 @@ type SupplierFormProps = {
 
 function buildInitialValues(initialSupplier?: Supplier): SupplierFormValues {
   return {
-    nome: initialSupplier?.nome ?? ""
+    nome: initialSupplier?.nome ?? "",
+    telefone: initialSupplier?.telefone ?? ""
   };
 }
 
-function validateValues(values: SupplierFormValues) {
+export function validateSupplierValues(values: SupplierFormValues) {
   const errors: SupplierFormErrors = {};
   const nome = values.nome.trim();
+  const telefone = values.telefone.trim();
 
   if (!nome) {
     errors.nome = "Informe o nome do fornecedor.";
   }
 
+  if (telefone.length > 50) {
+    errors.telefone = "O telefone deve ter no maximo 50 caracteres.";
+  }
+
   return {
     errors,
     payload: {
-      nome
+      nome,
+      telefone: telefone || null
     } satisfies SupplierPayload
   };
 }
@@ -77,8 +84,8 @@ export function SupplierForm({
   const isCreateMode = mode === "create";
   const title = isCreateMode ? "Cadastrar fornecedor" : "Editar fornecedor";
   const description = isCreateMode
-    ? "Informe o nome real do fornecedor para salvar no cadastro operacional."
-    : "Atualize somente o nome aceito pelo contrato de fornecedor.";
+    ? "Informe o nome e, se disponivel, o telefone do fornecedor."
+    : "Atualize os dados operacionais do fornecedor.";
   const submitLabel = isCreateMode ? "Salvar fornecedor" : "Atualizar fornecedor";
 
   function updateField(field: keyof SupplierFormValues, value: string) {
@@ -97,7 +104,7 @@ export function SupplierForm({
     event.preventDefault();
     setSubmitError(null);
 
-    const validation = validateValues(values);
+    const validation = validateSupplierValues(values);
     setErrors(validation.errors);
 
     if (Object.keys(validation.errors).length > 0) {

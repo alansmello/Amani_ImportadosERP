@@ -23,8 +23,8 @@ export function SupplierDetails({ supplier }: SupplierDetailsProps) {
           </div>
           <div className="min-w-0">
             <CardTitle className="leading-6">{supplier.nome}</CardTitle>
-            <CardDescription className="mt-2 break-all">
-              ID: {supplier.id}
+            <CardDescription className="mt-2 break-words">
+              {supplier.telefone?.trim() || "Nao informado"}
             </CardDescription>
           </div>
         </div>
@@ -42,10 +42,10 @@ export function SupplierDetails({ supplier }: SupplierDetailsProps) {
 
           <div className="rounded-amani border border-border bg-surface-light p-4">
             <dt className="text-xs font-medium uppercase tracking-normal text-text-secondary">
-              Identificador
+              Telefone
             </dt>
-            <dd className="mt-2 break-all text-sm font-medium text-text-primary">
-              {supplier.id}
+            <dd className="mt-2 break-words text-sm font-medium text-text-primary">
+              {supplier.telefone?.trim() || "Nao informado"}
             </dd>
           </div>
         </dl>

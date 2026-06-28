@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { Plus, Search, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { CustomerTable } from "@/components/clientes/customer-table";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
@@ -102,10 +102,10 @@ export default function ClientesPage() {
         description="Gerencie a carteira operacional de clientes com dados reais da API."
         actions={
           <Button asChild>
-            <Link href="/clientes/novo">
+            <ContextualLink href="/clientes/novo">
               <Plus className="h-4 w-4" aria-hidden />
               <span>Novo cliente</span>
-            </Link>
+            </ContextualLink>
           </Button>
         }
       />

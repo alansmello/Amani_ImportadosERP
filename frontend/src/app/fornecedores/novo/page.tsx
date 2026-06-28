@@ -1,13 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { SupplierForm } from "@/components/fornecedores/supplier-form";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
+import { routes } from "@/config/routes";
 import { useCreateSupplier } from "@/hooks/use-suppliers";
 import type { SupplierPayload } from "@/types/supplier";
 
@@ -39,12 +38,7 @@ export default function NovoFornecedorPage() {
         title="Novo fornecedor"
         description="Cadastre um fornecedor para preparar os fluxos operacionais de compras."
         actions={
-          <Button asChild variant="secondary">
-            <Link href="/fornecedores">
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton fallbackHref={routes.fornecedores} />
         }
       />
 

@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
@@ -42,9 +41,6 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
           </div>
           <div className="min-w-0">
             <CardTitle className="leading-6">{customer.nome}</CardTitle>
-            <CardDescription className="mt-2 break-all">
-              ID: {customer.id}
-            </CardDescription>
           </div>
         </div>
       </CardHeader>

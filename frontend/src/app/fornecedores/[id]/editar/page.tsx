@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Building2, Eye } from "lucide-react";
+import { Building2, Eye } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { SupplierForm } from "@/components/fornecedores/supplier-form";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
@@ -13,6 +14,7 @@ import { LoadingState } from "@/components/states/loading-state";
 import { Button } from "@/components/ui/button";
 import { useSupplier, useUpdateSupplier } from "@/hooks/use-suppliers";
 import { ApiError } from "@/services/errors";
+import { fornecedorDetalhe, routes } from "@/config/routes";
 import type { SupplierPayload } from "@/types/supplier";
 
 function getParamValue(value: string | string[] | undefined) {
@@ -70,12 +72,9 @@ export default function EditarFornecedorPage() {
         description="Atualize somente o nome aceito pelo contrato real de fornecedor."
         actions={
           <div className="flex flex-wrap gap-2">
-            <Button asChild variant="secondary">
-              <Link href="/fornecedores">
-                <ArrowLeft className="h-4 w-4" aria-hidden />
-                <span>Voltar</span>
-              </Link>
-            </Button>
+            <ContextualBackButton
+              fallbackHref={supplierId ? fornecedorDetalhe(supplierId) : routes.fornecedores}
+            />
             {supplier ? (
               <Button asChild variant="secondary">
                 <Link href={`/fornecedores/${supplier.id}`}>

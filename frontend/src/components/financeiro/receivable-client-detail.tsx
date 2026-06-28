@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import {
   ArrowRight,
   ChevronDown,
@@ -148,7 +148,7 @@ export function ReceivableClientDetail({
                       </div>
                       <div className="mt-1 text-xs text-text-secondary">
                         {conta.vendaId ? (
-                          <Link
+                          <ContextualLink
                             href={vendaDetalhe(conta.vendaId)}
                             className="flex items-center gap-1 text-primary underline-offset-4 hover:underline"
                           >
@@ -156,7 +156,7 @@ export function ReceivableClientDetail({
                               Origem: {formatReceivableOrigin(conta.origem)}
                             </span>
                             <ArrowRight className="h-3 w-3" aria-hidden />
-                          </Link>
+                          </ContextualLink>
                         ) : (
                           <span>
                             Origem: {formatReceivableOrigin(conta.origem)}

@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Edit3, PackageX } from "lucide-react";
+import { Edit3, PackageX } from "lucide-react";
 import { useMemo } from "react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { ProductDetails } from "@/components/produtos/product-details";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
@@ -15,6 +16,7 @@ import { useCategories } from "@/hooks/use-categories";
 import { useProduct } from "@/hooks/use-products";
 import { useSuppliers } from "@/hooks/use-suppliers";
 import { ApiError } from "@/services/errors";
+import { routes } from "@/config/routes";
 
 function getParamValue(value: string | string[] | undefined) {
   if (Array.isArray(value)) {
@@ -74,12 +76,7 @@ export default function ProdutoDetalhePage() {
         description="Consulte os campos reais do produto carregados da API."
         actions={
           <div className="flex flex-wrap gap-2">
-            <Button asChild variant="secondary">
-              <Link href="/produtos">
-                <ArrowLeft className="h-4 w-4" aria-hidden />
-                <span>Voltar</span>
-              </Link>
-            </Button>
+            <ContextualBackButton fallbackHref={routes.produtos} />
             {product ? (
               <Button asChild>
                 <Link href={`/produtos/${product.id}/editar`}>

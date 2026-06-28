@@ -1,13 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { CustomerForm } from "@/components/clientes/customer-form";
-import { Button } from "@/components/ui/button";
 import { useCreateCustomer } from "@/hooks/use-customers";
 import type { CustomerPayload } from "@/types/customer";
 
@@ -39,12 +37,7 @@ export default function NovoClientePage() {
         title="Novo cliente"
         description="Cadastre um cliente com os dados aceitos pelo contrato atual da API."
         actions={
-          <Button asChild variant="secondary">
-            <Link href="/clientes">
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton fallbackHref="/clientes" />
         }
       />
 

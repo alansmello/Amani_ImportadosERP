@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { PendingProductsPanel } from "@/components/compras/pending-products-panel";
 import { PurchaseFilters } from "@/components/compras/purchase-filters";
 import { PurchaseList } from "@/components/compras/purchase-list";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { PageHeader } from "@/components/layout/page-header";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
@@ -112,10 +112,10 @@ export default function ComprasPage() {
         description="Acompanhe compras em transito, filtre por fornecedor e periodo e veja produtos pendentes de recebimento."
         actions={
           <Button asChild>
-            <Link href={routes.comprasNova}>
+            <ContextualLink href={routes.comprasNova}>
               <Plus className="h-4 w-4" aria-hidden />
               <span>Nova compra</span>
-            </Link>
+            </ContextualLink>
           </Button>
         }
       />

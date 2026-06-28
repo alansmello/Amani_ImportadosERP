@@ -4,7 +4,9 @@ export const routes = {
   clientes: "/clientes",
   clientesNovo: "/clientes/novo",
   fornecedores: "/fornecedores",
+  fornecedoresNovo: "/fornecedores/novo",
   produtos: "/produtos",
+  produtosNovo: "/produtos/novo",
   compras: "/compras",
   comprasNova: "/compras/nova",
   vendas: "/vendas",
@@ -27,6 +29,30 @@ export type AppRoute = (typeof routes)[AppRouteKey];
 
 export function compraDetalhe(id: string) {
   return `/compras/${id}` as const;
+}
+
+export function clienteDetalhe(id: string) {
+  return `/clientes/${id}` as const;
+}
+
+export function clienteEditar(id: string) {
+  return `/clientes/${id}/editar` as const;
+}
+
+export function fornecedorDetalhe(id: string) {
+  return `/fornecedores/${id}` as const;
+}
+
+export function fornecedorEditar(id: string) {
+  return `/fornecedores/${id}/editar` as const;
+}
+
+export function produtoDetalhe(id: string) {
+  return `/produtos/${id}` as const;
+}
+
+export function produtoEditar(id: string) {
+  return `/produtos/${id}/editar` as const;
 }
 
 export function vendasNova() {

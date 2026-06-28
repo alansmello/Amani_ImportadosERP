@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { CreditCard, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { ReceivablesFilters } from "@/components/financeiro/receivables-filters";
 import { ReceivablesList } from "@/components/financeiro/receivables-list";
 import { ReceivablesByClient } from "@/components/financeiro/receivables-by-client";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { useCustomers } from "@/hooks/use-customers";
@@ -82,16 +82,16 @@ export default function ContasReceberPage() {
         actions={
           <div className="flex flex-col gap-2 tablet:flex-row">
             <Button asChild variant="secondary">
-              <Link href={routes.despesasOperadora}>
+              <ContextualLink href={routes.despesasOperadora}>
                 <CreditCard className="h-4 w-4" aria-hidden />
                 <span>Taxas operadora</span>
-              </Link>
+              </ContextualLink>
             </Button>
             <Button asChild>
-              <Link href={routes.contasReceberNova}>
+              <ContextualLink href={routes.contasReceberNova}>
                 <Plus className="h-4 w-4" aria-hidden />
                 <span>Nova conta</span>
-              </Link>
+              </ContextualLink>
             </Button>
           </div>
         }

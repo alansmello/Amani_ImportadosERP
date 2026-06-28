@@ -1,17 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, UserX } from "lucide-react";
+import { UserX } from "lucide-react";
 import { useState } from "react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { CustomerActions } from "@/components/clientes/customer-actions";
 import { CustomerDetails } from "@/components/clientes/customer-details";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
-import { Button } from "@/components/ui/button";
 import { useCustomer, useInactivateCustomer } from "@/hooks/use-customers";
 import { ApiError } from "@/services/errors";
 
@@ -51,12 +50,7 @@ export default function ClienteDetalhePage() {
         description="Consulte os campos reais do cliente carregados da API."
         actions={
           <div className="flex flex-wrap gap-2">
-            <Button asChild variant="secondary">
-              <Link href="/clientes">
-                <ArrowLeft className="h-4 w-4" aria-hidden />
-                <span>Voltar</span>
-              </Link>
-            </Button>
+            <ContextualBackButton fallbackHref="/clientes" />
             {customer ? (
               <CustomerActions
                 customerId={customer.id}

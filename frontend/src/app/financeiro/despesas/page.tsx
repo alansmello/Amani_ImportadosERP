@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { Plus, Tags } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { ExpenseFiltersPanel } from "@/components/financeiro/expense-filters";
 import { ExpensesList } from "@/components/financeiro/expenses-list";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
@@ -48,16 +48,16 @@ export default function DespesasPage() {
         actions={
           <div className="flex flex-col gap-2 tablet:flex-row">
             <Button asChild variant="secondary">
-              <Link href={routes.despesasCategorias}>
+              <ContextualLink href={routes.despesasCategorias}>
                 <Tags className="h-4 w-4" aria-hidden />
                 <span>Categorias</span>
-              </Link>
+              </ContextualLink>
             </Button>
             <Button asChild>
-              <Link href={routes.despesasNova}>
+              <ContextualLink href={routes.despesasNova}>
                 <Plus className="h-4 w-4" aria-hidden />
                 <span>Nova despesa</span>
-              </Link>
+              </ContextualLink>
             </Button>
           </div>
         }

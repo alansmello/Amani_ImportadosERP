@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { ArrowRight, PackageSearch } from "lucide-react";
 
 import { EmptyState } from "@/components/states/empty-state";
@@ -123,10 +123,10 @@ export function PendingReceiptsPanel({
                 size="sm"
                 className="w-full tablet:w-auto"
               >
-                <Link href={compraDetalhe(pending.compraId)}>
+                <ContextualLink href={compraDetalhe(pending.compraId)}>
                   <span>Detalhe da compra</span>
                   <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
+                </ContextualLink>
               </Button>
             </div>
           </div>

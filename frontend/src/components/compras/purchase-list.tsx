@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { ArrowRight, ClipboardList } from "lucide-react";
 
 import { EmptyState } from "@/components/states/empty-state";
@@ -141,10 +141,10 @@ export function PurchaseList({
                   </TableCell>
                   <TableCell className="text-right">
                     <Button asChild variant="secondary" size="sm">
-                      <Link href={compraDetalhe(purchase.id)}>
+                      <ContextualLink href={compraDetalhe(purchase.id)}>
                         <span>Detalhe</span>
                         <ArrowRight className="h-4 w-4" aria-hidden />
-                      </Link>
+                      </ContextualLink>
                     </Button>
                   </TableCell>
                 </TableRow>

@@ -1,16 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, FolderOpen, PackageX } from "lucide-react";
+import { FolderOpen, PackageX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { ContextualBackButton } from "@/components/layout/contextual-back-button";
 import { ProductForm } from "@/components/produtos/product-form";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
-import { Button } from "@/components/ui/button";
+import { produtoDetalhe, routes } from "@/config/routes";
 import { useCategories } from "@/hooks/use-categories";
 import { useProduct, useUpdateProduct } from "@/hooks/use-products";
 import { useSuppliers } from "@/hooks/use-suppliers";
@@ -83,12 +83,9 @@ export default function EditarProdutoPage() {
         title="Editar produto"
         description="Atualize os campos permitidos pelo contrato real de produto."
         actions={
-          <Button asChild variant="secondary">
-            <Link href={productId ? `/produtos/${productId}` : "/produtos"}>
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              <span>Voltar</span>
-            </Link>
-          </Button>
+          <ContextualBackButton
+            fallbackHref={productId ? produtoDetalhe(productId) : routes.produtos}
+          />
         }
       />
 

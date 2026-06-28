@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { ArrowRight, Boxes } from "lucide-react";
 
 import {
@@ -95,10 +95,10 @@ export function StockList({ products }: StockListProps) {
                 <StockBalance product={product} />
               </div>
               <Button asChild variant="secondary" className="w-full">
-                <Link href={estoqueDetalhe(product.produtoId)}>
+                <ContextualLink href={estoqueDetalhe(product.produtoId)}>
                   <span>Movimentacoes</span>
                   <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
+                </ContextualLink>
               </Button>
             </CardContent>
           </Card>
@@ -127,10 +127,10 @@ export function StockList({ products }: StockListProps) {
                 </TableCell>
                 <TableCell>
                   <Button asChild variant="secondary" size="sm">
-                    <Link href={estoqueDetalhe(product.produtoId)}>
+                    <ContextualLink href={estoqueDetalhe(product.produtoId)}>
                       <span>Movimentacoes</span>
                       <ArrowRight className="h-4 w-4" aria-hidden />
-                    </Link>
+                    </ContextualLink>
                   </Button>
                 </TableCell>
               </TableRow>

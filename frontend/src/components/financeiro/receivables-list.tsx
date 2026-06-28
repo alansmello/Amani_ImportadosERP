@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   ArrowRight,
   CreditCard,
@@ -16,6 +15,7 @@ import {
 } from "@/components/financeiro/receivable-formatters";
 import { DeleteReceivableDialog } from "@/components/financeiro/delete-receivable-dialog";
 import { ReceivablePaymentModal } from "@/components/financeiro/receivable-payment-modal";
+import { ContextualLink } from "@/components/layout/contextual-link";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
@@ -69,11 +69,11 @@ function resolveClienteName(
   customers: Customer[]
 ): string {
   if (!receivable.clienteId) {
-    return receivable.clienteId ? String(receivable.clienteId).slice(0, 8) + "…" : "—";
+    return "Referencia indisponivel";
   }
 
   const customer = customers.find((c) => c.id === receivable.clienteId);
-  return customer?.nome ?? receivable.clienteId.slice(0, 8) + "…";
+  return customer?.nome ?? "Cliente nao encontrado";
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -189,13 +189,13 @@ export function ReceivablesList({
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
                       {receivable.vendaId ? (
-                        <Link
+                        <ContextualLink
                           href={vendaDetalhe(receivable.vendaId)}
                           className="flex items-center gap-1 text-primary underline-offset-4 hover:underline"
                         >
                           <span>{formatReceivableOrigin(receivable.origem)}</span>
                           <ArrowRight className="h-3 w-3" aria-hidden />
-                        </Link>
+                        </ContextualLink>
                       ) : (
                         formatReceivableOrigin(receivable.origem)
                       )}
@@ -231,12 +231,12 @@ export function ReceivablesList({
                           variant="secondary"
                           size="sm"
                         >
-                          <Link href={contaReceberEditar(receivable.id)}>
+                          <ContextualLink href={contaReceberEditar(receivable.id)}>
                             <Pencil className="h-4 w-4" aria-hidden />
                             <span className="sr-only tablet:not-sr-only">
                               Editar
                             </span>
-                          </Link>
+                          </ContextualLink>
                         </Button>
                         <DeleteReceivableDialog
                           receivableId={receivable.id}
