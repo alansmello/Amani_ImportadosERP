@@ -104,14 +104,15 @@ Payload enviado para registrar saldo inicial de caixa.
 
 - `valor`: saldo inicial informado.
 - `data`: data do saldo inicial.
-- `origem`: valor constante planejado `SaldoInicial`.
+- `origem`: valor constante `ImplantacaoInicial`, conforme a origem aceita pelo
+  evento financeiro de implantacao no backend.
 - `descricao`: descricao opcional.
 
 ### Validation Rules
 
 - `valor` obrigatorio e deve respeitar rejeicoes da fonte oficial.
 - `data` obrigatoria.
-- `origem` obrigatoria.
+- `origem` obrigatoria e igual a `ImplantacaoInicial`.
 
 ## InitialCashBalanceResult
 

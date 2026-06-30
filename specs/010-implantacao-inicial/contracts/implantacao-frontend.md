@@ -106,7 +106,7 @@ Content-Type: application/json
 {
   "valor": 1500.0,
   "data": "2026-06-15T00:00:00.000Z",
-  "origem": "SaldoInicial",
+  "origem": "ImplantacaoInicial",
   "descricao": "Saldo inicial informado na implantacao"
 }
 ```
@@ -118,7 +118,7 @@ Content-Type: application/json
   "eventoFinanceiroId": "00000000-0000-0000-0000-000000000000",
   "valor": 1500.0,
   "data": "2026-06-15T00:00:00Z",
-  "origem": "SaldoInicial"
+  "origem": "ImplantacaoInicial"
 }
 ```
 
@@ -126,7 +126,8 @@ Content-Type: application/json
 
 - `valor` obrigatorio.
 - `data` obrigatoria.
-- `origem` obrigatoria, usando `SaldoInicial` nesta feature.
+- `origem` obrigatoria, usando `ImplantacaoInicial`, conforme o contrato oficial
+  do backend.
 - `descricao` opcional.
 
 ### Frontend Behavior
