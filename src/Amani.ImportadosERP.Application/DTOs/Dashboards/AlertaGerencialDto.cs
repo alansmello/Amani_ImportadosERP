@@ -17,4 +17,5 @@ public sealed class DashboardAlertasDto
 {
     public DashboardFiltroAplicadoDto FiltrosAplicados { get; set; } = new();
     public IReadOnlyCollection<AlertaGerencialDto> Alertas { get; set; } = Array.Empty<AlertaGerencialDto>();
+    public DashboardAlertasResumoDto? Resumo { get; set; }
 }

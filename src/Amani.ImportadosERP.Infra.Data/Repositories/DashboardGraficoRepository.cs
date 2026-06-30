@@ -9,10 +9,14 @@ namespace Amani.ImportadosERP.Infra.Data.Repositories;
 public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
 {
     private readonly AmaniDbContext _db;
+    private readonly DashboardCustoMedioReadService _custoMedioReadService;
 
-    public DashboardGraficoRepository(AmaniDbContext db)
+    public DashboardGraficoRepository(
+        AmaniDbContext db,
+        DashboardCustoMedioReadService custoMedioReadService)
     {
         _db = db;
+        _custoMedioReadService = custoMedioReadService;
     }
 
     public async Task<SerieGraficaDto> ObterReceitaPorPeriodoAsync(DateTime dataInicial, DateTime dataFinal)
@@ -59,7 +63,7 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
             .ToList();
 
         var produtoIds = itensVendidos.Select(i => i.ProdutoId).Distinct().ToList();
-        var custos = await ObterCustosMediosAsync(produtoIds, dataFinal);
+        var custos = await _custoMedioReadService.ObterCustosMediosAsync(produtoIds, dataFinal);
 
         var pontos = buckets
             .Select(bucket =>
@@ -191,36 +195,6 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
             .Where(v => !v.Cancelada
                 && v.DataVenda >= dataInicial
                 && v.DataVenda <= dataFinal);
-    }
-
-    private async Task<IReadOnlyDictionary<Guid, decimal>> ObterCustosMediosAsync(
-        IReadOnlyCollection<Guid> produtoIds,
-        DateTime dataReferencia)
-    {
-        if (!produtoIds.Any())
-        {
-            return new Dictionary<Guid, decimal>();
-        }
-
-        var entradas = await _db.EstoqueMovimentacoes
-            .AsNoTracking()
-            .Where(m => produtoIds.Contains(m.ProdutoId)
-                && m.Data <= dataReferencia
-                && m.ValorUnitario != null
-                && (m.Tipo == TipoMovimentacao.InventarioInicial
-                    || (m.Tipo == TipoMovimentacao.Entrada && m.CompraItemId != null)))
-            .GroupBy(m => m.ProdutoId)
-            .Select(g => new
-            {
-                ProdutoId = g.Key,
-                Quantidade = g.Sum(m => m.Quantidade),
-                Valor = g.Sum(m => (m.ValorUnitario ?? 0m) * m.Quantidade)
-            })
-            .ToListAsync();
-
-        return entradas
-            .Where(e => e.Quantidade > 0)
-            .ToDictionary(e => e.ProdutoId, e => e.Valor / e.Quantidade);
     }
 
     private static IReadOnlyCollection<AvisoDadoIncompletoDto> CriarAvisosDeCustoAusente(

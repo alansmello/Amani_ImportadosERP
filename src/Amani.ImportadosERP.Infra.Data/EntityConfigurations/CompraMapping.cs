@@ -34,5 +34,8 @@ public class CompraMapping : IEntityTypeConfiguration<Compra>
                .WithOne(p => p.Compra)
                .HasForeignKey(p => p.CompraId)
                .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(c => new { c.DataCompra, c.Status })
+            .HasDatabaseName("IX_compras_DataCompra_Status");
     }
 }

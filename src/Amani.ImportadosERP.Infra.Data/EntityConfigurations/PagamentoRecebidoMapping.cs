@@ -30,5 +30,8 @@ public class PagamentoRecebidoMapping : IEntityTypeConfiguration<PagamentoRecebi
 
         builder.Property(x => x.DataPagamento)
             .IsRequired();
+
+        builder.HasIndex(x => x.DataPagamento)
+            .HasDatabaseName("IX_pagamentos_recebidos_DataPagamento");
     }
 }

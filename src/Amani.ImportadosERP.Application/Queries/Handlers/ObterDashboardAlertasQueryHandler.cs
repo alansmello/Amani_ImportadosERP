@@ -47,18 +47,48 @@ public sealed class ObterDashboardAlertasQueryHandler
             filtros.DataFinal,
             LimitePerdasRecorrentes);
 
+        var alertasFiltrados = FiltrarTipos(
+                estoqueBaixo
+                    .Concat(semMovimentacao)
+                    .Concat(transitoAntigo)
+                    .Concat(perdasRecorrentes),
+                request.TiposAlertas)
+            .OrderBy(a => a.TipoAlerta)
+            .ThenBy(a => a.EntidadeNome)
+            .ThenBy(a => a.EntidadeId)
+            .ToList();
+
         return new DashboardAlertasDto
         {
             FiltrosAplicados = filtros,
-            Alertas = FiltrarTipos(
-                    estoqueBaixo
-                        .Concat(semMovimentacao)
-                        .Concat(transitoAntigo)
-                        .Concat(perdasRecorrentes),
-                    request.TiposAlertas)
-                .OrderBy(a => a.TipoAlerta)
-                .ThenBy(a => a.EntidadeNome)
-                .ThenBy(a => a.EntidadeId)
+            Alertas = alertasFiltrados,
+            Resumo = CriarResumo(alertasFiltrados)
+        };
+    }
+
+    private static DashboardAlertasResumoDto CriarResumo(
+        IReadOnlyCollection<AlertaGerencialDto> alertas)
+    {
+        return new DashboardAlertasResumoDto
+        {
+            Total = alertas.Count,
+            PorSeveridade = alertas
+                .GroupBy(a => a.Severidade.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Select(g => new DashboardContagemAgrupadaDto
+                {
+                    Chave = g.Key,
+                    Quantidade = g.Count()
+                })
+                .OrderBy(g => g.Chave, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            PorTipo = alertas
+                .GroupBy(a => a.TipoAlerta.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Select(g => new DashboardContagemAgrupadaDto
+                {
+                    Chave = g.Key,
+                    Quantidade = g.Count()
+                })
+                .OrderBy(g => g.Chave, StringComparer.OrdinalIgnoreCase)
                 .ToList()
         };
     }

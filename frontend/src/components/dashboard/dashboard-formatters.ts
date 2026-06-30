@@ -32,25 +32,46 @@ const severityLabels: Record<string, string> = {
   critico: "Critica"
 };
 
-export function formatDashboardCurrency(value: number | null | undefined) {
-  if (value === null || value === undefined) {
-    return "Indisponivel";
+export const DASHBOARD_UNAVAILABLE_LABEL = "Indisponível";
+
+export const DASHBOARD_EMPTY_PERIOD_MESSAGE = "Sem dados no periodo";
+
+export const DASHBOARD_EMPTY_CHART_MESSAGE =
+  "Nao ha movimentacoes suficientes para gerar este grafico.";
+
+export function isDashboardValueMissing(
+  value: number | null | undefined
+): value is null | undefined {
+  return value === null || value === undefined;
+}
+
+export function formatDashboardNullableCurrency(value: number | null | undefined) {
+  if (isDashboardValueMissing(value)) {
+    return DASHBOARD_UNAVAILABLE_LABEL;
   }
 
   return currencyFormatter.format(value);
 }
 
-export function formatDashboardQuantity(value: number | null | undefined) {
-  if (value === null || value === undefined) {
-    return "Indisponivel";
+export function formatDashboardNullableQuantity(value: number | null | undefined) {
+  if (isDashboardValueMissing(value)) {
+    return DASHBOARD_UNAVAILABLE_LABEL;
   }
 
   return quantityFormatter.format(value);
 }
 
+export function formatDashboardCurrency(value: number | null | undefined) {
+  return formatDashboardNullableCurrency(value);
+}
+
+export function formatDashboardQuantity(value: number | null | undefined) {
+  return formatDashboardNullableQuantity(value);
+}
+
 export function formatDashboardDate(value: string | null | undefined) {
   if (!value) {
-    return "Indisponivel";
+    return DASHBOARD_UNAVAILABLE_LABEL;
   }
 
   const date = new Date(value);
@@ -59,7 +80,7 @@ export function formatDashboardDate(value: string | null | undefined) {
 
 export function formatDashboardDateTime(value: string | null | undefined) {
   if (!value) {
-    return "Indisponivel";
+    return DASHBOARD_UNAVAILABLE_LABEL;
   }
 
   const date = new Date(value);
@@ -68,7 +89,7 @@ export function formatDashboardDateTime(value: string | null | undefined) {
 
 export function formatDashboardSeverity(value: string | null | undefined) {
   if (!value) {
-    return "Indisponivel";
+    return DASHBOARD_UNAVAILABLE_LABEL;
   }
 
   return severityLabels[value.toLowerCase()] ?? formatDashboardLabel(value);
@@ -76,7 +97,7 @@ export function formatDashboardSeverity(value: string | null | undefined) {
 
 export function formatDashboardLabel(value: string | null | undefined) {
   if (!value) {
-    return "Indisponivel";
+    return DASHBOARD_UNAVAILABLE_LABEL;
   }
 
   return value

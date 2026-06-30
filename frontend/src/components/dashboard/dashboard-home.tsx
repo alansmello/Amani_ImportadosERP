@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { DashboardAlerts } from "@/components/dashboard/dashboard-alerts";
 import { DashboardChartSection } from "@/components/dashboard/dashboard-chart-section";
 import { DashboardKpiGrid } from "@/components/dashboard/dashboard-kpi-grid";
+import { DashboardPatrimonialGrid } from "@/components/dashboard/dashboard-patrimonial-grid";
 import {
   formatDashboardDate,
   formatDashboardQuantity
@@ -21,10 +22,10 @@ import {
   useDashboardFinancialKpis,
   useDashboardOperationalSummary,
   useDashboardPeriodQuery,
-  useDashboardRankings
+  useDashboardRankings,
+  useDashboardSectionPeriodMatch
 } from "@/hooks/use-dashboard";
 import type {
-  DashboardAppliedFilter,
   DashboardPeriodFilter as DashboardPeriodFilterType
 } from "@/types/dashboard";
 
@@ -55,28 +56,6 @@ function formatPeriodSummary(period: DashboardPeriodFilterType) {
   return `${formatDashboardDate(period.startDate)} ate ${formatDashboardDate(
     period.endDate
   )}`;
-}
-
-function appliedFilterMatchesPeriod(
-  applied: DashboardAppliedFilter | undefined,
-  period: DashboardPeriodFilterType
-) {
-  if (!applied) {
-    return false;
-  }
-
-  if (period.mode === "month") {
-    return applied.mes === period.month && applied.ano === period.year;
-  }
-
-  if (period.mode === "year") {
-    return applied.ano === period.year && applied.mes == null;
-  }
-
-  return (
-    applied.dataInicial.slice(0, 10) === period.startDate &&
-    applied.dataFinal.slice(0, 10) === period.endDate
-  );
 }
 
 type SourceStatusCardProps = {
@@ -155,37 +134,22 @@ export function DashboardHome() {
   );
   const periodQuery = useDashboardPeriodQuery(period);
 
-  const financialKpis = useDashboardFinancialKpis(period);
-  const operational = useDashboardOperationalSummary(period);
-  const rankings = useDashboardRankings(period, { limiteRankings: 5 });
-  const alerts = useDashboardAlerts(period);
-  const charts = useDashboardCharts(period);
+  const financialKpisQuery = useDashboardFinancialKpis(period);
+  const operationalQuery = useDashboardOperationalSummary(period);
+  const rankingsQuery = useDashboardRankings(period, { limiteRankings: 5 });
+  const alertsQuery = useDashboardAlerts(period);
+  const chartsQuery = useDashboardCharts(period);
+
+  const financialKpis = useDashboardSectionPeriodMatch(financialKpisQuery, period);
+  const operational = useDashboardSectionPeriodMatch(operationalQuery, period);
+  const rankings = useDashboardSectionPeriodMatch(rankingsQuery, period);
+  const alerts = useDashboardSectionPeriodMatch(alertsQuery, period);
+  const charts = useDashboardSectionPeriodMatch(chartsQuery, period);
 
   const activePeriodSummary = useMemo(() => formatPeriodSummary(period), [period]);
 
-  const kpisMatch = appliedFilterMatchesPeriod(
-    financialKpis.data?.filtrosAplicados,
-    period
-  );
-  const operationalMatch = appliedFilterMatchesPeriod(
-    operational.data?.filtrosAplicados,
-    period
-  );
-  const rankingsMatch = appliedFilterMatchesPeriod(
-    rankings.data?.filtrosAplicados,
-    period
-  );
-  const alertsMatch = appliedFilterMatchesPeriod(
-    alerts.data?.filtrosAplicados,
-    period
-  );
-  const chartsMatch = appliedFilterMatchesPeriod(
-    charts.data?.filtrosAplicados,
-    period
-  );
-
   return (
-    <main className="space-y-6">
+    <main className="mx-auto w-full min-w-0 max-w-content space-y-6 overflow-x-hidden">
       <PageHeader
         title="Dashboard"
         description="Resumo gerencial e financeiro com dados oficiais do backend."
@@ -202,55 +166,77 @@ export function DashboardHome() {
         />
       ) : null}
 
-      <section className="grid gap-4 tablet:grid-cols-2 desktop:grid-cols-4">
+      <section
+        aria-label="Indicadores financeiros do periodo"
+        className="grid min-w-0 grid-cols-1 gap-4 tablet:grid-cols-2 desktop:grid-cols-3"
+      >
         <DashboardKpiGrid
-          data={kpisMatch ? financialKpis.data : undefined}
+          data={financialKpis.data}
           isLoading={financialKpis.isLoading}
           isError={financialKpis.isError}
-          isStaleForPeriod={Boolean(financialKpis.data && !kpisMatch)}
+          isStaleForPeriod={financialKpis.isStaleForPeriod}
           onRetry={() => void financialKpis.refetch()}
         />
       </section>
 
-      <section className="grid gap-4 tablet:grid-cols-2 desktop:grid-cols-4">
+      <section
+        aria-label="Posicao patrimonial"
+        className="grid min-w-0 grid-cols-1 gap-4 tablet:grid-cols-2 desktop:grid-cols-4"
+      >
+        <DashboardPatrimonialGrid
+          data={financialKpis.data}
+          isLoading={financialKpis.isLoading}
+          isError={financialKpis.isError}
+          isStaleForPeriod={financialKpis.isStaleForPeriod}
+          onRetry={() => void financialKpis.refetch()}
+        />
+      </section>
+
+      <section
+        aria-label="Resumo operacional"
+        className="grid min-w-0 grid-cols-1 gap-4 tablet:grid-cols-2 desktop:grid-cols-4"
+      >
         <SourceStatusCard
           title="Operacional"
           description="Resumo operacional filtrado pela API gerencial."
           icon={PackageCheck}
           countLabel="vendas no periodo"
-          count={operationalMatch ? operational.data?.quantidadeVendas : undefined}
+          count={operational.data?.quantidadeVendas}
           isLoading={operational.isLoading}
           isError={operational.isError}
-          isStaleForPeriod={Boolean(operational.data && !operationalMatch)}
+          isStaleForPeriod={operational.isStaleForPeriod}
           onRetry={() => void operational.refetch()}
         />
       </section>
 
-      <section className="grid gap-4 desktop:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
-        <DashboardRankingList
-          rankings={rankingsMatch ? rankings.data?.rankings : undefined}
-          notices={rankingsMatch ? rankings.data?.avisos : undefined}
-          isLoading={rankings.isLoading}
-          isError={rankings.isError}
-          isStaleForPeriod={Boolean(rankings.data && !rankingsMatch)}
-          onRetry={() => void rankings.refetch()}
-        />
+      <section aria-label="Resumo de alertas" className="min-w-0">
         <DashboardAlerts
-          alerts={alertsMatch ? alerts.data?.alertas : undefined}
+          resumo={alerts.data?.resumo}
           isLoading={alerts.isLoading}
           isError={alerts.isError}
-          isStaleForPeriod={Boolean(alerts.data && !alertsMatch)}
+          isStaleForPeriod={alerts.isStaleForPeriod}
           onRetry={() => void alerts.refetch()}
         />
       </section>
 
-      <section>
+      <section aria-label="Rankings gerenciais" className="min-w-0">
+        <DashboardRankingList
+          rankings={rankings.data?.rankings}
+          notices={rankings.data?.avisos}
+          isLoading={rankings.isLoading}
+          isError={rankings.isError}
+          isStaleForPeriod={rankings.isStaleForPeriod}
+          onRetry={() => void rankings.refetch()}
+        />
+      </section>
+
+      <section aria-label="Graficos gerenciais" className="min-w-0">
         <DashboardChartSection
-          series={chartsMatch ? charts.data?.graficos : undefined}
-          notices={chartsMatch ? charts.data?.avisos : undefined}
+          series={charts.data?.graficos}
+          notices={charts.data?.avisos}
           isLoading={charts.isLoading}
           isError={charts.isError}
-          isStaleForPeriod={Boolean(charts.data && !chartsMatch)}
+          isStaleForPeriod={charts.isStaleForPeriod}
           onRetry={() => void charts.refetch()}
         />
       </section>

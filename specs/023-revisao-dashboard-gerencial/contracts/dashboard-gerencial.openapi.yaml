@@ -1,0 +1,320 @@
+openapi: 3.0.3
+info:
+  title: Amani ERP - Dashboard Gerencial F023
+  version: 1.0.0
+  description: >-
+    Extensão aditiva dos contratos usados pela home. Campos existentes permanecem
+    obrigatórios; campos da F023 são opcionais e nullable durante o rollout.
+paths:
+  /api/dashboard-gerencial/financeiro:
+    get:
+      summary: Obter indicadores financeiros e patrimoniais
+      parameters:
+        - $ref: '#/components/parameters/DataInicial'
+        - $ref: '#/components/parameters/DataFinal'
+        - $ref: '#/components/parameters/Mes'
+        - $ref: '#/components/parameters/Ano'
+      responses:
+        '200':
+          description: Indicadores calculados para o filtro normalizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardFinanceiroGerencial'
+        '400':
+          $ref: '#/components/responses/FiltroInvalido'
+  /api/dashboard-gerencial/alertas:
+    get:
+      summary: Obter alertas e seu resumo gerencial
+      parameters:
+        - $ref: '#/components/parameters/DataInicial'
+        - $ref: '#/components/parameters/DataFinal'
+        - $ref: '#/components/parameters/Mes'
+        - $ref: '#/components/parameters/Ano'
+        - name: tiposAlertas
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+      responses:
+        '200':
+          description: Lista compatível e resumo calculado após os filtros.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardAlertas'
+        '400':
+          $ref: '#/components/responses/FiltroInvalido'
+components:
+  parameters:
+    DataInicial:
+      name: dataInicial
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+    DataFinal:
+      name: dataFinal
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+    Mes:
+      name: mes
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 12
+    Ano:
+      name: ano
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 2000
+        maximum: 2100
+  responses:
+    FiltroInvalido:
+      description: Filtro de período inválido.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [erro, detalhes]
+            properties:
+              erro:
+                type: string
+              detalhes:
+                type: array
+                items:
+                  type: string
+  schemas:
+    DashboardFiltroAplicado:
+      type: object
+      required:
+        - tipoFiltro
+        - dataInicial
+        - dataFinal
+        - dataReferencia
+        - precedenciaAplicada
+      properties:
+        tipoFiltro:
+          type: string
+        dataInicial:
+          type: string
+          format: date-time
+        dataFinal:
+          type: string
+          format: date-time
+        dataReferencia:
+          type: string
+          format: date-time
+        mes:
+          type: integer
+          nullable: true
+        ano:
+          type: integer
+          nullable: true
+        precedenciaAplicada:
+          type: string
+    AvisoDadoIncompleto:
+      type: object
+      required: [codigo, mensagem, impacto]
+      properties:
+        codigo:
+          type: string
+        mensagem:
+          type: string
+        entidadeTipo:
+          type: string
+          nullable: true
+        entidadeId:
+          type: string
+          format: uuid
+          nullable: true
+        impacto:
+          type: string
+    DashboardFinanceiroGerencial:
+      type: object
+      required:
+        - filtrosAplicados
+        - receitaTotal
+        - lucroTotal
+        - totalCompras
+        - totalDespesas
+        - saldoOperacional
+        - contasReceberAbertas
+        - valoresRecebidos
+        - valorLucroNaoCalculavel
+        - quantidadeItensSemCusto
+        - avisos
+      properties:
+        filtrosAplicados:
+          $ref: '#/components/schemas/DashboardFiltroAplicado'
+        receitaTotal:
+          type: number
+          format: decimal
+          description: Faturamento por data da venda; campo existente preservado.
+        lucroTotal:
+          type: number
+          format: decimal
+        totalCompras:
+          type: number
+          format: decimal
+        totalDespesas:
+          type: number
+          format: decimal
+        saldoOperacional:
+          type: number
+          format: decimal
+          description: Campo legado preservado.
+        contasReceberAbertas:
+          type: number
+          format: decimal
+        valoresRecebidos:
+          type: number
+          format: decimal
+          description: Entradas operacionais por data do pagamento.
+        valorLucroNaoCalculavel:
+          type: number
+          format: decimal
+        quantidadeItensSemCusto:
+          type: integer
+        avisos:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvisoDadoIncompleto'
+        saidasPeriodo:
+          type: number
+          format: decimal
+          nullable: true
+        caixaInicialPeriodo:
+          type: number
+          format: decimal
+          nullable: true
+        ajusteImplantacaoPeriodo:
+          type: number
+          format: decimal
+          nullable: true
+        caixaFinalPeriodo:
+          type: number
+          format: decimal
+          nullable: true
+        contasReceberVencidas:
+          type: number
+          format: decimal
+          nullable: true
+        contasReceberAVencer:
+          type: number
+          format: decimal
+          nullable: true
+        valorEstoqueAoCusto:
+          type: number
+          format: decimal
+          nullable: true
+        valorEstoqueAoPrecoVenda:
+          type: number
+          format: decimal
+          nullable: true
+        lucroPotencialEstoque:
+          type: number
+          format: decimal
+          nullable: true
+          description: Calculado somente para produtos com custo médio.
+        quantidadeEstoqueSemCusto:
+          type: integer
+          nullable: true
+          description: Unidades com saldo positivo e custo médio ausente.
+        valorVendaEstoqueSemCusto:
+          type: number
+          format: decimal
+          nullable: true
+        valorTotalRealistaOperacao:
+          type: number
+          format: decimal
+          nullable: true
+        valorTotalPotencialOperacao:
+          type: number
+          format: decimal
+          nullable: true
+    DashboardAlerta:
+      type: object
+      required:
+        - tipoAlerta
+        - severidade
+        - entidadeTipo
+        - entidadeId
+        - entidadeNome
+        - motivo
+        - valorAtual
+        - limiteAplicado
+        - dataReferencia
+      properties:
+        tipoAlerta:
+          type: string
+        severidade:
+          type: string
+        entidadeTipo:
+          type: string
+        entidadeId:
+          type: string
+          format: uuid
+        entidadeNome:
+          type: string
+        motivo:
+          type: string
+        valorAtual:
+          type: number
+          format: decimal
+        limiteAplicado:
+          type: number
+          format: decimal
+        dataReferencia:
+          type: string
+          format: date-time
+    ContagemAgrupada:
+      type: object
+      required: [chave, quantidade]
+      properties:
+        chave:
+          type: string
+        quantidade:
+          type: integer
+          minimum: 0
+    DashboardAlertasResumo:
+      type: object
+      required: [total, porSeveridade, porTipo]
+      properties:
+        total:
+          type: integer
+          minimum: 0
+        porSeveridade:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContagemAgrupada'
+        porTipo:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContagemAgrupada'
+    DashboardAlertas:
+      type: object
+      required: [filtrosAplicados, alertas]
+      properties:
+        filtrosAplicados:
+          $ref: '#/components/schemas/DashboardFiltroAplicado'
+        alertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardAlerta'
+        resumo:
+          allOf:
+            - $ref: '#/components/schemas/DashboardAlertasResumo'
+          nullable: true

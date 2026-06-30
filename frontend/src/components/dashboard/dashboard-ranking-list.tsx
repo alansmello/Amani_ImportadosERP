@@ -18,6 +18,11 @@ import {
 } from "@/components/ui/card";
 import type { DashboardRanking, IncompleteDataNotice } from "@/types/dashboard";
 
+const HIDDEN_HOME_RANKING_TYPES = new Set([
+  "ProdutosComMaiorEstoque",
+  "ProdutosComMenorEstoque"
+]);
+
 type DashboardRankingListProps = {
   rankings?: DashboardRanking[];
   notices?: IncompleteDataNotice[];
@@ -94,7 +99,21 @@ export function DashboardRankingList({
     );
   }
 
-  const groupedRankings = groupRankings(rankings);
+  const visibleRankings = rankings.filter(
+    (ranking) => !HIDDEN_HOME_RANKING_TYPES.has(ranking.tipoRanking)
+  );
+
+  if (visibleRankings.length === 0) {
+    return (
+      <DashboardSectionState
+        state="empty"
+        title="Sem rankings no periodo"
+        description="Nenhum ranking gerencial disponivel para exibicao na home."
+      />
+    );
+  }
+
+  const groupedRankings = groupRankings(visibleRankings);
 
   return (
     <div className="space-y-4">

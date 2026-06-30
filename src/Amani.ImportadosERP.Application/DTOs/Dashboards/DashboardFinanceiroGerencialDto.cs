@@ -12,5 +12,18 @@ public sealed class DashboardFinanceiroGerencialDto
     public decimal ValoresRecebidos { get; set; }
     public decimal ValorLucroNaoCalculavel { get; set; }
     public int QuantidadeItensSemCusto { get; set; }
+    public decimal? SaidasPeriodo { get; set; }
+    public decimal? CaixaInicialPeriodo { get; set; }
+    public decimal? AjusteImplantacaoPeriodo { get; set; }
+    public decimal? CaixaFinalPeriodo { get; set; }
+    public decimal? ContasReceberVencidas { get; set; }
+    public decimal? ContasReceberAVencer { get; set; }
+    public decimal? ValorEstoqueAoCusto { get; set; }
+    public decimal? ValorEstoqueAoPrecoVenda { get; set; }
+    public decimal? LucroPotencialEstoque { get; set; }
+    public int? QuantidadeEstoqueSemCusto { get; set; }
+    public decimal? ValorVendaEstoqueSemCusto { get; set; }
+    public decimal? ValorTotalRealistaOperacao { get; set; }
+    public decimal? ValorTotalPotencialOperacao { get; set; }
     public IReadOnlyCollection<AvisoDadoIncompletoDto> Avisos { get; set; } = Array.Empty<AvisoDadoIncompletoDto>();
 }

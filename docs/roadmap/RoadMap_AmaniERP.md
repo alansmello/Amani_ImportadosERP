@@ -56,7 +56,7 @@ Endpoints já implementados e funcionais:
 
 # **2. Features do produto**
 
-> *F008–F019 estão concluídas e seus textos abaixo registram o escopo histórico original. F020–F022 são as próximas features aprovadas e deverão originar specs, planos e tasks independentes. Para taxas e pagamentos, as decisões da F020 substituem qualquer premissa anterior incompatível das F015/F019.*
+> *F008–F019 estão concluídas e seus textos abaixo registram o escopo histórico original. F020–F023 são features aprovadas e deverão manter specs, planos e tasks independentes. Para taxas e pagamentos, as decisões da F020 substituem qualquer premissa anterior incompatível das F015/F019.*
 > 
 
 ---
@@ -507,6 +507,52 @@ Endpoints já implementados e funcionais:
 
 ---
 
+## **F023 — Revisão do Dashboard Gerencial (backend + frontend)**
+
+- **Status:** Especificação criada em 30/06/2026; pronta para planejamento.
+- **Prioridade:** Alta para confiabilidade da gestão financeira e patrimonial.
+- **Objetivo:** Evoluir o Dashboard existente, sem reescrita, para distinguir faturamento, entradas, saídas estimadas, lucro e caixa e para apresentar recebíveis, estoque valorizado e valor realista/potencial da operação.
+- **Documento-base:** `docs/dashboard/relatorio-revisao-dashboard-gerencial.md`.
+
+### **Decisões de negócio aprovadas**
+
+1. Faturamento usa vendas por competência; entradas usam exclusivamente pagamentos efetivamente recebidos.
+2. Saídas são a soma estimada de compras não canceladas e despesas registradas enquanto não houver contas a pagar.
+3. Caixa final é caixa inicial acumulado mais entradas menos saídas do período.
+4. O Dashboard mantém custo médio conservador, sem fallback para custo cadastral.
+5. Mercadorias em trânsito não integram estoque disponível nem sua valorização.
+6. Contratos e indicadores existentes evoluem por adição, sem remoções incompatíveis.
+7. Despesas de operadora ficam fora das saídas até decisão financeira específica.
+
+### **Escopo funcional**
+
+- Destacar faturamento, entradas, saídas estimadas, caixa inicial/final e lucro bruto.
+- Separar recebíveis vencidos e a vencer, preservando a posição total até a data de referência.
+- Valorizar estoque disponível ao custo médio e ao preço de venda atual e apresentar lucro potencial.
+- Apresentar valor total realista e potencial da operação.
+- Manter cálculos gerenciais centralizados no backend e consultas agregadas.
+- Reorganizar os indicadores para leitura Mobile First, reduzir alertas a um resumo e retirar rankings de maior/menor estoque da home.
+- Substituir mensagens técnicas de gráficos vazios por mensagens operacionais.
+
+### **Fora do escopo**
+
+- Contas a pagar e fluxo de caixa baseado em pagamentos reais de compras.
+- Inclusão de despesas de operadora nas saídas.
+- Custo histórico congelado por item vendido e correção retroativa da divergência de lucro.
+- Remoção de endpoints legados, novo gráfico Entradas versus Saídas, tela dedicada de alertas, exportação e drill-down.
+
+### **Critérios mínimos de aceite**
+
+- Indicadores financeiros conferem com as regras oficiais sem dupla contagem.
+- Recebíveis vencidos mais a vencer recompõem o total em aberto.
+- Estoque em trânsito e produtos sem custo calculável não inflam o valor ao custo.
+- Valor realista usa estoque ao custo; valor potencial usa preço de venda atual.
+- Rótulos distinguem competência, caixa, estimativa, snapshot e potencial.
+- Falha ou vazio de uma seção não derruba as demais.
+- Validação funcional em smartphone, tablet e desktop.
+
+---
+
 # **3. Roadmap recomendado por fases**
 
 ### **Fase 1 — Operação ponta a ponta (concluída)**
@@ -535,7 +581,13 @@ Ordem obrigatória para reduzir risco e facilitar validação:
    - Motivo da posição: altera o componente de maior interação somente depois da estabilização financeira e dos padrões de cadastro rápido.
    - Gate de saída: Cliente rápido, compositor único, duplicidade bloqueada, resumo editável e payload preservado.
 
-### **Fase 5 — Backlog pós-refinamento (não aprovado para execução nesta decisão)**
+### **Fase 5 — Evolução gerencial aprovada**
+
+1. **F023 — Revisão do Dashboard Gerencial**
+   - Motivo da posição: consolida regras financeiras e patrimoniais sobre os fluxos operacionais e financeiros já existentes.
+   - Gate de saída: indicadores conciliados, estoque valorizado sem trânsito, recebíveis segmentados, contratos compatíveis e experiência responsiva validada.
+
+### **Fase 6 — Backlog pós-refinamento (não aprovado para execução nesta decisão)**
 
 - Detalhe de Produto exibindo saldo e custo médio.
 - Paginação e busca server-side nas listas.
@@ -562,6 +614,8 @@ Ordem obrigatória para reduzir risco e facilitar validação:
 - **Compatibilidade:** contratos existentes devem ser estendidos de forma retrocompatível quando possível. Alterações incompatíveis exigem justificativa explícita no plano.
 - **Mobile First e Dark Theme:** todos os modais, resumos, tabelas e estados devem ser validados nos breakpoints já adotados.
 - **Testes:** por decisão do responsável em 26/06/2026, não será adicionada infraestrutura automatizada em F020–F022; builds e roteiros manuais completos são obrigatórios.
+- **F023 independente:** a revisão do Dashboard possui diretório Spec Kit próprio e não deve ser incorporada retroativamente à F017.
+- **Analytics da F023:** indicadores devem ser calculados no backend por consultas agregadas; o frontend apenas apresenta resultados.
 
 ---
 
@@ -579,6 +633,17 @@ Decisões aprovadas para orientar diretamente as próximas especificações:
 | Taxa configurável | Somente Cartão de Débito | F020 |
 | Infraestrutura automatizada de testes | Não autorizada para estas features | F020–F022 |
 
+## **Registro da decisão de 30/06/2026**
+
+| **Tema** | **Decisão aprovada** | **Feature** |
+| --- | --- | --- |
+| Dashboard | Evoluir por adição, sem reescrita ou quebra de contratos | F023 |
+| Entradas | Usar exclusivamente pagamentos recebidos por data de pagamento | F023 |
+| Saídas | Compras e despesas registradas, explicitamente como estimativa | F023 |
+| Estoque valorizado | Excluir trânsito e não presumir custo ausente | F023 |
+| Valor da operação | Exibir visões realista ao custo e potencial ao preço de venda | F023 |
+| Despesas de operadora | Manter fora das saídas até validação financeira específica | F023 |
+
 ## **Próximo passo previsto**
 
-Após a revisão deste roadmap, iniciar a fase de especificação pela **F020 — Consistência de Pagamentos e Revisão de Taxas de Operadora**. Nenhuma implementação deve começar antes da conclusão e revisão da sequência `spec → clarify (se necessário) → plan → tasks` da respectiva feature.
+A especificação da **F023 — Revisão do Dashboard Gerencial** está criada. O próximo passo é revisar a spec e executar `clarify` se surgirem novas decisões; caso contrário, seguir para `plan → tasks`. Nenhuma implementação da F023 deve começar antes dessa sequência.

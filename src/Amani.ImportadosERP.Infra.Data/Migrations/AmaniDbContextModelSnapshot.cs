@@ -157,6 +157,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DataCompra", "Status")
+                        .HasDatabaseName("IX_compras_DataCompra_Status");
+
                     b.ToTable("compras", (string)null);
                 });
 
@@ -376,6 +379,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
 
                     b.HasIndex("VendaId");
 
+                    b.HasIndex("CreatedAt", "DataVencimento")
+                        .HasDatabaseName("IX_contas_receber_CreatedAt_DataVencimento");
+
                     b.ToTable("contas_receber", (string)null);
                 });
 
@@ -414,6 +420,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoriaDespesaId");
+
+                    b.HasIndex("DataCompetencia")
+                        .HasDatabaseName("IX_despesas_DataCompetencia");
 
                     b.ToTable("despesas", (string)null);
                 });
@@ -505,6 +514,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
 
                     b.HasIndex("VendaId");
 
+                    b.HasIndex("ProdutoId", "Data", "Tipo")
+                        .HasDatabaseName("IX_estoque_movimentacoes_ProdutoId_Data_Tipo");
+
                     b.ToTable("estoque_movimentacoes", (string)null);
                 });
 
@@ -581,6 +593,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Tipo", "Data")
+                        .HasDatabaseName("IX_eventos_financeiros_Tipo_Data");
+
                     b.ToTable("eventos_financeiros", (string)null);
                 });
 
@@ -645,6 +660,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ContaReceberId");
+
+                    b.HasIndex("DataPagamento")
+                        .HasDatabaseName("IX_pagamentos_recebidos_DataPagamento");
 
                     b.ToTable("pagamentos_recebidos", (string)null);
                 });
@@ -790,6 +808,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DataVenda", "Cancelada")
+                        .HasDatabaseName("IX_vendas_DataVenda_Cancelada");
 
                     b.ToTable("vendas", (string)null);
                 });

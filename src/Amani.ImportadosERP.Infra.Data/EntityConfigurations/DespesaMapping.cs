@@ -23,5 +23,8 @@ public class DespesaMapping : IEntityTypeConfiguration<Despesa>
             .WithMany()
             .HasForeignKey(d => d.CategoriaDespesaId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(d => d.DataCompetencia)
+            .HasDatabaseName("IX_despesas_DataCompetencia");
     }
 }

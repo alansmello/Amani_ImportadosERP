@@ -61,6 +61,19 @@ export type DashboardFinancialKpis = {
   valoresRecebidos: number;
   valorLucroNaoCalculavel: number;
   quantidadeItensSemCusto: number;
+  saidasPeriodo?: number | null;
+  caixaInicialPeriodo?: number | null;
+  ajusteImplantacaoPeriodo?: number | null;
+  caixaFinalPeriodo?: number | null;
+  contasReceberVencidas?: number | null;
+  contasReceberAVencer?: number | null;
+  valorEstoqueAoCusto?: number | null;
+  valorEstoqueAoPrecoVenda?: number | null;
+  lucroPotencialEstoque?: number | null;
+  quantidadeEstoqueSemCusto?: number | null;
+  valorVendaEstoqueSemCusto?: number | null;
+  valorTotalRealistaOperacao?: number | null;
+  valorTotalPotencialOperacao?: number | null;
   avisos: IncompleteDataNotice[];
 };
 
@@ -125,6 +138,18 @@ export type DashboardAlert = {
 export type DashboardAlerts = {
   filtrosAplicados: DashboardAppliedFilter;
   alertas: DashboardAlert[];
+  resumo?: DashboardAlertsSummary | null;
+};
+
+export type DashboardGroupedCount = {
+  chave: string;
+  quantidade: number;
+};
+
+export type DashboardAlertsSummary = {
+  total: number;
+  porSeveridade: DashboardGroupedCount[];
+  porTipo: DashboardGroupedCount[];
 };
 
 export type DashboardChartPoint = {

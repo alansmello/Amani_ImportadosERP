@@ -93,6 +93,7 @@ public sealed class ObterDashboardGerencialQueryHandler
             Operacional = operacional,
             Rankings = rankings.Rankings,
             Alertas = alertas.Alertas,
+            ResumoAlertas = alertas.Resumo,
             Graficos = graficos.Graficos,
             Avisos = avisos
         };

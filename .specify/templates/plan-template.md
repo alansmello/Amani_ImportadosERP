@@ -40,20 +40,7 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- **Arquitetura e responsabilidades**: [PASS/FAIL - controllers sem regra de negocio; regras em Application/Domain]
-- **Estoque por movimentacoes**: [PASS/FAIL - sem campo fixo de estoque; saldo por movimentacoes historicas]
-- **Compras e mercadorias em transito**: [PASS/FAIL - compra nao gera entrada automatica; somente recebimento fisico confirmado gera entrada]
-- **Recebimentos, perdas e rastreabilidade**: [PASS/FAIL - recebimento por item; perdas/extravios/avarias sem estoque e com prejuizo rastreavel]
-- **Vendas, custo medio e inventario inicial**: [PASS/FAIL - vendas validam estoque fisico; custo medio usa entradas reais; inventario inicial permanece movimentacao valida]
-- **Contratos de API e DTOs**: [PASS/FAIL - DTOs explicitos; entidades internas nao expostas indevidamente; sem AutoMapper]
-- **Persistencia e mapeamentos**: [PASS/FAIL - Fluent API; Repository Pattern; historico preservado]
-- **Backend como fonte das regras**: [PASS/FAIL - validacoes operacionais, formulas, rankings, indicadores, alertas, metricas e dashboards calculados no backend]
-- **Analytics e escalabilidade**: [PASS/FAIL - dashboards/relatorios usam consultas agregadas, repositories especializados de leitura, filtros e limites; sem carregar historico integral em memoria]
-- **Mobile First**: [PASS/FAIL - frontend planejado para smartphone, tablet e desktop; responsividade validavel]
-- **Experiencia operacional**: [PASS/FAIL - fluxos frequentes minimizam interacoes e priorizam uso diario rapido]
-- **Priorizacao do produto**: [PASS/FAIL - operacao essencial vem antes de analytics, integracoes externas e recursos avancados]
-- **Identidade visual**: [PASS/FAIL - frontend segue Design System oficial, Dark Theme principal e imagem SaaS profissional/premium]
-- **Simplicidade antes de sofisticacao**: [PASS/FAIL - novas abstracoes/dependencias apenas quando justificadas]
+[Gates determined based on constitution file]
 
 ## Project Structure
 
