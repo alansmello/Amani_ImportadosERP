@@ -23,5 +23,8 @@ public class VendaMapping : IEntityTypeConfiguration<Venda>
                .WithOne(vi => vi.Venda)
                .HasForeignKey(vi => vi.VendaId)
                .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(v => new { v.DataVenda, v.Cancelada })
+            .HasDatabaseName("IX_vendas_DataVenda_Cancelada");
     }
 }

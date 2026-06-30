@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/query-client";
 import {
@@ -11,6 +11,7 @@ import {
   toDashboardPeriodQuery
 } from "@/services/dashboard";
 import type {
+  DashboardAppliedFilter,
   DashboardPeriodFilter,
   DashboardPeriodQuery
 } from "@/types/dashboard";
@@ -33,6 +34,51 @@ type DashboardAlertsOptions = DashboardQueryOptions & {
 
 function stableList(values: string[] | undefined) {
   return values ? [...values].sort() : [];
+}
+
+export function appliedFilterMatchesPeriod(
+  applied: DashboardAppliedFilter | undefined,
+  period: DashboardPeriodFilter
+) {
+  if (!applied) {
+    return false;
+  }
+
+  if (period.mode === "month") {
+    return applied.mes === period.month && applied.ano === period.year;
+  }
+
+  if (period.mode === "year") {
+    return applied.ano === period.year && applied.mes == null;
+  }
+
+  return (
+    applied.dataInicial.slice(0, 10) === period.startDate &&
+    applied.dataFinal.slice(0, 10) === period.endDate
+  );
+}
+
+type DashboardSectionPeriodMatch<T> = {
+  data: T | undefined;
+  isStaleForPeriod: boolean;
+  isLoading: boolean;
+  isError: boolean;
+  refetch: UseQueryResult<T>["refetch"];
+};
+
+export function useDashboardSectionPeriodMatch<T extends { filtrosAplicados?: DashboardAppliedFilter }>(
+  query: UseQueryResult<T>,
+  period: DashboardPeriodFilter
+): DashboardSectionPeriodMatch<T> {
+  const matches = appliedFilterMatchesPeriod(query.data?.filtrosAplicados, period);
+
+  return {
+    data: matches ? query.data : undefined,
+    isStaleForPeriod: Boolean(query.data && !matches),
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: query.refetch
+  };
 }
 
 export function useDashboardPeriodQuery(period: DashboardPeriodFilter) {

@@ -33,6 +33,13 @@ const stateIconClassName = {
   incomplete: "border-warning text-warning"
 } as const;
 
+const stateLiveMode = {
+  loading: "polite",
+  empty: "polite",
+  error: "assertive",
+  incomplete: "polite"
+} as const;
+
 export function DashboardSectionState({
   state,
   title,
@@ -56,7 +63,8 @@ export function DashboardSectionState({
     <Card
       className={cn("min-h-36", className)}
       role={state === "error" ? "alert" : "status"}
-      aria-live="polite"
+      aria-live={stateLiveMode[state]}
+      aria-busy={state === "loading" ? true : undefined}
     >
       <CardHeader className="pb-3">
         <div
@@ -74,8 +82,15 @@ export function DashboardSectionState({
           {description}
         </CardDescription>
 
+        {state === "loading" ? (
+          <span className="sr-only">Carregando conteudo do dashboard.</span>
+        ) : null}
+
         {notices.length > 0 ? (
-          <ul className="mt-4 space-y-2 text-sm text-text-secondary">
+          <ul
+            className="mt-4 space-y-2 text-sm text-text-secondary"
+            aria-label="Avisos de dados incompletos"
+          >
             {notices.map((notice) => (
               <li
                 key={`${notice.codigo}-${notice.entidadeId ?? notice.impacto}`}
@@ -92,7 +107,13 @@ export function DashboardSectionState({
       </CardContent>
       {onAction ? (
         <CardFooter>
-          <Button type="button" variant="secondary" size="sm" onClick={onAction}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={onAction}
+            aria-label={`${actionLabel}: ${title}`}
+          >
             {actionLabel}
           </Button>
         </CardFooter>

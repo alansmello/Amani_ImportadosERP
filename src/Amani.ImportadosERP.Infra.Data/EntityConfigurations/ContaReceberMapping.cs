@@ -43,5 +43,8 @@ public class ContaReceberMapping : IEntityTypeConfiguration<ContaReceber>
             .WithMany()
             .HasForeignKey(x => x.ClienteId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(x => new { x.CreatedAt, x.DataVencimento })
+            .HasDatabaseName("IX_contas_receber_CreatedAt_DataVencimento");
     }
 }

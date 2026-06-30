@@ -9,10 +9,14 @@ namespace Amani.ImportadosERP.Infra.Data.Repositories;
 public sealed class DashboardRankingRepository : IDashboardRankingRepository
 {
     private readonly AmaniDbContext _db;
+    private readonly DashboardCustoMedioReadService _custoMedioReadService;
 
-    public DashboardRankingRepository(AmaniDbContext db)
+    public DashboardRankingRepository(
+        AmaniDbContext db,
+        DashboardCustoMedioReadService custoMedioReadService)
     {
         _db = db;
+        _custoMedioReadService = custoMedioReadService;
     }
 
     public async Task<IReadOnlyCollection<RankingProdutoDto>> ObterProdutosMaisVendidosAsync(
@@ -73,7 +77,7 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
 
         var produtoIds = agregados.Select(a => a.ProdutoId).ToList();
         var produtos = await ObterProdutosAsync(produtoIds);
-        var custos = await ObterCustosMediosAsync(produtoIds, dataReferencia);
+        var custos = await _custoMedioReadService.ObterCustosMediosAsync(produtoIds, dataReferencia);
 
         var rankings = agregados
             .Where(a => custos.ContainsKey(a.ProdutoId))
@@ -213,36 +217,6 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
             .Where(c => clienteIds.Contains(c.Id))
             .Select(c => new ClienteResumo(c.Id, c.Nome))
             .ToDictionaryAsync(c => c.Id);
-    }
-
-    private async Task<IReadOnlyDictionary<Guid, decimal>> ObterCustosMediosAsync(
-        IReadOnlyCollection<Guid> produtoIds,
-        DateTime dataReferencia)
-    {
-        if (!produtoIds.Any())
-        {
-            return new Dictionary<Guid, decimal>();
-        }
-
-        var entradas = await _db.EstoqueMovimentacoes
-            .AsNoTracking()
-            .Where(m => produtoIds.Contains(m.ProdutoId)
-                && m.Data <= dataReferencia
-                && m.ValorUnitario != null
-                && (m.Tipo == TipoMovimentacao.InventarioInicial
-                    || (m.Tipo == TipoMovimentacao.Entrada && m.CompraItemId != null)))
-            .GroupBy(m => m.ProdutoId)
-            .Select(g => new
-            {
-                ProdutoId = g.Key,
-                Quantidade = g.Sum(m => m.Quantidade),
-                Valor = g.Sum(m => (m.ValorUnitario ?? 0m) * m.Quantidade)
-            })
-            .ToListAsync();
-
-        return entradas
-            .Where(e => e.Quantidade > 0)
-            .ToDictionary(e => e.ProdutoId, e => e.Valor / e.Quantidade);
     }
 
     private async Task<IReadOnlyCollection<RankingProdutoDto>> ObterRankingsDeEstoqueAsync(

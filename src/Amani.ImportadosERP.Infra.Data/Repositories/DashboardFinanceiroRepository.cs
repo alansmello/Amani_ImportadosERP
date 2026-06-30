@@ -9,19 +9,23 @@ namespace Amani.ImportadosERP.Infra.Data.Repositories;
 public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroRepository
 {
     private readonly AmaniDbContext _db;
+    private readonly DashboardCustoMedioReadService _custoMedioReadService;
 
-    public DashboardFinanceiroRepository(AmaniDbContext db)
+    public DashboardFinanceiroRepository(
+        AmaniDbContext db,
+        DashboardCustoMedioReadService custoMedioReadService)
     {
         _db = db;
+        _custoMedioReadService = custoMedioReadService;
     }
 
     public async Task<decimal> ObterReceitaTotalAsync(DateTime dataInicial, DateTime dataFinal)
     {
-        var vendas = await VendasConfirmadasNoPeriodo(dataInicial, dataFinal)
-            .Include(v => v.Items)
-            .ToListAsync();
-
-        return vendas.Sum(v => v.Total());
+        return await VendasConfirmadasNoPeriodo(dataInicial, dataFinal)
+            .Select(v => v.Items.Sum(i => i.Quantidade * i.PrecoUnitario - i.Desconto + i.Acrescimo)
+                - v.Desconto
+                + v.Acrescimo)
+            .SumAsync();
     }
 
     public async Task<IReadOnlyCollection<DashboardVendaCustoDto>> ObterItensVendidosComCustoAsync(
@@ -29,41 +33,46 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
         DateTime dataFinal,
         DateTime dataReferencia)
     {
-        var vendas = await VendasConfirmadasNoPeriodo(dataInicial, dataFinal)
-            .Include(v => v.Items)
+        var itens = await VendasConfirmadasNoPeriodo(dataInicial, dataFinal)
+            .SelectMany(v => v.Items.Select(item => new
+            {
+                v.Id,
+                item.ProdutoId,
+                item.Quantidade,
+                ValorLiquidoItem = item.Quantidade * item.PrecoUnitario - item.Desconto + item.Acrescimo
+            }))
             .ToListAsync();
 
-        var produtoIds = vendas
-            .SelectMany(v => v.Items)
+        if (itens.Count == 0)
+        {
+            return Array.Empty<DashboardVendaCustoDto>();
+        }
+
+        var produtoIds = itens
             .Select(i => i.ProdutoId)
             .Distinct()
             .ToList();
 
-        var custos = await ObterCustosMediosAsync(produtoIds, dataReferencia);
+        var custos = await _custoMedioReadService.ObterCustosMediosAsync(produtoIds, dataReferencia);
 
-        return vendas
-            .SelectMany(v => v.Items.Select(item => new DashboardVendaCustoDto
+        return itens
+            .Select(item => new DashboardVendaCustoDto
             {
-                VendaId = v.Id,
+                VendaId = item.Id,
                 ProdutoId = item.ProdutoId,
                 Quantidade = item.Quantidade,
-                ValorLiquidoItem = item.ValorTotal(),
+                ValorLiquidoItem = item.ValorLiquidoItem,
                 CustoMedio = custos.TryGetValue(item.ProdutoId, out var custo) ? custo : null
-            }))
+            })
             .ToList();
     }
 
     public async Task<decimal> ObterTotalComprasAsync(DateTime dataInicial, DateTime dataFinal)
     {
-        var compras = await _db.Compras
-            .AsNoTracking()
-            .Include(c => c.Items)
-            .Where(c => c.Status != CompraStatus.Cancelada
-                && c.DataCompra >= dataInicial
-                && c.DataCompra <= dataFinal)
-            .ToListAsync();
-
-        return compras.Sum(c => c.Total());
+        return await ComprasNaoCanceladas()
+            .Where(c => c.DataCompra >= dataInicial && c.DataCompra <= dataFinal)
+            .Select(c => c.Items.Sum(i => i.Quantidade * i.CustoUnitario - i.Desconto + i.Acrescimo))
+            .SumAsync();
     }
 
     public async Task<decimal> ObterTotalDespesasAsync(DateTime dataInicial, DateTime dataFinal)
@@ -76,18 +85,39 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
 
     public async Task<decimal> ObterContasReceberAbertasAsync(DateTime dataReferencia)
     {
-        var contas = await _db.ContasReceber
+        var resumo = await ObterResumoRecebiveisAsync(dataReferencia);
+        return resumo.Abertas;
+    }
+
+    public async Task<DashboardRecebiveisResumoDto> ObterResumoRecebiveisAsync(DateTime dataReferencia)
+    {
+        var contasComSaldo = await _db.ContasReceber
             .AsNoTracking()
-            .Include(c => c.Pagamentos)
             .Where(c => c.CreatedAt <= dataReferencia)
+            .Select(c => new
+            {
+                Saldo = c.Valor - c.Pagamentos
+                    .Where(p => p.DataPagamento <= dataReferencia)
+                    .Sum(p => p.ValorBrutoLiquidado),
+                c.DataVencimento
+            })
+            .Where(c => c.Saldo > 0)
             .ToListAsync();
 
-        return contas
-            .Select(c => c.Valor - c.Pagamentos
-                .Where(p => p.DataPagamento <= dataReferencia)
-                .Sum(p => p.Valor))
-            .Where(saldo => saldo > 0)
-            .Sum();
+        var vencidas = contasComSaldo
+            .Where(c => c.DataVencimento < dataReferencia)
+            .Sum(c => c.Saldo);
+
+        var aVencer = contasComSaldo
+            .Where(c => c.DataVencimento >= dataReferencia)
+            .Sum(c => c.Saldo);
+
+        return new DashboardRecebiveisResumoDto
+        {
+            Abertas = vencidas + aVencer,
+            Vencidas = vencidas,
+            AVencer = aVencer
+        };
     }
 
     public async Task<decimal> ObterValoresRecebidosAsync(DateTime dataInicial, DateTime dataFinal)
@@ -96,6 +126,51 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
             .AsNoTracking()
             .Where(p => p.DataPagamento >= dataInicial && p.DataPagamento <= dataFinal)
             .SumAsync(p => p.Valor);
+    }
+
+    public async Task<DashboardCaixaResumoDto> ObterResumoCaixaAsync(
+        DateTime dataInicial,
+        DateTime dataFinal)
+    {
+        var entradas = await ObterValoresRecebidosAsync(dataInicial, dataFinal);
+        var saidasCompras = await ObterTotalComprasAsync(dataInicial, dataFinal);
+        var saidasDespesas = await ObterTotalDespesasAsync(dataInicial, dataFinal);
+        var saidas = saidasCompras + saidasDespesas;
+
+        var saldoInicialEventos = await _db.EventosFinanceiros
+            .AsNoTracking()
+            .Where(e => e.Tipo == TipoEventoFinanceiro.SaldoInicialCaixa && e.Data < dataInicial)
+            .SumAsync(e => e.Valor);
+
+        var ajusteImplantacao = await _db.EventosFinanceiros
+            .AsNoTracking()
+            .Where(e => e.Tipo == TipoEventoFinanceiro.SaldoInicialCaixa
+                && e.Data >= dataInicial
+                && e.Data <= dataFinal)
+            .SumAsync(e => e.Valor);
+
+        var entradasAnteriores = await _db.PagamentosRecebidos
+            .AsNoTracking()
+            .Where(p => p.DataPagamento < dataInicial)
+            .SumAsync(p => p.Valor);
+
+        var comprasAnteriores = await ObterTotalComprasAntesAsync(dataInicial);
+        var despesasAnteriores = await _db.Despesas
+            .AsNoTracking()
+            .Where(d => d.DataCompetencia < dataInicial)
+            .SumAsync(d => d.Valor);
+
+        var caixaInicial = saldoInicialEventos + entradasAnteriores - comprasAnteriores - despesasAnteriores;
+        var caixaFinal = caixaInicial + ajusteImplantacao + entradas - saidas;
+
+        return new DashboardCaixaResumoDto
+        {
+            CaixaInicial = caixaInicial,
+            AjusteImplantacao = ajusteImplantacao,
+            Entradas = entradas,
+            Saidas = saidas,
+            CaixaFinal = caixaFinal
+        };
     }
 
     private IQueryable<Venda> VendasConfirmadasNoPeriodo(DateTime dataInicial, DateTime dataFinal)
@@ -107,33 +182,18 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
                 && v.DataVenda <= dataFinal);
     }
 
-    private async Task<IReadOnlyDictionary<Guid, decimal>> ObterCustosMediosAsync(
-        IReadOnlyCollection<Guid> produtoIds,
-        DateTime dataReferencia)
+    private IQueryable<Compra> ComprasNaoCanceladas()
     {
-        if (!produtoIds.Any())
-        {
-            return new Dictionary<Guid, decimal>();
-        }
-
-        var entradas = await _db.EstoqueMovimentacoes
+        return _db.Compras
             .AsNoTracking()
-            .Where(m => produtoIds.Contains(m.ProdutoId)
-                && m.Data <= dataReferencia
-                && m.ValorUnitario != null
-                && (m.Tipo == TipoMovimentacao.InventarioInicial
-                    || (m.Tipo == TipoMovimentacao.Entrada && m.CompraItemId != null)))
-            .GroupBy(m => m.ProdutoId)
-            .Select(g => new
-            {
-                ProdutoId = g.Key,
-                Quantidade = g.Sum(m => m.Quantidade),
-                Valor = g.Sum(m => (m.ValorUnitario ?? 0m) * m.Quantidade)
-            })
-            .ToListAsync();
+            .Where(c => c.Status != CompraStatus.Cancelada);
+    }
 
-        return entradas
-            .Where(e => e.Quantidade > 0)
-            .ToDictionary(e => e.ProdutoId, e => e.Valor / e.Quantidade);
+    private async Task<decimal> ObterTotalComprasAntesAsync(DateTime dataInicial)
+    {
+        return await ComprasNaoCanceladas()
+            .Where(c => c.DataCompra < dataInicial)
+            .Select(c => c.Items.Sum(i => i.Quantidade * i.CustoUnitario - i.Desconto + i.Acrescimo))
+            .SumAsync();
     }
 }

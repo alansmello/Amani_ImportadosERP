@@ -9,13 +9,16 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
     : IRequestHandler<ObterDashboardFinanceiroGerencialQuery, DashboardFinanceiroGerencialDto>
 {
     private readonly IDashboardFinanceiroRepository _repository;
+    private readonly IDashboardEstoqueRepository _estoqueRepository;
     private readonly DashboardFiltroService _filtroService;
 
     public ObterDashboardFinanceiroGerencialQueryHandler(
         IDashboardFinanceiroRepository repository,
+        IDashboardEstoqueRepository estoqueRepository,
         DashboardFiltroService filtroService)
     {
         _repository = repository;
+        _estoqueRepository = estoqueRepository;
         _filtroService = filtroService;
     }
 
@@ -32,8 +35,11 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
             filtros.DataReferencia);
         var totalCompras = await _repository.ObterTotalComprasAsync(filtros.DataInicial, filtros.DataFinal);
         var totalDespesas = await _repository.ObterTotalDespesasAsync(filtros.DataInicial, filtros.DataFinal);
-        var contasReceberAbertas = await _repository.ObterContasReceberAbertasAsync(filtros.DataReferencia);
+        var resumoRecebiveis = await _repository.ObterResumoRecebiveisAsync(filtros.DataReferencia);
         var valoresRecebidos = await _repository.ObterValoresRecebidosAsync(filtros.DataInicial, filtros.DataFinal);
+        var resumoCaixa = await _repository.ObterResumoCaixaAsync(filtros.DataInicial, filtros.DataFinal);
+        var estoqueValorizado = await _estoqueRepository.ObterEstoqueValorizadoAsync(filtros.DataReferencia);
+        var saidasPeriodo = totalCompras + totalDespesas;
 
         var custoCalculavel = itensVendidos
             .Where(i => i.CustoMedio.HasValue)
@@ -50,8 +56,13 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
         var quantidadeItensSemCusto = itensVendidos.Count(i => !i.CustoMedio.HasValue);
         var lucroTotal = receitaCalculavel - custoCalculavel;
         var saldoOperacional = valoresRecebidos - totalCompras - totalDespesas;
+        var caixaFinal = resumoCaixa.CaixaFinal;
 
-        var avisos = CriarAvisosDeCustoAusente(itensVendidos, valorLucroNaoCalculavel);
+        var avisos = CriarAvisos(
+            itensVendidos,
+            valorLucroNaoCalculavel,
+            estoqueValorizado.QuantidadeSemCusto,
+            estoqueValorizado.ValorVendaSemCusto);
 
         return new DashboardFinanceiroGerencialDto
         {
@@ -61,38 +72,63 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
             TotalCompras = totalCompras,
             TotalDespesas = totalDespesas,
             SaldoOperacional = saldoOperacional,
-            ContasReceberAbertas = contasReceberAbertas,
+            ContasReceberAbertas = resumoRecebiveis.Abertas,
             ValoresRecebidos = valoresRecebidos,
             ValorLucroNaoCalculavel = valorLucroNaoCalculavel,
             QuantidadeItensSemCusto = quantidadeItensSemCusto,
+            SaidasPeriodo = saidasPeriodo,
+            CaixaInicialPeriodo = resumoCaixa.CaixaInicial,
+            AjusteImplantacaoPeriodo = resumoCaixa.AjusteImplantacao,
+            CaixaFinalPeriodo = caixaFinal,
+            ContasReceberVencidas = resumoRecebiveis.Vencidas,
+            ContasReceberAVencer = resumoRecebiveis.AVencer,
+            ValorEstoqueAoCusto = estoqueValorizado.ValorAoCusto,
+            ValorEstoqueAoPrecoVenda = estoqueValorizado.ValorAoPrecoVenda,
+            LucroPotencialEstoque = estoqueValorizado.LucroPotencialCalculavel,
+            QuantidadeEstoqueSemCusto = estoqueValorizado.QuantidadeSemCusto,
+            ValorVendaEstoqueSemCusto = estoqueValorizado.ValorVendaSemCusto,
+            ValorTotalRealistaOperacao = caixaFinal + resumoRecebiveis.Abertas + estoqueValorizado.ValorAoCusto,
+            ValorTotalPotencialOperacao = caixaFinal + resumoRecebiveis.Abertas + estoqueValorizado.ValorAoPrecoVenda,
             Avisos = avisos
         };
     }
 
-    private static IReadOnlyCollection<AvisoDadoIncompletoDto> CriarAvisosDeCustoAusente(
+    private static IReadOnlyCollection<AvisoDadoIncompletoDto> CriarAvisos(
         IReadOnlyCollection<DashboardVendaCustoDto> itensVendidos,
-        decimal valorLucroNaoCalculavel)
+        decimal valorLucroNaoCalculavel,
+        int quantidadeEstoqueSemCusto,
+        decimal valorVendaEstoqueSemCusto)
     {
-        var produtosSemCusto = itensVendidos
+        var avisos = new List<AvisoDadoIncompletoDto>();
+
+        var produtosSemCustoVenda = itensVendidos
             .Where(i => !i.CustoMedio.HasValue)
             .Select(i => i.ProdutoId)
             .Distinct()
             .ToList();
 
-        if (!produtosSemCusto.Any())
+        if (produtosSemCustoVenda.Count > 0)
         {
-            return Array.Empty<AvisoDadoIncompletoDto>();
-        }
-
-        return new[]
-        {
-            new AvisoDadoIncompletoDto
+            avisos.Add(new AvisoDadoIncompletoDto
             {
                 Codigo = "CUSTO_MEDIO_AUSENTE",
                 Mensagem = "Existem itens vendidos sem custo medio derivado de entradas reais em estoque.",
                 EntidadeTipo = "Produto",
-                Impacto = $"Lucro possui R$ {valorLucroNaoCalculavel:N2} de receita sem custo calculavel em {produtosSemCusto.Count} produto(s)."
-            }
-        };
+                Impacto = $"Lucro possui R$ {valorLucroNaoCalculavel:N2} de receita sem custo calculavel em {produtosSemCustoVenda.Count} produto(s)."
+            });
+        }
+
+        if (quantidadeEstoqueSemCusto > 0)
+        {
+            avisos.Add(new AvisoDadoIncompletoDto
+            {
+                Codigo = "ESTOQUE_CUSTO_MEDIO_AUSENTE",
+                Mensagem = "Existem unidades em estoque sem custo medio derivado de entradas reais.",
+                EntidadeTipo = "Produto",
+                Impacto = $"{quantidadeEstoqueSemCusto} unidade(s) com potencial de venda de R$ {valorVendaEstoqueSemCusto:N2} sem valor ao custo calculavel."
+            });
+        }
+
+        return avisos;
     }
 }

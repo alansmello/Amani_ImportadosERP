@@ -15,7 +15,10 @@ import {
 import {
   formatDashboardCurrency,
   formatDashboardLabel,
-  formatDashboardQuantity
+  formatDashboardNullableCurrency,
+  formatDashboardQuantity,
+  DASHBOARD_EMPTY_CHART_MESSAGE,
+  DASHBOARD_EMPTY_PERIOD_MESSAGE
 } from "@/components/dashboard/dashboard-formatters";
 import { DashboardSectionState } from "@/components/dashboard/dashboard-section-state";
 import { Badge } from "@/components/ui/badge";
@@ -49,7 +52,7 @@ function formatChartValue(value: number, unidade: string) {
   const normalizedUnit = unidade.toLowerCase();
 
   return normalizedUnit.includes("r$") || normalizedUnit.includes("brl")
-    ? formatDashboardCurrency(value)
+    ? formatDashboardNullableCurrency(value)
     : formatDashboardQuantity(value);
 }
 
@@ -98,8 +101,8 @@ export function DashboardChartSection({
     return (
       <DashboardSectionState
         state="empty"
-        title="Sem series no periodo"
-        description="A API nao retornou pontos suficientes para graficos no filtro aplicado."
+        title={DASHBOARD_EMPTY_PERIOD_MESSAGE}
+        description="Nao ha series suficientes para graficos no filtro aplicado."
       />
     );
   }
@@ -189,8 +192,8 @@ export function DashboardChartSection({
                 ) : (
                   <DashboardSectionState
                     state="empty"
-                    title="Serie sem pontos"
-                    description="A API retornou a serie, mas sem pontos para renderizacao."
+                    title={DASHBOARD_EMPTY_PERIOD_MESSAGE}
+                    description={DASHBOARD_EMPTY_CHART_MESSAGE}
                   />
                 )}
               </CardContent>

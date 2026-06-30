@@ -20,5 +20,8 @@ public class EstoqueMovimentacaoMapping : IEntityTypeConfiguration<EstoqueMovime
         builder.HasOne<Compra>().WithMany().HasForeignKey(e => e.CompraId).OnDelete(DeleteBehavior.SetNull);
         builder.HasOne(e => e.CompraItem).WithMany().HasForeignKey(e => e.CompraItemId).OnDelete(DeleteBehavior.SetNull);
         builder.HasOne<Venda>().WithMany().HasForeignKey(e => e.VendaId).OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasIndex(e => new { e.ProdutoId, e.Data, e.Tipo })
+            .HasDatabaseName("IX_estoque_movimentacoes_ProdutoId_Data_Tipo");
     }
 }

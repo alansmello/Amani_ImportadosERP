@@ -15,5 +15,8 @@ public class EventoFinanceiroMapping : IEntityTypeConfiguration<EventoFinanceiro
         builder.Property(e => e.Data).IsRequired();
         builder.Property(e => e.Origem).IsRequired().HasMaxLength(50);
         builder.Property(e => e.Descricao).IsRequired().HasMaxLength(250);
+
+        builder.HasIndex(e => new { e.Tipo, e.Data })
+            .HasDatabaseName("IX_eventos_financeiros_Tipo_Data");
     }
 }
