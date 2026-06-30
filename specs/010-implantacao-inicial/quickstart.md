@@ -71,13 +71,15 @@ Expected:
 ## Scenario 4: Initial Cash Balance
 
 1. Abrir a etapa de saldo inicial de caixa.
-2. Informar valor, data, origem e descricao opcional.
+2. Informar valor, data e descricao opcional; a interface deve preencher a origem
+   tecnica automaticamente.
 3. Revisar o resumo.
 4. Confirmar o envio.
 
 Expected:
 
 - A fonte oficial registra o evento financeiro de saldo inicial.
+- A requisicao e a resposta usam `origem = ImplantacaoInicial`.
 - A etapa mostra sucesso e fica bloqueada para novo envio na sessao/tela atual.
 - Em rejeicao da fonte oficial, a mensagem e exibida e a etapa segue corrigivel.
 

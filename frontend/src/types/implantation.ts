@@ -1,5 +1,5 @@
 export const INITIAL_INVENTORY_ORIGIN = "ImplantacaoInicial";
-export const INITIAL_CASH_ORIGIN = "SaldoInicial";
+export const INITIAL_CASH_ORIGIN = "ImplantacaoInicial";
 export const INITIAL_RECEIVABLE_ORIGIN = "ImplantacaoInicial";
 
 export type ImplantationStepId =

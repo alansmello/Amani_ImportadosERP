@@ -74,7 +74,7 @@
 ### Implementation for User Story 2
 
 - [X] T021 [US2] Create InitialCashStep component with value, date, optional description, validation messages, review trigger, and completed-state lock in frontend/src/components/implantacao/initial-cash-step.tsx
-- [X] T022 [US2] Connect InitialCashStep to registerInitialCashBalance mutation using origem SaldoInicial and preserving typed data on validation/API errors in frontend/src/components/implantacao/initial-cash-step.tsx
+- [X] T022 [US2] Connect InitialCashStep to registerInitialCashBalance mutation using origem ImplantacaoInicial and preserving typed data on validation/API errors in frontend/src/components/implantacao/initial-cash-step.tsx
 - [X] T023 [US2] Render cash result summary with event id, value, date, and origem after success in frontend/src/components/implantacao/initial-cash-step.tsx
 - [X] T024 [US2] Add initial cash step to implantation page with independent state from inventory in frontend/src/app/configuracoes/implantacao/page.tsx
 
@@ -152,6 +152,7 @@
 - [X] T049 Run npm run build in frontend and fix any build issues in frontend/src/app/configuracoes and related implantation files
 - [X] T050 Validate regression that Produtos and Clientes pages still load through existing hooks after shared query key and route changes in frontend/src/app/produtos/page.tsx and frontend/src/app/clientes/page.tsx
 - [X] T051 Validate constitution gates and confirm no backend files, migrations, stock movement logic, purchase flow, sales flow, financial dashboard, analytics aggregation, import flow, reopening flow, or mass-edit behavior were changed for this frontend-only feature in src and frontend/src
+- [X] T052 [US2] Align the initial cash origin with the official backend contract in frontend/src/types/implantation.ts and update specs/010-implantacao-inicial/contracts/implantacao-frontend.md, specs/010-implantacao-inicial/data-model.md, and specs/010-implantacao-inicial/quickstart.md
 
 ---
 
