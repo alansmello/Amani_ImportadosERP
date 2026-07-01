@@ -14,15 +14,18 @@ public sealed class CancelarVendaCommandHandler : IRequestHandler<CancelarVendaC
     private readonly IVendaRepository _vendaRepository;
     private readonly IEstoqueMovimentacaoRepository _estoqueRepository;
     private readonly IContaReceberRepository _contaReceberRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CancelarVendaCommandHandler(
         IVendaRepository vendaRepository,
         IEstoqueMovimentacaoRepository estoqueRepository,
-        IContaReceberRepository contaReceberRepository)
+        IContaReceberRepository contaReceberRepository,
+        IUnitOfWork unitOfWork)
     {
         _vendaRepository = vendaRepository;
         _estoqueRepository = estoqueRepository;
         _contaReceberRepository = contaReceberRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Unit> Handle(CancelarVendaCommand request, CancellationToken cancellationToken)
@@ -48,30 +51,32 @@ public sealed class CancelarVendaCommandHandler : IRequestHandler<CancelarVendaC
         var movimentacoes = new List<EstoqueMovimentacao>();
         foreach (var item in venda.Items)
         {
+            var exata = item.ObterQuantidadeEstoqueExata();
             movimentacoes.Add(new EstoqueMovimentacao(
                 item.ProdutoId,
-                item.Quantidade,
+                exata.ParaDecimal(),
                 TipoMovimentacao.Entrada,
                 null,
                 null,
-                item.PrecoUnitario
+                null,
+                null,
+                null,
+                exata.NumeradorInt64(),
+                exata.DenominadorInt64(),
+                item.Id
             ));
         }
 
-        if (movimentacoes.Count > 0)
-            await _estoqueRepository.AdicionarRangeAsync(movimentacoes);
-
-        // 3) Remover contas a receber sem pagamentos
-        foreach (var conta in contas)
+        await _unitOfWork.ExecuteInTransactionAsync(async () =>
         {
-            await _contaReceberRepository.RemoverAsync(conta);
-        }
+            if (movimentacoes.Count > 0)
+                await _estoqueRepository.AdicionarRangeAsync(movimentacoes);
 
-        // 4) Marcar venda como cancelada
-        venda.Cancelar();
+            foreach (var conta in contas)
+                await _contaReceberRepository.RemoverAsync(conta);
 
-        await _contaReceberRepository.SalvarAsync();
-        await _vendaRepository.SalvarAsync();
+            venda.Cancelar();
+        });
 
         return Unit.Value;
     }

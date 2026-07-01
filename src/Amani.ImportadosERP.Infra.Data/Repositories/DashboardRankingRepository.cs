@@ -3,6 +3,8 @@ using Amani.ImportadosERP.Application.Interfaces;
 using Amani.ImportadosERP.Domain.Entities;
 using Amani.ImportadosERP.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using Amani.ImportadosERP.Domain.Common;
+using System.Numerics;
 
 namespace Amani.ImportadosERP.Infra.Data.Repositories;
 
@@ -10,13 +12,16 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
 {
     private readonly AmaniDbContext _db;
     private readonly DashboardCustoMedioReadService _custoMedioReadService;
+    private readonly IEstoqueConsultaRepository _estoqueConsultaRepository;
 
     public DashboardRankingRepository(
         AmaniDbContext db,
-        DashboardCustoMedioReadService custoMedioReadService)
+        DashboardCustoMedioReadService custoMedioReadService,
+        IEstoqueConsultaRepository estoqueConsultaRepository)
     {
         _db = db;
         _custoMedioReadService = custoMedioReadService;
+        _estoqueConsultaRepository = estoqueConsultaRepository;
     }
 
     public async Task<IReadOnlyCollection<RankingProdutoDto>> ObterProdutosMaisVendidosAsync(
@@ -24,18 +29,7 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
         DateTime dataFinal,
         int limite)
     {
-        var vendas = await VendasConfirmadasNoPeriodo(dataInicial, dataFinal)
-            .Include(v => v.Items)
-            .ToListAsync();
-
-        var agregados = vendas
-            .SelectMany(v => v.Items)
-            .GroupBy(i => i.ProdutoId)
-            .Select(g => new RankingAgregado(
-                g.Key,
-                g.Sum(i => i.Quantidade),
-                g.Sum(i => i.ValorTotal())))
-            .ToList();
+        var agregados = await ObterProdutosVendidosAgregadosAsync(dataInicial, dataFinal);
 
         var produtos = await ObterProdutosAsync(agregados.Select(a => a.ProdutoId).ToList());
 
@@ -62,18 +56,7 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
         DateTime dataReferencia,
         int limite)
     {
-        var vendas = await VendasConfirmadasNoPeriodo(dataInicial, dataFinal)
-            .Include(v => v.Items)
-            .ToListAsync();
-
-        var agregados = vendas
-            .SelectMany(v => v.Items)
-            .GroupBy(i => i.ProdutoId)
-            .Select(g => new RankingAgregado(
-                g.Key,
-                g.Sum(i => i.Quantidade),
-                g.Sum(i => i.ValorTotal())))
-            .ToList();
+        var agregados = await ObterProdutosVendidosAgregadosAsync(dataInicial, dataFinal);
 
         var produtoIds = agregados.Select(a => a.ProdutoId).ToList();
         var produtos = await ObterProdutosAsync(produtoIds);
@@ -191,6 +174,43 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
                 && v.DataVenda <= dataFinal);
     }
 
+    private async Task<List<RankingAgregado>> ObterProdutosVendidosAgregadosAsync(
+        DateTime dataInicial,
+        DateTime dataFinal)
+    {
+        var porDenominador = await _db.VendaItems
+            .AsNoTracking()
+            .Where(i => i.Venda != null
+                && !i.Venda.Cancelada
+                && i.Venda.DataVenda >= dataInicial
+                && i.Venda.DataVenda <= dataFinal)
+            .GroupBy(i => new
+            {
+                i.ProdutoId,
+                Denominador = i.FatorDenominadorAplicado ?? 1L
+            })
+            .Select(g => new
+            {
+                g.Key.ProdutoId,
+                g.Key.Denominador,
+                Numerador = g.Sum(i => (decimal)(i.FatorNumeradorAplicado ?? 1L) * i.Quantidade),
+                ValorFinanceiro = g.Sum(i => i.Quantidade * i.PrecoUnitario - i.Desconto + i.Acrescimo)
+            })
+            .ToListAsync();
+
+        return porDenominador
+            .GroupBy(i => i.ProdutoId)
+            .Select(g => new RankingAgregado(
+                g.Key,
+                g.Aggregate(
+                    QuantidadeRacional.Zero,
+                    (total, item) => total + new QuantidadeRacional(
+                        new BigInteger(item.Numerador),
+                        item.Denominador)).ParaDecimal(),
+                g.Sum(i => i.ValorFinanceiro)))
+            .ToList();
+    }
+
     private async Task<IReadOnlyDictionary<Guid, ProdutoResumo>> ObterProdutosAsync(IReadOnlyCollection<Guid> produtoIds)
     {
         if (!produtoIds.Any())
@@ -249,45 +269,19 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
             .ToList();
     }
 
-    private async Task<IReadOnlyDictionary<Guid, int>> ObterSaldosEstoqueAsync(
+    private async Task<IReadOnlyDictionary<Guid, decimal>> ObterSaldosEstoqueAsync(
         IReadOnlyCollection<Guid> produtoIds,
         DateTime dataReferencia)
     {
-        var entradas = await _db.EstoqueMovimentacoes
-            .AsNoTracking()
-            .Where(m => produtoIds.Contains(m.ProdutoId)
-                && m.Data <= dataReferencia
-                && (m.Tipo == TipoMovimentacao.Entrada || m.Tipo == TipoMovimentacao.InventarioInicial))
-            .GroupBy(m => m.ProdutoId)
-            .Select(g => new { ProdutoId = g.Key, Quantidade = g.Sum(m => m.Quantidade) })
-            .ToListAsync();
-
-        var saidas = await _db.EstoqueMovimentacoes
-            .AsNoTracking()
-            .Where(m => produtoIds.Contains(m.ProdutoId)
-                && m.Data <= dataReferencia
-                && m.Tipo == TipoMovimentacao.Saida)
-            .GroupBy(m => m.ProdutoId)
-            .Select(g => new { ProdutoId = g.Key, Quantidade = g.Sum(m => m.Quantidade) })
-            .ToListAsync();
-
-        var saldos = entradas.ToDictionary(e => e.ProdutoId, e => e.Quantidade);
-
-        foreach (var saida in saidas)
-        {
-            saldos[saida.ProdutoId] = saldos.TryGetValue(saida.ProdutoId, out var entrada)
-                ? entrada - saida.Quantidade
-                : -saida.Quantidade;
-        }
-
-        return saldos;
+        var saldos = await _estoqueConsultaRepository.ObterSaldosExatosAsync(produtoIds, dataReferencia);
+        return saldos.ToDictionary(item => item.Key, item => item.Value.ParaDecimal());
     }
 
     private static RankingProdutoDto CriarRanking(
         string tipoRanking,
         Guid produtoId,
         string produtoNome,
-        int quantidade,
+        decimal quantidade,
         decimal? valorFinanceiro,
         string criterioOrdenacao)
     {
@@ -347,7 +341,7 @@ public sealed class DashboardRankingRepository : IDashboardRankingRepository
             : clienteId.ToString();
     }
 
-    private sealed record RankingAgregado(Guid ProdutoId, int Quantidade, decimal ValorFinanceiro);
+    private sealed record RankingAgregado(Guid ProdutoId, decimal Quantidade, decimal ValorFinanceiro);
     private sealed record ProdutoResumo(Guid Id, string Nome);
     private sealed record RankingClienteAgregado(Guid ClienteId, int Quantidade, decimal ValorFinanceiro);
     private sealed record ClienteResumo(Guid Id, string Nome);

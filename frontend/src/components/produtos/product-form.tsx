@@ -11,6 +11,7 @@ import {
 } from "@/components/produtos/product-form-fields";
 import { CategoryQuickCreateDialog } from "@/components/produtos/category-quick-create-dialog";
 import { SupplierQuickCreateDialog } from "@/components/fornecedores/supplier-quick-create-dialog";
+import { ProductPresentations } from "@/components/produtos/product-presentations";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -221,6 +222,9 @@ export function ProductForm({
         </CardFooter>
       </form>
     </Card>
+    {!isCreateMode && initialProduct?.apresentacoesFracionadasHabilitadas ? (
+      <ProductPresentations productId={initialProduct.id} />
+    ) : null}
     {isCreateMode ? (
       <>
         <CategoryQuickCreateDialog

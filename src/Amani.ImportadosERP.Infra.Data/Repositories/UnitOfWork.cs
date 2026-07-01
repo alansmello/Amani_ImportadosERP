@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Amani.ImportadosERP.Application.Interfaces;
 using Amani.ImportadosERP.Infra.Data.Context;
+using System.Data;
 
 namespace Amani.ImportadosERP.Infra.Data.Repositories;
 
@@ -22,7 +23,7 @@ public class UnitOfWork : IUnitOfWork
         var strategy = _db.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
         {
-            await using var transaction = await _db.Database.BeginTransactionAsync();
+            await using var transaction = await _db.Database.BeginTransactionAsync(IsolationLevel.Serializable);
 
             await operation();
             await _db.SaveChangesAsync();

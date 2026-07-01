@@ -13,15 +13,18 @@ public class ProdutoService
     private readonly IProdutoRepository _produtoRepository;
     private readonly ICategoriaRepository _categoriaRepository;
     private readonly IFornecedorRepository _fornecedorRepository;
+    private readonly IFeatureSettings _features;
 
     public ProdutoService(
         IProdutoRepository produtoRepository,
         ICategoriaRepository categoriaRepository,
-        IFornecedorRepository fornecedorRepository)
+        IFornecedorRepository fornecedorRepository,
+        IFeatureSettings features)
     {
         _produtoRepository = produtoRepository;
         _categoriaRepository = categoriaRepository;
         _fornecedorRepository = fornecedorRepository;
+        _features = features;
     }
 
     public async Task<ProdutoDto> CreateAsync(CriarProdutoDto dto)
@@ -71,7 +74,7 @@ public class ProdutoService
         }
     }
 
-    private static ProdutoDto ToDto(Produto produto)
+    private ProdutoDto ToDto(Produto produto)
     {
         return new ProdutoDto
         {
@@ -80,7 +83,11 @@ public class ProdutoService
             PrecoVenda = produto.PrecoVenda,
             Custo = produto.Custo,
             CategoriaId = produto.CategoriaId,
-            FornecedorId = produto.FornecedorId
+            FornecedorId = produto.FornecedorId,
+            ApresentacoesFracionadasHabilitadas = _features.ApresentacoesFracionadasEnabled,
+            Apresentacoes = _features.ApresentacoesFracionadasEnabled
+                ? produto.Apresentacoes.Select(ProdutoApresentacaoService.Mapear).ToList()
+                : Array.Empty<ProdutoApresentacaoDto>()
         };
     }
 }

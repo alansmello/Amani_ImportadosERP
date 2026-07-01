@@ -25,6 +25,12 @@ public static class VendaMapper
             {
                 Id = i.Id,
                 ProdutoId = i.ProdutoId,
+                ProdutoApresentacaoId = i.ProdutoApresentacaoId,
+                ApresentacaoNome = i.ApresentacaoNomeSnapshot,
+                FatorNumeradorAplicado = i.FatorNumeradorAplicado,
+                FatorDenominadorAplicado = i.FatorDenominadorAplicado,
+                FatorConversaoAplicado = i.FatorConversaoAplicado,
+                QuantidadeConvertidaEstoque = i.QuantidadeConvertidaEstoque,
                 Quantidade = i.Quantidade,
                 PrecoUnitario = i.PrecoUnitario,
                 Desconto = i.Desconto,

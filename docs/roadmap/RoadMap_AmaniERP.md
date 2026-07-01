@@ -553,6 +553,49 @@ Endpoints já implementados e funcionais:
 
 ---
 
+## **F024 — Apresentações Comerciais e Conversão Fracionada de Estoque**
+
+- **Status:** Em implementação; projeto e tarefas de testes automatizados removidos por decisão explícita. Rollout condicionado aos gates manuais.
+- **Prioridade:** Alta para operação de vendas e integridade de estoque em produção.
+- **Problema de negócio:** Produtos comprados na unidade principal, como caixa, precisam ser vendidos como caixa, ampola ou dose sem criar produtos separados nem converter o histórico existente.
+- **Decisão técnica:** Representar cada conversão por `FatorNumerador/FatorDenominador` e preservar a razão exata no snapshot da venda e na movimentação. Decimal calculado é projeção; não é a única fonte de saldo.
+- **Documento-base:** `specs/024-apresentacoes-fracionadas/impact-analysis.md`.
+
+### **Escopo incluído**
+
+- Cadastro opt-in de apresentações por produto, com Caixa 1/1, Ampola 1/4 e Dose 1/24 como exemplo oficial.
+- Venda por apresentação, snapshot imutável e saída convertida na unidade principal.
+- Agregação, validação, cancelamento e conciliação por razão exata, inclusive entre operações separadas.
+- Custo médio e lucro proporcionais à quantidade exata.
+- Compatibilidade de produtos, vendas e movimentações legadas sem backfill.
+- Adequação de estoque, listagens, relatórios e dashboard para quantidades equivalentes na unidade principal.
+
+### **Fora desta versão**
+
+- Caixa lacrada versus aberta e rastreio físico de embalagem.
+- Compra, recebimento ou perda por apresentação.
+- Conversão do estoque antigo para dose.
+- Produtos separados por apresentação.
+- Alteração ou recálculo de movimentações antigas.
+
+### **Riscos e controles**
+
+- **Resíduo decimal:** razão exata autoritativa; projeção decimal apenas para contrato/exibição.
+- **Migration em produção:** colunas nullable, nenhum DML histórico e ensaio da ampliação de quantidade antes do rollout.
+- **Rollback após venda fracionada:** desligamento lógico com schema mantido; não executar `Down` nem retornar a binário que suponha inteiro.
+- **Regressão gerencial:** métricas de quantidade usam equivalente na unidade principal e passam por conciliação com legado.
+
+### **Critérios mínimos de aceite**
+
+- 4 vendas separadas de 1 ampola em 1/4 e 24 vendas separadas de 1 dose em 1/24 equivalem exatamente a 1 caixa.
+- Vender e cancelar a mesma razão restaura exatamente o saldo anterior.
+- Produto sem apresentações mantém compra, venda, saldo, custo e lucro anteriores.
+- Nenhuma linha histórica é atualizada, convertida ou recalculada.
+- Custo, lucro, dashboard e relatórios conciliam dados legados e fracionados.
+- Migration e rollback lógico são ensaiados em cópia representativa de produção.
+
+---
+
 # **3. Roadmap recomendado por fases**
 
 ### **Fase 1 — Operação ponta a ponta (concluída)**
@@ -587,7 +630,13 @@ Ordem obrigatória para reduzir risco e facilitar validação:
    - Motivo da posição: consolida regras financeiras e patrimoniais sobre os fluxos operacionais e financeiros já existentes.
    - Gate de saída: indicadores conciliados, estoque valorizado sem trânsito, recebíveis segmentados, contratos compatíveis e experiência responsiva validada.
 
-### **Fase 6 — Backlog pós-refinamento (não aprovado para execução nesta decisão)**
+### **Fase 6 — Evolução operacional planejada/em análise**
+
+1. **F024 — Apresentações Comerciais e Conversão Fracionada de Estoque**
+   - Motivo da posição: resolve venda fracionada sem reescrever estoque produtivo e exige gate técnico específico de precisão/migration.
+   - Gate de saída: razão exata validada, legado conciliado, rollback ensaiado e autorização explícita de implementação.
+
+### **Fase 7 — Backlog pós-refinamento (não aprovado para execução nesta decisão)**
 
 - Detalhe de Produto exibindo saldo e custo médio.
 - Paginação e busca server-side nas listas.
@@ -616,6 +665,8 @@ Ordem obrigatória para reduzir risco e facilitar validação:
 - **Testes:** por decisão do responsável em 26/06/2026, não será adicionada infraestrutura automatizada em F020–F022; builds e roteiros manuais completos são obrigatórios.
 - **F023 independente:** a revisão do Dashboard possui diretório Spec Kit próprio e não deve ser incorporada retroativamente à F017.
 - **Analytics da F023:** indicadores devem ser calculados no backend por consultas agregadas; o frontend apenas apresenta resultados.
+- **F024 planejada, não autorizada:** nenhuma implementação começa antes da aprovação explícita do relatório técnico, plano, tasks e estratégia de rollout.
+- **Precisão da F024:** numerador/denominador são autoritativos; valores decimais são projeções e não podem decidir saldo isoladamente.
 
 ---
 
@@ -644,6 +695,17 @@ Decisões aprovadas para orientar diretamente as próximas especificações:
 | Valor da operação | Exibir visões realista ao custo e potencial ao preço de venda | F023 |
 | Despesas de operadora | Manter fora das saídas até validação financeira específica | F023 |
 
+## **Registro da decisão de precisão da F024 em 30/06/2026**
+
+| **Tema** | **Decisão aprovada para planejamento** | **Feature** |
+| --- | --- | --- |
+| Conversão | Persistir numerador e denominador positivos, com fator ≤ 1 | F024 |
+| Exatidão | Razão exata é fonte de saldo, cancelamento e conciliação | F024 |
+| Snapshot | Preservar apresentação, numerador, denominador, fator calculado e quantidade convertida | F024 |
+| Legado | Interpretar quantidade histórica como denominador 1, sem backfill | F024 |
+| Compra | Manter compra, recebimento e perda na unidade principal | F024 |
+| Rollback | Desabilitar logicamente e manter schema após a primeira venda fracionada | F024 |
+
 ## **Próximo passo previsto**
 
-A especificação da **F023 — Revisão do Dashboard Gerencial** está criada. O próximo passo é revisar a spec e executar `clarify` se surgirem novas decisões; caso contrário, seguir para `plan → tasks`. Nenhuma implementação da F023 deve começar antes dessa sequência.
+A documentação da **F024 — Apresentações Comerciais e Conversão Fracionada de Estoque** está em análise com representação racional definida. O próximo passo é revisar `spec.md`, `impact-analysis.md`, `plan.md` e `tasks.md`. Nenhuma implementação da F024 deve começar sem autorização explícita posterior a essa revisão.

@@ -64,6 +64,34 @@ public sealed class Venda : BaseEntity
         Touch();
     }
 
+    public void AdicionarItem(
+        Guid produtoId,
+        int quantidade,
+        decimal precoUnitario,
+        Guid produtoApresentacaoId,
+        string apresentacaoNome,
+        long fatorNumerador,
+        long fatorDenominador,
+        decimal desconto = 0m,
+        decimal acrescimo = 0m)
+    {
+        var existente = _items.FirstOrDefault(i => i.ProdutoId == produtoId);
+        if (existente != null) throw new InvalidOperationException("Produto já adicionado na venda");
+
+        var item = new VendaItem(
+            produtoId,
+            quantidade,
+            precoUnitario,
+            produtoApresentacaoId,
+            apresentacaoNome,
+            fatorNumerador,
+            fatorDenominador,
+            desconto,
+            acrescimo);
+        _items.Add(item);
+        Touch();
+    }
+
     public decimal Total() => _items.Sum(i => i.ValorTotal()) - Desconto + Acrescimo;
 
     public void Cancelar()

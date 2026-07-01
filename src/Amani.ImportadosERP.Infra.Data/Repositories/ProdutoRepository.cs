@@ -28,19 +28,20 @@ public class ProdutoRepository : IProdutoRepository
     public async Task<Produto?> ObterPorIdAsync(Guid id)
     {
         if (id == Guid.Empty) return null;
-        return await _db.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+        return await _db.Produtos.AsNoTracking().Include(p => p.Apresentacoes).FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<Produto?> ObterPorIdParaAtualizarAsync(Guid id)
     {
         if (id == Guid.Empty) return null;
-        return await _db.Produtos.FirstOrDefaultAsync(p => p.Id == id);
+        return await _db.Produtos.Include(p => p.Apresentacoes).FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<List<Produto>> ListarAsync()
     {
         return await _db.Produtos
             .AsNoTracking()
+            .Include(p => p.Apresentacoes)
             .OrderBy(p => p.Nome)
             .ToListAsync();
     }

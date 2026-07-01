@@ -114,10 +114,7 @@ export function SaleForm({ onCreated }: SaleFormProps) {
   const discountError = getSaleValidationMessage(errors, "desconto");
   const increaseError = getSaleValidationMessage(errors, "acrescimo");
 
-  const referenceProducts = useMemo(
-    () => products.map((product) => ({ id: product.id })),
-    [products]
-  );
+  const referenceProducts = products;
   const referenceCustomers = useMemo(
     () => customers.map((customer) => ({ id: customer.id })),
     [customers]
@@ -183,6 +180,19 @@ export function SaleForm({ onCreated }: SaleFormProps) {
         const selectedProduct = products.find((product) => product.id === value);
         if (selectedProduct) {
           nextItem.precoUnitario = String(selectedProduct.precoVenda);
+          nextItem.produtoApresentacaoId = "";
+        }
+      }
+
+      if (field === "produtoApresentacaoId" && value) {
+        const selectedProduct = products.find(
+          (product) => product.id === nextItem.produtoId
+        );
+        const selectedPresentation = selectedProduct?.apresentacoes.find(
+          (presentation) => presentation.id === value
+        );
+        if (selectedPresentation?.precoVenda !== null && selectedPresentation?.precoVenda !== undefined) {
+          nextItem.precoUnitario = String(selectedPresentation.precoVenda);
         }
       }
 

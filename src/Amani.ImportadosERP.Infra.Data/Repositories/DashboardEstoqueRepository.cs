@@ -10,35 +10,31 @@ public sealed class DashboardEstoqueRepository : IDashboardEstoqueRepository
 {
     private readonly AmaniDbContext _db;
     private readonly DashboardCustoMedioReadService _custoMedioReadService;
+    private readonly IEstoqueConsultaRepository _estoqueConsultaRepository;
 
     public DashboardEstoqueRepository(
         AmaniDbContext db,
-        DashboardCustoMedioReadService custoMedioReadService)
+        DashboardCustoMedioReadService custoMedioReadService,
+        IEstoqueConsultaRepository estoqueConsultaRepository)
     {
         _db = db;
         _custoMedioReadService = custoMedioReadService;
+        _estoqueConsultaRepository = estoqueConsultaRepository;
     }
 
     public async Task<DashboardEstoqueValorizadoDto> ObterEstoqueValorizadoAsync(DateTime dataReferencia)
     {
-        var saldos = await _db.EstoqueMovimentacoes
+        var produtoIdsComMovimento = await _db.EstoqueMovimentacoes
             .AsNoTracking()
             .Where(m => m.Data <= dataReferencia)
-            .GroupBy(m => m.ProdutoId)
-            .Select(g => new
-            {
-                ProdutoId = g.Key,
-                Saldo = g.Sum(m =>
-                    m.Tipo == TipoMovimentacao.Saida
-                        ? -m.Quantidade
-                        : m.Tipo == TipoMovimentacao.InventarioInicial
-                            ? m.Quantidade
-                            : m.Tipo == TipoMovimentacao.Entrada && m.CompraItemId != null
-                                ? m.Quantidade
-                                : 0)
-            })
-            .Where(x => x.Saldo > 0)
+            .Select(m => m.ProdutoId)
+            .Distinct()
             .ToListAsync();
+        var saldosExatos = await _estoqueConsultaRepository.ObterSaldosExatosAsync(produtoIdsComMovimento, dataReferencia);
+        var saldos = saldosExatos
+            .Where(item => item.Value > Amani.ImportadosERP.Domain.Common.QuantidadeRacional.Zero)
+            .Select(item => new { ProdutoId = item.Key, Saldo = item.Value.ParaDecimal() })
+            .ToList();
 
         if (saldos.Count == 0)
         {
@@ -54,11 +50,11 @@ public sealed class DashboardEstoqueRepository : IDashboardEstoqueRepository
 
         var custos = await _custoMedioReadService.ObterCustosMediosAsync(produtoIds, dataReferencia);
 
-        var quantidadeTotal = 0;
+        var quantidadeTotal = 0m;
         var valorAoCusto = 0m;
         var valorAoPrecoVenda = 0m;
         var lucroPotencialCalculavel = 0m;
-        var quantidadeSemCusto = 0;
+        var quantidadeSemCusto = 0m;
         var valorVendaSemCusto = 0m;
 
         foreach (var saldo in saldos)

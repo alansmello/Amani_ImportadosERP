@@ -49,10 +49,12 @@ function FieldError({ message }: { message?: string }) {
 
 function StockHint({
   item,
-  stockByProductId
+  stockByProductId,
+  product
 }: {
   item: SaleItemDraft;
   stockByProductId: Map<string, StockProduct>;
+  product?: Product;
 }) {
   if (!item.produtoId) {
     return null;
@@ -76,10 +78,22 @@ function StockHint({
     );
   }
 
+  const presentation = product?.apresentacoes.find(
+    (candidate) => candidate.id === item.produtoApresentacaoId
+  );
+  const quantity = Number(item.quantidade.replace(",", "."));
+  const converted =
+    presentation && Number.isFinite(quantity)
+      ? (quantity * presentation.fatorNumerador) / presentation.fatorDenominador
+      : null;
+
   return (
     <p className="text-xs leading-5 text-text-secondary">
       Saldo exibido: {formatSaleQuantity(stock.saldoAtual)}. O backend confirma
       a disponibilidade ao registrar.
+      {converted !== null
+        ? ` Esta venda consome ${formatSaleQuantity(converted)} da unidade principal.`
+        : ""}
     </p>
   );
 }
@@ -96,10 +110,16 @@ export function SaleItemComposer({
   onCancelEdit
 }: SaleItemComposerProps) {
   const productError = getError(errors, "produtoId", item.id);
+  const presentationError = getError(errors, "produtoApresentacaoId", item.id);
   const quantityError = getError(errors, "quantidade", item.id);
   const priceError = getError(errors, "precoUnitario", item.id);
   const discountError = getError(errors, "desconto", item.id);
   const increaseError = getError(errors, "acrescimo", item.id);
+  const selectedProduct = products.find((product) => product.id === item.produtoId);
+  const availablePresentations =
+    selectedProduct?.apresentacoes.filter(
+      (presentation) => presentation.ativo && presentation.permiteVenda
+    ) ?? [];
 
   return (
     <div className="rounded-amani border border-border bg-surface-light p-4 space-y-4">
@@ -150,12 +170,52 @@ export function SaleItemComposer({
             ))}
           </select>
           <div id={`composer-product-${item.id}-help`} className="space-y-1">
-            <StockHint item={item} stockByProductId={stockByProductId} />
+            <StockHint
+              item={item}
+              stockByProductId={stockByProductId}
+              product={selectedProduct}
+            />
           </div>
           <div id={`composer-product-${item.id}-error`}>
             <FieldError message={productError} />
           </div>
         </div>
+
+        {selectedProduct && selectedProduct.apresentacoes.length > 0 ? (
+          <div className="grid gap-2">
+            <label
+              className={fieldLabelClassName}
+              htmlFor={`composer-presentation-${item.id}`}
+            >
+              Apresentacao comercial
+            </label>
+            <select
+              id={`composer-presentation-${item.id}`}
+              className={cn(selectClassName)}
+              value={item.produtoApresentacaoId}
+              onChange={(event) =>
+                onChange("produtoApresentacaoId", event.target.value)
+              }
+              disabled={disabled || availablePresentations.length === 0}
+              aria-invalid={Boolean(presentationError)}
+            >
+              <option value="">Selecione uma apresentacao</option>
+              {availablePresentations.map((presentation) => (
+                <option key={presentation.id} value={presentation.id}>
+                  {presentation.nome} ({presentation.fatorNumerador}/
+                  {presentation.fatorDenominador})
+                </option>
+              ))}
+            </select>
+            {availablePresentations.length === 0 ? (
+              <p className="text-xs leading-5 text-warning">
+                Este produto possui apresentacoes, mas nenhuma esta disponivel
+                para venda.
+              </p>
+            ) : null}
+            <FieldError message={presentationError} />
+          </div>
+        ) : null}
 
         <div className="grid gap-4 tablet:grid-cols-2 desktop:grid-cols-4">
           <div className="grid gap-2">

@@ -21,7 +21,7 @@ public sealed class DashboardFinanceiroGerencialDto
     public decimal? ValorEstoqueAoCusto { get; set; }
     public decimal? ValorEstoqueAoPrecoVenda { get; set; }
     public decimal? LucroPotencialEstoque { get; set; }
-    public int? QuantidadeEstoqueSemCusto { get; set; }
+    public decimal? QuantidadeEstoqueSemCusto { get; set; }
     public decimal? ValorVendaEstoqueSemCusto { get; set; }
     public decimal? ValorTotalRealistaOperacao { get; set; }
     public decimal? ValorTotalPotencialOperacao { get; set; }

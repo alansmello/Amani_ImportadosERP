@@ -23,6 +23,7 @@ public class CustoProdutoRepository : ICustoProdutoRepository
 
         var entradas = await _db.EstoqueMovimentacoes
             .Where(m => m.ProdutoId == produtoId
+                && m.VendaItemId == null
                 && m.ValorUnitario != null
                 && (m.Tipo == TipoMovimentacao.InventarioInicial
                     || (m.Tipo == TipoMovimentacao.Entrada && m.CompraItemId != null)))

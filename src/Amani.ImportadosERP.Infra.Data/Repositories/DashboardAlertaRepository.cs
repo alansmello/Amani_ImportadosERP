@@ -9,10 +9,12 @@ namespace Amani.ImportadosERP.Infra.Data.Repositories;
 public sealed class DashboardAlertaRepository : IDashboardAlertaRepository
 {
     private readonly AmaniDbContext _db;
+    private readonly IEstoqueConsultaRepository _estoqueConsultaRepository;
 
-    public DashboardAlertaRepository(AmaniDbContext db)
+    public DashboardAlertaRepository(AmaniDbContext db, IEstoqueConsultaRepository estoqueConsultaRepository)
     {
         _db = db;
+        _estoqueConsultaRepository = estoqueConsultaRepository;
     }
 
     public async Task<IReadOnlyCollection<AlertaGerencialDto>> ObterAlertasEstoqueBaixoAsync(
@@ -193,38 +195,12 @@ public sealed class DashboardAlertaRepository : IDashboardAlertaRepository
             .ToList();
     }
 
-    private async Task<IReadOnlyDictionary<Guid, int>> ObterSaldosEstoqueAsync(
+    private async Task<IReadOnlyDictionary<Guid, decimal>> ObterSaldosEstoqueAsync(
         IReadOnlyCollection<Guid> produtoIds,
         DateTime dataReferencia)
     {
-        var entradas = await _db.EstoqueMovimentacoes
-            .AsNoTracking()
-            .Where(m => produtoIds.Contains(m.ProdutoId)
-                && m.Data <= dataReferencia
-                && (m.Tipo == TipoMovimentacao.Entrada || m.Tipo == TipoMovimentacao.InventarioInicial))
-            .GroupBy(m => m.ProdutoId)
-            .Select(g => new { ProdutoId = g.Key, Quantidade = g.Sum(m => m.Quantidade) })
-            .ToListAsync();
-
-        var saidas = await _db.EstoqueMovimentacoes
-            .AsNoTracking()
-            .Where(m => produtoIds.Contains(m.ProdutoId)
-                && m.Data <= dataReferencia
-                && m.Tipo == TipoMovimentacao.Saida)
-            .GroupBy(m => m.ProdutoId)
-            .Select(g => new { ProdutoId = g.Key, Quantidade = g.Sum(m => m.Quantidade) })
-            .ToListAsync();
-
-        var saldos = entradas.ToDictionary(e => e.ProdutoId, e => e.Quantidade);
-
-        foreach (var saida in saidas)
-        {
-            saldos[saida.ProdutoId] = saldos.TryGetValue(saida.ProdutoId, out var entrada)
-                ? entrada - saida.Quantidade
-                : -saida.Quantidade;
-        }
-
-        return saldos;
+        var saldos = await _estoqueConsultaRepository.ObterSaldosExatosAsync(produtoIds, dataReferencia);
+        return saldos.ToDictionary(item => item.Key, item => item.Value.ParaDecimal());
     }
 
     private async Task<IReadOnlyCollection<EventoProduto>> ObterEventosOperacionaisAsync(

@@ -96,7 +96,7 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
     private static IReadOnlyCollection<AvisoDadoIncompletoDto> CriarAvisos(
         IReadOnlyCollection<DashboardVendaCustoDto> itensVendidos,
         decimal valorLucroNaoCalculavel,
-        int quantidadeEstoqueSemCusto,
+        decimal quantidadeEstoqueSemCusto,
         decimal valorVendaEstoqueSemCusto)
     {
         var avisos = new List<AvisoDadoIncompletoDto>();

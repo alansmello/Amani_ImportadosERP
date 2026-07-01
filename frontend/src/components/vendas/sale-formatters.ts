@@ -1,5 +1,5 @@
 const quantityFormatter = new Intl.NumberFormat("pt-BR", {
-  maximumFractionDigits: 0
+  maximumFractionDigits: 12
 });
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {

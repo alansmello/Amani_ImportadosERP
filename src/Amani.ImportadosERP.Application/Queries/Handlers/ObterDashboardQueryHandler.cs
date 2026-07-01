@@ -55,7 +55,7 @@ public sealed class ObterDashboardQueryHandler : IRequestHandler<ObterDashboardQ
             foreach (var item in venda.Items)
             {
                 var custoMedio = await _custoRepository.ObterCustoMedioAsync(item.ProdutoId);
-                lucroVenda += item.ValorTotal() - custoMedio * item.Quantidade;
+                lucroVenda += item.ValorTotal() - custoMedio * item.ObterQuantidadeEstoqueExata().ParaDecimal();
             }
 
             vendaComLucro.Add((totalVenda, lucroVenda));

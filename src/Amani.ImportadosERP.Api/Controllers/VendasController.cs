@@ -37,6 +37,14 @@ public class VendasController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (OverflowException)
+        {
+            return BadRequest(new { error = "A conversão informada excede os limites suportados." });
+        }
     }
 
     [HttpGet("{id:guid}")]

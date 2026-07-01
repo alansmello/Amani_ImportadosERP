@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Amani.ImportadosERP.Application.DTOs;
 
@@ -10,4 +11,6 @@ public sealed class ProdutoDto
     public decimal Custo { get; set; }
     public Guid CategoriaId { get; set; }
     public Guid? FornecedorId { get; set; }
+    public bool ApresentacoesFracionadasHabilitadas { get; set; }
+    public IReadOnlyCollection<ProdutoApresentacaoDto> Apresentacoes { get; set; } = Array.Empty<ProdutoApresentacaoDto>();
 }

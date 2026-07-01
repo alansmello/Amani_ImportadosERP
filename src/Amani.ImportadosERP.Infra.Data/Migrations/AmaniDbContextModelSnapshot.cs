@@ -490,8 +490,15 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Property<Guid>("ProdutoId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Quantidade")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Quantidade")
+                        .HasPrecision(28, 12)
+                        .HasColumnType("numeric(28,12)");
+
+                    b.Property<long?>("QuantidadeExataDenominador")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("QuantidadeExataNumerador")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Tipo")
                         .HasColumnType("integer");
@@ -506,6 +513,9 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Property<Guid?>("VendaId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("VendaItemId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CompraId");
@@ -514,10 +524,17 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
 
                     b.HasIndex("VendaId");
 
+                    b.HasIndex("VendaItemId");
+
                     b.HasIndex("ProdutoId", "Data", "Tipo")
                         .HasDatabaseName("IX_estoque_movimentacoes_ProdutoId_Data_Tipo");
 
-                    b.ToTable("estoque_movimentacoes", (string)null);
+                    b.ToTable("estoque_movimentacoes", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_estoque_movimentacoes_Quantidade", "\"Quantidade\" > 0");
+
+                            t.HasCheckConstraint("CK_estoque_movimentacoes_QuantidadeExata", "(\"QuantidadeExataNumerador\" IS NULL AND \"QuantidadeExataDenominador\" IS NULL) OR (\"QuantidadeExataNumerador\" IS NOT NULL AND \"QuantidadeExataDenominador\" IS NOT NULL AND \"QuantidadeExataNumerador\" > 0 AND \"QuantidadeExataDenominador\" > 0 AND \"Quantidade\" = round(\"QuantidadeExataNumerador\"::numeric / \"QuantidadeExataDenominador\", 12))");
+                        });
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.EventoAutenticacao", b =>
@@ -707,6 +724,66 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.ToTable("produtos", (string)null);
                 });
 
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ProdutoApresentacao", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("FatorDenominador")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("FatorNumerador")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("PermiteCompra")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("PermiteVenda")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal?>("PrecoVenda")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<Guid>("ProdutoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutoId", "Nome")
+                        .IsUnique();
+
+                    b.HasIndex("ProdutoId", "Ativo", "PermiteVenda");
+
+                    b.ToTable("produto_apresentacoes", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_produto_apresentacoes_FatorAteUm", "\"FatorNumerador\" <= \"FatorDenominador\"");
+
+                            t.HasCheckConstraint("CK_produto_apresentacoes_FatorDenominador", "\"FatorDenominador\" > 0");
+
+                            t.HasCheckConstraint("CK_produto_apresentacoes_FatorNumerador", "\"FatorNumerador\" > 0");
+
+                            t.HasCheckConstraint("CK_produto_apresentacoes_PermiteCompra", "\"PermiteCompra\" = FALSE");
+                        });
+                });
+
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.Usuario", b =>
                 {
                     b.Property<Guid>("Id")
@@ -827,6 +904,10 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .HasColumnType("numeric(18,2)")
                         .HasDefaultValue(0m);
 
+                    b.Property<string>("ApresentacaoNomeSnapshot")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -836,15 +917,32 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .HasColumnType("numeric(18,2)")
                         .HasDefaultValue(0m);
 
+                    b.Property<decimal?>("FatorConversaoAplicado")
+                        .HasPrecision(28, 12)
+                        .HasColumnType("numeric(28,12)");
+
+                    b.Property<long?>("FatorDenominadorAplicado")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("FatorNumeradorAplicado")
+                        .HasColumnType("bigint");
+
                     b.Property<decimal>("PrecoUnitario")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
+
+                    b.Property<Guid?>("ProdutoApresentacaoId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProdutoId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Quantidade")
                         .HasColumnType("integer");
+
+                    b.Property<decimal?>("QuantidadeConvertidaEstoque")
+                        .HasPrecision(28, 12)
+                        .HasColumnType("numeric(28,12)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -854,9 +952,14 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProdutoApresentacaoId");
+
                     b.HasIndex("VendaId");
 
-                    b.ToTable("venda_items", (string)null);
+                    b.ToTable("venda_items", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_venda_items_ApresentacaoSnapshot", "(\"ProdutoApresentacaoId\" IS NULL AND \"ApresentacaoNomeSnapshot\" IS NULL AND \"FatorNumeradorAplicado\" IS NULL AND \"FatorDenominadorAplicado\" IS NULL AND \"FatorConversaoAplicado\" IS NULL AND \"QuantidadeConvertidaEstoque\" IS NULL) OR (\"ProdutoApresentacaoId\" IS NOT NULL AND \"ApresentacaoNomeSnapshot\" IS NOT NULL AND \"FatorNumeradorAplicado\" > 0 AND \"FatorDenominadorAplicado\" > 0 AND \"FatorNumeradorAplicado\" <= \"FatorDenominadorAplicado\" AND \"FatorConversaoAplicado\" > 0 AND \"QuantidadeConvertidaEstoque\" > 0 AND \"FatorConversaoAplicado\" = round(\"FatorNumeradorAplicado\"::numeric / \"FatorDenominadorAplicado\", 12) AND \"QuantidadeConvertidaEstoque\" = round(\"Quantidade\"::numeric * \"FatorNumeradorAplicado\" / \"FatorDenominadorAplicado\", 12))");
+                        });
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItem", b =>
@@ -967,7 +1070,14 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .HasForeignKey("VendaId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.VendaItem", "VendaItem")
+                        .WithMany()
+                        .HasForeignKey("VendaItemId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("CompraItem");
+
+                    b.Navigation("VendaItem");
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.EventoAutenticacao", b =>
@@ -1003,13 +1113,31 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
                 });
 
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ProdutoApresentacao", b =>
+                {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.Produto", "Produto")
+                        .WithMany("Apresentacoes")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Produto");
+                });
+
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.VendaItem", b =>
                 {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.ProdutoApresentacao", "ProdutoApresentacao")
+                        .WithMany()
+                        .HasForeignKey("ProdutoApresentacaoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Amani.ImportadosERP.Domain.Entities.Venda", "Venda")
                         .WithMany("Items")
                         .HasForeignKey("VendaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("ProdutoApresentacao");
 
                     b.Navigation("Venda");
                 });
@@ -1033,6 +1161,11 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ContaReceber", b =>
                 {
                     b.Navigation("Pagamentos");
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.Produto", b =>
+                {
+                    b.Navigation("Apresentacoes");
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.Venda", b =>

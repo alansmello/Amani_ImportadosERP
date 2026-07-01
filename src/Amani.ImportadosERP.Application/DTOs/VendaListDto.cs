@@ -11,4 +11,5 @@ public sealed class VendaListDto
     public decimal TotalVenda { get; set; }
     public decimal Lucro { get; set; }
     public FormaPagamento FormaPagamento { get; set; }
+    public bool PossuiApresentacaoFracionada { get; set; }
 }

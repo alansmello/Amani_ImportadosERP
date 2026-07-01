@@ -3,6 +3,7 @@ using Amani.ImportadosERP.Application.Interfaces;
 using Amani.ImportadosERP.Domain.Entities;
 using Amani.ImportadosERP.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using Amani.ImportadosERP.Domain.Common;
 
 namespace Amani.ImportadosERP.Infra.Data.Repositories;
 
@@ -10,13 +11,16 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
 {
     private readonly AmaniDbContext _db;
     private readonly DashboardCustoMedioReadService _custoMedioReadService;
+    private readonly IEstoqueConsultaRepository _estoqueConsultaRepository;
 
     public DashboardGraficoRepository(
         AmaniDbContext db,
-        DashboardCustoMedioReadService custoMedioReadService)
+        DashboardCustoMedioReadService custoMedioReadService,
+        IEstoqueConsultaRepository estoqueConsultaRepository)
     {
         _db = db;
         _custoMedioReadService = custoMedioReadService;
+        _estoqueConsultaRepository = estoqueConsultaRepository;
     }
 
     public async Task<SerieGraficaDto> ObterReceitaPorPeriodoAsync(DateTime dataInicial, DateTime dataFinal)
@@ -58,7 +62,7 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
                 v.Id,
                 v.DataVenda,
                 item.ProdutoId,
-                item.Quantidade,
+                item.ObterQuantidadeEstoqueExata().ParaDecimal(),
                 item.ValorTotal())))
             .ToList();
 
@@ -153,29 +157,28 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
     public async Task<SerieGraficaDto> ObterEvolucaoEstoqueAsync(DateTime dataInicial, DateTime dataFinal)
     {
         var buckets = CriarBuckets(dataInicial, dataFinal);
-        var movimentos = await _db.EstoqueMovimentacoes
+        var produtoIds = await _db.EstoqueMovimentacoes
             .AsNoTracking()
             .Where(m => m.Data <= dataFinal)
-            .Select(m => new MovimentoEstoqueGrafico(
-                m.Data,
-                m.Tipo == TipoMovimentacao.Saida ? -m.Quantidade : m.Quantidade))
+            .Select(m => m.ProdutoId)
+            .Distinct()
             .ToListAsync();
 
-        if (!movimentos.Any())
+        if (produtoIds.Count == 0)
         {
             return CriarSerie("EvolucaoEstoque", "Evolucao do estoque", buckets.Granularidade, "UN", Array.Empty<PontoGraficoDto>());
         }
 
-        var pontos = buckets
-            .Select(bucket =>
-            {
-                var saldo = movimentos
-                    .Where(m => m.Data <= bucket.Fim)
-                    .Sum(m => m.Quantidade);
-
-                return CriarPonto(bucket, saldo, saldo);
-            })
-            .ToList();
+        var pontos = new List<PontoGraficoDto>();
+        foreach (var bucket in buckets)
+        {
+            var saldos = await _estoqueConsultaRepository.ObterSaldosExatosAsync(produtoIds, bucket.Fim);
+            var saldoExato = saldos.Values.Aggregate(
+                QuantidadeRacional.Zero,
+                (total, quantidade) => total + quantidade);
+            var saldo = saldoExato.ParaDecimal();
+            pontos.Add(CriarPonto(bucket, saldo, saldo));
+        }
 
         return new SerieGraficaDto
         {
@@ -246,7 +249,7 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
         };
     }
 
-    private static PontoGraficoDto CriarPonto(BucketGrafico bucket, decimal valor, int? quantidade)
+    private static PontoGraficoDto CriarPonto(BucketGrafico bucket, decimal valor, decimal? quantidade)
     {
         return new PontoGraficoDto
         {
@@ -315,6 +318,6 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
     }
 
     private sealed record BucketGrafico(DateTime Inicio, DateTime Fim, string Rotulo);
-    private sealed record ItemVendidoGrafico(Guid VendaId, DateTime DataVenda, Guid ProdutoId, int Quantidade, decimal ValorLiquidoItem);
-    private sealed record MovimentoEstoqueGrafico(DateTime Data, int Quantidade);
+    private sealed record ItemVendidoGrafico(Guid VendaId, DateTime DataVenda, Guid ProdutoId, decimal Quantidade, decimal ValorLiquidoItem);
+    private sealed record MovimentoEstoqueGrafico(DateTime Data, QuantidadeRacional Quantidade);
 }

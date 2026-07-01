@@ -39,6 +39,8 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
                 v.Id,
                 item.ProdutoId,
                 item.Quantidade,
+                item.FatorNumeradorAplicado,
+                item.FatorDenominadorAplicado,
                 ValorLiquidoItem = item.Quantidade * item.PrecoUnitario - item.Desconto + item.Acrescimo
             }))
             .ToListAsync();
@@ -60,7 +62,11 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
             {
                 VendaId = item.Id,
                 ProdutoId = item.ProdutoId,
-                Quantidade = item.Quantidade,
+                Quantidade = item.FatorNumeradorAplicado.HasValue && item.FatorDenominadorAplicado.HasValue
+                    ? new Amani.ImportadosERP.Domain.Common.QuantidadeRacional(
+                        item.FatorNumeradorAplicado.Value,
+                        item.FatorDenominadorAplicado.Value).Multiplicar(item.Quantidade).ParaDecimal()
+                    : item.Quantidade,
                 ValorLiquidoItem = item.ValorLiquidoItem,
                 CustoMedio = custos.TryGetValue(item.ProdutoId, out var custo) ? custo : null
             })

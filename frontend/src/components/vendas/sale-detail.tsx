@@ -115,6 +115,8 @@ export function SaleDetail({
               <TableRow>
                 <TableHead>Produto</TableHead>
                 <TableHead>Quantidade</TableHead>
+                <TableHead>Apresentacao</TableHead>
+                <TableHead>Equivalente estoque</TableHead>
                 <TableHead>Preco unitario</TableHead>
                 <TableHead>Desconto</TableHead>
                 <TableHead>Acrescimo</TableHead>
@@ -131,6 +133,17 @@ export function SaleDetail({
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {formatSaleQuantity(item.quantidade)}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {item.apresentacaoNome ?? "Unidade principal"}
+                    {item.fatorNumeradorAplicado && item.fatorDenominadorAplicado
+                      ? ` (${item.fatorNumeradorAplicado}/${item.fatorDenominadorAplicado})`
+                      : ""}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {formatSaleQuantity(
+                      item.quantidadeConvertidaEstoque ?? item.quantidade
+                    )}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {formatSaleCurrency(item.precoUnitario)}

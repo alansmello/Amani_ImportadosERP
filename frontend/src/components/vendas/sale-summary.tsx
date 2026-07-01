@@ -69,7 +69,7 @@ export function SaleSummary({
   const previewTotal =
     itemsNetTotal - getSafeNumber(draft.desconto) + getSafeNumber(draft.acrescimo);
   const itemCount = draft.items.length;
-  const productsById = new Map(products.map((product) => [product.id, product.nome]));
+  const productsById = new Map(products.map((product) => [product.id, product]));
 
   return (
     <Card className="bg-surface-light">
@@ -94,8 +94,11 @@ export function SaleSummary({
                 const quantity = getSafeNumber(item.quantidade);
                 const price = getSafeNumber(item.precoUnitario);
                 const net = calculateItemPreview(item);
-                const productName =
-                  productsById.get(item.produtoId) ?? "Produto nao encontrado";
+                const product = productsById.get(item.produtoId);
+                const productName = product?.nome ?? "Produto nao encontrado";
+                const presentation = product?.apresentacoes.find(
+                  (candidate) => candidate.id === item.produtoApresentacaoId
+                );
 
                 return (
                   <div
@@ -109,8 +112,13 @@ export function SaleSummary({
                             {index + 1}. {productName}
                           </p>
                           <p className="mt-1 text-xs leading-5 text-text-secondary">
-                            {quantity} x {formatSaleCurrency(price)}
+                            {quantity} {presentation?.nome ?? "unidade principal"} x {formatSaleCurrency(price)}
                           </p>
+                          {presentation ? (
+                            <p className="text-xs leading-5 text-text-secondary">
+                              Consumo: {quantity * presentation.fatorNumerador / presentation.fatorDenominador} da unidade principal
+                            </p>
+                          ) : null}
                         </div>
                         <p className="text-sm font-semibold text-text-primary">
                           {formatSaleCurrency(net)}

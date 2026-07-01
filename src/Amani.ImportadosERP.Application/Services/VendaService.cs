@@ -8,6 +8,7 @@ using Amani.ImportadosERP.Application.Interfaces;
 using Amani.ImportadosERP.Application.Mappers;
 using Amani.ImportadosERP.Domain.Entities;
 using Amani.ImportadosERP.Domain.Enums;
+using Amani.ImportadosERP.Domain.Common;
 
 namespace Amani.ImportadosERP.Application.Services;
 
@@ -21,6 +22,8 @@ public class VendaService
     private readonly IConfiguracaoFormaPagamentoRepository _configuracaoFormaPagamentoRepository;
     private readonly IDespesaOperadoraRepository _despesaOperadoraRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IProdutoApresentacaoRepository _apresentacaoRepository;
+    private readonly IFeatureSettings _features;
 
     public VendaService(
         IVendaRepository vendaRepository,
@@ -30,7 +33,9 @@ public class VendaService
         IContaReceberRepository contaReceberRepository,
         IConfiguracaoFormaPagamentoRepository configuracaoFormaPagamentoRepository,
         IDespesaOperadoraRepository despesaOperadoraRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IProdutoApresentacaoRepository apresentacaoRepository,
+        IFeatureSettings features)
     {
         _vendaRepository = vendaRepository;
         _estoqueRepository = estoqueRepository;
@@ -40,6 +45,8 @@ public class VendaService
         _configuracaoFormaPagamentoRepository = configuracaoFormaPagamentoRepository;
         _despesaOperadoraRepository = despesaOperadoraRepository;
         _unitOfWork = unitOfWork;
+        _apresentacaoRepository = apresentacaoRepository;
+        _features = features;
     }
 
     public async Task<VendaResultDto> CreateAsync(CriarVendaDto dto)
@@ -62,14 +69,43 @@ public class VendaService
 
         foreach (var item in dto.Items)
         {
-            var saldo = await _estoqueConsulta.ObterSaldoAsync(item.ProdutoId);
-            if (saldo < item.Quantidade)
+            if (!_features.ApresentacoesFracionadasEnabled)
             {
-                throw new InvalidOperationException($"Estoque insuficiente para o produto {item.ProdutoId}. Saldo: {saldo}, solicitado: {item.Quantidade}");
+                if (item.ProdutoApresentacaoId.HasValue)
+                    throw new InvalidOperationException("Apresentações fracionadas estão desabilitadas");
+
+                venda.AdicionarItem(item.ProdutoId, item.Quantidade, item.PrecoUnitario, item.Desconto, item.Acrescimo);
+                continue;
             }
 
-            venda.AdicionarItem(item.ProdutoId, item.Quantidade, item.PrecoUnitario, item.Desconto, item.Acrescimo);
+            var apresentacoes = await _apresentacaoRepository.ListarPorProdutoAsync(item.ProdutoId);
+            if (item.ProdutoApresentacaoId.HasValue)
+            {
+                var apresentacao = apresentacoes.FirstOrDefault(a => a.Id == item.ProdutoApresentacaoId.Value);
+                if (apresentacao == null || !apresentacao.Ativo || !apresentacao.PermiteVenda)
+                    throw new InvalidOperationException("Apresentação inválida ou indisponível para venda");
+
+                venda.AdicionarItem(
+                    item.ProdutoId,
+                    item.Quantidade,
+                    item.PrecoUnitario,
+                    apresentacao.Id,
+                    apresentacao.Nome,
+                    apresentacao.FatorNumerador,
+                    apresentacao.FatorDenominador,
+                    item.Desconto,
+                    item.Acrescimo);
+            }
+            else
+            {
+                if (apresentacoes.Count > 0)
+                    throw new InvalidOperationException("Selecione uma apresentação para o produto configurado");
+
+                venda.AdicionarItem(item.ProdutoId, item.Quantidade, item.PrecoUnitario, item.Desconto, item.Acrescimo);
+            }
         }
+
+        await ValidarEstoqueAsync(venda.Items);
 
         var movimentacoes = BuildMovimentacoes(venda);
         var valorBruto = venda.Total();
@@ -80,6 +116,7 @@ public class VendaService
 
         await _unitOfWork.ExecuteInTransactionAsync(async () =>
         {
+            await ValidarEstoqueAsync(venda.Items);
             await SaveVendaAndMovementsAsync(venda, movimentacoes);
             await _contaReceberRepository.AdicionarAsync(contaReceber);
 
@@ -98,7 +135,7 @@ public class VendaService
         foreach (var item in venda.Items)
         {
             var custoMedio = await _custoRepository.ObterCustoMedioAsync(item.ProdutoId);
-            lucroTotal += item.ValorTotal() - custoMedio * item.Quantidade;
+            lucroTotal += item.ValorTotal() - custoMedio * item.ObterQuantidadeEstoqueExata().ParaDecimal();
         }
 
         return new VendaResultDto
@@ -223,7 +260,22 @@ public class VendaService
 
     private IEnumerable<EstoqueMovimentacao> BuildMovimentacoes(Venda venda)
     {
-        return venda.Items.Select(i => new EstoqueMovimentacao(i.ProdutoId, i.Quantidade, TipoMovimentacao.Saida, null, venda.Id));
+        return venda.Items.Select(i =>
+        {
+            var exata = i.ObterQuantidadeEstoqueExata();
+            return new EstoqueMovimentacao(
+                i.ProdutoId,
+                exata.ParaDecimal(),
+                TipoMovimentacao.Saida,
+                null,
+                venda.Id,
+                null,
+                null,
+                null,
+                exata.NumeradorInt64(),
+                exata.DenominadorInt64(),
+                i.Id);
+        });
     }
 
     private async Task SaveVendaAndMovementsAsync(Venda venda, IEnumerable<EstoqueMovimentacao> movimentacoes)
@@ -248,9 +300,26 @@ public class VendaService
         foreach (var item in venda.Items)
         {
             var custoMedio = await _custoRepository.ObterCustoMedioAsync(item.ProdutoId);
-            lucroTotal += item.ValorTotal() - custoMedio * item.Quantidade;
+            lucroTotal += item.ValorTotal() - custoMedio * item.ObterQuantidadeEstoqueExata().ParaDecimal();
         }
 
         return VendaMapper.ToResponse(venda, lucroTotal);
+    }
+
+    private async Task ValidarEstoqueAsync(IEnumerable<VendaItem> itens)
+    {
+        foreach (var grupo in itens.GroupBy(i => i.ProdutoId))
+        {
+            var solicitado = grupo.Aggregate(
+                QuantidadeRacional.Zero,
+                (total, item) => total + item.ObterQuantidadeEstoqueExata());
+            var saldo = await _estoqueConsulta.ObterSaldoExatoAsync(grupo.Key);
+
+            if (saldo < solicitado)
+            {
+                throw new InvalidOperationException(
+                    $"Estoque insuficiente para o produto {grupo.Key}. Saldo: {saldo.ParaDecimal()}, solicitado: {solicitado.ParaDecimal()}");
+            }
+        }
     }
 }
