@@ -80,6 +80,24 @@ export function ProductDetails({
           </div>
         </dl>
       </CardContent>
+      {product.apresentacoesFracionadasHabilitadas && product.apresentacoes.length > 0 ? (
+        <CardContent>
+          <h3 className="mb-3 text-sm font-semibold text-text-primary">Apresentacoes comerciais</h3>
+          <div className="grid gap-3 tablet:grid-cols-2">
+            {product.apresentacoes.map((item) => (
+              <div key={item.id} className="rounded-amani border border-border bg-surface-light p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-medium text-text-primary">{item.nome}</p>
+                  <Badge variant={item.ativo && item.permiteVenda ? "success" : "neutral"}>
+                    {item.ativo && item.permiteVenda ? "Venda ativa" : "Inativa"}
+                  </Badge>
+                </div>
+                <p className="mt-2 text-sm text-text-secondary">Fator {item.fatorNumerador}/{item.fatorDenominador} · {item.precoVenda === null ? "preco padrao" : formatCurrency(item.precoVenda)}</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      ) : null}
     </Card>
   );
 }

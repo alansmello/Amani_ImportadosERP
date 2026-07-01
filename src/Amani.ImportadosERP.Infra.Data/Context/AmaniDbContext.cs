@@ -11,6 +11,7 @@ public class AmaniDbContext : DbContext
     public DbSet<Fornecedor> Fornecedores { get; set; } = null!;
     public DbSet<Categoria> Categorias { get; set; } = null!;
     public DbSet<Produto> Produtos { get; set; } = null!;
+    public DbSet<ProdutoApresentacao> ProdutoApresentacoes { get; set; } = null!;
     public DbSet<Compra> Compras { get; set; } = null!;
     public DbSet<CompraItem> CompraItems { get; set; } = null!;
     public DbSet<CompraItemRecebimento> CompraItemRecebimentos { get; set; } = null!;

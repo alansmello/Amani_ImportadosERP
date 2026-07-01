@@ -15,7 +15,7 @@ public sealed class PontoGraficoDto
     public DateTime Periodo { get; set; }
     public string Rotulo { get; set; } = string.Empty;
     public decimal Valor { get; set; }
-    public int? Quantidade { get; set; }
+    public decimal? Quantidade { get; set; }
     public string? Categoria { get; set; }
 }
 

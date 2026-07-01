@@ -41,7 +41,7 @@ public sealed class ObterListaVendasQueryHandler : IRequestHandler<ObterListaVen
             foreach (var item in venda.Items)
             {
                 var custoMedio = await _custoRepository.ObterCustoMedioAsync(item.ProdutoId);
-                lucroTotal += item.ValorTotal() - custoMedio * item.Quantidade;
+                lucroTotal += item.ValorTotal() - custoMedio * item.ObterQuantidadeEstoqueExata().ParaDecimal();
             }
 
             // Mapear entidade para DTO
@@ -52,7 +52,8 @@ public sealed class ObterListaVendasQueryHandler : IRequestHandler<ObterListaVen
                 DataVenda = venda.DataVenda,
                 TotalVenda = totalVenda,
                 Lucro = lucroTotal,
-                FormaPagamento = venda.FormaPagamento
+                FormaPagamento = venda.FormaPagamento,
+                PossuiApresentacaoFracionada = venda.Items.Any(i => i.ProdutoApresentacaoId.HasValue)
             });
         }
 

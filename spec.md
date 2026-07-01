@@ -342,17 +342,25 @@ Implementado:
 * Contas a receber e pagamentos recebidos
 * Dashboard operacional e dashboard financeiro
 
+Feature planejada/em análise:
+
+* 024-apresentacoes-fracionadas — Apresentações Comerciais e Conversão Fracionada de Estoque
+* Conversão autoritativa por numerador/denominador; decimal apenas como projeção
+* Sem migração ou recálculo do histórico existente
+* Implementação autorizada sem novo projeto de testes; rollout depende de builds e validação manual completa
+
 Feature concluida mais recente:
 
 * 001-cadastros-base
 
 Proxima prioridade:
 
-* 002-implantacao-inicial
+* Revisar e aprovar a documentação da Feature 024 antes de qualquer implementação
 
 Observacao:
 
-* A specification da Feature 002 ainda nao foi iniciada.
+* A Feature 024 deve garantir que 4 ampolas de 1/4 e 24 doses de 1/24 correspondam exatamente a 1 caixa, inclusive em operações separadas.
+* O rollback após a primeira venda fracionada é lógico: desabilitar a feature e manter leitura compatível; não executar reversão destrutiva de schema ou histórico.
 
 ---
 

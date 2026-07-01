@@ -6,7 +6,7 @@ public sealed class RankingProdutoDto
     public int Posicao { get; set; }
     public Guid ProdutoId { get; set; }
     public string ProdutoNome { get; set; } = string.Empty;
-    public int Quantidade { get; set; }
+    public decimal Quantidade { get; set; }
     public decimal? ValorFinanceiro { get; set; }
     public string CriterioOrdenacao { get; set; } = string.Empty;
     public AvisoDadoIncompletoDto? Aviso { get; set; }

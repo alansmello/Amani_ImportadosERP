@@ -13,27 +13,34 @@ public enum TipoMovimentacao
 public sealed class EstoqueMovimentacao : BaseEntity
 {
     public Guid ProdutoId { get; private set; }
-    public int Quantidade { get; private set; }
+    public decimal Quantidade { get; private set; }
     public TipoMovimentacao Tipo { get; private set; }
     public Guid? CompraId { get; private set; }
     public Guid? CompraItemId { get; private set; }
     public Guid? VendaId { get; private set; }
     public DateTime Data { get; private set; }
     public decimal? ValorUnitario { get; private set; }
+    public long? QuantidadeExataNumerador { get; private set; }
+    public long? QuantidadeExataDenominador { get; private set; }
+    public Guid? VendaItemId { get; private set; }
     public CompraItem? CompraItem { get; private set; }
+    public VendaItem? VendaItem { get; private set; }
 
     public EstoqueMovimentacao(
         Guid produtoId,
-        int quantidade,
+        decimal quantidade,
         TipoMovimentacao tipo,
         Guid? compraId = null,
         Guid? vendaId = null,
         decimal? valorUnitario = null,
         DateTime? data = null,
-        Guid? compraItemId = null)
+        Guid? compraItemId = null,
+        long? quantidadeExataNumerador = null,
+        long? quantidadeExataDenominador = null,
+        Guid? vendaItemId = null)
     {
         if (produtoId == Guid.Empty) throw new ArgumentException("ProdutoId e obrigatorio", nameof(produtoId));
-        if (quantidade == 0) throw new ArgumentException("Quantidade nao pode ser zero", nameof(quantidade));
+        if (quantidade <= 0) throw new ArgumentException("Quantidade deve ser maior que zero", nameof(quantidade));
         if (compraItemId == Guid.Empty) throw new ArgumentException("CompraItemId nao pode ser vazio", nameof(compraItemId));
         if (tipo == TipoMovimentacao.Entrada && vendaId != null) throw new ArgumentException("Movimentacao de entrada nao pode referenciar VendaId");
         if (tipo == TipoMovimentacao.Saida && compraId != null) throw new ArgumentException("Movimentacao de saida nao pode referenciar CompraId");
@@ -43,6 +50,17 @@ public sealed class EstoqueMovimentacao : BaseEntity
         if (tipo == TipoMovimentacao.InventarioInicial && vendaId != null) throw new ArgumentException("Inventario inicial nao pode referenciar VendaId");
         if (tipo == TipoMovimentacao.InventarioInicial && quantidade <= 0) throw new ArgumentException("Quantidade do inventario inicial deve ser maior que zero", nameof(quantidade));
         if (valorUnitario != null && valorUnitario < 0) throw new ArgumentException("ValorUnitario nao pode ser negativo", nameof(valorUnitario));
+        if (quantidadeExataNumerador.HasValue != quantidadeExataDenominador.HasValue)
+            throw new ArgumentException("Numerador e denominador exatos devem ser informados juntos");
+        if (quantidadeExataNumerador <= 0 || quantidadeExataDenominador <= 0)
+            throw new ArgumentException("Quantidade exata deve possuir numerador e denominador positivos");
+        if (vendaItemId == Guid.Empty) throw new ArgumentException("VendaItemId não pode ser vazio", nameof(vendaItemId));
+
+        QuantidadeRacional? exata = null;
+        if (quantidadeExataNumerador.HasValue)
+        {
+            exata = new QuantidadeRacional(quantidadeExataNumerador.Value, quantidadeExataDenominador!.Value);
+        }
 
         ProdutoId = produtoId;
         Quantidade = quantidade;
@@ -52,9 +70,17 @@ public sealed class EstoqueMovimentacao : BaseEntity
         VendaId = vendaId;
         Data = NormalizeData(data);
         ValorUnitario = valorUnitario;
+        QuantidadeExataNumerador = exata?.NumeradorInt64();
+        QuantidadeExataDenominador = exata?.DenominadorInt64();
+        VendaItemId = vendaItemId;
     }
 
     protected EstoqueMovimentacao() { }
+
+    public QuantidadeRacional ObterQuantidadeExata() =>
+        QuantidadeExataNumerador.HasValue && QuantidadeExataDenominador.HasValue
+            ? new QuantidadeRacional(QuantidadeExataNumerador.Value, QuantidadeExataDenominador.Value)
+            : QuantidadeRacional.DeDecimal(Quantidade);
 
     private static DateTime NormalizeData(DateTime? data)
     {

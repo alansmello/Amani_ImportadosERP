@@ -13,6 +13,7 @@ export type SaleListItem = {
   totalVenda: number;
   lucro: number;
   formaPagamento?: PaymentMethod;
+  possuiApresentacaoFracionada?: boolean;
 };
 
 export type SaleItem = {
@@ -23,6 +24,12 @@ export type SaleItem = {
   desconto: number;
   acrescimo: number;
   valorTotal: number;
+  produtoApresentacaoId?: string | null;
+  apresentacaoNome?: string | null;
+  fatorNumeradorAplicado?: number | null;
+  fatorDenominadorAplicado?: number | null;
+  fatorConversaoAplicado?: number | null;
+  quantidadeConvertidaEstoque?: number | null;
 };
 
 export type Sale = {
@@ -40,6 +47,7 @@ export type Sale = {
 
 export type CreateSaleItemPayload = {
   produtoId: string;
+  produtoApresentacaoId?: string | null;
   quantidade: number;
   precoUnitario: number;
   desconto: number;
@@ -72,6 +80,7 @@ export type CreateSaleResponse = {
 export type SaleItemDraft = {
   id: string;
   produtoId: string;
+  produtoApresentacaoId: string;
   quantidade: string;
   precoUnitario: string;
   desconto: string;

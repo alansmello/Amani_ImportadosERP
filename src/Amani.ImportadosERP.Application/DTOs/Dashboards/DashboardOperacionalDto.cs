@@ -4,7 +4,7 @@ public sealed class DashboardOperacionalDto
 {
     public DashboardFiltroAplicadoDto FiltrosAplicados { get; set; } = new();
     public int ProdutosCadastrados { get; set; }
-    public int EstoqueDisponivelTotal { get; set; }
+    public decimal EstoqueDisponivelTotal { get; set; }
     public int MercadoriasEmTransitoQuantidade { get; set; }
     public decimal MercadoriasEmTransitoValor { get; set; }
     public int ComprasEmAberto { get; set; }

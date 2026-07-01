@@ -7,6 +7,7 @@ import type {
 
 type ExistingReference = {
   id: string;
+  apresentacoes?: Array<{ id: string; ativo: boolean; permiteVenda: boolean }>;
 };
 
 const DEFAULT_ADJUSTMENT = 0;
@@ -39,6 +40,7 @@ export function createEmptySaleItemDraft(): SaleItemDraft {
   return {
     id: createDraftItemId(),
     produtoId: "",
+    produtoApresentacaoId: "",
     quantidade: "1",
     precoUnitario: "",
     desconto: "",
@@ -97,6 +99,27 @@ export function validateSaleItemDraft(
       itemId: item.id,
       message: "Este produto ja foi adicionado. Edite o item na lista do resumo se desejar alterar."
     });
+  }
+
+  const product = products.find((reference) => reference.id === item.produtoId);
+  const configuredPresentations = product?.apresentacoes ?? [];
+  if (configuredPresentations.length > 0) {
+    const selectedPresentation = configuredPresentations.find(
+      (presentation) => presentation.id === item.produtoApresentacaoId
+    );
+    if (!item.produtoApresentacaoId) {
+      errors.push({
+        field: "produtoApresentacaoId",
+        itemId: item.id,
+        message: "Selecione uma apresentacao comercial."
+      });
+    } else if (!selectedPresentation?.ativo || !selectedPresentation.permiteVenda) {
+      errors.push({
+        field: "produtoApresentacaoId",
+        itemId: item.id,
+        message: "Apresentacao indisponivel para venda."
+      });
+    }
   }
 
   const quantidade = parseNumber(item.quantidade);
@@ -201,6 +224,7 @@ export function buildCreateSalePayload(draft: SaleDraft): CreateSalePayload {
     acrescimo: parseOptionalNonNegative(draft.acrescimo),
     items: draft.items.map((item) => ({
       produtoId: item.produtoId,
+      produtoApresentacaoId: item.produtoApresentacaoId || null,
       quantidade: parseNumber(item.quantidade),
       precoUnitario: parseNumber(item.precoUnitario),
       desconto: parseOptionalNonNegative(item.desconto),

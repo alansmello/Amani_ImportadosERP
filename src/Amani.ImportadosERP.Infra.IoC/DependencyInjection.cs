@@ -18,6 +18,7 @@ public static class DependencyInjection
 
         // Repositories
         services.AddScoped<IProdutoRepository, Amani.ImportadosERP.Infra.Data.Repositories.ProdutoRepository>();
+        services.AddScoped<IProdutoApresentacaoRepository, Amani.ImportadosERP.Infra.Data.Repositories.ProdutoApresentacaoRepository>();
         services.AddScoped<IClienteRepository, Amani.ImportadosERP.Infra.Data.Repositories.ClienteRepository>();
         services.AddScoped<IFornecedorRepository, Amani.ImportadosERP.Infra.Data.Repositories.FornecedorRepository>();
         services.AddScoped<ICategoriaRepository, Amani.ImportadosERP.Infra.Data.Repositories.CategoriaRepository>();
@@ -44,6 +45,7 @@ public static class DependencyInjection
         services.AddScoped<IUsuarioRepository, Amani.ImportadosERP.Infra.Data.Repositories.UsuarioRepository>();
         services.AddScoped<IEventoAutenticacaoRepository, Amani.ImportadosERP.Infra.Data.Repositories.EventoAutenticacaoRepository>();
         services.AddScoped<IUnitOfWork, Amani.ImportadosERP.Infra.Data.Repositories.UnitOfWork>();
+        services.AddSingleton<IFeatureSettings, ConfigurationFeatureSettings>();
 
         // Services
         services.AddScoped<IPasswordHasher, PasswordHasher>();
@@ -53,9 +55,11 @@ public static class DependencyInjection
         services.AddScoped<Amani.ImportadosERP.Application.Services.FornecedorService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.CategoriaService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.ProdutoService>();
+        services.AddScoped<Amani.ImportadosERP.Application.Services.ProdutoApresentacaoService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.ImplantacaoService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.CompraService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.VendaService>();
+        services.AddScoped<Amani.ImportadosERP.Application.Services.EstoqueQuantidadeService>();
         services.AddScoped<Amani.ImportadosERP.Application.Services.DashboardFiltroService>();
 
         // MediatR

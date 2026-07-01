@@ -33,6 +33,7 @@ public sealed class DashboardCustoMedioReadService
             .AsNoTracking()
             .Where(m => ids.Contains(m.ProdutoId)
                 && m.Data <= dataReferencia
+                && m.VendaItemId == null
                 && m.ValorUnitario != null
                 && (m.Tipo == TipoMovimentacao.InventarioInicial
                     || (m.Tipo == TipoMovimentacao.Entrada && m.CompraItemId != null)))

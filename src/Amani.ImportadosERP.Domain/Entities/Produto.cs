@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Amani.ImportadosERP.Domain.Common;
 
 namespace Amani.ImportadosERP.Domain.Entities;
@@ -10,6 +11,8 @@ public sealed class Produto : BaseEntity
     public decimal Custo { get; private set; }
     public Guid CategoriaId { get; private set; }
     public Guid? FornecedorId { get; private set; }
+    private readonly List<ProdutoApresentacao> _apresentacoes = new();
+    public IReadOnlyCollection<ProdutoApresentacao> Apresentacoes => _apresentacoes.AsReadOnly();
 
     public Produto(string nome, decimal precoVenda, decimal custo, Guid categoriaId, Guid? fornecedorId = null)
     {

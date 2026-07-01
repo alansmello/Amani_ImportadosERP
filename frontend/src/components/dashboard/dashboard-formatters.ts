@@ -4,7 +4,7 @@ const currencyFormatter = new Intl.NumberFormat("pt-BR", {
 });
 
 const quantityFormatter = new Intl.NumberFormat("pt-BR", {
-  maximumFractionDigits: 2
+  maximumFractionDigits: 12
 });
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {

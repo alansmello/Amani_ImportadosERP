@@ -155,6 +155,7 @@ export function DashboardRankingList({
                     </div>
                     <Badge variant="info">
                       {formatDashboardQuantity(ranking.quantidade)}
+                      {"produtoNome" in ranking ? " un. principal" : ""}
                     </Badge>
                   </div>
                   {ranking.valorFinanceiro !== null &&

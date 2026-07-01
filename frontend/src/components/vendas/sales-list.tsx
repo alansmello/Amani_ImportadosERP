@@ -9,6 +9,7 @@ import {
   formatSaleProfit
 } from "@/components/vendas/sale-formatters";
 import { EmptyState } from "@/components/states/empty-state";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -78,6 +79,7 @@ export function SalesList({
             <TableRow>
               <TableHead>Cliente</TableHead>
               <TableHead>Data</TableHead>
+              <TableHead>Apresentacao</TableHead>
               <TableHead>Total</TableHead>
               <TableHead>Lucro</TableHead>
               <TableHead className="text-right">Acao</TableHead>
@@ -93,6 +95,13 @@ export function SalesList({
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   {formatSaleDate(sale.dataVenda)}
+                </TableCell>
+                <TableCell className="whitespace-nowrap">
+                  {sale.possuiApresentacaoFracionada ? (
+                    <Badge variant="neutral">Fracionada</Badge>
+                  ) : (
+                    <span className="text-sm text-text-secondary">Legado</span>
+                  )}
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   {formatSaleCurrency(sale.totalVenda)}

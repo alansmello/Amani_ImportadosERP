@@ -8,10 +8,12 @@ namespace Amani.ImportadosERP.Infra.Data.Repositories;
 public sealed class DashboardOperacionalRepository : IDashboardOperacionalRepository
 {
     private readonly AmaniDbContext _db;
+    private readonly IEstoqueConsultaRepository _estoqueConsultaRepository;
 
-    public DashboardOperacionalRepository(AmaniDbContext db)
+    public DashboardOperacionalRepository(AmaniDbContext db, IEstoqueConsultaRepository estoqueConsultaRepository)
     {
         _db = db;
+        _estoqueConsultaRepository = estoqueConsultaRepository;
     }
 
     public async Task<int> ObterProdutosCadastradosAsync(DateTime dataReferencia)
@@ -22,20 +24,19 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
             .CountAsync();
     }
 
-    public async Task<int> ObterEstoqueDisponivelTotalAsync(DateTime dataReferencia)
+    public async Task<decimal> ObterEstoqueDisponivelTotalAsync(DateTime dataReferencia)
     {
-        var entradas = await _db.EstoqueMovimentacoes
+        var produtoIds = await _db.EstoqueMovimentacoes
             .AsNoTracking()
-            .Where(m => m.Data <= dataReferencia
-                && (m.Tipo == TipoMovimentacao.Entrada || m.Tipo == TipoMovimentacao.InventarioInicial))
-            .SumAsync(m => (int?)m.Quantidade) ?? 0;
-
-        var saidas = await _db.EstoqueMovimentacoes
-            .AsNoTracking()
-            .Where(m => m.Data <= dataReferencia && m.Tipo == TipoMovimentacao.Saida)
-            .SumAsync(m => (int?)m.Quantidade) ?? 0;
-
-        return entradas - saidas;
+            .Where(m => m.Data <= dataReferencia)
+            .Select(m => m.ProdutoId)
+            .Distinct()
+            .ToListAsync();
+        var saldos = await _estoqueConsultaRepository.ObterSaldosExatosAsync(produtoIds, dataReferencia);
+        var total = saldos.Values.Aggregate(
+            Amani.ImportadosERP.Domain.Common.QuantidadeRacional.Zero,
+            (atual, quantidade) => atual + quantidade);
+        return total.ParaDecimal();
     }
 
     public async Task<(int Quantidade, decimal Valor)> ObterMercadoriasEmTransitoAsync(DateTime dataReferencia)
