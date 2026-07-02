@@ -10,15 +10,18 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
 {
     private readonly IDashboardFinanceiroRepository _repository;
     private readonly IDashboardEstoqueRepository _estoqueRepository;
+    private readonly IDashboardOperacionalRepository _operacionalRepository;
     private readonly DashboardFiltroService _filtroService;
 
     public ObterDashboardFinanceiroGerencialQueryHandler(
         IDashboardFinanceiroRepository repository,
         IDashboardEstoqueRepository estoqueRepository,
+        IDashboardOperacionalRepository operacionalRepository,
         DashboardFiltroService filtroService)
     {
         _repository = repository;
         _estoqueRepository = estoqueRepository;
+        _operacionalRepository = operacionalRepository;
         _filtroService = filtroService;
     }
 
@@ -39,6 +42,7 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
         var valoresRecebidos = await _repository.ObterValoresRecebidosAsync(filtros.DataInicial, filtros.DataFinal);
         var resumoCaixa = await _repository.ObterResumoCaixaAsync(filtros.DataInicial, filtros.DataFinal);
         var estoqueValorizado = await _estoqueRepository.ObterEstoqueValorizadoAsync(filtros.DataReferencia);
+        var transito = await _operacionalRepository.ObterMercadoriasEmTransitoAsync(filtros.DataReferencia);
         var saidasPeriodo = totalCompras + totalDespesas;
 
         var custoCalculavel = itensVendidos
@@ -62,7 +66,20 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
             itensVendidos,
             valorLucroNaoCalculavel,
             estoqueValorizado.QuantidadeSemCusto,
-            estoqueValorizado.ValorVendaSemCusto);
+            estoqueValorizado.ValorVendaSemCusto).ToList();
+
+        AdicionarAvisosTransito(avisos, transito);
+
+        decimal? valorTotalRealista = transito.ValorAoCusto.HasValue
+                ? caixaFinal + resumoRecebiveis.Abertas
+                    + estoqueValorizado.ValorAoCusto
+                    + transito.ValorAoCusto.Value
+                : null;
+        decimal? valorTotalPotencial = transito.ValorAoPrecoVenda.HasValue
+                ? caixaFinal + resumoRecebiveis.Abertas
+                    + estoqueValorizado.ValorAoPrecoVenda
+                    + transito.ValorAoPrecoVenda.Value
+                : null;
 
         return new DashboardFinanceiroGerencialDto
         {
@@ -84,13 +101,46 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
             ContasReceberAVencer = resumoRecebiveis.AVencer,
             ValorEstoqueAoCusto = estoqueValorizado.ValorAoCusto,
             ValorEstoqueAoPrecoVenda = estoqueValorizado.ValorAoPrecoVenda,
+            ValorMercadoriasEmTransitoAoCusto = transito.ValorAoCusto,
+            MotivoValorMercadoriasEmTransitoAoCustoIndisponivel = transito.MotivoValorAoCustoIndisponivel,
+            ValorMercadoriasEmTransitoAoPrecoVenda = transito.ValorAoPrecoVenda,
+            MotivoValorMercadoriasEmTransitoAoPrecoVendaIndisponivel = transito.MotivoValorAoPrecoVendaIndisponivel,
             LucroPotencialEstoque = estoqueValorizado.LucroPotencialCalculavel,
             QuantidadeEstoqueSemCusto = estoqueValorizado.QuantidadeSemCusto,
             ValorVendaEstoqueSemCusto = estoqueValorizado.ValorVendaSemCusto,
-            ValorTotalRealistaOperacao = caixaFinal + resumoRecebiveis.Abertas + estoqueValorizado.ValorAoCusto,
-            ValorTotalPotencialOperacao = caixaFinal + resumoRecebiveis.Abertas + estoqueValorizado.ValorAoPrecoVenda,
+            ValorTotalRealistaOperacao = valorTotalRealista,
+            ValorTotalPotencialOperacao = valorTotalPotencial,
             Avisos = avisos
         };
+    }
+
+    private static void AdicionarAvisosTransito(
+        ICollection<AvisoDadoIncompletoDto> avisos,
+        ResumoMercadoriasEmTransitoDto transito)
+    {
+        if (!transito.ValorAoCusto.HasValue)
+        {
+            avisos.Add(new AvisoDadoIncompletoDto
+            {
+                Codigo = "TRANSITO_CUSTO_INDISPONIVEL",
+                Mensagem = transito.MotivoValorAoCustoIndisponivel
+                    ?? "O valor oficial das mercadorias em transito ao custo esta indisponivel.",
+                EntidadeTipo = "Compra",
+                Impacto = "O valor total realista da operacao nao pode ser calculado."
+            });
+        }
+
+        if (!transito.ValorAoPrecoVenda.HasValue)
+        {
+            avisos.Add(new AvisoDadoIncompletoDto
+            {
+                Codigo = "TRANSITO_PRECO_VENDA_INDISPONIVEL",
+                Mensagem = transito.MotivoValorAoPrecoVendaIndisponivel
+                    ?? "O valor das mercadorias em transito ao preco de venda esta indisponivel.",
+                EntidadeTipo = "Produto",
+                Impacto = "O valor total potencial da operacao nao pode ser calculado."
+            });
+        }
     }
 
     private static IReadOnlyCollection<AvisoDadoIncompletoDto> CriarAvisos(

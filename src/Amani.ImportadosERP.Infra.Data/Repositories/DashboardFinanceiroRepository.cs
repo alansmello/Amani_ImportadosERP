@@ -77,7 +77,9 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
     {
         return await ComprasNaoCanceladas()
             .Where(c => c.DataCompra >= dataInicial && c.DataCompra <= dataFinal)
-            .Select(c => c.Items.Sum(i => i.Quantidade * i.CustoUnitario - i.Desconto + i.Acrescimo))
+            .Select(c => c.Items.Sum(i => i.Quantidade * i.CustoUnitario - i.Desconto + i.Acrescimo)
+                - c.Desconto
+                + c.Acrescimo)
             .SumAsync();
     }
 
@@ -199,7 +201,9 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
     {
         return await ComprasNaoCanceladas()
             .Where(c => c.DataCompra < dataInicial)
-            .Select(c => c.Items.Sum(i => i.Quantidade * i.CustoUnitario - i.Desconto + i.Acrescimo))
+            .Select(c => c.Items.Sum(i => i.Quantidade * i.CustoUnitario - i.Desconto + i.Acrescimo)
+                - c.Desconto
+                + c.Acrescimo)
             .SumAsync();
     }
 }

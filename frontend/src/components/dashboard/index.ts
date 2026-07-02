@@ -1,4 +1,3 @@
-export * from "@/components/dashboard/dashboard-alerts";
 export * from "@/components/dashboard/dashboard-chart-section";
 export * from "@/components/dashboard/dashboard-formatters";
 export * from "@/components/dashboard/dashboard-home";

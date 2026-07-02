@@ -98,10 +98,16 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
         var buckets = CriarBuckets(dataInicial, dataFinal);
         var compras = await _db.Compras
             .AsNoTracking()
-            .Include(c => c.Items)
             .Where(c => c.Status != CompraStatus.Cancelada
                 && c.DataCompra >= dataInicial
                 && c.DataCompra <= dataFinal)
+            .Select(c => new
+            {
+                c.DataCompra,
+                Total = c.Items.Sum(i => i.Quantidade * i.CustoUnitario - i.Desconto + i.Acrescimo)
+                    - c.Desconto
+                    + c.Acrescimo
+            })
             .ToListAsync();
 
         var pontos = buckets
@@ -113,7 +119,7 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
 
                 return CriarPonto(
                     bucket,
-                    comprasDoPeriodo.Sum(c => c.Total()),
+                    comprasDoPeriodo.Sum(c => c.Total),
                     comprasDoPeriodo.Count);
             })
             .Where(p => p.Valor != 0m || p.Quantidade > 0)

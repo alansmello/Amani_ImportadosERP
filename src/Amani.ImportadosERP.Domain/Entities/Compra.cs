@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Amani.ImportadosERP.Domain.Common;
+using Amani.ImportadosERP.Domain.Services;
 
 namespace Amani.ImportadosERP.Domain.Entities;
 
@@ -96,7 +97,13 @@ public sealed class Compra : BaseEntity
         return perda;
     }
 
-    public decimal Total() => _items.Sum(i => i.ValorTotal());
+    public decimal Total()
+    {
+        return CompraCalculoFinanceiro.CalcularTotal(
+            _items.Select(CompraItemCalculoFinanceiro.FromEntity),
+            Desconto,
+            Acrescimo);
+    }
 
     private CompraItem ObterItem(Guid compraItemId)
     {

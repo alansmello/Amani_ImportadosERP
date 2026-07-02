@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Amani.ImportadosERP.Application.DTOs;
 using Amani.ImportadosERP.Application.Interfaces;
+using Amani.ImportadosERP.Domain.Services;
 
 namespace Amani.ImportadosERP.Application.Queries.Handlers;
 
@@ -21,25 +22,36 @@ public sealed class ObterComprasEmTransitoQueryHandler : IRequestHandler<ObterCo
     {
         var compras = await _compraRepository.ObterComprasEmTransitoAsync();
 
-        return compras.Select(c => new CompraEmTransitoDto
+        return compras.Select(c =>
         {
-            CompraId = c.Id,
-            FornecedorId = c.FornecedorId,
-            DataCompra = c.DataCompra,
-            Status = c.Status.ToString(),
-            Itens = c.Items
-                .Where(i => i.QuantidadePendente > 0)
-                .Select(i => new CompraEmTransitoItemDto
-                {
-                    ItemId = i.Id,
-                    ProdutoId = i.ProdutoId,
-                    QuantidadeComprada = i.Quantidade,
-                    QuantidadeRecebida = i.QuantidadeRecebida,
-                    QuantidadePerdida = i.QuantidadePerdida,
-                    QuantidadePendente = i.QuantidadePendente
-                })
-                .ToList()
-                .AsReadOnly()
+            var calculo = CompraCalculoFinanceiro.Calcular(
+                c.Items.Select(CompraItemCalculoFinanceiro.FromEntity),
+                c.Desconto,
+                c.Acrescimo);
+
+            return new CompraEmTransitoDto
+            {
+                CompraId = c.Id,
+                FornecedorId = c.FornecedorId,
+                DataCompra = c.DataCompra,
+                Status = c.Status.ToString(),
+                TotalCompra = calculo.TotalCompra,
+                ValorPendenteCusto = calculo.ValorPendenteCusto,
+                MotivoValorPendenteIndisponivel = calculo.MotivoValorPendenteIndisponivel,
+                Itens = c.Items
+                    .Where(i => i.QuantidadePendente > 0)
+                    .Select(i => new CompraEmTransitoItemDto
+                    {
+                        ItemId = i.Id,
+                        ProdutoId = i.ProdutoId,
+                        QuantidadeComprada = i.Quantidade,
+                        QuantidadeRecebida = i.QuantidadeRecebida,
+                        QuantidadePerdida = i.QuantidadePerdida,
+                        QuantidadePendente = i.QuantidadePendente
+                    })
+                    .ToList()
+                    .AsReadOnly()
+            };
         }).ToList();
     }
 }

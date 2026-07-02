@@ -38,10 +38,6 @@ function formatDate(value: string) {
 }
 
 function formatCurrency(value: number) {
-  if (value <= 0) {
-    return "Valor nao informado";
-  }
-
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL"
@@ -137,7 +133,20 @@ export function PurchaseList({
                       : "Sem pendencia informada"}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    {formatCurrency(purchase.totalCompra)}
+                    <span className="block">
+                      {formatCurrency(purchase.totalCompra)}
+                    </span>
+                    {purchase.valorPendenteCusto !== undefined ? (
+                      purchase.valorPendenteCusto !== null ? (
+                        <span className="mt-1 block text-xs text-text-secondary">
+                          Pendente: {formatCurrency(purchase.valorPendenteCusto)}
+                        </span>
+                      ) : purchase.motivoValorPendenteIndisponivel ? (
+                        <span className="mt-1 block max-w-64 whitespace-normal text-xs text-warning">
+                          {purchase.motivoValorPendenteIndisponivel}
+                        </span>
+                      ) : null
+                    ) : null}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button asChild variant="secondary" size="sm">

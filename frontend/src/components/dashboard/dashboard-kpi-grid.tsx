@@ -215,16 +215,6 @@ export function DashboardKpiGrid({
           </Card>
         );
       })}
-
-      {data.avisos.length > 0 ? (
-        <DashboardSectionState
-          state="incomplete"
-          title="Dados financeiros incompletos"
-          description="A API retornou avisos para leitura dos KPIs deste periodo."
-          notices={data.avisos}
-          className="tablet:col-span-2 desktop:col-span-3"
-        />
-      ) : null}
     </>
   );
 }
