@@ -20,6 +20,10 @@ public sealed class DashboardFinanceiroGerencialDto
     public decimal? ContasReceberAVencer { get; set; }
     public decimal? ValorEstoqueAoCusto { get; set; }
     public decimal? ValorEstoqueAoPrecoVenda { get; set; }
+    public decimal? ValorMercadoriasEmTransitoAoCusto { get; set; }
+    public string? MotivoValorMercadoriasEmTransitoAoCustoIndisponivel { get; set; }
+    public decimal? ValorMercadoriasEmTransitoAoPrecoVenda { get; set; }
+    public string? MotivoValorMercadoriasEmTransitoAoPrecoVendaIndisponivel { get; set; }
     public decimal? LucroPotencialEstoque { get; set; }
     public decimal? QuantidadeEstoqueSemCusto { get; set; }
     public decimal? ValorVendaEstoqueSemCusto { get; set; }

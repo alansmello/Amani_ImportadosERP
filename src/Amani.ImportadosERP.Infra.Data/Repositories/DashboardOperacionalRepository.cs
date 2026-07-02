@@ -1,5 +1,7 @@
 using Amani.ImportadosERP.Application.Interfaces;
+using Amani.ImportadosERP.Application.DTOs.Dashboards;
 using Amani.ImportadosERP.Domain.Entities;
+using Amani.ImportadosERP.Domain.Services;
 using Amani.ImportadosERP.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,22 +41,107 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
         return total.ParaDecimal();
     }
 
-    public async Task<(int Quantidade, decimal Valor)> ObterMercadoriasEmTransitoAsync(DateTime dataReferencia)
+    public async Task<ResumoMercadoriasEmTransitoDto> ObterMercadoriasEmTransitoAsync(DateTime dataReferencia)
     {
-        var itens = await ObterItensDeComprasAteDataReferenciaAsync(dataReferencia);
+        var compraIdsComPendencia = await _db.CompraItems
+            .AsNoTracking()
+            .Where(i => i.Compra.Status != CompraStatus.Cancelada
+                && i.Compra.DataCompra <= dataReferencia
+                && i.Quantidade
+                    - i.Recebimentos.Where(r => r.DataRecebimento <= dataReferencia).Sum(r => r.Quantidade)
+                    - i.Perdas.Where(p => p.DataPerda <= dataReferencia).Sum(p => p.Quantidade) > 0)
+            .Select(i => i.CompraId)
+            .Distinct()
+            .ToListAsync();
 
-        var pendentes = itens
-            .Select(i => new
+        if (compraIdsComPendencia.Count == 0)
+        {
+            return new ResumoMercadoriasEmTransitoDto
             {
-                Quantidade = CalcularQuantidadePendente(i, dataReferencia),
-                ValorUnitario = ObterValorUnitarioCompra(i)
-            })
-            .Where(i => i.Quantidade > 0)
-            .ToList();
+                ValorAoCusto = 0m,
+                ValorAoPrecoVenda = 0m
+            };
+        }
 
-        return (
-            pendentes.Sum(i => i.Quantidade),
-            pendentes.Sum(i => i.Quantidade * i.ValorUnitario));
+        var itens = await (
+                from item in _db.CompraItems.AsNoTracking()
+                join produto in _db.Produtos.AsNoTracking()
+                    on item.ProdutoId equals produto.Id into produtos
+                from produto in produtos.DefaultIfEmpty()
+                where compraIdsComPendencia.Contains(item.CompraId)
+                select new
+                {
+                    item.Id,
+                    item.CompraId,
+                    item.Quantidade,
+                    item.CustoUnitario,
+                    item.Desconto,
+                    item.Acrescimo,
+                    DescontoGeral = item.Compra.Desconto,
+                    AcrescimoGeral = item.Compra.Acrescimo,
+                    QuantidadePendente = item.Quantidade
+                        - item.Recebimentos.Where(r => r.DataRecebimento <= dataReferencia).Sum(r => r.Quantidade)
+                        - item.Perdas.Where(p => p.DataPerda <= dataReferencia).Sum(p => p.Quantidade),
+                    PrecoVenda = produto == null ? (decimal?)null : produto.PrecoVenda
+                })
+            .ToListAsync();
+
+        var quantidadePendente = itens.Where(i => i.QuantidadePendente > 0).Sum(i => i.QuantidadePendente);
+        decimal subtotalCalculavelAoCusto = 0m;
+        decimal valorAoPrecoVenda = 0m;
+        var custoCompleto = true;
+        var vendaCompleta = true;
+        string? motivoCusto = null;
+        string? motivoVenda = null;
+
+        foreach (var compra in itens.GroupBy(i => i.CompraId))
+        {
+            var primeiroItem = compra.First();
+            var calculo = CompraCalculoFinanceiro.Calcular(
+                compra.Select(i => new CompraItemCalculoFinanceiro(
+                    i.Id,
+                    i.Quantidade,
+                    i.QuantidadePendente,
+                    i.CustoUnitario,
+                    i.Desconto,
+                    i.Acrescimo)),
+                primeiroItem.DescontoGeral,
+                primeiroItem.AcrescimoGeral);
+
+            if (calculo.ValorPendenteCusto.HasValue)
+            {
+                subtotalCalculavelAoCusto += calculo.ValorPendenteCusto.Value;
+            }
+            else
+            {
+                custoCompleto = false;
+                motivoCusto ??= calculo.MotivoValorPendenteIndisponivel;
+            }
+
+            foreach (var item in compra.Where(i => i.QuantidadePendente > 0))
+            {
+                if (item.PrecoVenda.HasValue)
+                {
+                    valorAoPrecoVenda += item.QuantidadePendente * item.PrecoVenda.Value;
+                }
+                else
+                {
+                    vendaCompleta = false;
+                    motivoVenda ??= "O valor em transito ao preco de venda nao pode ser calculado porque um produto pendente nao possui referencia valida.";
+                }
+            }
+        }
+
+        return new ResumoMercadoriasEmTransitoDto
+        {
+            QuantidadePendente = quantidadePendente,
+            ValorAoCusto = custoCompleto ? subtotalCalculavelAoCusto : null,
+            SubtotalCalculavelAoCusto = subtotalCalculavelAoCusto,
+            ValorAoCustoCompleto = custoCompleto,
+            MotivoValorAoCustoIndisponivel = motivoCusto,
+            ValorAoPrecoVenda = vendaCompleta ? valorAoPrecoVenda : null,
+            MotivoValorAoPrecoVendaIndisponivel = motivoVenda
+        };
     }
 
     public async Task<int> ObterComprasEmAbertoAsync(DateTime dataReferencia)

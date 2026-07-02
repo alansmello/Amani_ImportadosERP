@@ -69,6 +69,10 @@ export type DashboardFinancialKpis = {
   contasReceberAVencer?: number | null;
   valorEstoqueAoCusto?: number | null;
   valorEstoqueAoPrecoVenda?: number | null;
+  valorMercadoriasEmTransitoAoCusto?: number | null;
+  motivoValorMercadoriasEmTransitoAoCustoIndisponivel?: string | null;
+  valorMercadoriasEmTransitoAoPrecoVenda?: number | null;
+  motivoValorMercadoriasEmTransitoAoPrecoVendaIndisponivel?: string | null;
   lucroPotencialEstoque?: number | null;
   quantidadeEstoqueSemCusto?: number | null;
   valorVendaEstoqueSemCusto?: number | null;
@@ -83,6 +87,11 @@ export type DashboardOperationalSummary = {
   estoqueDisponivelTotal: number;
   mercadoriasEmTransitoQuantidade: number;
   mercadoriasEmTransitoValor: number;
+  mercadoriasEmTransitoValorCusto?: number | null;
+  mercadoriasEmTransitoValorCustoCompleto: boolean;
+  motivoMercadoriasEmTransitoValorCustoIndisponivel?: string | null;
+  mercadoriasEmTransitoValorVenda?: number | null;
+  motivoMercadoriasEmTransitoValorVendaIndisponivel?: string | null;
   comprasEmAberto: number;
   produtosPendentesRecebimento: number;
   perdasRegistradasQuantidade: number;

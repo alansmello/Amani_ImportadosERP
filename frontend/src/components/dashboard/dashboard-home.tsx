@@ -3,7 +3,6 @@
 import { PackageCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { DashboardAlerts } from "@/components/dashboard/dashboard-alerts";
 import { DashboardChartSection } from "@/components/dashboard/dashboard-chart-section";
 import { DashboardKpiGrid } from "@/components/dashboard/dashboard-kpi-grid";
 import { DashboardPatrimonialGrid } from "@/components/dashboard/dashboard-patrimonial-grid";
@@ -17,7 +16,6 @@ import { DashboardSectionState } from "@/components/dashboard/dashboard-section-
 import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
 import {
-  useDashboardAlerts,
   useDashboardCharts,
   useDashboardFinancialKpis,
   useDashboardOperationalSummary,
@@ -137,13 +135,11 @@ export function DashboardHome() {
   const financialKpisQuery = useDashboardFinancialKpis(period);
   const operationalQuery = useDashboardOperationalSummary(period);
   const rankingsQuery = useDashboardRankings(period, { limiteRankings: 5 });
-  const alertsQuery = useDashboardAlerts(period);
   const chartsQuery = useDashboardCharts(period);
 
   const financialKpis = useDashboardSectionPeriodMatch(financialKpisQuery, period);
   const operational = useDashboardSectionPeriodMatch(operationalQuery, period);
   const rankings = useDashboardSectionPeriodMatch(rankingsQuery, period);
-  const alerts = useDashboardSectionPeriodMatch(alertsQuery, period);
   const charts = useDashboardSectionPeriodMatch(chartsQuery, period);
 
   const activePeriodSummary = useMemo(() => formatPeriodSummary(period), [period]);
@@ -206,16 +202,6 @@ export function DashboardHome() {
           isError={operational.isError}
           isStaleForPeriod={operational.isStaleForPeriod}
           onRetry={() => void operational.refetch()}
-        />
-      </section>
-
-      <section aria-label="Resumo de alertas" className="min-w-0">
-        <DashboardAlerts
-          resumo={alerts.data?.resumo}
-          isLoading={alerts.isLoading}
-          isError={alerts.isError}
-          isStaleForPeriod={alerts.isStaleForPeriod}
-          onRetry={() => void alerts.refetch()}
         />
       </section>
 

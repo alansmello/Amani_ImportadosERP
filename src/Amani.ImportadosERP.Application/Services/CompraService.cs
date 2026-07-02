@@ -7,6 +7,7 @@ using Amani.ImportadosERP.Application.DTOs.Response;
 using Amani.ImportadosERP.Application.Interfaces;
 using Amani.ImportadosERP.Application.Mappers;
 using Amani.ImportadosERP.Domain.Entities;
+using Amani.ImportadosERP.Domain.Services;
 
 namespace Amani.ImportadosERP.Application.Services;
 
@@ -138,26 +139,7 @@ public class CompraService
 
         return compras
             .Where(c => CompraEstaEmTransito(c) && c.Items.Any(i => i.QuantidadePendente > 0))
-            .Select(c => new CompraEmTransitoDto
-            {
-                CompraId = c.Id,
-                FornecedorId = c.FornecedorId,
-                DataCompra = c.DataCompra,
-                Status = c.Status.ToString(),
-                Itens = c.Items
-                    .Where(i => i.QuantidadePendente > 0)
-                    .Select(i => new CompraEmTransitoItemDto
-                    {
-                        ItemId = i.Id,
-                        ProdutoId = i.ProdutoId,
-                        QuantidadeComprada = i.Quantidade,
-                        QuantidadeRecebida = i.QuantidadeRecebida,
-                        QuantidadePerdida = i.QuantidadePerdida,
-                        QuantidadePendente = i.QuantidadePendente
-                    })
-                    .ToList()
-                    .AsReadOnly()
-            })
+            .Select(MapearCompraEmTransito)
             .ToList()
             .AsReadOnly();
     }
@@ -201,5 +183,37 @@ public class CompraService
         return compra.Status != CompraStatus.Recebida
             && compra.Status != CompraStatus.Finalizada
             && compra.Status != CompraStatus.Cancelada;
+    }
+
+    private static CompraEmTransitoDto MapearCompraEmTransito(Compra compra)
+    {
+        var calculo = CompraCalculoFinanceiro.Calcular(
+            compra.Items.Select(CompraItemCalculoFinanceiro.FromEntity),
+            compra.Desconto,
+            compra.Acrescimo);
+
+        return new CompraEmTransitoDto
+        {
+            CompraId = compra.Id,
+            FornecedorId = compra.FornecedorId,
+            DataCompra = compra.DataCompra,
+            Status = compra.Status.ToString(),
+            TotalCompra = calculo.TotalCompra,
+            ValorPendenteCusto = calculo.ValorPendenteCusto,
+            MotivoValorPendenteIndisponivel = calculo.MotivoValorPendenteIndisponivel,
+            Itens = compra.Items
+                .Where(i => i.QuantidadePendente > 0)
+                .Select(i => new CompraEmTransitoItemDto
+                {
+                    ItemId = i.Id,
+                    ProdutoId = i.ProdutoId,
+                    QuantidadeComprada = i.Quantidade,
+                    QuantidadeRecebida = i.QuantidadeRecebida,
+                    QuantidadePerdida = i.QuantidadePerdida,
+                    QuantidadePendente = i.QuantidadePendente
+                })
+                .ToList()
+                .AsReadOnly()
+        };
     }
 }

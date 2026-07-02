@@ -645,6 +645,50 @@ Endpoints já implementados e funcionais:
 
 ---
 
+## **F026 — Consistência de Compras em Trânsito e Limpeza do Dashboard Gerencial**
+
+- **Status:** Fases Specify, Plan, Tasks e Analyze concluídas em 02/07/2026; achados da análise remediados e pronta para aprovação explícita, sem autorização de implementação.
+- **Prioridade:** Alta para confiabilidade das compras e da posição patrimonial.
+- **Problema de negócio:** Totais de compra divergem entre consultas, compras em trânsito podem aparecer sem valor e o dashboard mistura estoque disponível com uma leitura patrimonial incompleta, além de manter blocos não acionáveis.
+- **Decisão de produto:** Adotar uma regra oficial única para total e parcela pendente, separar trânsito ao custo e ao preço de venda e retirar temporariamente da home alertas e blocos de incompletude ainda sem ação operacional.
+- **Documento-base:** `specs/026-consistencia-compras-transito/spec.md`.
+
+### **Escopo incluído**
+
+- Total oficial da compra formado pelos valores líquidos dos itens e pelos ajustes gerais.
+- Rateio proporcional de desconto e acréscimo gerais entre os itens, com fechamento monetário exato.
+- Valor em trânsito restrito às quantidades ainda pendentes após recebimentos e perdas.
+- Consistência entre listagem, detalhe, visão em trânsito e dashboard.
+- Cards separados de trânsito ao custo e ao preço de venda atual.
+- Inclusão do trânsito nas visões realista e potencial da operação, sem incorporá-lo ao estoque disponível.
+- Correção da tela de compras para não inventar total zero nem exibir indisponibilidade causada apenas por contrato incompleto.
+- Remoção da home do resumo de alertas e dos blocos “Estoque com lacunas de custo” e “Dados financeiros incompletos”.
+
+### **Fora desta versão**
+
+- Limite mínimo configurável por produto e nova regra de estoque baixo.
+- Tela de alertas acionáveis.
+- Contas a pagar, recálculo histórico destrutivo ou alteração de recebimento, perdas e custo médio.
+- Inclusão de trânsito no estoque disponível.
+- Mudanças na F024 ou no refinamento visual da F025.
+- Nova infraestrutura de testes automatizados sem autorização.
+
+### **Dívidas técnicas registradas**
+
+- Limite mínimo de estoque configurável por produto.
+- Cálculo de estoque baixo baseado no limite individual.
+- Tela futura de alertas acionáveis com contexto e links para produto, estoque ou compra.
+- Refinamento das regras e ações dos blocos de lacunas de custo e dados financeiros incompletos.
+
+### **Gate antes da implementação**
+
+- Inventariar os cálculos e contratos atuais de compra e dashboard.
+- Documentar a regra de rateio, arredondamento, indisponibilidade real e cenários de regressão.
+- Submeter análise, plano e tarefas à aprovação explícita do responsável pelo produto.
+- Atualizar este roadmap novamente ao término da implementação para registrar entregas, validações e eventuais débitos remanescentes.
+
+---
+
 # **3. Roadmap recomendado por fases**
 
 ### **Fase 1 — Operação ponta a ponta (concluída)**
@@ -687,6 +731,9 @@ Ordem obrigatória para reduzir risco e facilitar validação:
 2. **F025 — Refinamento do Fluxo de Nova Compra**
    - Motivo da posição: simplifica um fluxo operacional frequente aproveitando o padrão de compositor e resumo, sem ampliar o domínio logístico da Compra.
    - Gate de saída: compositor único, carrinho editável, conteúdo parcial protegido, contrato preservado e regressão de trânsito, recebimento, estoque e custo médio validada.
+3. **F026 — Consistência de Compras em Trânsito e Limpeza do Dashboard Gerencial**
+   - Motivo da posição: consolida a regra comercial das compras e corrige sua representação patrimonial sem ampliar os fluxos logísticos.
+   - Gate de saída: análise técnica aprovada, total oficial único, trânsito separado do estoque, dashboard simplificado e roteiro manual validado.
 
 ### **Fase 7 — Backlog pós-refinamento (não aprovado para execução nesta decisão)**
 
@@ -719,6 +766,9 @@ Ordem obrigatória para reduzir risco e facilitar validação:
 - **Analytics da F023:** indicadores devem ser calculados no backend por consultas agregadas; o frontend apenas apresenta resultados.
 - **F024 planejada, não autorizada:** nenhuma implementação começa antes da aprovação explícita do relatório técnico, plano, tasks e estratégia de rollout.
 - **Precisão da F024:** numerador/denominador são autoritativos; valores decimais são projeções e não podem decidir saldo isoladamente.
+- **F026 sem implementação automática:** a fase Specify registra a decisão de produto; análise técnica, plano e tarefas devem ser aprovados antes de qualquer alteração funcional.
+- **Rateio da F026:** ajustes gerais integram o total oficial por rateio proporcional e o valor em trânsito usa somente a parcela das quantidades pendentes.
+- **Roadmap da F026:** este documento deve ser atualizado novamente ao final da implementação, incluindo validações concluídas e débitos técnicos remanescentes.
 
 ---
 
@@ -769,6 +819,20 @@ Decisões aprovadas para orientar diretamente as próximas especificações:
 | Domínio | Preservar compra em trânsito e entrada/custo somente no recebimento físico | F025 |
 | Contratos e dados | Não alterar contrato, migration ou histórico sem limitação comprovada e aprovação específica | F025 |
 
+## **Registro da decisão da F026 em 02/07/2026**
+
+| **Tema** | **Decisão aprovada para especificação** | **Feature** |
+| --- | --- | --- |
+| Total de compra | Adotar uma regra oficial única em todas as consultas | F026 |
+| Ajustes gerais | Ratear proporcionalmente entre os itens com fechamento monetário exato | F026 |
+| Trânsito | Considerar somente quantidades pendentes e manter fora do estoque disponível | F026 |
+| Dashboard | Exibir trânsito ao custo e ao preço de venda em cards separados | F026 |
+| Valor da operação | Incluir trânsito nas visões realista e potencial | F026 |
+| Limpeza da home | Remover alertas e blocos de incompletude não acionáveis | F026 |
+| Dívida técnica | Registrar estoque mínimo configurável, alertas acionáveis e refinamento das incompletudes | F026 |
+| Implementação | Exigir aprovação explícita após análise, plano e tarefas | F026 |
+| Governança documental | Atualizar o roadmap novamente ao final da implementação | F026 |
+
 ## **Próximo passo previsto**
 
-As fases Specify, Plan e Tasks da **F025 — Refinamento do Fluxo de Nova Compra** estão concluídas e validadas. O próximo passo recomendado é revisar `tasks.md` e executar a análise cruzada dos artefatos antes de autorizar a implementação. A F024 mantém seu fluxo e gates próprios, sem ser incorporada à F025.
+As fases Specify, Plan, Tasks e Analyze da **F026 — Consistência de Compras em Trânsito e Limpeza do Dashboard Gerencial** estão concluídas, e os achados da análise cruzada foram remediados. O próximo passo é revisar o pacote e registrar a aprovação explícita prevista em T001. Nenhuma implementação funcional da F026 está autorizada antes desse gate. A F024 e a F025 mantêm seus fluxos e gates próprios.

@@ -17,6 +17,8 @@ export type PurchaseListItem = {
   dataCompra: string;
   status: PurchaseStatus;
   totalCompra: number;
+  valorPendenteCusto?: number | null;
+  motivoValorPendenteIndisponivel?: string | null;
 };
 
 export type PurchaseInTransitItem = {
@@ -33,6 +35,9 @@ export type PurchaseInTransit = {
   fornecedorId: string;
   dataCompra: string;
   status: PurchaseStatus;
+  totalCompra: number;
+  valorPendenteCusto: number | null;
+  motivoValorPendenteIndisponivel?: string | null;
   itens: PurchaseInTransitItem[];
 };
 

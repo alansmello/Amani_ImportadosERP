@@ -9,6 +9,9 @@ public sealed class CompraEmTransitoDto
     public Guid FornecedorId { get; set; }
     public DateTime DataCompra { get; set; }
     public string Status { get; set; } = string.Empty;
+    public decimal TotalCompra { get; set; }
+    public decimal? ValorPendenteCusto { get; set; }
+    public string? MotivoValorPendenteIndisponivel { get; set; }
     public IReadOnlyCollection<CompraEmTransitoItemDto> Itens { get; set; } = new List<CompraEmTransitoItemDto>();
 }
 

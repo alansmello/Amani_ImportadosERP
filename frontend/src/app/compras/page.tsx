@@ -81,7 +81,10 @@ export default function ComprasPage() {
         fornecedorId: purchase.fornecedorId,
         dataCompra: purchase.dataCompra,
         status: purchase.status,
-        totalCompra: 0
+        totalCompra: purchase.totalCompra,
+        valorPendenteCusto: purchase.valorPendenteCusto,
+        motivoValorPendenteIndisponivel:
+          purchase.motivoValorPendenteIndisponivel
       }));
   }, [filters.status, inTransitQuery.data, purchasesQuery.data, usingFilters]);
 

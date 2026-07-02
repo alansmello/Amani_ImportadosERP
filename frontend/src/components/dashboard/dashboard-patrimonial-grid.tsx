@@ -8,14 +8,14 @@ import {
   Gem,
   HandCoins,
   Sparkles,
-  TrendingUp
+  TrendingUp,
+  Truck
 } from "lucide-react";
 
 import {
   formatDashboardCurrency,
   formatDashboardDate,
-  formatDashboardNullableCurrency,
-  formatDashboardQuantity
+  formatDashboardNullableCurrency
 } from "@/components/dashboard/dashboard-formatters";
 import { DashboardSectionState } from "@/components/dashboard/dashboard-section-state";
 import { Badge } from "@/components/ui/badge";
@@ -44,6 +44,8 @@ type PatrimonialField = keyof Pick<
   | "contasReceberAVencer"
   | "valorEstoqueAoCusto"
   | "valorEstoqueAoPrecoVenda"
+  | "valorMercadoriasEmTransitoAoCusto"
+  | "valorMercadoriasEmTransitoAoPrecoVenda"
   | "lucroPotencialEstoque"
   | "valorTotalRealistaOperacao"
   | "valorTotalPotencialOperacao"
@@ -57,6 +59,11 @@ type PatrimonialDefinition = {
   description: string;
   badge: "Snapshot" | "Potencial" | "Referencia";
   nullable?: boolean;
+  unavailableReasonField?: keyof Pick<
+    DashboardFinancialKpis,
+    | "motivoValorMercadoriasEmTransitoAoCustoIndisponivel"
+    | "motivoValorMercadoriasEmTransitoAoPrecoVendaIndisponivel"
+  >;
 };
 
 const patrimonialDefinitions: PatrimonialDefinition[] = [
@@ -105,6 +112,28 @@ const patrimonialDefinitions: PatrimonialDefinition[] = [
     description: "Potencial bruto se vendido hoje ao preco atual de tabela."
   },
   {
+    title: "Mercadorias em transito ao custo",
+    field: "valorMercadoriasEmTransitoAoCusto",
+    unavailableReasonField:
+      "motivoValorMercadoriasEmTransitoAoCustoIndisponivel",
+    icon: Truck,
+    tone: "text-warning",
+    badge: "Snapshot",
+    nullable: true,
+    description: "Valor oficial ainda pendente de recebimento, separado do estoque disponivel."
+  },
+  {
+    title: "Mercadorias em transito a venda",
+    field: "valorMercadoriasEmTransitoAoPrecoVenda",
+    unavailableReasonField:
+      "motivoValorMercadoriasEmTransitoAoPrecoVendaIndisponivel",
+    icon: Truck,
+    tone: "text-accent",
+    badge: "Potencial",
+    nullable: true,
+    description: "Potencial bruto dos itens pendentes ao preco atual de venda."
+  },
+  {
     title: "Lucro potencial do estoque",
     field: "lucroPotencialEstoque",
     icon: TrendingUp,
@@ -120,7 +149,7 @@ const patrimonialDefinitions: PatrimonialDefinition[] = [
     tone: "text-primary",
     badge: "Snapshot",
     nullable: true,
-    description: "Caixa final + recebiveis abertos + estoque ao custo."
+    description: "Caixa final + recebiveis abertos + estoque ao custo + transito ao custo."
   },
   {
     title: "Valor potencial da operacao",
@@ -129,7 +158,7 @@ const patrimonialDefinitions: PatrimonialDefinition[] = [
     tone: "text-accent",
     badge: "Potencial",
     nullable: true,
-    description: "Caixa final + recebiveis abertos + estoque ao preco de venda."
+    description: "Caixa final + recebiveis abertos + estoque e transito ao preco de venda."
   }
 ];
 
@@ -200,12 +229,13 @@ export function DashboardPatrimonialGrid({
   }
 
   const dataReferencia = formatDashboardDate(data.filtrosAplicados.dataReferencia);
-  const estoqueSemCusto = data.quantidadeEstoqueSemCusto ?? 0;
-
   return (
     <>
       {patrimonialDefinitions.map((definition) => {
         const Icon = definition.icon;
+        const reason = definition.unavailableReasonField
+          ? data[definition.unavailableReasonField]
+          : null;
 
         return (
           <Card key={definition.field} className="min-h-40 min-w-0">
@@ -230,24 +260,12 @@ export function DashboardPatrimonialGrid({
                 {formatPatrimonialValue(data, definition)}
               </p>
               <CardDescription className="mt-3">
-                {definition.description} Referencia em {dataReferencia}.
+                {reason ?? definition.description} Referencia em {dataReferencia}.
               </CardDescription>
             </CardContent>
           </Card>
         );
       })}
-
-      {estoqueSemCusto > 0 ? (
-        <DashboardSectionState
-          state="incomplete"
-          title="Estoque com lacunas de custo"
-          description={`${formatDashboardQuantity(estoqueSemCusto)} unidade(s) entram no potencial de venda, mas nao no valor ao custo.`}
-          notices={data.avisos.filter(
-            (aviso) => aviso.codigo === "ESTOQUE_CUSTO_MEDIO_AUSENTE"
-          )}
-          className="tablet:col-span-2 desktop:col-span-4"
-        />
-      ) : null}
     </>
   );
 }

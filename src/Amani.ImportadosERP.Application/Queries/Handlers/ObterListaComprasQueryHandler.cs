@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -30,20 +29,13 @@ public sealed class ObterListaComprasQueryHandler : IRequestHandler<ObterListaCo
 
         foreach (var compra in compras)
         {
-            // Calcular total dos itens
-            decimal totalItens = compra.Items.Sum(i => i.CustoUnitario * i.Quantidade);
-
-            // Aplicar desconto e acrescimo geral da compra
-            decimal totalCompra = totalItens + compra.Acrescimo - compra.Desconto;
-
-            // Mapear entidade para DTO
             result.Add(new CompraListDto
             {
                 Id = compra.Id,
                 FornecedorId = compra.FornecedorId,
                 DataCompra = compra.DataCompra,
                 Status = compra.Status.ToString(),
-                TotalCompra = totalCompra
+                TotalCompra = compra.Total()
             });
         }
 
