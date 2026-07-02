@@ -1,26 +1,28 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { Check, Eraser, Pencil, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/cn";
-import type { PurchaseItemDraft, PurchaseValidationError } from "@/types/purchase";
 import type { Product } from "@/types/product";
+import type { PurchaseItemDraft, PurchaseValidationError } from "@/types/purchase";
 
-type PurchaseItemEditorProps = {
+type PurchaseItemComposerProps = {
   item: PurchaseItemDraft;
-  index: number;
   products: Product[];
   errors: PurchaseValidationError[];
   disabled?: boolean;
-  canRemove?: boolean;
+  isEditing: boolean;
+  canClear?: boolean;
+  submitBlockMessage?: string | null;
   onChange: (
-    itemId: string,
     field: keyof Omit<PurchaseItemDraft, "id">,
     value: string
   ) => void;
-  onRemove: (itemId: string) => void;
+  onInclude: () => void;
+  onCancelEdit?: () => void;
+  onClear?: () => void;
 };
 
 const fieldLabelClassName = "text-sm font-medium text-text-primary";
@@ -46,16 +48,19 @@ function FieldError({ message }: { message?: string }) {
   return <p className={fieldErrorClassName}>{message}</p>;
 }
 
-export function PurchaseItemEditor({
+export function PurchaseItemComposer({
   item,
-  index,
   products,
   errors,
   disabled = false,
-  canRemove = true,
+  isEditing,
+  canClear = false,
+  submitBlockMessage,
   onChange,
-  onRemove
-}: PurchaseItemEditorProps) {
+  onInclude,
+  onCancelEdit,
+  onClear
+}: PurchaseItemComposerProps) {
   const productError = getError(errors, "produtoId", item.id);
   const quantityError = getError(errors, "quantidade", item.id);
   const costError = getError(errors, "custoUnitario", item.id);
@@ -63,46 +68,73 @@ export function PurchaseItemEditor({
   const increaseError = getError(errors, "acrescimo", item.id);
 
   return (
-    <div className="rounded-amani border border-border bg-surface-light p-4">
-      <div className="mb-4 flex flex-col gap-3 tablet:flex-row tablet:items-center tablet:justify-between">
-        <p className="text-sm font-semibold text-text-primary">
-          Item {index + 1}
-        </p>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          disabled={disabled || !canRemove}
-          onClick={() => onRemove(item.id)}
-          aria-label={`Remover item ${index + 1}`}
-          className="w-full tablet:w-auto"
-        >
-          <Trash2 className="h-4 w-4" aria-hidden />
-          <span>Remover</span>
-        </Button>
+    <div className="space-y-4 rounded-amani border border-border bg-surface-light p-4">
+      <div className="flex flex-col gap-3 tablet:flex-row tablet:items-start tablet:justify-between">
+        <div className="min-w-0">
+          <h4 className="text-sm font-semibold text-text-primary">
+            {isEditing ? "Editar item confirmado" : "Compor novo item"}
+          </h4>
+          <p className={fieldHelpClassName}>
+            Preencha um item por vez e confirme para adicionar ao carrinho.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {isEditing && onCancelEdit ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={onCancelEdit}
+              disabled={disabled}
+              className="w-full tablet:w-auto"
+            >
+              <X className="h-4 w-4" aria-hidden />
+              <span>Cancelar edicao</span>
+            </Button>
+          ) : null}
+
+          {!isEditing && canClear && onClear ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={onClear}
+              disabled={disabled}
+              className="w-full tablet:w-auto"
+            >
+              <Eraser className="h-4 w-4" aria-hidden />
+              <span>Limpar composicao</span>
+            </Button>
+          ) : null}
+        </div>
       </div>
+
+      {submitBlockMessage ? (
+        <div className="rounded-amani border border-warning bg-surface px-3 py-3 text-xs leading-5 text-warning">
+          {submitBlockMessage}
+        </div>
+      ) : null}
 
       <div className="grid gap-4">
         <div className="grid gap-2">
           <label
             className={fieldLabelClassName}
-            htmlFor={`purchase-item-product-${item.id}`}
+            htmlFor={`purchase-composer-product-${item.id}`}
           >
             Produto
           </label>
           <select
-            id={`purchase-item-product-${item.id}`}
+            id={`purchase-composer-product-${item.id}`}
             className={cn(selectClassName)}
             value={item.produtoId}
-            onChange={(event) =>
-              onChange(item.id, "produtoId", event.target.value)
-            }
+            onChange={(event) => onChange("produtoId", event.target.value)}
             disabled={disabled || products.length === 0}
             aria-invalid={Boolean(productError)}
             aria-describedby={
               productError
-                ? `purchase-item-product-${item.id}-error`
-                : `purchase-item-product-${item.id}-help`
+                ? `purchase-composer-product-${item.id}-error`
+                : `purchase-composer-product-${item.id}-help`
             }
           >
             <option value="">Selecione um produto</option>
@@ -113,12 +145,12 @@ export function PurchaseItemEditor({
             ))}
           </select>
           <p
-            id={`purchase-item-product-${item.id}-help`}
+            id={`purchase-composer-product-${item.id}-help`}
             className={fieldHelpClassName}
           >
             Cada produto pode aparecer apenas uma vez na compra.
           </p>
-          <div id={`purchase-item-product-${item.id}-error`}>
+          <div id={`purchase-composer-product-${item.id}-error`}>
             <FieldError message={productError} />
           </div>
         </div>
@@ -127,29 +159,33 @@ export function PurchaseItemEditor({
           <div className="grid gap-2">
             <label
               className={fieldLabelClassName}
-              htmlFor={`purchase-item-quantity-${item.id}`}
+              htmlFor={`purchase-composer-quantity-${item.id}`}
             >
               Quantidade
             </label>
             <Input
-              id={`purchase-item-quantity-${item.id}`}
+              id={`purchase-composer-quantity-${item.id}`}
               type="number"
               min="1"
               step="1"
               inputMode="numeric"
               value={item.quantidade}
-              onChange={(event) =>
-                onChange(item.id, "quantidade", event.target.value)
-              }
+              onChange={(event) => onChange("quantidade", event.target.value)}
               disabled={disabled}
               aria-invalid={Boolean(quantityError)}
               aria-describedby={
                 quantityError
-                  ? `purchase-item-quantity-${item.id}-error`
-                  : undefined
+                  ? `purchase-composer-quantity-${item.id}-error`
+                  : `purchase-composer-quantity-${item.id}-help`
               }
             />
-            <div id={`purchase-item-quantity-${item.id}-error`}>
+            <p
+              id={`purchase-composer-quantity-${item.id}-help`}
+              className={fieldHelpClassName}
+            >
+              Informe a quantidade inteira na unidade principal do produto.
+            </p>
+            <div id={`purchase-composer-quantity-${item.id}-error`}>
               <FieldError message={quantityError} />
             </div>
           </div>
@@ -157,27 +193,29 @@ export function PurchaseItemEditor({
           <div className="grid gap-2">
             <label
               className={fieldLabelClassName}
-              htmlFor={`purchase-item-cost-${item.id}`}
+              htmlFor={`purchase-composer-cost-${item.id}`}
             >
               Custo unitario
             </label>
             <Input
-              id={`purchase-item-cost-${item.id}`}
+              id={`purchase-composer-cost-${item.id}`}
               type="number"
               min="0"
               step="0.01"
               inputMode="decimal"
               value={item.custoUnitario}
               onChange={(event) =>
-                onChange(item.id, "custoUnitario", event.target.value)
+                onChange("custoUnitario", event.target.value)
               }
               disabled={disabled}
               aria-invalid={Boolean(costError)}
               aria-describedby={
-                costError ? `purchase-item-cost-${item.id}-error` : undefined
+                costError
+                  ? `purchase-composer-cost-${item.id}-error`
+                  : undefined
               }
             />
-            <div id={`purchase-item-cost-${item.id}-error`}>
+            <div id={`purchase-composer-cost-${item.id}-error`}>
               <FieldError message={costError} />
             </div>
           </div>
@@ -185,29 +223,27 @@ export function PurchaseItemEditor({
           <div className="grid gap-2">
             <label
               className={fieldLabelClassName}
-              htmlFor={`purchase-item-discount-${item.id}`}
+              htmlFor={`purchase-composer-discount-${item.id}`}
             >
-              Desconto
+              Desconto do item
             </label>
             <Input
-              id={`purchase-item-discount-${item.id}`}
+              id={`purchase-composer-discount-${item.id}`}
               type="number"
               min="0"
               step="0.01"
               inputMode="decimal"
               value={item.desconto}
-              onChange={(event) =>
-                onChange(item.id, "desconto", event.target.value)
-              }
+              onChange={(event) => onChange("desconto", event.target.value)}
               disabled={disabled}
               aria-invalid={Boolean(discountError)}
               aria-describedby={
                 discountError
-                  ? `purchase-item-discount-${item.id}-error`
+                  ? `purchase-composer-discount-${item.id}-error`
                   : undefined
               }
             />
-            <div id={`purchase-item-discount-${item.id}-error`}>
+            <div id={`purchase-composer-discount-${item.id}-error`}>
               <FieldError message={discountError} />
             </div>
           </div>
@@ -215,33 +251,50 @@ export function PurchaseItemEditor({
           <div className="grid gap-2">
             <label
               className={fieldLabelClassName}
-              htmlFor={`purchase-item-increase-${item.id}`}
+              htmlFor={`purchase-composer-increase-${item.id}`}
             >
-              Acrescimo
+              Acrescimo do item
             </label>
             <Input
-              id={`purchase-item-increase-${item.id}`}
+              id={`purchase-composer-increase-${item.id}`}
               type="number"
               min="0"
               step="0.01"
               inputMode="decimal"
               value={item.acrescimo}
-              onChange={(event) =>
-                onChange(item.id, "acrescimo", event.target.value)
-              }
+              onChange={(event) => onChange("acrescimo", event.target.value)}
               disabled={disabled}
               aria-invalid={Boolean(increaseError)}
               aria-describedby={
                 increaseError
-                  ? `purchase-item-increase-${item.id}-error`
+                  ? `purchase-composer-increase-${item.id}-error`
                   : undefined
               }
             />
-            <div id={`purchase-item-increase-${item.id}-error`}>
+            <div id={`purchase-composer-increase-${item.id}-error`}>
               <FieldError message={increaseError} />
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="flex flex-col gap-2 border-t border-border pt-4 tablet:flex-row tablet:justify-end">
+        <Button
+          type="button"
+          variant={isEditing ? "secondary" : "primary"}
+          onClick={onInclude}
+          disabled={disabled}
+          className="w-full tablet:w-auto"
+        >
+          {isEditing ? (
+            <Pencil className="h-4 w-4" aria-hidden />
+          ) : (
+            <Check className="h-4 w-4" aria-hidden />
+          )}
+          <span>
+            {isEditing ? "Atualizar item" : "Incluir item na compra"}
+          </span>
+        </Button>
       </div>
     </div>
   );

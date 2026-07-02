@@ -1,15 +1,20 @@
 "use client";
 
-import { LoaderCircle, PackagePlus, Plus, Save } from "lucide-react";
+import { LoaderCircle, PackagePlus, Save } from "lucide-react";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 
+import { PurchaseItemComposer } from "@/components/compras/purchase-item-composer";
+import { PurchaseSummary } from "@/components/compras/purchase-summary";
 import {
   buildCreatePurchasePayload,
+  createEmptyPurchaseDraft,
+  createPurchaseDraftItem,
   getPurchaseValidationMessage,
-  validatePurchaseDraft
+  hasPurchaseItemContent,
+  validatePurchaseDraft,
+  validatePurchaseItemDraft
 } from "@/components/compras/purchase-validation";
-import { PurchaseItemEditor } from "@/components/compras/purchase-item-editor";
 import { SupplierQuickCreateDialog } from "@/components/fornecedores/supplier-quick-create-dialog";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
@@ -51,27 +56,10 @@ const fieldErrorClassName = "text-xs font-medium leading-5 text-danger";
 const selectClassName =
   "flex h-11 w-full rounded-amani border border-border bg-surface px-3 py-2 text-sm text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-danger aria-[invalid=true]:focus-visible:ring-danger";
 
-function createDraftItem(): PurchaseItemDraft {
-  return {
-    id:
-      typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : String(Date.now()),
-    produtoId: "",
-    quantidade: "",
-    custoUnitario: "",
-    desconto: "",
-    acrescimo: ""
-  };
-}
-
 function buildInitialDraft(): PurchaseDraft {
   return {
-    fornecedorId: "",
-    dataCompra: new Date().toISOString().slice(0, 10),
-    desconto: "",
-    acrescimo: "",
-    items: [createDraftItem()]
+    ...createEmptyPurchaseDraft(),
+    dataCompra: new Date().toISOString().slice(0, 10)
   };
 }
 
@@ -88,6 +76,10 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
   const productsQuery = useProducts();
   const createPurchase = useCreatePurchase();
   const [draft, setDraft] = useState<PurchaseDraft>(() => buildInitialDraft());
+  const [composerItem, setComposerItem] = useState<PurchaseItemDraft>(() =>
+    createPurchaseDraftItem()
+  );
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [errors, setErrors] = useState<PurchaseValidationError[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -116,6 +108,28 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
     () => suppliers.map((supplier) => ({ id: supplier.id })),
     [suppliers]
   );
+  const composerHasContent = hasPurchaseItemContent(composerItem);
+  const hasEditingActive = Boolean(editingItemId);
+  const canSubmit = useMemo(() => {
+    return (
+      validatePurchaseDraft(draft, referenceProducts, referenceSuppliers).length ===
+        0 &&
+      !composerHasContent &&
+      !hasEditingActive
+    );
+  }, [
+    composerHasContent,
+    draft,
+    hasEditingActive,
+    referenceProducts,
+    referenceSuppliers
+  ]);
+
+  const composerSubmitMessage = hasEditingActive
+    ? "Atualize o item em edicao ou cancele antes de registrar a compra."
+    : composerHasContent
+      ? "Inclua o item preenchido no carrinho ou limpe a composicao antes de registrar."
+      : null;
 
   function retrySupportLists() {
     void suppliersQuery.refetch();
@@ -137,37 +151,50 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
     setSuccessMessage(null);
   }
 
-  function updateItem(
-    itemId: string,
+  function updateComposerField(
     field: keyof Omit<PurchaseItemDraft, "id">,
     value: string
   ) {
-    setDraft((currentDraft) => ({
-      ...currentDraft,
-      items: currentDraft.items.map((item) =>
-        item.id === itemId ? { ...item, [field]: value } : item
-      )
+    const composerId = composerItem.id;
+
+    setComposerItem((currentItem) => ({
+      ...currentItem,
+      [field]: value
     }));
     setErrors((currentErrors) =>
       currentErrors.filter(
-        (error) => !(error.itemId === itemId && error.field === field)
+        (error) =>
+          error.field !== "items" &&
+          !(error.itemId === composerId && error.field === field)
       )
     );
     setSubmitError(null);
     setSuccessMessage(null);
   }
 
-  function addItem() {
-    setDraft((currentDraft) => ({
-      ...currentDraft,
-      items: [...currentDraft.items, createDraftItem()]
-    }));
-    setErrors((currentErrors) =>
-      currentErrors.filter((error) => error.field !== "items")
-    );
+  function resetComposer() {
+    setComposerItem(createPurchaseDraftItem());
+    setEditingItemId(null);
   }
 
-  function removeItem(itemId: string) {
+  function clearComposer() {
+    const composerId = composerItem.id;
+
+    resetComposer();
+    setErrors((currentErrors) =>
+      currentErrors.filter(
+        (error) => error.itemId !== composerId && error.field !== "items"
+      )
+    );
+    setSubmitError(null);
+    setSuccessMessage(null);
+  }
+
+  function removeConfirmedItem(itemId: string) {
+    if (editingItemId) {
+      return;
+    }
+
     setDraft((currentDraft) => ({
       ...currentDraft,
       items: currentDraft.items.filter((item) => item.id !== itemId)
@@ -175,6 +202,98 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
     setErrors((currentErrors) =>
       currentErrors.filter((error) => error.itemId !== itemId)
     );
+    setSubmitError(null);
+    setSuccessMessage(null);
+  }
+
+  function startItemEdit(itemId: string) {
+    if (editingItemId) {
+      return;
+    }
+
+    const itemToEdit = draft.items.find((item) => item.id === itemId);
+    if (!itemToEdit) {
+      return;
+    }
+
+    setComposerItem({ ...itemToEdit });
+    setEditingItemId(itemId);
+    setErrors((currentErrors) =>
+      currentErrors.filter((error) => error.field !== "items")
+    );
+    setSubmitError(null);
+    setSuccessMessage(null);
+  }
+
+  function cancelItemEdit() {
+    if (!editingItemId) {
+      return;
+    }
+
+    const currentComposerId = composerItem.id;
+    resetComposer();
+    setErrors((currentErrors) =>
+      currentErrors.filter(
+        (error) => error.itemId !== currentComposerId && error.field !== "items"
+      )
+    );
+    setSubmitError(null);
+    setSuccessMessage(null);
+  }
+
+  function includeComposerItem() {
+    const currentComposer = composerItem;
+    const itemErrors = validatePurchaseItemDraft(
+      currentComposer,
+      referenceProducts,
+      draft.items,
+      editingItemId
+    );
+
+    if (itemErrors.length > 0) {
+      setErrors((currentErrors) => {
+        const remainingErrors = currentErrors.filter(
+          (error) =>
+            error.field !== "items" && error.itemId !== currentComposer.id
+        );
+        return [...remainingErrors, ...itemErrors];
+      });
+      return;
+    }
+
+    setDraft((currentDraft) => {
+      if (editingItemId) {
+        const itemIndex = currentDraft.items.findIndex(
+          (item) => item.id === editingItemId
+        );
+
+        if (itemIndex === -1) {
+          return currentDraft;
+        }
+
+        const nextItems = [...currentDraft.items];
+        nextItems[itemIndex] = currentComposer;
+        return {
+          ...currentDraft,
+          items: nextItems
+        };
+      }
+
+      return {
+        ...currentDraft,
+        items: [...currentDraft.items, currentComposer]
+      };
+    });
+
+    const previousComposerId = currentComposer.id;
+    resetComposer();
+    setErrors((currentErrors) =>
+      currentErrors.filter(
+        (error) => error.itemId !== previousComposerId && error.field !== "items"
+      )
+    );
+    setSubmitError(null);
+    setSuccessMessage(null);
   }
 
   async function submitPurchase(payload: CreatePurchasePayload) {
@@ -197,6 +316,15 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
     setErrors(validationErrors);
 
     if (validationErrors.length > 0) {
+      return;
+    }
+
+    if (hasEditingActive || composerHasContent) {
+      setSubmitError(
+        hasEditingActive
+          ? "Atualize o item em edicao ou cancele antes de registrar a compra."
+          : "Inclua o item preenchido no carrinho ou limpe a composicao antes de registrar."
+      );
       return;
     }
 
@@ -240,7 +368,6 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
   }
 
   return (
-    <>
     <Card>
       <form onSubmit={handleSubmit} noValidate>
         <CardHeader>
@@ -384,51 +511,47 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex flex-col gap-3 tablet:flex-row tablet:items-center tablet:justify-between">
+          <div className="grid gap-6 desktop:grid-cols-[minmax(0,1fr)_minmax(300px,380px)] desktop:items-start">
+            <div className="space-y-4">
               <div className="min-w-0">
                 <h3 className="text-sm font-semibold text-text-primary">
                   Itens da compra
                 </h3>
                 <p className="mt-1 text-xs leading-5 text-text-secondary">
-                  Informe produtos distintos, quantidades, custos e ajustes por
-                  item.
+                  Componha um item por vez e confirme para adicionar ao carrinho.
                 </p>
               </div>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={addItem}
+
+              <FieldError message={itemsError} />
+
+              <PurchaseItemComposer
+                item={composerItem}
+                products={products}
+                errors={errors}
                 disabled={isSubmitting}
-                className="w-full tablet:w-auto"
-              >
-                <Plus className="h-4 w-4" aria-hidden />
-                <span>Adicionar item</span>
-              </Button>
+                isEditing={hasEditingActive}
+                canClear={composerHasContent}
+                submitBlockMessage={composerSubmitMessage}
+                onChange={updateComposerField}
+                onInclude={includeComposerItem}
+                onCancelEdit={hasEditingActive ? cancelItemEdit : undefined}
+                onClear={!hasEditingActive ? clearComposer : undefined}
+              />
             </div>
 
-            <FieldError message={itemsError} />
-
-            <div className="grid gap-4">
-              {draft.items.map((item, index) => (
-                <PurchaseItemEditor
-                  key={item.id}
-                  item={item}
-                  index={index}
-                  products={products}
-                  errors={errors}
-                  disabled={isSubmitting}
-                  canRemove={draft.items.length > 1}
-                  onChange={updateItem}
-                  onRemove={removeItem}
-                />
-              ))}
-            </div>
+            <PurchaseSummary
+              draft={draft}
+              products={products}
+              canSubmit={canSubmit}
+              disabled={isSubmitting}
+              editingItemId={editingItemId}
+              onEditItem={startItemEdit}
+              onRemoveItem={removeConfirmedItem}
+            />
           </div>
         </CardContent>
         <CardFooter className="flex-col items-stretch tablet:flex-row tablet:justify-end">
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting || !canSubmit}>
             {isSubmitting ? (
               <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden />
             ) : (
@@ -439,6 +562,5 @@ export function PurchaseForm({ onCreated }: PurchaseFormProps) {
         </CardFooter>
       </form>
     </Card>
-    </>
   );
 }
