@@ -596,6 +596,55 @@ Endpoints já implementados e funcionais:
 
 ---
 
+## **F025 — Refinamento do Fluxo de Nova Compra**
+
+- **Status:** Fases Specify, Plan e Tasks concluídas em 01/07/2026; pronta para revisão das tarefas antes da implementação.
+- **Prioridade:** Alta para experiência operacional de compras.
+- **Problema de negócio:** A tela atual acumula um formulário completo para cada item, tornando a montagem de compras longas visualmente poluída e mais sujeita a erros.
+- **Decisão de produto:** Adotar um único compositor de item e um carrinho revisável, seguindo o padrão operacional aprovado na Venda sem tratar Compra como Venda.
+- **Documento-base:** `specs/025-refine-purchase-flow/spec.md`.
+
+### **Escopo incluído**
+
+- Um único formulário para compor produto, quantidade, custo unitário, desconto e acréscimo do item.
+- Inclusão validada no carrinho seguida de limpeza do compositor.
+- Resumo dos itens confirmados com prévia comercial.
+- Edição, cancelamento de edição e remoção antes do registro.
+- Bloqueio de produto duplicado e envio exclusivo dos itens confirmados.
+- Preservação de fornecedor, data e ajustes gerais durante a montagem.
+- Experiência Mobile First em smartphone, tablet e desktop.
+
+### **Fora desta versão**
+
+- Edição ou exclusão de itens após o registro oficial da compra.
+- Compra, recebimento ou perda por apresentação comercial.
+- Mudança de contrato sem limitação comprovada e aprovada.
+- Alteração de estoque, recebimento, perdas, mercadorias em trânsito ou custo médio.
+- Migration ou transformação de dados históricos.
+- Correção silenciosa das inconsistências preexistentes de total oficial entre consultas de compra.
+
+### **Riscos e controles**
+
+- **Item parcial ignorado:** exigir inclusão ou descarte explícito antes do registro.
+- **Perda durante edição:** restaurar o item integralmente e na mesma posição ao cancelar.
+- **Produto duplicado:** bloquear inclusão e orientar a edição do item existente.
+- **Divergência de totais:** tratar valores como prévia e manter correções de regra oficial em escopo separado.
+- **Regressão logística:** validar que criar compra não gera estoque e que somente recebimento físico confirmado gera entrada e custo.
+
+### **Critérios mínimos de aceite**
+
+- Existe somente um formulário de item, mesmo em compras com muitos produtos.
+- Incluir valida, adiciona ao carrinho e limpa o compositor sem apagar dados gerais.
+- Carrinho permite editar e remover, preservando campos e ordem no cancelamento da edição.
+- Produto duplicado e compra sem item confirmado são bloqueados.
+- Conteúdo parcial no compositor não é descartado silenciosamente.
+- Payload comercial e regras existentes de compra permanecem equivalentes.
+- Compra registrada continua em trânsito; estoque e custo médio só mudam no recebimento físico.
+- Fluxo de vendas permanece funcionalmente inalterado.
+- Operação validada em smartphone, tablet e desktop.
+
+---
+
 # **3. Roadmap recomendado por fases**
 
 ### **Fase 1 — Operação ponta a ponta (concluída)**
@@ -635,6 +684,9 @@ Ordem obrigatória para reduzir risco e facilitar validação:
 1. **F024 — Apresentações Comerciais e Conversão Fracionada de Estoque**
    - Motivo da posição: resolve venda fracionada sem reescrever estoque produtivo e exige gate técnico específico de precisão/migration.
    - Gate de saída: razão exata validada, legado conciliado, rollback ensaiado e autorização explícita de implementação.
+2. **F025 — Refinamento do Fluxo de Nova Compra**
+   - Motivo da posição: simplifica um fluxo operacional frequente aproveitando o padrão de compositor e resumo, sem ampliar o domínio logístico da Compra.
+   - Gate de saída: compositor único, carrinho editável, conteúdo parcial protegido, contrato preservado e regressão de trânsito, recebimento, estoque e custo médio validada.
 
 ### **Fase 7 — Backlog pós-refinamento (não aprovado para execução nesta decisão)**
 
@@ -706,6 +758,17 @@ Decisões aprovadas para orientar diretamente as próximas especificações:
 | Compra | Manter compra, recebimento e perda na unidade principal | F024 |
 | Rollback | Desabilitar logicamente e manter schema após a primeira venda fracionada | F024 |
 
+## **Registro da decisão da F025 em 01/07/2026**
+
+| **Tema** | **Decisão aprovada para especificação** | **Feature** |
+| --- | --- | --- |
+| Composição | Manter exatamente um formulário de item e separar itens confirmados no carrinho | F025 |
+| Revisão | Permitir editar, cancelar edição e remover antes do registro | F025 |
+| Duplicidade | Bloquear produto repetido e orientar edição do item existente | F025 |
+| Conteúdo parcial | Exigir inclusão ou descarte explícito antes do registro | F025 |
+| Domínio | Preservar compra em trânsito e entrada/custo somente no recebimento físico | F025 |
+| Contratos e dados | Não alterar contrato, migration ou histórico sem limitação comprovada e aprovação específica | F025 |
+
 ## **Próximo passo previsto**
 
-A documentação da **F024 — Apresentações Comerciais e Conversão Fracionada de Estoque** está em análise com representação racional definida. O próximo passo é revisar `spec.md`, `impact-analysis.md`, `plan.md` e `tasks.md`. Nenhuma implementação da F024 deve começar sem autorização explícita posterior a essa revisão.
+As fases Specify, Plan e Tasks da **F025 — Refinamento do Fluxo de Nova Compra** estão concluídas e validadas. O próximo passo recomendado é revisar `tasks.md` e executar a análise cruzada dos artefatos antes de autorizar a implementação. A F024 mantém seu fluxo e gates próprios, sem ser incorporada à F025.

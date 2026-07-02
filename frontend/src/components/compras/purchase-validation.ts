@@ -33,6 +33,44 @@ function hasReference(id: string, references: ExistingReference[]) {
   return references.some((reference) => reference.id === id);
 }
 
+export function createPurchaseDraftItemId() {
+  return (
+    globalThis.crypto?.randomUUID?.() ??
+    `purchase-item-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  );
+}
+
+export function createPurchaseDraftItem() {
+  return {
+    id: createPurchaseDraftItemId(),
+    produtoId: "",
+    quantidade: "",
+    custoUnitario: "",
+    desconto: "",
+    acrescimo: ""
+  };
+}
+
+export function createEmptyPurchaseDraft(): PurchaseDraft {
+  return {
+    fornecedorId: "",
+    dataCompra: "",
+    desconto: "",
+    acrescimo: "",
+    items: []
+  };
+}
+
+export function hasPurchaseItemContent(item: PurchaseDraft["items"][number]) {
+  return (
+    item.produtoId.trim() !== "" ||
+    item.quantidade.trim() !== "" ||
+    item.custoUnitario.trim() !== "" ||
+    item.desconto.trim() !== "" ||
+    item.acrescimo.trim() !== ""
+  );
+}
+
 function isValidLossMotive(value: string): value is PurchaseLossMotive {
   return purchaseLossMotives.some((motive) => motive === value);
 }
@@ -43,8 +81,6 @@ export function validatePurchaseDraft(
   suppliers: ExistingReference[] = []
 ) {
   const errors: PurchaseValidationError[] = [];
-  const selectedProducts = new Set<string>();
-  const duplicatedProducts = new Set<string>();
 
   if (!draft.fornecedorId) {
     errors.push({
@@ -92,79 +128,89 @@ export function validatePurchaseDraft(
   }
 
   for (const item of draft.items) {
-    if (!item.produtoId) {
+    errors.push(
+      ...validatePurchaseItemDraft(item, products, draft.items, item.id)
+    );
+  }
+
+  return errors;
+}
+
+export function validatePurchaseItemDraft(
+  item: PurchaseDraft["items"][number],
+  products: ExistingReference[] = [],
+  existingItems: PurchaseDraft["items"] = [],
+  editingItemId?: string | null
+) {
+  const errors: PurchaseValidationError[] = [];
+
+  if (!item.produtoId) {
+    errors.push({
+      field: "produtoId",
+      itemId: item.id,
+      message: "Selecione um produto."
+    });
+  } else if (products.length > 0 && !hasReference(item.produtoId, products)) {
+    errors.push({
+      field: "produtoId",
+      itemId: item.id,
+      message: "Produto nao encontrado na lista carregada."
+    });
+  } else {
+    const hasDuplicate = existingItems.some(
+      (existingItem) =>
+        existingItem.produtoId === item.produtoId &&
+        existingItem.id !== editingItemId
+    );
+
+    if (hasDuplicate) {
       errors.push({
         field: "produtoId",
         itemId: item.id,
-        message: "Selecione um produto."
-      });
-    } else if (products.length > 0 && !hasReference(item.produtoId, products)) {
-      errors.push({
-        field: "produtoId",
-        itemId: item.id,
-        message: "Produto nao encontrado na lista carregada."
-      });
-    }
-
-    if (item.produtoId) {
-      if (selectedProducts.has(item.produtoId)) {
-        duplicatedProducts.add(item.produtoId);
-      }
-
-      selectedProducts.add(item.produtoId);
-    }
-
-    const quantidade = parseNumber(item.quantidade);
-    if (
-      !Number.isFinite(quantidade) ||
-      quantidade <= 0 ||
-      !Number.isInteger(quantidade)
-    ) {
-      errors.push({
-        field: "quantidade",
-        itemId: item.id,
-        message: "Informe uma quantidade inteira maior que zero."
-      });
-    }
-
-    const custoUnitario = parseNumber(item.custoUnitario);
-    if (!Number.isFinite(custoUnitario) || custoUnitario < 0) {
-      errors.push({
-        field: "custoUnitario",
-        itemId: item.id,
-        message: "Informe um custo unitario maior ou igual a zero."
-      });
-    }
-
-    const itemDesconto = parseOptionalNonNegative(item.desconto);
-    if (!Number.isFinite(itemDesconto) || itemDesconto < 0) {
-      errors.push({
-        field: "desconto",
-        itemId: item.id,
-        message: "Informe um desconto valido ou deixe em branco."
-      });
-    }
-
-    const itemAcrescimo = parseOptionalNonNegative(item.acrescimo);
-    if (!Number.isFinite(itemAcrescimo) || itemAcrescimo < 0) {
-      errors.push({
-        field: "acrescimo",
-        itemId: item.id,
-        message: "Informe um acrescimo valido ou deixe em branco."
+        message:
+          "Este produto ja foi adicionado. Edite o item existente para alterar a compra."
       });
     }
   }
 
-  if (duplicatedProducts.size > 0) {
-    for (const item of draft.items) {
-      if (duplicatedProducts.has(item.produtoId)) {
-        errors.push({
-          field: "produtoId",
-          itemId: item.id,
-          message: "Este produto ja foi adicionado a compra."
-        });
-      }
-    }
+  const quantidade = parseNumber(item.quantidade);
+  if (
+    !Number.isFinite(quantidade) ||
+    quantidade <= 0 ||
+    !Number.isInteger(quantidade)
+  ) {
+    errors.push({
+      field: "quantidade",
+      itemId: item.id,
+      message: "Informe uma quantidade inteira maior que zero."
+    });
+  }
+
+  const custoUnitario = parseNumber(item.custoUnitario);
+  if (!Number.isFinite(custoUnitario) || custoUnitario < 0) {
+    errors.push({
+      field: "custoUnitario",
+      itemId: item.id,
+      message: "Informe um custo unitario maior ou igual a zero."
+    });
+  }
+
+  const itemDesconto = parseOptionalNonNegative(item.desconto);
+  if (!Number.isFinite(itemDesconto) || itemDesconto < 0) {
+    errors.push({
+      field: "desconto",
+      itemId: item.id,
+      message: "Informe um desconto valido ou deixe em branco."
+    });
+  }
+
+  const itemAcrescimo = parseOptionalNonNegative(item.acrescimo);
+  if (!Number.isFinite(itemAcrescimo) || itemAcrescimo < 0) {
+    errors.push({
+      field: "acrescimo",
+      itemId: item.id,
+      message: "Informe um acrescimo valido ou deixe em branco."
+    });
   }
 
   return errors;
