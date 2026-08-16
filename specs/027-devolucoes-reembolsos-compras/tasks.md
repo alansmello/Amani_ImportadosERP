@@ -18,10 +18,10 @@
 
 **Purpose**: preparar controles e evidências antes de implementar comportamentos da F027
 
-- [ ] T001 Adicionar `DevolucoesReembolsosComprasEnabled` desligado por padrão em `src/Amani.ImportadosERP.Application/Interfaces/IFeatureSettings.cs`, `src/Amani.ImportadosERP.Infra.IoC/Services/ConfigurationFeatureSettings.cs`, `src/Amani.ImportadosERP.Api/appsettings.json` e `src/Amani.ImportadosERP.Api/appsettings.Development.json`
-- [ ] T002 [P] Criar o baseline não destrutivo de contagens, hashes e somatórios legados em `artifacts/f027-production-baseline.sql`
-- [ ] T003 [P] Criar a verificação SQL idempotente das cinco tabelas, índices, FKs e ausência de dados inesperados em `artifacts/f027-post-migration-check.sql`
-- [ ] T004 [P] Criar o modelo de registro de evidências, aprovações e reconciliações em `artifacts/f027-validation-evidence.md`
+- [X] T001 Adicionar `DevolucoesReembolsosComprasEnabled` desligado por padrão em `src/Amani.ImportadosERP.Application/Interfaces/IFeatureSettings.cs`, `src/Amani.ImportadosERP.Infra.IoC/Services/ConfigurationFeatureSettings.cs`, `src/Amani.ImportadosERP.Api/appsettings.json` e `src/Amani.ImportadosERP.Api/appsettings.Development.json`
+- [X] T002 [P] Criar o baseline não destrutivo de contagens, hashes e somatórios legados em `artifacts/f027-production-baseline.sql`
+- [X] T003 [P] Criar a verificação SQL idempotente das cinco tabelas, índices, FKs e ausência de dados inesperados em `artifacts/f027-post-migration-check.sql`
+- [X] T004 [P] Criar o modelo de registro de evidências, aprovações e reconciliações em `artifacts/f027-validation-evidence.md`
 
 ---
 

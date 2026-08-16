@@ -14,4 +14,7 @@ public sealed class ConfigurationFeatureSettings : IFeatureSettings
 
     public bool ApresentacoesFracionadasEnabled =>
         bool.TryParse(_configuration["Features:ApresentacoesFracionadasEnabled"], out var enabled) && enabled;
+
+    public bool DevolucoesReembolsosComprasEnabled =>
+        bool.TryParse(_configuration["Features:DevolucoesReembolsosComprasEnabled"], out var enabled) && enabled;
 }
