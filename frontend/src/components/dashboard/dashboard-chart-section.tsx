@@ -13,7 +13,6 @@ import {
 } from "recharts";
 
 import {
-  formatDashboardCurrency,
   formatDashboardLabel,
   formatDashboardNullableCurrency,
   formatDashboardQuantity,

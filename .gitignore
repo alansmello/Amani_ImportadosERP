@@ -75,3 +75,5 @@ frontend/coverage/
 # Entity Framework
 *.db
 *.db-journal
+# Production validation exports kept local only
+artifacts/f027-neon-*.json

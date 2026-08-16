@@ -63,19 +63,60 @@ public class EstoqueConsultaRepository : IEstoqueConsultaRepository
             .Take(limite)
             .ToListAsync();
 
-        return movimentacoes.Select(m => new EstoqueMovimentacaoItemDto
+        var movimentacaoIds = movimentacoes.Select(m => m.Id).ToArray();
+        var devolucoesPorMovimentacao = await _db.CompraItemDevolucoes
+            .AsNoTracking()
+            .Where(d => d.EstoqueMovimentacaoId.HasValue
+                && movimentacaoIds.Contains(d.EstoqueMovimentacaoId.Value))
+            .Select(d => new
+            {
+                EstoqueMovimentacaoId = d.EstoqueMovimentacaoId!.Value,
+                DevolucaoId = d.Id,
+                d.CompraId,
+                d.CompraItemId,
+                d.CompraItemRecebimentoId
+            })
+            .ToDictionaryAsync(d => d.EstoqueMovimentacaoId);
+
+        var compensacoesPorMovimentacao = await _db.CompraItemDevolucaoCompensacoes
+            .AsNoTracking()
+            .Where(c => c.EstoqueMovimentacaoId.HasValue
+                && movimentacaoIds.Contains(c.EstoqueMovimentacaoId.Value))
+            .Select(c => new
+            {
+                EstoqueMovimentacaoId = c.EstoqueMovimentacaoId!.Value,
+                DevolucaoId = c.CompraItemDevolucaoId,
+                c.CompraItemDevolucao!.CompraId,
+                c.CompraItemDevolucao.CompraItemId,
+                c.CompraItemDevolucao.CompraItemRecebimentoId
+            })
+            .ToDictionaryAsync(c => c.EstoqueMovimentacaoId);
+
+        return movimentacoes.Select(m =>
         {
-            Id = m.Id,
-            Data = m.Data,
-            Tipo = m.Tipo.ToString(),
-            Quantidade = m.Quantidade,
-            Origem = m.Tipo == TipoMovimentacao.InventarioInicial
-                ? "InventarioInicial"
-                : m.Tipo == TipoMovimentacao.Saida ? "Venda" : m.VendaItemId.HasValue ? "CancelamentoVenda" : "Compra",
-            CompraId = m.CompraId,
-            CompraItemId = m.CompraItemId,
-            VendaId = m.VendaId,
-            ValorUnitario = m.ValorUnitario
+            devolucoesPorMovimentacao.TryGetValue(m.Id, out var devolucao);
+            compensacoesPorMovimentacao.TryGetValue(m.Id, out var compensacao);
+
+            return new EstoqueMovimentacaoItemDto
+            {
+                Id = m.Id,
+                Data = m.Data,
+                Tipo = m.Tipo.ToString(),
+                Quantidade = m.Quantidade,
+                Origem = compensacao != null
+                    ? "CompensacaoDevolucaoCompra"
+                    : devolucao != null
+                    ? "DevolucaoCompra"
+                    : m.Tipo == TipoMovimentacao.InventarioInicial
+                        ? "InventarioInicial"
+                        : m.Tipo == TipoMovimentacao.Saida ? "Venda" : m.VendaItemId.HasValue ? "CancelamentoVenda" : "Compra",
+                CompraId = compensacao?.CompraId ?? devolucao?.CompraId ?? m.CompraId,
+                CompraItemId = compensacao?.CompraItemId ?? devolucao?.CompraItemId ?? m.CompraItemId,
+                CompraItemDevolucaoId = compensacao?.DevolucaoId ?? devolucao?.DevolucaoId,
+                CompraItemRecebimentoId = compensacao?.CompraItemRecebimentoId ?? devolucao?.CompraItemRecebimentoId,
+                VendaId = m.VendaId,
+                ValorUnitario = m.ValorUnitario
+            };
         }).ToList();
     }
 

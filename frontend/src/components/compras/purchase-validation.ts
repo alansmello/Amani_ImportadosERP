@@ -1,13 +1,19 @@
 import {
   purchaseLossMotives,
+  purchaseReturnMotives,
   type CreatePurchasePayload,
   type PurchaseActionDraft,
   type PurchaseDraft,
   type PurchaseLossDraft,
   type PurchaseLossMotive,
+  type PurchaseRefundDraft,
+  type PurchaseReturnDraft,
+  type PurchaseReturnMotive,
   type PurchaseValidationError,
   type RegisterPurchaseLossPayload,
-  type RegisterPurchaseReceiptPayload
+  type RegisterPurchaseReceiptPayload,
+  type RegisterPurchaseRefundPayload,
+  type RegisterPurchaseReturnPayload
 } from "@/types/purchase";
 
 type ExistingReference = {
@@ -73,6 +79,10 @@ export function hasPurchaseItemContent(item: PurchaseDraft["items"][number]) {
 
 function isValidLossMotive(value: string): value is PurchaseLossMotive {
   return purchaseLossMotives.some((motive) => motive === value);
+}
+
+function isValidReturnMotive(value: string): value is PurchaseReturnMotive {
+  return purchaseReturnMotives.some((motive) => motive === value);
 }
 
 export function validatePurchaseDraft(
@@ -303,6 +313,103 @@ export function buildLossPayload(
     quantidade: parseNumber(draft.quantidade),
     motivo: draft.motivo,
     dataPerda: draft.data ? new Date(draft.data).toISOString() : null,
+    observacao: draft.observacao.trim() || null
+  };
+}
+
+export function validateRefundDraft(
+  draft: PurchaseRefundDraft,
+  saldoReembolsavel?: number | null
+) {
+  const errors: PurchaseValidationError[] = [];
+  const valor = parseNumber(draft.valor);
+
+  if (!Number.isFinite(valor) || valor <= 0) {
+    errors.push({
+      field: "valor",
+      message: "Informe um valor de reembolso maior que zero."
+    });
+  } else if (
+    typeof saldoReembolsavel === "number" &&
+    saldoReembolsavel >= 0 &&
+    valor > saldoReembolsavel
+  ) {
+    errors.push({
+      field: "valor",
+      message: "O valor nao pode exceder o saldo reembolsavel exibido."
+    });
+  }
+
+  return errors;
+}
+
+export function buildRefundPayload(
+  draft: PurchaseRefundDraft,
+  operacaoId: string
+): RegisterPurchaseRefundPayload {
+  return {
+    valor: parseNumber(draft.valor),
+    dataReembolso: draft.data ? new Date(draft.data).toISOString() : null,
+    referenciaExterna: draft.referenciaExterna.trim() || null,
+    observacao: draft.observacao.trim() || null,
+    operacaoId
+  };
+}
+
+export function validateReturnDraft(
+  draft: PurchaseReturnDraft,
+  quantidadePendente?: number
+) {
+  const errors: PurchaseValidationError[] = validateReceiptDraft(
+    draft,
+    quantidadePendente
+  );
+
+  if (!draft.motivo || !isValidReturnMotive(draft.motivo)) {
+    errors.push({
+      field: "motivo",
+      message: "Selecione um motivo de devolucao."
+    });
+  }
+
+  if (draft.motivo === "Outro" && !draft.observacao.trim()) {
+    errors.push({
+      field: "observacao",
+      message: "Informe a justificativa quando o motivo for Outro."
+    });
+  }
+
+  if (
+    draft.momento === "DepoisDoRecebimento" &&
+    !draft.compraItemRecebimentoId
+  ) {
+    errors.push({
+      field: "compraItemRecebimentoId",
+      message: "Selecione o recebimento que sera devolvido."
+    });
+  }
+
+  return errors;
+}
+
+export function buildReturnPayload(
+  draft: PurchaseReturnDraft,
+  operacaoId: string
+): RegisterPurchaseReturnPayload {
+  if (!isValidReturnMotive(draft.motivo)) {
+    throw new Error("Motivo de devolucao invalido.");
+  }
+
+  return {
+    operacaoId,
+    momento: draft.momento,
+    compraItemRecebimentoId:
+      draft.momento === "DepoisDoRecebimento"
+        ? draft.compraItemRecebimentoId
+        : null,
+    quantidade: parseNumber(draft.quantidade),
+    motivo: draft.motivo,
+    dataDevolucao: draft.data ? new Date(draft.data).toISOString() : null,
     observacao: draft.observacao.trim() || null
   };
 }

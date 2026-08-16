@@ -244,6 +244,11 @@ export function PurchaseSummary({
               : "Revise fornecedor, itens confirmados e qualquer composicao pendente antes de registrar."}
           </p>
         </div>
+        <div className="rounded-amani border border-info bg-surface px-3 py-2 text-xs leading-5 text-text-secondary">
+          Reembolsos e devolucoes de fornecedor sao registrados depois que a compra existe,
+          no detalhe da compra. Eles preservam este total bruto consultivo e aparecem
+          separadamente como recuperacao financeira, devolucao logistica ou compensacao.
+        </div>
       </CardContent>
     </Card>
   );

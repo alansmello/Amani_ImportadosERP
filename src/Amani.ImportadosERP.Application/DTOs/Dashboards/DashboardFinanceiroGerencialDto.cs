@@ -10,6 +10,8 @@ public sealed class DashboardFinanceiroGerencialDto
     public decimal SaldoOperacional { get; set; }
     public decimal ContasReceberAbertas { get; set; }
     public decimal ValoresRecebidos { get; set; }
+    public decimal ReembolsosComprasPeriodo { get; set; }
+    public decimal EntradasCaixaPeriodo { get; set; }
     public decimal ValorLucroNaoCalculavel { get; set; }
     public int QuantidadeItensSemCusto { get; set; }
     public decimal? SaidasPeriodo { get; set; }

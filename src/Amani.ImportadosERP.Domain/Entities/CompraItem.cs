@@ -58,6 +58,21 @@ public sealed class CompraItem : BaseEntity
         ValidarQuantidadePendente(quantidade, "recebimento");
     }
 
+    public int CalcularQuantidadePendente(int quantidadeDevolvidaAntesVigente)
+    {
+        if (quantidadeDevolvidaAntesVigente < 0)
+        {
+            throw new ArgumentException("Quantidade devolvida vigente nao pode ser negativa", nameof(quantidadeDevolvidaAntesVigente));
+        }
+
+        return Math.Max(0, QuantidadePendente - quantidadeDevolvidaAntesVigente);
+    }
+
+    public void ValidarDevolucaoAntesRecebimento(int quantidade, int quantidadeDevolvidaAntesVigente)
+    {
+        ValidarQuantidadePendente(quantidade, "devolucao", quantidadeDevolvidaAntesVigente);
+    }
+
     public CompraItemRecebimento RegistrarRecebimento(
         Guid compraId,
         int quantidade,
@@ -128,14 +143,14 @@ public sealed class CompraItem : BaseEntity
         }
     }
 
-    private void ValidarQuantidadePendente(int quantidade, string operacao)
+    private void ValidarQuantidadePendente(int quantidade, string operacao, int quantidadeDevolvidaAntesVigente = 0)
     {
         if (quantidade <= 0)
         {
             throw new ArgumentException($"Quantidade de {operacao} deve ser maior que zero", nameof(quantidade));
         }
 
-        if (quantidade > QuantidadePendente)
+        if (quantidade > CalcularQuantidadePendente(quantidadeDevolvidaAntesVigente))
         {
             throw new InvalidOperationException($"Quantidade de {operacao} nao pode exceder a quantidade pendente");
         }

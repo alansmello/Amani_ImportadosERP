@@ -5,6 +5,7 @@ import {
   ArrowUpRight,
   CircleDollarSign,
   Landmark,
+  RotateCcw,
   Scale,
   TrendingUp,
   Wallet
@@ -39,6 +40,8 @@ type KpiField = keyof Pick<
   DashboardFinancialKpis,
   | "receitaTotal"
   | "valoresRecebidos"
+  | "reembolsosComprasPeriodo"
+  | "entradasCaixaPeriodo"
   | "saidasPeriodo"
   | "caixaInicialPeriodo"
   | "ajusteImplantacaoPeriodo"
@@ -67,11 +70,21 @@ const kpiDefinitions: KpiDefinition[] = [
   },
   {
     title: "Entradas",
-    field: "valoresRecebidos",
+    field: "entradasCaixaPeriodo",
     icon: ArrowDownLeft,
     tone: "text-info",
     badge: "Caixa",
-    description: "Pagamentos recebidos registrados no periodo."
+    nullable: true,
+    description: "Pagamentos de clientes + reembolsos de compras no periodo."
+  },
+  {
+    title: "Reembolsos compras",
+    field: "reembolsosComprasPeriodo",
+    icon: RotateCcw,
+    tone: "text-success",
+    badge: "Caixa",
+    nullable: true,
+    description: "Creditos de fornecedores recebidos por data de reembolso."
   },
   {
     title: "Saidas estimadas",

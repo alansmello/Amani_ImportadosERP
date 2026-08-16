@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read
-`specs/026-consistencia-compras-transito/plan.md`.
+shell commands, and other important information, read the current plan
+at specs/027-devolucoes-reembolsos-compras/plan.md
 <!-- SPECKIT END -->

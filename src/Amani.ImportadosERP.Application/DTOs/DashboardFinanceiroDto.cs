@@ -3,6 +3,8 @@ namespace Amani.ImportadosERP.Application.DTOs;
 public sealed class DashboardFinanceiroDto
 {
     public decimal TotalRecebido { get; set; }
+    public decimal ReembolsosComprasPeriodo { get; set; }
+    public decimal EntradasCaixaPeriodo { get; set; }
     public decimal TotalAReceber { get; set; }
     public decimal TotalCompras { get; set; }
     public decimal TotalDespesas { get; set; }

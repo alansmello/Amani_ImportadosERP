@@ -43,7 +43,14 @@ export function formatMovementType(type: StockMovementType) {
 
 export function formatMovementOrigin(origin: string | null | undefined) {
   const normalized = origin?.trim();
-  return normalized ? normalized : "Origem nao informada";
+  const labels: Record<string, string> = {
+    DevolucaoCompra: "Devolucao de compra",
+    CompensacaoDevolucaoCompra: "Compensacao de devolucao",
+    InventarioInicial: "Inventario inicial",
+    CancelamentoVenda: "Cancelamento de venda"
+  };
+
+  return normalized ? labels[normalized] ?? normalized : "Origem nao informada";
 }
 
 export function getStockBalanceVariant(value: number): StockBalanceVariant {

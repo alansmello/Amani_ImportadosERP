@@ -40,6 +40,8 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
         var totalDespesas = await _repository.ObterTotalDespesasAsync(filtros.DataInicial, filtros.DataFinal);
         var resumoRecebiveis = await _repository.ObterResumoRecebiveisAsync(filtros.DataReferencia);
         var valoresRecebidos = await _repository.ObterValoresRecebidosAsync(filtros.DataInicial, filtros.DataFinal);
+        var reembolsosCompras = await _repository.ObterReembolsosComprasLiquidosAsync(filtros.DataInicial, filtros.DataFinal);
+        var entradasCaixa = valoresRecebidos + reembolsosCompras;
         var resumoCaixa = await _repository.ObterResumoCaixaAsync(filtros.DataInicial, filtros.DataFinal);
         var estoqueValorizado = await _estoqueRepository.ObterEstoqueValorizadoAsync(filtros.DataReferencia);
         var transito = await _operacionalRepository.ObterMercadoriasEmTransitoAsync(filtros.DataReferencia);
@@ -59,7 +61,7 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
 
         var quantidadeItensSemCusto = itensVendidos.Count(i => !i.CustoMedio.HasValue);
         var lucroTotal = receitaCalculavel - custoCalculavel;
-        var saldoOperacional = valoresRecebidos - totalCompras - totalDespesas;
+        var saldoOperacional = entradasCaixa - totalCompras - totalDespesas;
         var caixaFinal = resumoCaixa.CaixaFinal;
 
         var avisos = CriarAvisos(
@@ -91,6 +93,8 @@ public sealed class ObterDashboardFinanceiroGerencialQueryHandler
             SaldoOperacional = saldoOperacional,
             ContasReceberAbertas = resumoRecebiveis.Abertas,
             ValoresRecebidos = valoresRecebidos,
+            ReembolsosComprasPeriodo = reembolsosCompras,
+            EntradasCaixaPeriodo = entradasCaixa,
             ValorLucroNaoCalculavel = valorLucroNaoCalculavel,
             QuantidadeItensSemCusto = quantidadeItensSemCusto,
             SaidasPeriodo = saidasPeriodo,

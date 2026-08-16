@@ -45,6 +45,20 @@ public sealed record CompraCalculoFinanceiroResultado(
     public bool ValorPendenteDisponivel => ValorPendenteCusto.HasValue;
 }
 
+public enum CompraSituacaoReembolso
+{
+    SemReembolso,
+    Parcial,
+    Integral
+}
+
+public sealed record CompraResumoReembolso(
+    decimal TotalOriginal,
+    decimal TotalReembolsado,
+    decimal SaldoReembolsavel,
+    decimal CustoFinanceiroLiquido,
+    CompraSituacaoReembolso Situacao);
+
 public static class CompraCalculoFinanceiro
 {
     public const string MotivoBaseRateioInvalida =
@@ -125,6 +139,37 @@ public static class CompraCalculoFinanceiro
             rateios.Sum(rateio => rateio.ValorPendenteCusto),
             null,
             rateios.AsReadOnly());
+    }
+
+    public static CompraResumoReembolso CalcularResumoReembolso(
+        decimal totalOriginal,
+        decimal totalCreditos,
+        decimal totalCancelamentos)
+    {
+        if (totalOriginal < 0m)
+            throw new ArgumentException("Total original nao pode ser negativo.", nameof(totalOriginal));
+        if (totalCreditos < 0m)
+            throw new ArgumentException("Total de creditos nao pode ser negativo.", nameof(totalCreditos));
+        if (totalCancelamentos < 0m)
+            throw new ArgumentException("Total de cancelamentos nao pode ser negativo.", nameof(totalCancelamentos));
+
+        var totalReembolsado = ArredondarMoeda(Math.Max(0m, totalCreditos - totalCancelamentos));
+        if (totalReembolsado > totalOriginal)
+        {
+            totalReembolsado = totalOriginal;
+        }
+
+        var saldo = ArredondarMoeda(Math.Max(0m, totalOriginal - totalReembolsado));
+        var situacao = totalReembolsado <= 0m
+            ? CompraSituacaoReembolso.SemReembolso
+            : saldo <= 0m ? CompraSituacaoReembolso.Integral : CompraSituacaoReembolso.Parcial;
+
+        return new CompraResumoReembolso(
+            ArredondarMoeda(totalOriginal),
+            totalReembolsado,
+            saldo,
+            saldo,
+            situacao);
     }
 
     private static decimal[] RatearAjuste(

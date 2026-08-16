@@ -1,6 +1,14 @@
 export const purchaseLossMotives = ["Perda", "Extravio", "Avaria"] as const;
+export const purchaseReturnMotives = [
+  "ProdutoFalsificado",
+  "Avaria",
+  "ProdutoIncorreto",
+  "DesistenciaRecusa",
+  "Outro"
+] as const;
 
 export type PurchaseLossMotive = (typeof purchaseLossMotives)[number];
+export type PurchaseReturnMotive = (typeof purchaseReturnMotives)[number];
 
 export type PurchaseStatus = string;
 
@@ -17,6 +25,15 @@ export type PurchaseListItem = {
   dataCompra: string;
   status: PurchaseStatus;
   totalCompra: number;
+  totalReembolsadoLiquido?: number | null;
+  custoFinanceiroLiquido?: number | null;
+  situacaoReembolso?: PurchaseRefundStatus | null;
+  possuiDevolucao?: boolean | null;
+  quantidadeDevolvidaAntes?: number | null;
+  quantidadeDevolvidaDepois?: number | null;
+  quantidadeDevolvidaDepoisCompensada?: number | null;
+  situacaoLogisticaDevolucao?: PurchaseReturnLogisticsStatus | null;
+  descricaoSituacaoLogisticaDevolucao?: string | null;
   valorPendenteCusto?: number | null;
   motivoValorPendenteIndisponivel?: string | null;
 };
@@ -27,6 +44,12 @@ export type PurchaseInTransitItem = {
   quantidadeComprada: number;
   quantidadeRecebida: number;
   quantidadePerdida: number;
+  quantidadeDevolvidaAntes?: number | null;
+  quantidadeDevolvidaDepois?: number | null;
+  quantidadeDevolvidaDepoisCompensada?: number | null;
+  situacaoLogisticaDevolucao?: PurchaseReturnLogisticsStatus | null;
+  descricaoSituacaoLogisticaDevolucao?: string | null;
+  quantidadeElegivelDevolucaoAntes?: number | null;
   quantidadePendente: number;
 };
 
@@ -51,6 +74,12 @@ export type PendingPurchaseProduct = {
   quantidadeComprada: number;
   quantidadeRecebida: number;
   quantidadePerdida: number;
+  quantidadeDevolvidaAntes?: number | null;
+  quantidadeDevolvidaDepois?: number | null;
+  quantidadeDevolvidaDepoisCompensada?: number | null;
+  situacaoLogisticaDevolucao?: PurchaseReturnLogisticsStatus | null;
+  descricaoSituacaoLogisticaDevolucao?: string | null;
+  quantidadeElegivelDevolucaoAntes?: number | null;
   quantidadePendente: number;
 };
 
@@ -61,7 +90,14 @@ export type PurchaseItem = {
   quantidadeComprada: number;
   quantidadeRecebida: number;
   quantidadePerdida: number;
+  quantidadeDevolvidaAntes?: number | null;
+  quantidadeDevolvidaDepois?: number | null;
+  quantidadeDevolvidaDepoisCompensada?: number | null;
+  situacaoLogisticaDevolucao?: PurchaseReturnLogisticsStatus | null;
+  descricaoSituacaoLogisticaDevolucao?: string | null;
+  quantidadeElegivelDevolucaoAntes?: number | null;
   quantidadePendente: number;
+  recebimentosElegiveisDevolucao?: PurchaseReceiptEligibleForReturn[] | null;
   custoUnitario: number;
   desconto: number;
   acrescimo: number;
@@ -76,7 +112,26 @@ export type Purchase = {
   desconto: number;
   acrescimo: number;
   total: number;
+  totalReembolsadoLiquido?: number | null;
+  saldoReembolsavel?: number | null;
+  custoFinanceiroLiquido?: number | null;
+  situacaoReembolso?: PurchaseRefundStatus | null;
+  possuiDevolucao?: boolean | null;
+  quantidadeDevolvidaAntes?: number | null;
+  quantidadeDevolvidaDepois?: number | null;
+  quantidadeDevolvidaDepoisCompensada?: number | null;
+  situacaoLogisticaDevolucao?: PurchaseReturnLogisticsStatus | null;
+  descricaoSituacaoLogisticaDevolucao?: string | null;
   items: PurchaseItem[];
+};
+
+export type PurchaseReceiptEligibleForReturn = {
+  recebimentoId: string;
+  dataRecebimento: string;
+  quantidadeRecebida: number;
+  quantidadeDevolvidaDepois: number;
+  quantidadeElegivel: number;
+  valorUnitario: number;
 };
 
 export type CreatePurchaseItemPayload = {
@@ -136,6 +191,111 @@ export type PurchaseLoss = {
   observacao: string | null;
 };
 
+export type PurchaseRefundStatus = "SemReembolso" | "Parcial" | "Integral" | string;
+export type PurchaseReturnLogisticsStatus =
+  | "SemDevolucao"
+  | "ParcialmenteDevolvida"
+  | "Devolvida"
+  | "ParcialmenteCompensada"
+  | "DevolucaoCompensada"
+  | string;
+
+export type PurchaseRefundAllocationPayload = {
+  compraItemId?: string | null;
+  compraItemPerdaId?: string | null;
+  compraItemDevolucaoId?: string | null;
+  valor: number;
+};
+
+export type RegisterPurchaseRefundPayload = {
+  valor: number;
+  dataReembolso?: string | null;
+  referenciaExterna?: string | null;
+  observacao?: string | null;
+  operacaoId: string;
+  alocacoes?: PurchaseRefundAllocationPayload[];
+};
+
+export type CancelPurchaseRefundPayload = {
+  operacaoId: string;
+  dataCancelamento?: string | null;
+  motivo: string;
+};
+
+export type PurchaseRefundAllocation = {
+  id: string;
+  compraReembolsoId: string;
+  compraItemId?: string | null;
+  compraItemPerdaId?: string | null;
+  compraItemDevolucaoId?: string | null;
+  valor: number;
+};
+
+export type PurchaseRefund = {
+  id: string;
+  compraId: string;
+  valor: number;
+  valorLiquido: number;
+  dataReembolso: string;
+  referenciaExterna?: string | null;
+  operacaoId: string;
+  observacao?: string | null;
+  cancelado: boolean;
+  criadoEm?: string | null;
+  alocacoes: PurchaseRefundAllocation[];
+};
+
+export type PurchaseRefundList = {
+  compraId: string;
+  totalReembolsadoLiquido: number;
+  saldoReembolsavel: number;
+  situacaoReembolso: PurchaseRefundStatus;
+  reembolsos: PurchaseRefund[];
+};
+
+export type RegisterPurchaseReturnPayload = {
+  operacaoId: string;
+  momento: "AntesDoRecebimento" | "DepoisDoRecebimento";
+  compraItemRecebimentoId?: string | null;
+  quantidade: number;
+  motivo: PurchaseReturnMotive;
+  dataDevolucao?: string | null;
+  observacao?: string | null;
+};
+
+export type CompensatePurchaseReturnPayload = {
+  operacaoId: string;
+  dataCompensacao?: string | null;
+  motivo: string;
+  presencaFisicaConfirmada: boolean;
+};
+
+export type PurchaseReturn = {
+  id: string;
+  compraId: string;
+  compraItemId: string;
+  compraItemRecebimentoId?: string | null;
+  estoqueMovimentacaoId?: string | null;
+  momento: string;
+  quantidade: number;
+  quantidadeCompensada: number;
+  quantidadeVigente: number;
+  motivo: PurchaseReturnMotive | string;
+  dataDevolucao: string;
+  observacao?: string | null;
+  valorComercialBruto: number;
+  valorCustoEstoque: number;
+  compensada: boolean;
+  criadoEm: string;
+};
+
+export type PurchaseReturnList = {
+  items: PurchaseReturn[];
+  quantidadeVigenteAntesRecebimento: number;
+  quantidadeVigenteDepoisRecebimento: number;
+  valorComercialBrutoVigente: number;
+};
+
 export type PurchaseItemDraft = {
   id: string;
   produtoId: string;
@@ -161,6 +321,25 @@ export type PurchaseActionDraft = {
 
 export type PurchaseLossDraft = PurchaseActionDraft & {
   motivo: PurchaseLossMotive | "";
+};
+
+export type PurchaseRefundDraft = {
+  valor: string;
+  data: string;
+  referenciaExterna: string;
+  observacao: string;
+};
+
+export type PurchaseReturnDraft = PurchaseActionDraft & {
+  momento: "AntesDoRecebimento" | "DepoisDoRecebimento";
+  compraItemRecebimentoId: string;
+  motivo: PurchaseReturnMotive | "";
+};
+
+export type PurchaseEventCorrectionDraft = {
+  data: string;
+  motivo: string;
+  presencaFisicaConfirmada: boolean;
 };
 
 export type PurchaseValidationError = {

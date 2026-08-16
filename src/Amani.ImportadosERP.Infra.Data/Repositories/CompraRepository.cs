@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Amani.ImportadosERP.Application.Interfaces;
+using Amani.ImportadosERP.Application.DTOs.Response;
 using Amani.ImportadosERP.Domain.Entities;
 using Amani.ImportadosERP.Infra.Data.Context;
 
@@ -76,7 +77,12 @@ public class CompraRepository : ICompraRepository
             .Where(c => c.Items.Any(i =>
                 i.Quantidade
                 - i.Recebimentos.Sum(r => r.Quantidade)
-                - i.Perdas.Sum(p => p.Quantidade) > 0))
+                - i.Perdas.Sum(p => p.Quantidade)
+                - _db.CompraItemDevolucoes
+                    .Where(d => d.CompraItemId == i.Id
+                        && d.Momento == CompraItemDevolucaoMomento.AntesDoRecebimento
+                        && (d.Compensacao == null || d.Compensacao.DataCompensacao > DateTime.UtcNow.Date))
+                    .Sum(d => d.Quantidade) > 0))
             .OrderBy(c => c.DataCompra)
             .ToListAsync();
     }
@@ -87,7 +93,12 @@ public class CompraRepository : ICompraRepository
             .Where(c => c.Items.Any(i =>
                 i.Quantidade
                 - i.Recebimentos.Sum(r => r.Quantidade)
-                - i.Perdas.Sum(p => p.Quantidade) > 0))
+                - i.Perdas.Sum(p => p.Quantidade)
+                - _db.CompraItemDevolucoes
+                    .Where(d => d.CompraItemId == i.Id
+                        && d.Momento == CompraItemDevolucaoMomento.AntesDoRecebimento
+                        && (d.Compensacao == null || d.Compensacao.DataCompensacao > DateTime.UtcNow.Date))
+                    .Sum(d => d.Quantidade) > 0))
             .OrderBy(c => c.DataCompra)
             .ToListAsync();
     }
@@ -114,6 +125,101 @@ public class CompraRepository : ICompraRepository
             .OrderBy(p => p.DataPerda)
             .ThenBy(p => p.Motivo)
             .ToListAsync();
+    }
+
+    public async Task<List<CompraHistoricoEventoDto>> ObterHistoricoEventosAsync(Guid compraId)
+    {
+        if (compraId == Guid.Empty) return new List<CompraHistoricoEventoDto>();
+
+        var recebimentos = await _db.CompraItemRecebimentos
+            .AsNoTracking()
+            .Where(r => r.CompraId == compraId)
+            .Select(r => new CompraHistoricoEventoDto
+            {
+                Id = r.Id,
+                CompraId = r.CompraId,
+                CompraItemId = r.CompraItemId,
+                ProdutoId = r.ProdutoId,
+                Tipo = "Recebimento",
+                Dimensao = "Estoque",
+                DataEfetiva = r.DataRecebimento,
+                DataRegistro = r.CreatedAt,
+                Quantidade = r.Quantidade,
+                Valor = r.ValorUnitario * r.Quantidade,
+                Observacao = r.Observacao,
+                ReferenciaId = r.EstoqueMovimentacaoId
+            })
+            .ToListAsync();
+
+        var perdas = await _db.CompraItemPerdas
+            .AsNoTracking()
+            .Where(p => p.CompraId == compraId)
+            .Select(p => new CompraHistoricoEventoDto
+            {
+                Id = p.Id,
+                CompraId = p.CompraId,
+                CompraItemId = p.CompraItemId,
+                ProdutoId = p.ProdutoId,
+                Tipo = "Perda",
+                Dimensao = "Logistica",
+                DataEfetiva = p.DataPerda,
+                DataRegistro = p.CreatedAt,
+                Quantidade = p.Quantidade,
+                Motivo = p.Motivo.ToString(),
+                Observacao = p.Observacao
+            })
+            .ToListAsync();
+
+        var devolucoes = await _db.CompraItemDevolucoes
+            .AsNoTracking()
+            .Where(d => d.CompraId == compraId)
+            .Select(d => new CompraHistoricoEventoDto
+            {
+                Id = d.Id,
+                CompraId = d.CompraId,
+                CompraItemId = d.CompraItemId,
+                ProdutoId = d.CompraItem!.ProdutoId,
+                Tipo = d.Momento == CompraItemDevolucaoMomento.DepoisDoRecebimento
+                    ? "DevolucaoDepoisRecebimento"
+                    : "DevolucaoAntesRecebimento",
+                Dimensao = d.Momento == CompraItemDevolucaoMomento.DepoisDoRecebimento
+                    ? "Estoque"
+                    : "Logistica",
+                DataEfetiva = d.DataDevolucao,
+                DataRegistro = d.CreatedAt,
+                Quantidade = d.Quantidade,
+                Valor = d.CompraItemRecebimento != null
+                    ? d.CompraItemRecebimento.ValorUnitario * d.Quantidade
+                    : null,
+                Motivo = d.Motivo.ToString(),
+                Observacao = d.Observacao,
+                ReferenciaId = d.EstoqueMovimentacaoId
+            })
+            .ToListAsync();
+
+        var reembolsos = await _db.CompraReembolsos
+            .AsNoTracking()
+            .Where(r => r.CompraId == compraId)
+            .Select(r => new CompraHistoricoEventoDto
+            {
+                Id = r.Id,
+                CompraId = r.CompraId,
+                Tipo = "Reembolso",
+                Dimensao = "Financeiro",
+                DataEfetiva = r.DataReembolso,
+                DataRegistro = r.CreatedAt,
+                Valor = r.Valor,
+                Observacao = r.Observacao
+            })
+            .ToListAsync();
+
+        return recebimentos
+            .Concat(perdas)
+            .Concat(devolucoes)
+            .Concat(reembolsos)
+            .OrderByDescending(e => e.DataEfetiva)
+            .ThenByDescending(e => e.DataRegistro)
+            .ToList();
     }
 
     public async Task SalvarAsync()

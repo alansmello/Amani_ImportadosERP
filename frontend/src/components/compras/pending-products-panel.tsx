@@ -106,6 +106,13 @@ export function PendingProductsPanel({
                 <p className="mt-2 text-sm text-text-primary">
                   {pending.quantidadePendente} unidade(s) pendente(s)
                 </p>
+                {typeof pending.quantidadeDevolvidaAntes === "number" &&
+                pending.quantidadeDevolvidaAntes > 0 ? (
+                  <p className="mt-1 text-xs leading-5 text-warning">
+                    Devolvida/recusada antes do recebimento:{" "}
+                    {pending.quantidadeDevolvidaAntes} unidade(s)
+                  </p>
+                ) : null}
               </div>
               <Button
                 asChild

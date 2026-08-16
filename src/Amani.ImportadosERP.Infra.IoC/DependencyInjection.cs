@@ -25,6 +25,8 @@ public static class DependencyInjection
         services.AddScoped<ICompraRepository, Amani.ImportadosERP.Infra.Data.Repositories.CompraRepository>();
         services.AddScoped<ICompraItemRecebimentoRepository, Amani.ImportadosERP.Infra.Data.Repositories.CompraItemRecebimentoRepository>();
         services.AddScoped<ICompraItemPerdaRepository, Amani.ImportadosERP.Infra.Data.Repositories.CompraItemPerdaRepository>();
+        services.AddScoped<ICompraItemDevolucaoRepository, Amani.ImportadosERP.Infra.Data.Repositories.CompraItemDevolucaoRepository>();
+        services.AddScoped<ICompraReembolsoRepository, Amani.ImportadosERP.Infra.Data.Repositories.CompraReembolsoRepository>();
         services.AddScoped<IVendaRepository, Amani.ImportadosERP.Infra.Data.Repositories.VendaRepository>();
         services.AddScoped<IDespesaRepository, Amani.ImportadosERP.Infra.Data.Repositories.DespesaRepository>();
         services.AddScoped<ICategoriaDespesaRepository, Amani.ImportadosERP.Infra.Data.Repositories.CategoriaDespesaRepository>();

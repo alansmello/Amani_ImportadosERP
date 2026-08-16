@@ -25,6 +25,8 @@ public sealed class ObterDashboardFinanceiroQueryHandler : IRequestHandler<Obter
     {
         var filtros = _filtroService.Normalizar(new());
         var totalRecebido = await _repository.ObterValoresRecebidosAsync(filtros.DataInicial, filtros.DataFinal);
+        var reembolsosCompras = await _repository.ObterReembolsosComprasLiquidosAsync(filtros.DataInicial, filtros.DataFinal);
+        var entradasCaixa = totalRecebido + reembolsosCompras;
         var totalAReceber = await _repository.ObterContasReceberAbertasAsync(filtros.DataReferencia);
         var totalCompras = await _repository.ObterTotalComprasAsync(filtros.DataInicial, filtros.DataFinal);
         var totalDespesas = await _repository.ObterTotalDespesasAsync(filtros.DataInicial, filtros.DataFinal);
@@ -42,12 +44,14 @@ public sealed class ObterDashboardFinanceiroQueryHandler : IRequestHandler<Obter
             .Sum(i => i.ValorLiquidoItem);
 
         var receitaTotal = await _repository.ObterReceitaTotalAsync(filtros.DataInicial, filtros.DataFinal);
-        var caixaAtual = totalRecebido - totalCompras - totalDespesas;
+        var caixaAtual = entradasCaixa - totalCompras - totalDespesas;
         var lucroReal = receitaCalculavel - custoCalculavel;
 
         return new DashboardFinanceiroDto
         {
             TotalRecebido = totalRecebido,
+            ReembolsosComprasPeriodo = reembolsosCompras,
+            EntradasCaixaPeriodo = entradasCaixa,
             TotalAReceber = totalAReceber,
             TotalCompras = totalCompras,
             TotalDespesas = totalDespesas,

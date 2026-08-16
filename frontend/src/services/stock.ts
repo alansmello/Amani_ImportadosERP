@@ -74,9 +74,16 @@ function toStockMovement(
     data: response.data,
     origem: response.origem,
     referenciaId:
-      response.compraItemId ?? response.compraId ?? response.vendaId ?? null,
+      response.compraItemDevolucaoId ??
+      response.compraItemRecebimentoId ??
+      response.compraItemId ??
+      response.compraId ??
+      response.vendaId ??
+      null,
     compraId: response.compraId ?? null,
     compraItemId: response.compraItemId ?? null,
+    compraItemDevolucaoId: response.compraItemDevolucaoId ?? null,
+    compraItemRecebimentoId: response.compraItemRecebimentoId ?? null,
     vendaId: response.vendaId ?? null,
     valorUnitario: response.valorUnitario ?? null
   };

@@ -31,6 +31,10 @@ public sealed class ObterDashboardOperacionalQueryHandler
         var comprasEmAberto = await _repository.ObterComprasEmAbertoAsync(filtros.DataReferencia);
         var produtosPendentesRecebimento = await _repository.ObterProdutosPendentesRecebimentoAsync(filtros.DataReferencia);
         var perdasRegistradas = await _repository.ObterPerdasRegistradasAsync(filtros.DataInicial, filtros.DataFinal);
+        var recuperacao = await _repository.ObterRecuperacaoOperacionalAsync(
+            filtros.DataInicial,
+            filtros.DataFinal,
+            filtros.DataReferencia);
         var quantidadeVendas = await _repository.ObterQuantidadeVendasAsync(filtros.DataInicial, filtros.DataFinal);
         var quantidadeCompras = await _repository.ObterQuantidadeComprasAsync(filtros.DataInicial, filtros.DataFinal);
 
@@ -50,6 +54,11 @@ public sealed class ObterDashboardOperacionalQueryHandler
             ProdutosPendentesRecebimento = produtosPendentesRecebimento,
             PerdasRegistradasQuantidade = perdasRegistradas.Quantidade,
             PerdasRegistradasValor = perdasRegistradas.Valor,
+            DevolucoesRegistradasQuantidade = recuperacao.DevolucoesQuantidade,
+            DevolucoesRegistradasValor = recuperacao.DevolucoesValor,
+            ValorBrutoOcorrencias = recuperacao.ValorBrutoOcorrencias,
+            ValorRecuperadoAssociado = recuperacao.ValorRecuperadoAssociado,
+            PrejuizoLiquidoNaoRecuperado = recuperacao.PrejuizoLiquidoNaoRecuperado,
             QuantidadeVendas = quantidadeVendas,
             QuantidadeCompras = quantidadeCompras
         };

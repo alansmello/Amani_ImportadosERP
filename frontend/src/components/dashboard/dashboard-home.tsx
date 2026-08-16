@@ -1,12 +1,13 @@
 "use client";
 
-import { PackageCheck } from "lucide-react";
+import { PackageCheck, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { DashboardChartSection } from "@/components/dashboard/dashboard-chart-section";
 import { DashboardKpiGrid } from "@/components/dashboard/dashboard-kpi-grid";
 import { DashboardPatrimonialGrid } from "@/components/dashboard/dashboard-patrimonial-grid";
 import {
+  formatDashboardCurrency,
   formatDashboardDate,
   formatDashboardQuantity
 } from "@/components/dashboard/dashboard-formatters";
@@ -126,6 +127,40 @@ function SourceStatusCard({
   );
 }
 
+type OperationalValueCardProps = {
+  title: string;
+  description: string;
+  value?: number | null;
+  badge: string;
+};
+
+function OperationalValueCard({
+  title,
+  description,
+  value,
+  badge
+}: OperationalValueCardProps) {
+  return (
+    <section className="rounded-amani border border-border bg-surface p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-amani border border-border bg-surface-light text-primary">
+          <ShieldCheck className="h-5 w-5" aria-hidden />
+        </div>
+        <Badge variant="info">{badge}</Badge>
+      </div>
+      <div className="mt-4 min-w-0">
+        <h2 className="text-base font-semibold text-text-primary">{title}</h2>
+        <p className="mt-2 text-sm leading-6 text-text-secondary">
+          {description}
+        </p>
+        <p className="mt-4 break-words text-2xl font-semibold text-text-primary">
+          {formatDashboardCurrency(value ?? 0)}
+        </p>
+      </div>
+    </section>
+  );
+}
+
 export function DashboardHome() {
   const [period, setPeriod] = useState<DashboardPeriodFilterType>(() =>
     getCurrentMonthPeriod()
@@ -203,6 +238,30 @@ export function DashboardHome() {
           isStaleForPeriod={operational.isStaleForPeriod}
           onRetry={() => void operational.refetch()}
         />
+        {!operational.isLoading &&
+        !operational.isError &&
+        !operational.isStaleForPeriod ? (
+          <>
+            <OperationalValueCard
+              title="Ocorrencias brutas"
+              description="Perdas e devolucoes do recorte por valor comercial bruto."
+              value={operational.data?.valorBrutoOcorrencias}
+              badge="Coorte"
+            />
+            <OperationalValueCard
+              title="Recuperado associado"
+              description="Alocacoes efetivas ligadas a perdas/devolucoes ate a referencia."
+              value={operational.data?.valorRecuperadoAssociado}
+              badge="Recuperacao"
+            />
+            <OperationalValueCard
+              title="Prejuizo liquido"
+              description="Ocorrencias brutas menos recuperacao associada, sem misturar caixa."
+              value={operational.data?.prejuizoLiquidoNaoRecuperado}
+              badge="Liquido"
+            />
+          </>
+        ) : null}
       </section>
 
       <section aria-label="Rankings gerenciais" className="min-w-0">

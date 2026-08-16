@@ -16,6 +16,11 @@ public class AmaniDbContext : DbContext
     public DbSet<CompraItem> CompraItems { get; set; } = null!;
     public DbSet<CompraItemRecebimento> CompraItemRecebimentos { get; set; } = null!;
     public DbSet<CompraItemPerda> CompraItemPerdas { get; set; } = null!;
+    public DbSet<CompraItemDevolucao> CompraItemDevolucoes { get; set; } = null!;
+    public DbSet<CompraItemDevolucaoCompensacao> CompraItemDevolucaoCompensacoes { get; set; } = null!;
+    public DbSet<CompraReembolso> CompraReembolsos { get; set; } = null!;
+    public DbSet<CompraReembolsoCancelamento> CompraReembolsoCancelamentos { get; set; } = null!;
+    public DbSet<CompraReembolsoAlocacao> CompraReembolsoAlocacoes { get; set; } = null!;
     public DbSet<Venda> Vendas { get; set; } = null!;
     public DbSet<VendaItem> VendaItems { get; set; } = null!;
     public DbSet<EstoqueMovimentacao> EstoqueMovimentacoes { get; set; } = null!;

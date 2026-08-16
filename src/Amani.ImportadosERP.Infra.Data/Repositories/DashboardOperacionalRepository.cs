@@ -187,6 +187,63 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
             perdas.Sum(p => p.Quantidade * ObterValorUnitarioCompra(p.CompraItem)));
     }
 
+    public async Task<ResumoRecuperacaoOperacionalDto> ObterRecuperacaoOperacionalAsync(
+        DateTime dataInicial,
+        DateTime dataFinal,
+        DateTime dataReferencia)
+    {
+        var perdas = await _db.CompraItemPerdas
+            .AsNoTracking()
+            .Include(p => p.Compra)
+            .Include(p => p.CompraItem)
+            .Where(p => p.Compra.Status != CompraStatus.Cancelada
+                && p.DataPerda >= dataInicial
+                && p.DataPerda <= dataFinal)
+            .ToListAsync();
+
+        var devolucoes = await _db.CompraItemDevolucoes
+            .AsNoTracking()
+            .Include(d => d.Compra)
+            .Include(d => d.CompraItem)
+            .Include(d => d.Compensacao)
+            .Where(d => d.Compra != null
+                && d.Compra.Status != CompraStatus.Cancelada
+                && d.DataDevolucao >= dataInicial
+                && d.DataDevolucao <= dataFinal
+                && (d.Compensacao == null || d.Compensacao.DataCompensacao > dataReferencia))
+            .ToListAsync();
+
+        var perdaIds = perdas.Select(p => p.Id).ToArray();
+        var devolucaoIds = devolucoes.Select(d => d.Id).ToArray();
+
+        var valorRecuperado = await _db.CompraReembolsoAlocacoes
+            .AsNoTracking()
+            .Include(a => a.CompraReembolso)
+                .ThenInclude(r => r!.Cancelamento)
+            .Where(a => a.CompraReembolso != null
+                && a.CompraReembolso.DataReembolso <= dataReferencia
+                && (a.CompraReembolso.Cancelamento == null
+                    || a.CompraReembolso.Cancelamento.DataCancelamento > dataReferencia)
+                && ((a.CompraItemPerdaId.HasValue && perdaIds.Contains(a.CompraItemPerdaId.Value))
+                    || (a.CompraItemDevolucaoId.HasValue && devolucaoIds.Contains(a.CompraItemDevolucaoId.Value))))
+            .SumAsync(a => (decimal?)a.Valor) ?? 0m;
+
+        var perdasValor = perdas.Sum(p => p.Quantidade * ObterValorUnitarioCompra(p.CompraItem));
+        var devolucoesValor = devolucoes.Sum(d => d.Quantidade * ObterValorUnitarioCompra(d.CompraItem!));
+        var valorBruto = perdasValor + devolucoesValor;
+
+        return new ResumoRecuperacaoOperacionalDto
+        {
+            PerdasQuantidade = perdas.Sum(p => p.Quantidade),
+            PerdasValor = perdasValor,
+            DevolucoesQuantidade = devolucoes.Sum(d => d.Quantidade),
+            DevolucoesValor = devolucoesValor,
+            ValorBrutoOcorrencias = valorBruto,
+            ValorRecuperadoAssociado = valorRecuperado,
+            PrejuizoLiquidoNaoRecuperado = Math.Max(0m, valorBruto - valorRecuperado)
+        };
+    }
+
     public async Task<int> ObterQuantidadeVendasAsync(DateTime dataInicial, DateTime dataFinal)
     {
         return await _db.Vendas

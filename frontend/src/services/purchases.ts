@@ -4,13 +4,21 @@ import type {
   CreatePurchaseResponse,
   PendingPurchaseProduct,
   Purchase,
+  CancelPurchaseRefundPayload,
+  CompensatePurchaseReturnPayload,
   PurchaseFilters,
   PurchaseInTransit,
   PurchaseListItem,
   PurchaseLoss,
   PurchaseReceipt,
+  PurchaseRefund,
+  PurchaseRefundList,
+  PurchaseReturn,
+  PurchaseReturnList,
   RegisterPurchaseLossPayload,
-  RegisterPurchaseReceiptPayload
+  RegisterPurchaseReceiptPayload,
+  RegisterPurchaseRefundPayload,
+  RegisterPurchaseReturnPayload
 } from "@/types/purchase";
 
 const PURCHASES_PATH = "/api/compras";
@@ -97,6 +105,70 @@ export const purchasesService = {
   listLosses(compraId: string) {
     return apiClient<PurchaseLoss[]>(
       `${PURCHASES_PATH}/${compraId}/perdas`
+    );
+  },
+
+  registerRefund(compraId: string, payload: RegisterPurchaseRefundPayload) {
+    return apiClient<PurchaseRefund>(
+      `${PURCHASES_PATH}/${compraId}/reembolsos`,
+      {
+        method: "POST",
+        body: { ...payload }
+      }
+    );
+  },
+
+  cancelRefund(
+    compraId: string,
+    reembolsoId: string,
+    payload: CancelPurchaseRefundPayload
+  ) {
+    return apiClient<PurchaseRefund>(
+      `${PURCHASES_PATH}/${compraId}/reembolsos/${reembolsoId}/cancelamentos`,
+      {
+        method: "POST",
+        body: { ...payload }
+      }
+    );
+  },
+
+  listRefunds(compraId: string) {
+    return apiClient<PurchaseRefundList>(
+      `${PURCHASES_PATH}/${compraId}/reembolsos`
+    );
+  },
+
+  registerReturn(
+    compraId: string,
+    itemId: string,
+    payload: RegisterPurchaseReturnPayload
+  ) {
+    return apiClient<PurchaseReturn>(
+      `${PURCHASES_PATH}/${compraId}/itens/${itemId}/devolucoes`,
+      {
+        method: "POST",
+        body: { ...payload }
+      }
+    );
+  },
+
+  compensateReturn(
+    compraId: string,
+    devolucaoId: string,
+    payload: CompensatePurchaseReturnPayload
+  ) {
+    return apiClient<PurchaseReturn>(
+      `${PURCHASES_PATH}/${compraId}/devolucoes/${devolucaoId}/compensacoes`,
+      {
+        method: "POST",
+        body: { ...payload }
+      }
+    );
+  },
+
+  listReturns(compraId: string) {
+    return apiClient<PurchaseReturnList>(
+      `${PURCHASES_PATH}/${compraId}/devolucoes`
     );
   }
 };

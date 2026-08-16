@@ -46,7 +46,38 @@ public sealed class DashboardCustoMedioReadService
             })
             .ToListAsync();
 
+        var devolucoes = await _db.CompraItemDevolucoes
+            .AsNoTracking()
+            .Include(d => d.CompraItemRecebimento)
+            .Where(d => d.CompraItemRecebimento != null
+                && ids.Contains(d.CompraItemRecebimento.ProdutoId)
+                && d.Momento == CompraItemDevolucaoMomento.DepoisDoRecebimento
+                && d.DataDevolucao <= dataReferencia
+                && (d.Compensacao == null || d.Compensacao.DataCompensacao > dataReferencia))
+            .GroupBy(d => d.CompraItemRecebimento!.ProdutoId)
+            .Select(g => new
+            {
+                ProdutoId = g.Key,
+                Quantidade = g.Sum(d => d.Quantidade),
+                Valor = g.Sum(d => d.CompraItemRecebimento!.ValorUnitario * d.Quantidade)
+            })
+            .ToListAsync();
+
+        var devolucoesPorProduto = devolucoes.ToDictionary(d => d.ProdutoId);
+
         return entradas
+            .Select(entrada =>
+            {
+                var devolucao = devolucoesPorProduto.TryGetValue(entrada.ProdutoId, out var item)
+                    ? item
+                    : null;
+                return new
+                {
+                    entrada.ProdutoId,
+                    Quantidade = entrada.Quantidade - (devolucao?.Quantidade ?? 0),
+                    Valor = entrada.Valor - (devolucao?.Valor ?? 0m)
+                };
+            })
             .Where(entrada => entrada.Quantidade > 0)
             .ToDictionary(
                 entrada => entrada.ProdutoId,

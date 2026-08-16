@@ -10,6 +10,7 @@ public interface IDashboardOperacionalRepository
     Task<int> ObterComprasEmAbertoAsync(DateTime dataReferencia);
     Task<int> ObterProdutosPendentesRecebimentoAsync(DateTime dataReferencia);
     Task<(int Quantidade, decimal Valor)> ObterPerdasRegistradasAsync(DateTime dataInicial, DateTime dataFinal);
+    Task<ResumoRecuperacaoOperacionalDto> ObterRecuperacaoOperacionalAsync(DateTime dataInicial, DateTime dataFinal, DateTime dataReferencia);
     Task<int> ObterQuantidadeVendasAsync(DateTime dataInicial, DateTime dataFinal);
     Task<int> ObterQuantidadeComprasAsync(DateTime dataInicial, DateTime dataFinal);
 }

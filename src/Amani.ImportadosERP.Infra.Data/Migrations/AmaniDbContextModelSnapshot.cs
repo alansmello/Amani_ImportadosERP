@@ -207,6 +207,126 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.ToTable("compra_items", (string)null);
                 });
 
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucao", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CompraItemRecebimentoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataDevolucao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("EstoqueMovimentacaoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Momento")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Observacao")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("OperacaoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompraItemRecebimentoId");
+
+                    b.HasIndex("EstoqueMovimentacaoId")
+                        .IsUnique();
+
+                    b.HasIndex("OperacaoId")
+                        .IsUnique();
+
+                    b.HasIndex("CompraId", "DataDevolucao");
+
+                    b.HasIndex("CompraItemId", "Momento");
+
+                    b.ToTable("compra_item_devolucoes", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_compra_item_devolucoes_MomentoReferencias", "(\"Momento\" = 'AntesDoRecebimento' AND \"CompraItemRecebimentoId\" IS NULL AND \"EstoqueMovimentacaoId\" IS NULL) OR (\"Momento\" = 'DepoisDoRecebimento' AND \"CompraItemRecebimentoId\" IS NOT NULL AND \"EstoqueMovimentacaoId\" IS NOT NULL)");
+
+                            t.HasCheckConstraint("CK_compra_item_devolucoes_ObservacaoOutro", "\"Motivo\" <> 'Outro' OR (\"Observacao\" IS NOT NULL AND length(trim(\"Observacao\")) > 0)");
+
+                            t.HasCheckConstraint("CK_compra_item_devolucoes_Quantidade", "\"Quantidade\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucaoCompensacao", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraItemDevolucaoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataCompensacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("EstoqueMovimentacaoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("OperacaoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("PresencaFisicaConfirmada")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompraItemDevolucaoId")
+                        .IsUnique();
+
+                    b.HasIndex("EstoqueMovimentacaoId")
+                        .IsUnique();
+
+                    b.HasIndex("OperacaoId")
+                        .IsUnique();
+
+                    b.ToTable("compra_item_devolucao_compensacoes", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_compra_item_devolucao_compensacoes_Motivo", "length(trim(\"Motivo\")) > 0");
+                        });
+                });
+
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemPerda", b =>
                 {
                     b.Property<Guid>("Id")
@@ -309,6 +429,142 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.HasIndex("ProdutoId");
 
                     b.ToTable("compra_item_recebimentos", (string)null);
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraReembolso", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataReembolso")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Observacao")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("OperacaoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ReferenciaExterna")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperacaoId")
+                        .IsUnique();
+
+                    b.HasIndex("CompraId", "DataReembolso");
+
+                    b.HasIndex("CompraId", "ReferenciaExterna")
+                        .IsUnique()
+                        .HasFilter("\"ReferenciaExterna\" IS NOT NULL");
+
+                    b.ToTable("compra_reembolsos", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_compra_reembolsos_Valor", "\"Valor\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraReembolsoAlocacao", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CompraItemDevolucaoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CompraItemPerdaId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraReembolsoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompraItemDevolucaoId");
+
+                    b.HasIndex("CompraItemId");
+
+                    b.HasIndex("CompraItemPerdaId");
+
+                    b.HasIndex("CompraReembolsoId");
+
+                    b.ToTable("compra_reembolso_alocacoes", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_compra_reembolso_alocacoes_OcorrenciaUnica", "NOT (\"CompraItemPerdaId\" IS NOT NULL AND \"CompraItemDevolucaoId\" IS NOT NULL)");
+
+                            t.HasCheckConstraint("CK_compra_reembolso_alocacoes_Valor", "\"Valor\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraReembolsoCancelamento", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompraReembolsoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataCancelamento")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("OperacaoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompraReembolsoId")
+                        .IsUnique();
+
+                    b.HasIndex("OperacaoId")
+                        .IsUnique();
+
+                    b.ToTable("compra_reembolso_cancelamentos", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_compra_reembolso_cancelamentos_Motivo", "length(trim(\"Motivo\")) > 0");
+                        });
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ConfiguracaoFormaPagamento", b =>
@@ -973,6 +1229,57 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Navigation("Compra");
                 });
 
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucao", b =>
+                {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.Compra", "Compra")
+                        .WithMany()
+                        .HasForeignKey("CompraId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraItem", "CompraItem")
+                        .WithMany()
+                        .HasForeignKey("CompraItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraItemRecebimento", "CompraItemRecebimento")
+                        .WithMany()
+                        .HasForeignKey("CompraItemRecebimentoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.EstoqueMovimentacao", "EstoqueMovimentacao")
+                        .WithOne()
+                        .HasForeignKey("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucao", "EstoqueMovimentacaoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Compra");
+
+                    b.Navigation("CompraItem");
+
+                    b.Navigation("CompraItemRecebimento");
+
+                    b.Navigation("EstoqueMovimentacao");
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucaoCompensacao", b =>
+                {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucao", "CompraItemDevolucao")
+                        .WithOne("Compensacao")
+                        .HasForeignKey("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucaoCompensacao", "CompraItemDevolucaoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.EstoqueMovimentacao", "EstoqueMovimentacao")
+                        .WithOne()
+                        .HasForeignKey("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucaoCompensacao", "EstoqueMovimentacaoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CompraItemDevolucao");
+
+                    b.Navigation("EstoqueMovimentacao");
+                });
+
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemPerda", b =>
                 {
                     b.HasOne("Amani.ImportadosERP.Domain.Entities.Compra", "Compra")
@@ -1016,6 +1323,61 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Navigation("CompraItem");
 
                     b.Navigation("EstoqueMovimentacao");
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraReembolso", b =>
+                {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.Compra", "Compra")
+                        .WithMany()
+                        .HasForeignKey("CompraId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Compra");
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraReembolsoAlocacao", b =>
+                {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucao", "CompraItemDevolucao")
+                        .WithMany()
+                        .HasForeignKey("CompraItemDevolucaoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraItem", "CompraItem")
+                        .WithMany()
+                        .HasForeignKey("CompraItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraItemPerda", "CompraItemPerda")
+                        .WithMany()
+                        .HasForeignKey("CompraItemPerdaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraReembolso", "CompraReembolso")
+                        .WithMany("Alocacoes")
+                        .HasForeignKey("CompraReembolsoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CompraItem");
+
+                    b.Navigation("CompraItemDevolucao");
+
+                    b.Navigation("CompraItemPerda");
+
+                    b.Navigation("CompraReembolso");
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraReembolsoCancelamento", b =>
+                {
+                    b.HasOne("Amani.ImportadosERP.Domain.Entities.CompraReembolso", "CompraReembolso")
+                        .WithOne("Cancelamento")
+                        .HasForeignKey("Amani.ImportadosERP.Domain.Entities.CompraReembolsoCancelamento", "CompraReembolsoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CompraReembolso");
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ContaReceber", b =>
@@ -1156,6 +1518,18 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Navigation("Perdas");
 
                     b.Navigation("Recebimentos");
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraItemDevolucao", b =>
+                {
+                    b.Navigation("Compensacao");
+                });
+
+            modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.CompraReembolso", b =>
+                {
+                    b.Navigation("Alocacoes");
+
+                    b.Navigation("Cancelamento");
                 });
 
             modelBuilder.Entity("Amani.ImportadosERP.Domain.Entities.ContaReceber", b =>
