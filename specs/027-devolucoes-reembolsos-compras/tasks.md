@@ -31,28 +31,28 @@
 
 **⚠️ CRITICAL**: nenhuma história de usuário pode ser implementada antes da conclusão desta fase; a migration não deve ser aplicada em produção nesta fase
 
-- [ ] T005 [P] Criar a entidade e os enums de devolução com invariantes de momento, motivo, quantidade, observação e idempotência em `src/Amani.ImportadosERP.Domain/Entities/CompraItemDevolucao.cs`
-- [ ] T006 [P] Criar a entidade de compensação única e auditável da devolução em `src/Amani.ImportadosERP.Domain/Entities/CompraItemDevolucaoCompensacao.cs`
-- [ ] T007 [P] Criar a entidade de reembolso positivo com referência externa normalizada e operação idempotente em `src/Amani.ImportadosERP.Domain/Entities/CompraReembolso.cs`
-- [ ] T008 [P] Criar a entidade de cancelamento integral e único do reembolso em `src/Amani.ImportadosERP.Domain/Entities/CompraReembolsoCancelamento.cs`
-- [ ] T009 [P] Criar a entidade de alocação monetária opcional por item, perda ou devolução em `src/Amani.ImportadosERP.Domain/Entities/CompraReembolsoAlocacao.cs`
-- [ ] T010 [P] Implementar total reembolsado, saldo reembolsável, custo financeiro líquido e situação derivada em `src/Amani.ImportadosERP.Domain/Services/CompraCalculoFinanceiro.cs`
-- [ ] T011 [P] Implementar valor bruto F026, recuperação associada e prejuízo líquido sem misturar custo de estoque em `src/Amani.ImportadosERP.Domain/Services/CompraRecuperacaoFinanceira.cs`
-- [ ] T012 [P] Definir operações append-only, consultas temporais e idempotência em `src/Amani.ImportadosERP.Application/Interfaces/ICompraItemDevolucaoRepository.cs` e `src/Amani.ImportadosERP.Application/Interfaces/ICompraReembolsoRepository.cs`
-- [ ] T013 [P] Criar DTOs de registro, listagem e compensação de devoluções conforme o contrato em `src/Amani.ImportadosERP.Application/DTOs/Devolucoes/`
-- [ ] T014 [P] Criar DTOs de registro, alocação, listagem e cancelamento de reembolsos conforme o contrato em `src/Amani.ImportadosERP.Application/DTOs/Reembolsos/`
-- [ ] T015 [P] Criar mapeamento explícito entre devoluções, compensações e DTOs em `src/Amani.ImportadosERP.Application/Mappers/CompraDevolucaoMapper.cs`
-- [ ] T016 [P] Criar mapeamento explícito entre reembolsos, cancelamentos, alocações e DTOs em `src/Amani.ImportadosERP.Application/Mappers/CompraReembolsoMapper.cs`
-- [ ] T017 [P] Mapear tabela, checks, FKs `Restrict` e índices de devolução em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraItemDevolucaoMapping.cs`
-- [ ] T018 [P] Mapear unicidade e FKs `Restrict` da compensação de devolução em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraItemDevolucaoCompensacaoMapping.cs`
-- [ ] T019 [P] Mapear valor, referência externa parcial única e índices do reembolso em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraReembolsoMapping.cs`
-- [ ] T020 [P] Mapear cancelamento único e FKs `Restrict` do reembolso em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraReembolsoCancelamentoMapping.cs`
-- [ ] T021 [P] Mapear alocações, checks monetários e referências mutuamente exclusivas em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraReembolsoAlocacaoMapping.cs`
-- [ ] T022 Registrar os cinco `DbSet` e aplicar somente os novos mappings em `src/Amani.ImportadosERP.Infra.Data/Context/AmaniDbContext.cs`
-- [ ] T023 [P] Implementar persistência, agregações temporais, replay idempotente e consultas de elegibilidade em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraItemDevolucaoRepository.cs`
-- [ ] T024 [P] Implementar persistência, teto líquido, referência externa, alocações e replay idempotente em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraReembolsoRepository.cs`
-- [ ] T025 Registrar repositories, serviços de domínio e feature settings sem dependência nova em `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
-- [ ] T026 Gerar uma única migration expand-only e atualizar apenas o snapshot em `src/Amani.ImportadosERP.Infra.Data/Migrations/`, sem DML, backfill ou alteração destrutiva de tabelas existentes
+- [X] T005 [P] Criar a entidade e os enums de devolução com invariantes de momento, motivo, quantidade, observação e idempotência em `src/Amani.ImportadosERP.Domain/Entities/CompraItemDevolucao.cs`
+- [X] T006 [P] Criar a entidade de compensação única e auditável da devolução em `src/Amani.ImportadosERP.Domain/Entities/CompraItemDevolucaoCompensacao.cs`
+- [X] T007 [P] Criar a entidade de reembolso positivo com referência externa normalizada e operação idempotente em `src/Amani.ImportadosERP.Domain/Entities/CompraReembolso.cs`
+- [X] T008 [P] Criar a entidade de cancelamento integral e único do reembolso em `src/Amani.ImportadosERP.Domain/Entities/CompraReembolsoCancelamento.cs`
+- [X] T009 [P] Criar a entidade de alocação monetária opcional por item, perda ou devolução em `src/Amani.ImportadosERP.Domain/Entities/CompraReembolsoAlocacao.cs`
+- [X] T010 [P] Implementar total reembolsado, saldo reembolsável, custo financeiro líquido e situação derivada em `src/Amani.ImportadosERP.Domain/Services/CompraCalculoFinanceiro.cs`
+- [X] T011 [P] Implementar valor bruto F026, recuperação associada e prejuízo líquido sem misturar custo de estoque em `src/Amani.ImportadosERP.Domain/Services/CompraRecuperacaoFinanceira.cs`
+- [X] T012 [P] Definir operações append-only, consultas temporais e idempotência em `src/Amani.ImportadosERP.Application/Interfaces/ICompraItemDevolucaoRepository.cs` e `src/Amani.ImportadosERP.Application/Interfaces/ICompraReembolsoRepository.cs`
+- [X] T013 [P] Criar DTOs de registro, listagem e compensação de devoluções conforme o contrato em `src/Amani.ImportadosERP.Application/DTOs/Devolucoes/`
+- [X] T014 [P] Criar DTOs de registro, alocação, listagem e cancelamento de reembolsos conforme o contrato em `src/Amani.ImportadosERP.Application/DTOs/Reembolsos/`
+- [X] T015 [P] Criar mapeamento explícito entre devoluções, compensações e DTOs em `src/Amani.ImportadosERP.Application/Mappers/CompraDevolucaoMapper.cs`
+- [X] T016 [P] Criar mapeamento explícito entre reembolsos, cancelamentos, alocações e DTOs em `src/Amani.ImportadosERP.Application/Mappers/CompraReembolsoMapper.cs`
+- [X] T017 [P] Mapear tabela, checks, FKs `Restrict` e índices de devolução em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraItemDevolucaoMapping.cs`
+- [X] T018 [P] Mapear unicidade e FKs `Restrict` da compensação de devolução em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraItemDevolucaoCompensacaoMapping.cs`
+- [X] T019 [P] Mapear valor, referência externa parcial única e índices do reembolso em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraReembolsoMapping.cs`
+- [X] T020 [P] Mapear cancelamento único e FKs `Restrict` do reembolso em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraReembolsoCancelamentoMapping.cs`
+- [X] T021 [P] Mapear alocações, checks monetários e referências mutuamente exclusivas em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/CompraReembolsoAlocacaoMapping.cs`
+- [X] T022 Registrar os cinco `DbSet` e aplicar somente os novos mappings em `src/Amani.ImportadosERP.Infra.Data/Context/AmaniDbContext.cs`
+- [X] T023 [P] Implementar persistência, agregações temporais, replay idempotente e consultas de elegibilidade em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraItemDevolucaoRepository.cs`
+- [X] T024 [P] Implementar persistência, teto líquido, referência externa, alocações e replay idempotente em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraReembolsoRepository.cs`
+- [X] T025 Registrar repositories, serviços de domínio e feature settings sem dependência nova em `src/Amani.ImportadosERP.Infra.IoC/DependencyInjection.cs`
+- [X] T026 Gerar uma única migration expand-only e atualizar apenas o snapshot em `src/Amani.ImportadosERP.Infra.Data/Migrations/`, sem DML, backfill ou alteração destrutiva de tabelas existentes
 
 **Checkpoint**: modelo, contratos internos e schema aditivo prontos; a feature continua desligada
 
