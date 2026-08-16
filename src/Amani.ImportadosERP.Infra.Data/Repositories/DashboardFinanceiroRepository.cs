@@ -136,11 +136,29 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
             .SumAsync(p => p.Valor);
     }
 
+    public async Task<decimal> ObterReembolsosComprasLiquidosAsync(DateTime dataInicial, DateTime dataFinal)
+    {
+        var creditos = await _db.CompraReembolsos
+            .AsNoTracking()
+            .Where(r => r.DataReembolso >= dataInicial && r.DataReembolso <= dataFinal)
+            .SumAsync(r => r.Valor);
+
+        var cancelamentos = await _db.CompraReembolsoCancelamentos
+            .AsNoTracking()
+            .Where(c => c.DataCancelamento >= dataInicial && c.DataCancelamento <= dataFinal)
+            .Select(c => c.CompraReembolso!.Valor)
+            .SumAsync();
+
+        return creditos - cancelamentos;
+    }
+
     public async Task<DashboardCaixaResumoDto> ObterResumoCaixaAsync(
         DateTime dataInicial,
         DateTime dataFinal)
     {
-        var entradas = await ObterValoresRecebidosAsync(dataInicial, dataFinal);
+        var valoresRecebidosClientes = await ObterValoresRecebidosAsync(dataInicial, dataFinal);
+        var reembolsosCompras = await ObterReembolsosComprasLiquidosAsync(dataInicial, dataFinal);
+        var entradas = valoresRecebidosClientes + reembolsosCompras;
         var saidasCompras = await ObterTotalComprasAsync(dataInicial, dataFinal);
         var saidasDespesas = await ObterTotalDespesasAsync(dataInicial, dataFinal);
         var saidas = saidasCompras + saidasDespesas;
@@ -161,6 +179,7 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
             .AsNoTracking()
             .Where(p => p.DataPagamento < dataInicial)
             .SumAsync(p => p.Valor);
+        var reembolsosAnteriores = await ObterReembolsosComprasLiquidosAntesAsync(dataInicial);
 
         var comprasAnteriores = await ObterTotalComprasAntesAsync(dataInicial);
         var despesasAnteriores = await _db.Despesas
@@ -168,7 +187,7 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
             .Where(d => d.DataCompetencia < dataInicial)
             .SumAsync(d => d.Valor);
 
-        var caixaInicial = saldoInicialEventos + entradasAnteriores - comprasAnteriores - despesasAnteriores;
+        var caixaInicial = saldoInicialEventos + entradasAnteriores + reembolsosAnteriores - comprasAnteriores - despesasAnteriores;
         var caixaFinal = caixaInicial + ajusteImplantacao + entradas - saidas;
 
         return new DashboardCaixaResumoDto
@@ -176,6 +195,8 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
             CaixaInicial = caixaInicial,
             AjusteImplantacao = ajusteImplantacao,
             Entradas = entradas,
+            ValoresRecebidosClientes = valoresRecebidosClientes,
+            ReembolsosCompras = reembolsosCompras,
             Saidas = saidas,
             CaixaFinal = caixaFinal
         };
@@ -205,5 +226,21 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
                 - c.Desconto
                 + c.Acrescimo)
             .SumAsync();
+    }
+
+    private async Task<decimal> ObterReembolsosComprasLiquidosAntesAsync(DateTime dataInicial)
+    {
+        var creditos = await _db.CompraReembolsos
+            .AsNoTracking()
+            .Where(r => r.DataReembolso < dataInicial)
+            .SumAsync(r => r.Valor);
+
+        var cancelamentos = await _db.CompraReembolsoCancelamentos
+            .AsNoTracking()
+            .Where(c => c.DataCancelamento < dataInicial)
+            .Select(c => c.CompraReembolso!.Valor)
+            .SumAsync();
+
+        return creditos - cancelamentos;
     }
 }

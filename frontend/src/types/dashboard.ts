@@ -59,6 +59,8 @@ export type DashboardFinancialKpis = {
   saldoOperacional: number;
   contasReceberAbertas: number;
   valoresRecebidos: number;
+  reembolsosComprasPeriodo?: number | null;
+  entradasCaixaPeriodo?: number | null;
   valorLucroNaoCalculavel: number;
   quantidadeItensSemCusto: number;
   saidasPeriodo?: number | null;
@@ -96,6 +98,11 @@ export type DashboardOperationalSummary = {
   produtosPendentesRecebimento: number;
   perdasRegistradasQuantidade: number;
   perdasRegistradasValor: number;
+  devolucoesRegistradasQuantidade?: number | null;
+  devolucoesRegistradasValor?: number | null;
+  valorBrutoOcorrencias?: number | null;
+  valorRecuperadoAssociado?: number | null;
+  prejuizoLiquidoNaoRecuperado?: number | null;
   quantidadeVendas: number;
   quantidadeCompras: number;
 };
@@ -186,6 +193,8 @@ export type DashboardCharts = {
 
 export type DashboardFinancialSnapshot = {
   totalRecebido: number;
+  reembolsosComprasPeriodo?: number | null;
+  entradasCaixaPeriodo?: number | null;
   totalAReceber: number;
   totalCompras: number;
   totalDespesas: number;

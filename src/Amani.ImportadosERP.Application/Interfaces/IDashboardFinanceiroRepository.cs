@@ -13,6 +13,7 @@ public interface IDashboardFinanceiroRepository
     Task<decimal> ObterTotalDespesasAsync(DateTime dataInicial, DateTime dataFinal);
     Task<decimal> ObterContasReceberAbertasAsync(DateTime dataReferencia);
     Task<decimal> ObterValoresRecebidosAsync(DateTime dataInicial, DateTime dataFinal);
+    Task<decimal> ObterReembolsosComprasLiquidosAsync(DateTime dataInicial, DateTime dataFinal);
     Task<DashboardCaixaResumoDto> ObterResumoCaixaAsync(DateTime dataInicial, DateTime dataFinal);
 
     Task<DashboardRecebiveisResumoDto> ObterResumoRecebiveisAsync(DateTime dataReferencia);

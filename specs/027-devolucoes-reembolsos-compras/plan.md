@@ -61,6 +61,8 @@ Introduzir dois históricos independentes e append-only: devoluções logística
 8. Valor bruto de perda/devolução para análise comercial usa o rateio oficial da F026; custo de estoque usa o snapshot do recebimento. As duas medidas não são intercambiáveis.
 9. Reembolso e devolução são comandos independentes e atomicamente consistentes em si; a interface não cria transação distribuída entre fatos que podem ocorrer em datas diferentes.
 10. O schema é aplicado com a feature desligada; após baseline e smoke test, a habilitação ocorre por configuração. Recuo mantém schema e dados novos e desliga novas operações.
+11. A apresentação operacional deve diferenciar fato histórico de efeito vigente: recebimentos continuam aparecendo como recebidos, devoluções pós-recebimento aparecem como devolvidas, e compensações aparecem como neutralização auditável. A lista de compras deve usar tag logística derivada desses fatos, sem misturar com tag financeira de reembolso.
+12. Débito técnico identificado na homologação: ao compensar uma devolução vinculada ou alocada a reembolso, a UI e o backend devem evoluir para apresentar uma escolha explícita de cancelamento/estorno do reembolso relacionado ou manutenção justificada do crédito. A entrega atual preserva a independência entre eventos e exige conciliação operacional manual desse caso.
 
 ## Migration and Production Rollout Strategy
 
@@ -147,7 +149,8 @@ artifacts/
 - **Custo**: `CustoProdutoRepository`, `DashboardCustoMedioReadService` e consumidores de estoque/lucro devem subtrair devoluções e somar compensações pelo custo do recebimento.
 - **Financeiro**: `DashboardFinanceiroRepository`, resumo de caixa e handler gerencial adicionam reembolsos líquidos atuais e anteriores, preservando compras/despesas brutas e `ValoresRecebidos` de clientes.
 - **Operacional**: perdas e devoluções usam rateio F026 para valor bruto; recuperações alocadas formam prejuízo líquido; valores por ocorrência e caixa por data de crédito permanecem distintos.
-- **Contratos/UI**: lista/detalhe ganham resumo de reembolso; itens ganham quantidades devolvidas; histórico reúne quatro tipos de evento e compensações; mutations invalidam compras, estoque, financeiro e dashboard.
+- **Contratos/UI**: lista/detalhe ganham resumo de reembolso; itens ganham quantidades devolvidas vigentes e compensadas; histórico reúne quatro tipos de evento e compensações; a lista exibe tag logística derivada como parcialmente devolvida, devolvida, parcialmente compensada ou devolução compensada; mutations invalidam compras, estoque, financeiro e dashboard.
+- **Débito técnico - Compensação financeira associada à compensação logística**: quando a devolução compensada possuir reembolso relacionado, o fluxo futuro deve oferecer cancelar/estornar o reembolso ou manter o crédito com justificativa auditável.
 - **Legado**: sem registros novos, todas as fórmulas recompõem exatamente os resultados anteriores.
 
 ## Implementation Sequence

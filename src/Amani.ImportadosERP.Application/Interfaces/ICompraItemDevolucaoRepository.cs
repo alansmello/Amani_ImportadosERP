@@ -7,7 +7,9 @@ public interface ICompraItemDevolucaoRepository
     Task AdicionarAsync(CompraItemDevolucao devolucao);
     Task AdicionarSemSalvarAsync(CompraItemDevolucao devolucao);
     Task AdicionarCompensacaoAsync(CompraItemDevolucaoCompensacao compensacao);
+    Task AdicionarCompensacaoSemSalvarAsync(CompraItemDevolucaoCompensacao compensacao);
     Task<CompraItemDevolucao?> ObterPorIdAsync(Guid id);
+    Task<CompraItemDevolucao?> ObterPorIdParaAtualizarAsync(Guid id);
     Task<CompraItemDevolucao?> ObterPorOperacaoIdAsync(Guid operacaoId);
     Task<CompraItemDevolucaoCompensacao?> ObterCompensacaoPorOperacaoIdAsync(Guid operacaoId);
     Task<IReadOnlyCollection<CompraItemDevolucao>> ObterPorCompraAsync(Guid compraId, DateTime? referencia = null);

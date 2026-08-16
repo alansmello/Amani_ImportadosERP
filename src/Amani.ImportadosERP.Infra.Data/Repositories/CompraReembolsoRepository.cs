@@ -34,11 +34,24 @@ public class CompraReembolsoRepository : ICompraReembolsoRepository
         await _db.SaveChangesAsync();
     }
 
+    public async Task AdicionarCancelamentoSemSalvarAsync(CompraReembolsoCancelamento cancelamento)
+    {
+        ArgumentNullException.ThrowIfNull(cancelamento);
+        await _db.CompraReembolsoCancelamentos.AddAsync(cancelamento);
+    }
+
     public async Task<CompraReembolso?> ObterPorIdAsync(Guid id)
     {
         if (id == Guid.Empty) return null;
         return await QueryCompleta()
             .AsNoTracking()
+            .FirstOrDefaultAsync(r => r.Id == id);
+    }
+
+    public async Task<CompraReembolso?> ObterPorIdParaAtualizarAsync(Guid id)
+    {
+        if (id == Guid.Empty) return null;
+        return await QueryCompleta()
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 

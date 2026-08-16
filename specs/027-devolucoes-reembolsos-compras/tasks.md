@@ -64,18 +64,18 @@
 
 **Independent Test**: registrar R$ 80,00 em uma compra oficial de R$ 300,00 e comprovar total original R$ 300,00, situação parcial, custo líquido R$ 220,00 e entrada no caixa somente a partir da data do crédito
 
-- [ ] T027 [US1] Implementar registro serializável de reembolso, teto oficial F026, alocações opcionais, idempotência e bloqueio pela feature flag em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
-- [ ] T028 [US1] Expor `POST` e `GET /api/compras/{compraId}/reembolsos` com respostas 201/200/400/404/409 em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`
-- [ ] T029 [P] [US1] Projetar total reembolsado, saldo, custo líquido e situação nas consultas de compra em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`
-- [ ] T030 [US1] Acrescentar campos aditivos de reembolso em `src/Amani.ImportadosERP.Application/DTOs/CompraListDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraResponseDto.cs` e `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`
-- [ ] T031 [P] [US1] Incorporar créditos por data ao caixa sem alterar compras brutas nem pagamentos de clientes em `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardFinanceiroRepository.cs`
-- [ ] T032 [US1] Acrescentar reembolsos líquidos e entradas totais nos contratos e handlers financeiros em `src/Amani.ImportadosERP.Application/DTOs/DashboardFinanceiroDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardFinanceiroGerencialDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardCaixaResumoDto.cs`, `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardFinanceiroQueryHandler.cs` e `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardFinanceiroGerencialQueryHandler.cs`
-- [ ] T033 [P] [US1] Adicionar tipos tolerantes ao rollout aditivo para resumos e comandos de reembolso em `frontend/src/types/purchase.ts` e `frontend/src/types/dashboard.ts`
-- [ ] T034 [US1] Implementar chamadas e mutations idempotentes com invalidação de compras e financeiro em `frontend/src/services/purchases.ts` e `frontend/src/hooks/use-purchases.ts`
-- [ ] T035 [P] [US1] Criar diálogo Mobile First de revisão e confirmação do reembolso, preservando formulário em erro em `frontend/src/components/compras/refund-dialog.tsx`
-- [ ] T036 [US1] Integrar resumo, histórico e ação de reembolso no detalhe sem calcular valores oficiais no cliente em `frontend/src/components/compras/purchase-detail.tsx` e `frontend/src/components/compras/purchase-summary.tsx`
-- [ ] T037 [P] [US1] Exibir badges separados de situação logística e reembolso na lista em `frontend/src/components/compras/purchase-list.tsx`
-- [ ] T038 [US1] Exibir reembolsos e entradas totais mantendo recebimentos de clientes separados em `frontend/src/services/dashboard.ts`, `frontend/src/hooks/use-dashboard.ts` e `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
+- [X] T027 [US1] Implementar registro serializável de reembolso, teto oficial F026, alocações opcionais, idempotência e bloqueio pela feature flag em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
+- [X] T028 [US1] Expor `POST` e `GET /api/compras/{compraId}/reembolsos` com respostas 201/200/400/404/409 em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`
+- [X] T029 [P] [US1] Projetar total reembolsado, saldo, custo líquido e situação nas consultas de compra em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`
+- [X] T030 [US1] Acrescentar campos aditivos de reembolso em `src/Amani.ImportadosERP.Application/DTOs/CompraListDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraResponseDto.cs` e `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`
+- [X] T031 [P] [US1] Incorporar créditos por data ao caixa sem alterar compras brutas nem pagamentos de clientes em `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardFinanceiroRepository.cs`
+- [X] T032 [US1] Acrescentar reembolsos líquidos e entradas totais nos contratos e handlers financeiros em `src/Amani.ImportadosERP.Application/DTOs/DashboardFinanceiroDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardFinanceiroGerencialDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardCaixaResumoDto.cs`, `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardFinanceiroQueryHandler.cs` e `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardFinanceiroGerencialQueryHandler.cs`
+- [X] T033 [P] [US1] Adicionar tipos tolerantes ao rollout aditivo para resumos e comandos de reembolso em `frontend/src/types/purchase.ts` e `frontend/src/types/dashboard.ts`
+- [X] T034 [US1] Implementar chamadas e mutations idempotentes com invalidação de compras e financeiro em `frontend/src/services/purchases.ts` e `frontend/src/hooks/use-purchases.ts`
+- [X] T035 [P] [US1] Criar diálogo Mobile First de revisão e confirmação do reembolso, preservando formulário em erro em `frontend/src/components/compras/refund-dialog.tsx`
+- [X] T036 [US1] Integrar resumo, histórico e ação de reembolso no detalhe sem calcular valores oficiais no cliente em `frontend/src/components/compras/purchase-detail.tsx` e `frontend/src/components/compras/purchase-summary.tsx`
+- [X] T037 [P] [US1] Exibir badges separados de situação logística e reembolso na lista em `frontend/src/components/compras/purchase-list.tsx`
+- [X] T038 [US1] Exibir reembolsos e entradas totais mantendo recebimentos de clientes separados em `frontend/src/services/dashboard.ts`, `frontend/src/hooks/use-dashboard.ts` e `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
 - [ ] T039 [US1] Executar os cenários de reembolso parcial, múltiplo, integral, limite, referência externa e caixa das seções 4, 5 e 13 de `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar evidências em `artifacts/f027-validation-evidence.md`
 
 **Checkpoint**: reembolsos funcionam independentemente de devoluções e jamais alteram estoque
@@ -88,13 +88,13 @@
 
 **Independent Test**: devolver 3 unidades de um item com 7 pendentes e verificar pendência 4, nenhuma movimentação e situação financeira inalterada
 
-- [ ] T040 [P] [US2] Incorporar devoluções anteriores vigentes à quantidade pendente e ao status logístico sem persistir novo estado em `src/Amani.ImportadosERP.Domain/Entities/CompraItem.cs` e `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`
-- [ ] T041 [US2] Implementar registro serializável antes do recebimento com revalidação de pendência, motivos, data, idempotência e zero movimento em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
-- [ ] T042 [US2] Expor registro por item e listagem de devoluções da compra em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`
-- [ ] T043 [P] [US2] Integrar devoluções anteriores, compensações e cortes temporais nas consultas de trânsito, pendências e alertas em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`, `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterComprasEmTransitoQueryHandler.cs` e `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterProdutosPendentesRecebimentoQueryHandler.cs`
-- [ ] T044 [US2] Acrescentar quantidades devolvidas antes/depois e elegibilidade nos DTOs e mapper em `src/Amani.ImportadosERP.Application/DTOs/CompraEmTransitoDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/ProdutoPendenteRecebimentoDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraItemResponseDto.cs` e `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`
-- [ ] T045 [P] [US2] Criar diálogo Mobile First para devolução anterior com motivos, justificativa de `Outro`, revisão e confirmação em `frontend/src/components/compras/return-dialog.tsx`
-- [ ] T046 [US2] Integrar ação e quantidades da devolução anterior ao detalhe e painel de pendências em `frontend/src/components/compras/purchase-detail.tsx`, `frontend/src/components/compras/purchase-history.tsx` e `frontend/src/components/compras/pending-products-panel.tsx`
+- [X] T040 [P] [US2] Incorporar devoluções anteriores vigentes à quantidade pendente e ao status logístico sem persistir novo estado em `src/Amani.ImportadosERP.Domain/Entities/CompraItem.cs` e `src/Amani.ImportadosERP.Domain/Entities/Compra.cs`
+- [X] T041 [US2] Implementar registro serializável antes do recebimento com revalidação de pendência, motivos, data, idempotência e zero movimento em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
+- [X] T042 [US2] Expor registro por item e listagem de devoluções da compra em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`
+- [X] T043 [P] [US2] Integrar devoluções anteriores, compensações e cortes temporais nas consultas de trânsito, pendências e alertas em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardAlertaRepository.cs`, `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterComprasEmTransitoQueryHandler.cs` e `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterProdutosPendentesRecebimentoQueryHandler.cs`
+- [X] T044 [US2] Acrescentar quantidades devolvidas antes/depois e elegibilidade nos DTOs e mapper em `src/Amani.ImportadosERP.Application/DTOs/CompraEmTransitoDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/ProdutoPendenteRecebimentoDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraItemResponseDto.cs` e `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`
+- [X] T045 [P] [US2] Criar diálogo Mobile First para devolução anterior com motivos, justificativa de `Outro`, revisão e confirmação em `frontend/src/components/compras/return-dialog.tsx`
+- [X] T046 [US2] Integrar ação e quantidades da devolução anterior ao detalhe e painel de pendências em `frontend/src/components/compras/purchase-detail.tsx`, `frontend/src/components/compras/purchase-history.tsx` e `frontend/src/components/compras/pending-products-panel.tsx`
 - [ ] T047 [US2] Executar o cenário de devolução anterior e rejeições da seção 7 de `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar pendência e ausência de movimento em `artifacts/f027-validation-evidence.md`
 
 **Checkpoint**: recusas pré-recebimento encerram trânsito sem tocar estoque ou caixa
@@ -107,14 +107,14 @@
 
 **Independent Test**: devolver 2 unidades de um recebimento a R$ 52,70 e comprovar uma saída de estoque, reversão de R$ 105,40, recebimento preservado e pendência não reaberta
 
-- [ ] T048 [US3] Implementar devolução posterior serializável vinculada ao recebimento com validação de elegibilidade, saldo físico e criação atômica da saída em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
-- [ ] T049 [P] [US3] Resolver origem `DevolucaoCompra` por join às tabelas F027 sem alterar `estoque_movimentacoes` em `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueConsultaRepository.cs` e `src/Amani.ImportadosERP.Application/DTOs/Estoque/EstoqueMovimentacaoItemDto.cs`
-- [ ] T050 [P] [US3] Subtrair devoluções posteriores da base de aquisição pelo `ValorUnitario` do recebimento em `src/Amani.ImportadosERP.Infra.Data/Repositories/CustoProdutoRepository.cs`
-- [ ] T051 [P] [US3] Aplicar a mesma semântica temporal de custo nas leituras gerenciais em `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardCustoMedioReadService.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardEstoqueRepository.cs`
-- [ ] T052 [US3] Acrescentar recebimentos elegíveis e valores de custo oficiais à resposta de detalhe em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraItemResponseDto.cs` e `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`
-- [ ] T053 [P] [US3] Estender os tipos e mutations de devolução para vínculo obrigatório ao recebimento em `frontend/src/types/purchase.ts`, `frontend/src/services/purchases.ts` e `frontend/src/hooks/use-purchases.ts`
-- [ ] T054 [US3] Estender o diálogo para selecionar recebimento, mostrar saldo elegível e impedir confirmação inválida em `frontend/src/components/compras/return-dialog.tsx`
-- [ ] T055 [US3] Integrar devolução pós-recebimento, origem de estoque e atualização coordenada das consultas em `frontend/src/components/compras/purchase-detail.tsx`, `frontend/src/components/compras/purchase-history.tsx`, `frontend/src/types/stock.ts` e `frontend/src/components/estoque/stock-movement-list.tsx`
+- [X] T048 [US3] Implementar devolução posterior serializável vinculada ao recebimento com validação de elegibilidade, saldo físico e criação atômica da saída em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
+- [X] T049 [P] [US3] Resolver origem `DevolucaoCompra` por join às tabelas F027 sem alterar `estoque_movimentacoes` em `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueConsultaRepository.cs` e `src/Amani.ImportadosERP.Application/DTOs/Estoque/EstoqueMovimentacaoItemDto.cs`
+- [X] T050 [P] [US3] Subtrair devoluções posteriores da base de aquisição pelo `ValorUnitario` do recebimento em `src/Amani.ImportadosERP.Infra.Data/Repositories/CustoProdutoRepository.cs`
+- [X] T051 [P] [US3] Aplicar a mesma semântica temporal de custo nas leituras gerenciais em `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardCustoMedioReadService.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardEstoqueRepository.cs`
+- [X] T052 [US3] Acrescentar recebimentos elegíveis e valores de custo oficiais à resposta de detalhe em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraItemResponseDto.cs` e `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`
+- [X] T053 [P] [US3] Estender os tipos e mutations de devolução para vínculo obrigatório ao recebimento em `frontend/src/types/purchase.ts`, `frontend/src/services/purchases.ts` e `frontend/src/hooks/use-purchases.ts`
+- [X] T054 [US3] Estender o diálogo para selecionar recebimento, mostrar saldo elegível e impedir confirmação inválida em `frontend/src/components/compras/return-dialog.tsx`
+- [X] T055 [US3] Integrar devolução pós-recebimento, origem de estoque e atualização coordenada das consultas em `frontend/src/components/compras/purchase-detail.tsx`, `frontend/src/components/compras/purchase-history.tsx`, `frontend/src/types/stock.ts` e `frontend/src/components/estoque/stock-movement-list.tsx`
 - [ ] T056 [US3] Executar os cenários de devolução posterior, estoque insuficiente, custos distintos e temporalidade das seções 8, 9 e 10 de `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar evidências em `artifacts/f027-validation-evidence.md`
 
 **Checkpoint**: saída física, origem e custo conciliam sem apagar recebimentos nem gerar crédito automático
@@ -127,12 +127,12 @@
 
 **Independent Test**: combinar perda de R$ 50,00, devolução de R$ 120,00 e reembolso de R$ 100,00 com R$ 90,00 alocados e confirmar prejuízo líquido R$ 80,00 e caixa creditado em R$ 100,00
 
-- [ ] T057 [US4] Validar e persistir alocações parciais por item, perda ou devolução no fluxo de reembolso em `src/Amani.ImportadosERP.Application/Services/CompraService.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraReembolsoRepository.cs`
-- [ ] T058 [P] [US4] Implementar agregações SQL de valor bruto F026, recuperação associada e prejuízo líquido por coorte em `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
-- [ ] T059 [US4] Expor indicadores aditivos e temporalmente consistentes em `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardOperacionalDto.cs` e `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardOperacionalQueryHandler.cs`
-- [ ] T060 [P] [US4] Criar DTO e projeção cronológica unificada de recebimentos, perdas, devoluções, reembolsos e compensações em `src/Amani.ImportadosERP.Application/DTOs/Response/CompraHistoricoEventoDto.cs`, `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`
-- [ ] T061 [US4] Renderizar histórico auditável com datas efetiva e de registro e distinção visual entre logística, estoque e financeiro em `frontend/src/components/compras/purchase-history.tsx`
-- [ ] T062 [P] [US4] Adicionar contratos e cartões gerenciais de bruto, recuperado e líquido em `frontend/src/types/dashboard.ts`, `frontend/src/services/dashboard.ts` e `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
+- [X] T057 [US4] Validar e persistir alocações parciais por item, perda ou devolução no fluxo de reembolso em `src/Amani.ImportadosERP.Application/Services/CompraService.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraReembolsoRepository.cs`
+- [X] T058 [P] [US4] Implementar agregações SQL de valor bruto F026, recuperação associada e prejuízo líquido por coorte em `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
+- [X] T059 [US4] Expor indicadores aditivos e temporalmente consistentes em `src/Amani.ImportadosERP.Application/DTOs/Dashboards/DashboardOperacionalDto.cs` e `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterDashboardOperacionalQueryHandler.cs`
+- [X] T060 [P] [US4] Criar DTO e projeção cronológica unificada de recebimentos, perdas, devoluções, reembolsos e compensações em `src/Amani.ImportadosERP.Application/DTOs/Response/CompraHistoricoEventoDto.cs`, `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`
+- [X] T061 [US4] Renderizar histórico auditável com datas efetiva e de registro e distinção visual entre logística, estoque e financeiro em `frontend/src/components/compras/purchase-history.tsx`
+- [X] T062 [P] [US4] Adicionar contratos e cartões gerenciais de bruto, recuperado e líquido em `frontend/src/types/dashboard.ts`, `frontend/src/services/dashboard.ts` e `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
 - [ ] T063 [US4] Executar os cenários de alocação, prejuízo líquido e legado das seções 12 e 14 de `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar a conciliação em `artifacts/f027-validation-evidence.md`
 
 **Checkpoint**: gestão identifica impacto bruto, recuperação e prejuízo sem dupla contagem
@@ -145,13 +145,13 @@
 
 **Independent Test**: compensar uma devolução pré e outra pós-recebimento e cancelar um reembolso, comprovando efeitos inversos na data da correção, histórico preservado e rejeição da segunda tentativa
 
-- [ ] T064 [US5] Implementar compensação serializável de devolução e cancelamento de reembolso com motivo, data, idempotência e unicidade em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
-- [ ] T065 [US5] Expor `POST /devolucoes/{id}/compensacoes` e `POST /reembolsos/{id}/cancelamentos` sem rotas destrutivas em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`
-- [ ] T066 [P] [US5] Aplicar compensações por data à pendência, trânsito e estado logístico em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraItemDevolucaoRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs` e `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterComprasEmTransitoQueryHandler.cs`
-- [ ] T067 [P] [US5] Criar entrada compensatória com presença física confirmada e restaurar custo pelo snapshot original em `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueMovimentacaoRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/CustoProdutoRepository.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardCustoMedioReadService.cs`
-- [ ] T068 [P] [US5] Aplicar cancelamentos por data ao caixa, situação financeira e validade das alocações em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraReembolsoRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardFinanceiroRepository.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
-- [ ] T069 [P] [US5] Criar diálogo único de correção com motivo obrigatório e confirmação física condicional em `frontend/src/components/compras/purchase-event-cancel-dialog.tsx`
-- [ ] T070 [US5] Integrar ações de compensação/cancelamento, estados de erro e invalidações de compra, estoque e dashboards em `frontend/src/components/compras/purchase-detail.tsx`, `frontend/src/services/purchases.ts` e `frontend/src/hooks/use-purchases.ts`
+- [X] T064 [US5] Implementar compensação serializável de devolução e cancelamento de reembolso com motivo, data, idempotência e unicidade em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
+- [X] T065 [US5] Expor `POST /devolucoes/{id}/compensacoes` e `POST /reembolsos/{id}/cancelamentos` sem rotas destrutivas em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`
+- [X] T066 [P] [US5] Aplicar compensações por data à pendência, trânsito e estado logístico em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraItemDevolucaoRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs` e `src/Amani.ImportadosERP.Application/Queries/Handlers/ObterComprasEmTransitoQueryHandler.cs`
+- [X] T067 [P] [US5] Criar entrada compensatória com presença física confirmada e restaurar custo pelo snapshot original em `src/Amani.ImportadosERP.Infra.Data/Repositories/EstoqueMovimentacaoRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/CustoProdutoRepository.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardCustoMedioReadService.cs`
+- [X] T068 [P] [US5] Aplicar cancelamentos por data ao caixa, situação financeira e validade das alocações em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraReembolsoRepository.cs`, `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardFinanceiroRepository.cs` e `src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs`
+- [X] T069 [P] [US5] Criar diálogo único de correção com motivo obrigatório e confirmação física condicional em `frontend/src/components/compras/purchase-event-cancel-dialog.tsx`
+- [X] T070 [US5] Integrar ações de compensação/cancelamento, estados de erro e invalidações de compra, estoque e dashboards em `frontend/src/components/compras/purchase-detail.tsx`, `frontend/src/services/purchases.ts` e `frontend/src/hooks/use-purchases.ts`
 - [ ] T071 [US5] Executar os cenários de cancelamento e compensação das seções 6 e 11 de `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar unicidade, temporalidade e restauração em `artifacts/f027-validation-evidence.md`
 
 **Checkpoint**: erros humanos são corrigíveis sem hard delete, reescrita retroativa ou efeito duplicado
@@ -164,15 +164,15 @@
 
 **Independent Test**: ensaiar migration e aplicação numa cópia representativa, comparar baseline antes/depois e obter zero divergência não explicada em histórico, estoque, custo, trânsito e caixa
 
-- [ ] T072 [P] [US6] Exportar e revisar o SQL da migration, comprovando exatamente cinco tabelas novas e ausência de `UPDATE`, `DELETE`, `TRUNCATE`, backfill ou `ALTER` destrutivo em `artifacts/f027-migration-generated.sql`
+- [X] T072 [P] [US6] Exportar e revisar o SQL da migration, comprovando exatamente cinco tabelas novas e ausência de `UPDATE`, `DELETE`, `TRUNCATE`, backfill ou `ALTER` destrutivo em `artifacts/f027-migration-generated.sql`
 - [ ] T073 [US6] Ensaiar backup, restauração e migration somente em cópia isolada representativa e registrar versão, checksum, duração, locks e responsáveis em `artifacts/f027-validation-evidence.md`
 - [ ] T074 [US6] Executar `artifacts/f027-production-baseline.sql` antes/depois do ensaio e documentar conciliação de compras, recebimentos, perdas, vendas, movimentos, pagamentos e financeiro em `artifacts/f027-validation-evidence.md`
-- [ ] T075 [P] [US6] Executar restore/build do backend e lint/typecheck/build do frontend conforme `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar resultados em `artifacts/f027-validation-evidence.md`
+- [X] T075 [P] [US6] Executar restore/build do backend e lint/typecheck/build do frontend conforme `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar resultados em `artifacts/f027-validation-evidence.md`
 - [ ] T076 [US6] Executar a regressão completa dos fluxos legados, incluindo alertas de trânsito e pendências, com a feature desligada e registrar ausência de mudança sem registros F027 em `artifacts/f027-validation-evidence.md`
 - [ ] T077 [P] [US6] Executar dez tentativas controladas de replay e concorrência para reembolso, devolução e compensação e registrar no máximo um efeito válido em `artifacts/f027-validation-evidence.md`
 - [ ] T078 [P] [US6] Medir dez carregamentos de detalhe, histórico, estoque e dashboards com massa representativa e registrar o critério 9/10 abaixo de dois segundos em `artifacts/f027-validation-evidence.md`
 - [ ] T079 [P] [US6] Validar os fluxos completos em 360 px, 768 px e 1440 px, incluindo Dark Theme e ausência de rolagem horizontal, e executar com ao menos dois usuários representativos a medição de operação em até 2 minutos e identificação das informações em até 30 segundos, registrando resultados em `artifacts/f027-validation-evidence.md`
-- [ ] T080 [US6] Completar o runbook de deploy gradual, monitoramento, desligamento da flag e rollback lógico sem `Down` em `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar aprovações explícitas antes de qualquer produção em `artifacts/f027-validation-evidence.md`
+- [X] T080 [US6] Completar o runbook de deploy gradual, monitoramento, desligamento da flag e rollback lógico sem `Down` em `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar aprovações explícitas antes de qualquer produção em `artifacts/f027-validation-evidence.md`
 
 **Checkpoint**: feature tecnicamente pronta, mas produção permanece bloqueada até aprovação nominal documentada
 
@@ -182,11 +182,22 @@
 
 **Purpose**: consolidar contratos, observabilidade, desempenho e documentação sem ampliar o escopo
 
-- [ ] T081 [P] Revisar respostas e códigos de erro contra `specs/027-devolucoes-reembolsos-compras/contracts/api-contracts.md` em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`
-- [ ] T082 [P] Adicionar logs estruturados sem dados sensíveis para operações, conflitos e falhas atômicas em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
-- [ ] T083 Revisar planos de execução e ajustar somente os índices F027 necessários em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/` e na migration F027 de `src/Amani.ImportadosERP.Infra.Data/Migrations/`
-- [ ] T084 [P] Revisar acessibilidade, foco, estados de carregamento/sucesso/erro e prevenção de duplo envio em `frontend/src/components/compras/refund-dialog.tsx`, `frontend/src/components/compras/return-dialog.tsx` e `frontend/src/components/compras/purchase-event-cancel-dialog.tsx`
+- [X] T081 [P] Revisar respostas e códigos de erro contra `specs/027-devolucoes-reembolsos-compras/contracts/api-contracts.md` em `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`
+- [X] T082 [P] Adicionar logs estruturados sem dados sensíveis para operações, conflitos e falhas atômicas em `src/Amani.ImportadosERP.Application/Services/CompraService.cs`
+- [X] T083 Revisar planos de execução e ajustar somente os índices F027 necessários em `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/` e na migration F027 de `src/Amani.ImportadosERP.Infra.Data/Migrations/`
+- [X] T084 [P] Revisar acessibilidade, foco, estados de carregamento/sucesso/erro e prevenção de duplo envio em `frontend/src/components/compras/refund-dialog.tsx`, `frontend/src/components/compras/return-dialog.tsx` e `frontend/src/components/compras/purchase-event-cancel-dialog.tsx`
 - [ ] T085 Executar integralmente `specs/027-devolucoes-reembolsos-compras/quickstart.md`, fechar todas as evidências em `artifacts/f027-validation-evidence.md` e manter a feature desligada até autorização de produção
+
+---
+
+## Phase 10: Homologation Refinement - Status logístico de devoluções pós-recebimento
+
+**Purpose**: corrigir descoberta de homologação sem alterar schema, deixando recebimento histórico, devolução vigente e compensação logística claros na lista e no detalhe.
+
+- [X] T086 [US3] Ajustar projeções oficiais de detalhe/lista para manter recebimento histórico e expor devolução posterior vigente, quantidade compensada e situação logística derivada em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`, `src/Amani.ImportadosERP.Application/DTOs/CompraListDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraItemResponseDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraResponseDto.cs` e `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`
+- [X] T087 [US3] Atualizar tags e tabela de itens no frontend para exibir compra recebida com devolução, devolvida, parcialmente devolvida, parcialmente compensada ou devolução compensada sem misturar com reembolso em `frontend/src/components/compras/purchase-list.tsx`, `frontend/src/components/compras/purchase-detail.tsx`, `frontend/src/components/compras/purchase-summary.tsx` e `frontend/src/types/purchase.ts`
+- [ ] T088 [US3] Validar em homologação compra recebida e depois devolvida, compra devolvida integralmente e devolução posterior compensada, registrando evidências de detalhe, lista, estoque e histórico em `artifacts/f027-validation-evidence.md`
+- [ ] T089 [US5] DÉBITO TÉCNICO: evoluir a compensação de devolução para oferecer cancelamento/estorno do reembolso relacionado ou manutenção justificada do crédito financeiro, com reflexo em financeiro/dashboard e histórico auditável. Descoberto após reembolso homologado; não bloqueia a validação do registro de reembolso isolado, mas deve bloquear liberação produtiva de compensação de devolução com reembolso relacionado sem decisão operacional clara.
 
 ---
 
@@ -201,12 +212,13 @@
 - **US5 (Phase 7)**: depende dos eventos originais de US1–US3; suas agregações também atualizam US4.
 - **US6 (Phase 8)**: depende de todas as histórias funcionais escolhidas para liberação e bloqueia produção.
 - **Polish (Phase 9)**: depende das histórias incluídas na entrega e antecede a aprovação final.
+- **Homologation Refinement (Phase 10)**: depende da descoberta em homologação e deve ser concluída antes de retomar a validação integral T085.
 
 ### User Story Dependencies
 
 - **US1 (P1)**: começa após a fundação e funciona sem devolução física.
 - **US2 (P1)**: começa após a fundação e funciona sem reembolso e sem estoque.
-- **US3 (P1)**: começa após a fundação e funciona sem reembolso, mas exige estoque e recebimento existentes.
+- **US3 (P1)**: começa após a fundação e funciona sem reembolso, mas exige estoque e recebimento existentes; inclui o refinamento T086–T088 para tornar devoluções pós-recebimento e compensações visíveis na lista e no detalhe.
 - **US4 (P2)**: depende de US1 e das ocorrências de US2/US3 para o cenário completo; cada métrica deve tolerar fontes ainda vazias.
 - **US5 (P2)**: depende dos eventos criados por US1–US3 e preserva a independência entre financeiro e logística.
 - **US6 (P3)**: depende do escopo funcional completo candidato à implantação.
@@ -226,7 +238,7 @@
 - Na fundação, entidades T005–T009, serviços T010–T011, contratos T012–T016 e mappings T017–T021 formam grupos paralelos; T022–T026 integram esses resultados.
 - Após a fundação, US1, US2 e US3 podem ser desenvolvidas por frentes diferentes com coordenação dos arquivos compartilhados.
 - Em US1, projeções de compra, financeiro, tipos e diálogo podem avançar em paralelo antes da integração.
-- Em US3, estoque, custo atual, custo gerencial e tipos frontend são frentes paralelas.
+- Em US3, estoque, custo atual, custo gerencial, projeção de status logístico e tipos/frontend são frentes paralelas; T086 e T087 podem avançar coordenadamente por contrato DTO/tipos.
 - Em US4 e US5, consultas gerenciais e componentes visuais podem avançar em paralelo depois dos contratos.
 - Em US6, builds, concorrência, desempenho e responsividade podem ser executados em paralelo sobre a mesma versão candidata isolada.
 
@@ -293,6 +305,7 @@ O MVP funcional é **US1 — Registrar reembolso de compra**, pois resolve o ret
 5. US4 → auditoria e prejuízo líquido.
 6. US5 → correções compensatórias.
 7. US6 + Polish → ensaio, conciliação e gate de produção.
+8. Phase 10 → refinamento de homologação para status logístico de devoluções pós-recebimento antes de nova rodada de validação integral.
 
 ### Production Safety Strategy
 
@@ -302,6 +315,7 @@ O MVP funcional é **US1 — Registrar reembolso de compra**, pois resolve o ret
 4. Executar smoke test e conciliação com a flag desligada.
 5. Habilitar gradualmente apenas após aprovação nominal documentada.
 6. Em incidente, desligar a flag e preservar tabelas e eventos; não executar `Down` após o primeiro dado F027.
+7. Antes da liberação produtiva, confirmar que a lista e o detalhe não ocultam devoluções pós-recebimento nem compensações, preservando recebimento histórico.
 
 ## Notes
 

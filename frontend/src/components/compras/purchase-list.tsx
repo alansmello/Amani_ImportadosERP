@@ -72,6 +72,58 @@ function getStatusVariant(status: string) {
   return "info" as const;
 }
 
+function getRefundStatusLabel(status?: string | null) {
+  const labels: Record<string, string> = {
+    SemReembolso: "Sem reembolso",
+    Parcial: "Reembolso parcial",
+    Integral: "Reembolso integral"
+  };
+
+  return status ? labels[status] ?? status : "Sem reembolso";
+}
+
+function getRefundStatusVariant(status?: string | null) {
+  if (status === "Integral") {
+    return "success" as const;
+  }
+
+  if (status === "Parcial") {
+    return "info" as const;
+  }
+
+  return "neutral" as const;
+}
+function getReturnLogisticsStatusLabel(
+  status?: string | null,
+  description?: string | null
+) {
+  const labels: Record<string, string> = {
+    SemDevolucao: "Sem devolucao",
+    ParcialmenteDevolvida: "Parcialmente devolvida",
+    Devolvida: "Devolvida",
+    ParcialmenteCompensada: "Parcialmente compensada",
+    DevolucaoCompensada: "Devolucao compensada"
+  };
+
+  return description || (status ? labels[status] ?? status : "Sem devolucao");
+}
+
+function getReturnLogisticsStatusVariant(status?: string | null) {
+  if (status === "Devolvida" || status === "ParcialmenteDevolvida") {
+    return "warning" as const;
+  }
+
+  if (status === "ParcialmenteCompensada") {
+    return "info" as const;
+  }
+
+  if (status === "DevolucaoCompensada") {
+    return "success" as const;
+  }
+
+  return "neutral" as const;
+}
+
 export function PurchaseList({
   purchases,
   suppliers,
@@ -123,9 +175,30 @@ export function PurchaseList({
                     {formatDate(purchase.dataCompra)}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getStatusVariant(purchase.status)}>
-                      {getStatusLabel(purchase.status)}
-                    </Badge>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant={getStatusVariant(purchase.status)}>
+                        {getStatusLabel(purchase.status)}
+                      </Badge>
+                      <Badge
+                        variant={getRefundStatusVariant(
+                          purchase.situacaoReembolso
+                        )}
+                      >
+                        {getRefundStatusLabel(purchase.situacaoReembolso)}
+                      </Badge>
+                      {purchase.possuiDevolucao ? (
+                        <Badge
+                          variant={getReturnLogisticsStatusVariant(
+                            purchase.situacaoLogisticaDevolucao
+                          )}
+                        >
+                          {getReturnLogisticsStatusLabel(
+                            purchase.situacaoLogisticaDevolucao,
+                            purchase.descricaoSituacaoLogisticaDevolucao
+                          )}
+                        </Badge>
+                      ) : null}
+                    </div>
                   </TableCell>
                   <TableCell>
                     {pendingQuantity > 0
@@ -136,6 +209,19 @@ export function PurchaseList({
                     <span className="block">
                       {formatCurrency(purchase.totalCompra)}
                     </span>
+                    {typeof purchase.custoFinanceiroLiquido === "number" ? (
+                      <span className="mt-1 block text-xs text-success">
+                        Liquido:{" "}
+                        {formatCurrency(purchase.custoFinanceiroLiquido)}
+                      </span>
+                    ) : null}
+                    {typeof purchase.totalReembolsadoLiquido === "number" &&
+                    purchase.totalReembolsadoLiquido > 0 ? (
+                      <span className="mt-1 block text-xs text-info">
+                        Reembolsado:{" "}
+                        {formatCurrency(purchase.totalReembolsadoLiquido)}
+                      </span>
+                    ) : null}
                     {purchase.valorPendenteCusto !== undefined ? (
                       purchase.valorPendenteCusto !== null ? (
                         <span className="mt-1 block text-xs text-text-secondary">

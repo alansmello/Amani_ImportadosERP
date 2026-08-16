@@ -105,6 +105,33 @@ public sealed class Compra : BaseEntity
             Acrescimo);
     }
 
+    public static CompraStatus CalcularStatusOperacional(
+        IEnumerable<CompraItem> items,
+        Func<CompraItem, int>? obterQuantidadePendente = null)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        var lista = items.ToList();
+
+        if (!lista.Any())
+        {
+            return CompraStatus.EmTransito;
+        }
+
+        var calcularPendencia = obterQuantidadePendente ?? (item => item.QuantidadePendente);
+        var possuiPendencia = lista.Any(i => calcularPendencia(i) > 0);
+        var possuiRecebimento = lista.Any(i => i.QuantidadeRecebida > 0);
+        var possuiPerda = lista.Any(i => i.QuantidadePerdida > 0);
+
+        if (!possuiPendencia)
+        {
+            return possuiPerda ? CompraStatus.Finalizada : CompraStatus.Recebida;
+        }
+
+        return possuiRecebimento
+            ? CompraStatus.ParcialmenteRecebida
+            : CompraStatus.EmTransito;
+    }
+
     private CompraItem ObterItem(Guid compraItemId)
     {
         if (compraItemId == Guid.Empty)
@@ -126,25 +153,7 @@ public sealed class Compra : BaseEntity
 
     private void RecalcularStatusOperacional()
     {
-        if (!_items.Any())
-        {
-            Status = CompraStatus.EmTransito;
-            return;
-        }
-
-        var possuiPendencia = _items.Any(i => i.QuantidadePendente > 0);
-        var possuiRecebimento = _items.Any(i => i.QuantidadeRecebida > 0);
-        var possuiPerda = _items.Any(i => i.QuantidadePerdida > 0);
-
-        if (!possuiPendencia)
-        {
-            Status = possuiPerda ? CompraStatus.Finalizada : CompraStatus.Recebida;
-            return;
-        }
-
-        Status = possuiRecebimento
-            ? CompraStatus.ParcialmenteRecebida
-            : CompraStatus.EmTransito;
+        Status = CalcularStatusOperacional(_items);
     }
 }
 

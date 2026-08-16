@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Amani.ImportadosERP.Application.DTOs.Response;
 using Amani.ImportadosERP.Domain.Entities;
 
 namespace Amani.ImportadosERP.Application.Interfaces;
@@ -17,5 +18,6 @@ public interface ICompraRepository
     Task<List<Compra>> ObterComprasComProdutosPendentesAsync();
     Task<List<CompraItemRecebimento>> ObterRecebimentosPorCompraAsync(Guid compraId);
     Task<List<CompraItemPerda>> ObterPerdasPorCompraAsync(Guid compraId);
+    Task<List<CompraHistoricoEventoDto>> ObterHistoricoEventosAsync(Guid compraId);
     Task SalvarAsync();
 }

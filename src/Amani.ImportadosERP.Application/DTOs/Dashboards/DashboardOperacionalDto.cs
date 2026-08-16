@@ -16,6 +16,22 @@ public sealed class DashboardOperacionalDto
     public int ProdutosPendentesRecebimento { get; set; }
     public int PerdasRegistradasQuantidade { get; set; }
     public decimal PerdasRegistradasValor { get; set; }
+    public int DevolucoesRegistradasQuantidade { get; set; }
+    public decimal DevolucoesRegistradasValor { get; set; }
+    public decimal ValorBrutoOcorrencias { get; set; }
+    public decimal ValorRecuperadoAssociado { get; set; }
+    public decimal PrejuizoLiquidoNaoRecuperado { get; set; }
     public int QuantidadeVendas { get; set; }
     public int QuantidadeCompras { get; set; }
+}
+
+public sealed class ResumoRecuperacaoOperacionalDto
+{
+    public int PerdasQuantidade { get; set; }
+    public decimal PerdasValor { get; set; }
+    public int DevolucoesQuantidade { get; set; }
+    public decimal DevolucoesValor { get; set; }
+    public decimal ValorBrutoOcorrencias { get; set; }
+    public decimal ValorRecuperadoAssociado { get; set; }
+    public decimal PrejuizoLiquidoNaoRecuperado { get; set; }
 }

@@ -63,6 +63,7 @@ Como operador de compras e estoque, quero devolver um produto que já foi recebi
 4. **Given** devoluções anteriores do mesmo item, **When** uma nova devolução é solicitada, **Then** a soma devolvida não ultrapassa a quantidade recebida ainda elegível para devolução.
 5. **Given** uma devolução posterior ao recebimento, **When** custo e posição de estoque são consultados antes e depois da data do evento, **Then** o passado permanece inalterado e somente as posições a partir da devolução refletem a saída e a reversão de custo correspondente.
 6. **Given** uma devolução com reembolso, **When** ambos são registrados em datas diferentes, **Then** estoque e financeiro respeitam as datas de seus próprios eventos.
+7. **Given** uma mercadoria recebida e depois devolvida, **When** o detalhe ou a lista de compras é consultado, **Then** o recebimento histórico continua visível e a devolução vigente aparece separadamente no item e na situação logística da compra.
 
 ---
 
@@ -98,6 +99,7 @@ Como operador responsável, quero corrigir uma devolução ou um reembolso lanç
 2. **Given** uma devolução posterior ao recebimento lançada incorretamente, **When** ela é cancelada e a reposição física é confirmada, **Then** estoque e custo são restaurados por evento compensatório rastreável sem apagar a saída original.
 3. **Given** uma devolução anterior ao recebimento lançada incorretamente, **When** ela é cancelada, **Then** a quantidade volta à pendência sem ser apresentada como estoque recebido.
 4. **Given** um evento já cancelado, **When** nova tentativa de cancelamento é enviada, **Then** o sistema não duplica efeitos físicos ou financeiros.
+5. **Given** uma devolução posterior ao recebimento compensada, **When** o detalhe ou a lista de compras é consultado, **Then** a compra indica que houve devolução compensada, preserva a devolução original no histórico e deixa claro o efeito logístico vigente após a compensação.
 
 ---
 
@@ -129,6 +131,8 @@ Como responsável pelo produto, quero que a evolução seja implantada sem perda
 - Devolução posterior ao recebimento quando parte da quantidade já foi vendida, devolvida ou não está mais disponível.
 - Produto com várias entradas de custos diferentes e devolução associada a um recebimento específico.
 - Devolução parcial em duas ou mais datas para o mesmo item.
+- Compra integralmente recebida e integralmente devolvida depois do recebimento, exigindo status logístico visível como devolvida sem apagar o recebimento histórico.
+- Devolução posterior compensada, exigindo indicação visual de compensação sem remover o evento original.
 - Tentativa de devolver quantidade maior que a recebida ou maior que o saldo disponível.
 - Devolução com motivo `Outro` sem justificativa.
 - Falha no meio do registro conjunto de devolução e efeito de estoque.
@@ -139,6 +143,7 @@ Como responsável pelo produto, quero que a evolução seja implantada sem perda
 - Valor oficial da compra ou rateio indisponível por inconsistência histórica.
 - Produto legado sem qualquer devolução ou reembolso.
 - Evolução aplicada sobre dados produtivos sem alterar linhas históricas existentes.
+- Compensação de devolução com reembolso já registrado: nesta entrega, logística e financeiro continuam comandos independentes; permanece como débito técnico oferecer no mesmo fluxo a decisão de cancelar/estornar o reembolso relacionado para evitar conciliação manual esquecida.
 
 ## Requirements *(mandatory)*
 
@@ -169,8 +174,9 @@ Como responsável pelo produto, quero que a evolução seja implantada sem perda
 - **FR-023**: O sistema MUST revalidar pendência, quantidade recebida elegível e saldo físico no momento da confirmação para proteger operações concorrentes.
 - **FR-024**: Uma devolução com reembolso MUST encerrar a quantidade correspondente e MUST NOT reabrir mercadoria em trânsito automaticamente.
 - **FR-025**: Reposição ou substituição de produto MUST exigir evento operacional explícito e MUST NOT ser inferida a partir da devolução ou do reembolso.
-- **FR-026**: O detalhe da compra MUST distinguir quantidade comprada, recebida, devolvida antes do recebimento, devolvida depois do recebimento, perdida e pendente.
+- **FR-026**: O detalhe da compra MUST distinguir quantidade comprada, recebida histórica, devolvida antes do recebimento vigente, devolvida depois do recebimento vigente, devolvida compensada, perdida e pendente, sem reduzir visualmente a quantidade recebida histórica por causa de uma devolução posterior.
 - **FR-027**: O estado logístico da compra e sua situação de devolução/reembolso MUST ser apresentados separadamente, sem reescrever estados históricos de forma incompatível.
+- **FR-027A**: A lista e o detalhe da compra MUST apresentar tag/status logístico derivado das devoluções vigentes e compensadas, incluindo ao menos: sem devolução, parcialmente devolvida, devolvida, parcialmente compensada e devolução compensada, mantendo a situação financeira de reembolso em tag separada.
 - **FR-028**: O sistema MUST aceitar ao menos os motivos Produto falsificado, Avaria, Produto incorreto, Desistência ou recusa e Outro; o motivo Outro MUST exigir justificativa.
 - **FR-029**: Devolução e reembolso MUST exigir revisão e confirmação explícita antes do registro.
 - **FR-030**: A devolução posterior ao recebimento MUST retirar da base de custo vigente a quantidade e o valor correspondentes à entrada original, sem aceitar custo livre informado pela interface.
@@ -198,6 +204,7 @@ Como responsável pelo produto, quero que a evolução seja implantada sem perda
 - **FR-052**: Depois que novos eventos forem registrados, o recuo operacional MUST preservar esses dados e MUST NOT depender de exclusão destrutiva.
 - **FR-053**: A validação pós-liberação MUST conciliar saldo de estoque, custo, compras em trânsito, caixa e contagens históricas.
 - **FR-054**: Especificação, esclarecimento, planejamento, geração de tarefas, análise e remediação documental MUST NOT autorizar implementação. A implementação e a geração da migration MUST depender de solicitação explícita posterior para executar a fase de implementação; aplicar a migration sobre dados produtivos, habilitar a feature ou liberar em produção MUST depender de uma segunda aprovação explícita, concedida somente após backup, ensaio em cópia representativa e conciliação documentada.
+- **FR-055 (débito técnico pós-homologação)**: Ao compensar uma devolução que possua reembolso relacionado ou alocado, o sistema SHOULD oferecer uma decisão explícita para cancelar/estornar o reembolso correspondente ou manter o crédito financeiro justificado, garantindo que a compensação logística reflita corretamente no financeiro quando aplicável.
 
 ### Scope Boundaries
 
@@ -229,7 +236,7 @@ Ficam fora desta feature:
 
 - **SC-001**: Em 100% dos cenários de referência, o total original da compra permanece inalterado e total reembolsado mais custo financeiro líquido recompõem exatamente esse total.
 - **SC-002**: Em 100% das devoluções anteriores ao recebimento, a pendência diminui pela quantidade confirmada e o saldo de estoque permanece inalterado.
-- **SC-003**: Em 100% das devoluções posteriores ao recebimento aceitas, o recebimento original permanece auditável, o saldo físico diminui exatamente pela quantidade devolvida e a origem não é apresentada como venda.
+- **SC-003**: Em 100% das devoluções posteriores ao recebimento aceitas, o recebimento original permanece auditável, o saldo físico diminui exatamente pela quantidade devolvida, a origem não é apresentada como venda e a lista/detalhe da compra indicam a devolução logística vigente.
 - **SC-004**: Nenhuma devolução aceita deixa saldo físico negativo ou permite quantidade acumulada superior à recebida elegível.
 - **SC-005**: Em 100% das consultas históricas de referência, eventos posteriores à data consultada não alteram estoque, custo, trânsito ou caixa do passado.
 - **SC-006**: Em 100% dos cenários financeiros de referência, reembolsos afetam o caixa por sua data efetiva, permanecem separados de pagamentos de clientes e não alteram as saídas brutas.

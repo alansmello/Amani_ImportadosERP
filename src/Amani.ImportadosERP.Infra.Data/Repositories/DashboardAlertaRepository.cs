@@ -125,12 +125,21 @@ public sealed class DashboardAlertaRepository : IDashboardAlertaRepository
                 && c.DataCompra <= dataReferencia)
             .ToListAsync();
 
+        var itemIds = compras
+            .SelectMany(c => c.Items)
+            .Select(i => i.Id)
+            .ToList();
+        var devolucoesAntesPorItem = await ObterDevolucoesAntesVigentesPorItemAsync(itemIds, dataReferencia);
+
         return compras
             .Select(c => new
             {
                 Compra = c,
                 DiasEmTransito = Math.Max(0, (dataReferencia.Date - c.DataCompra.Date).Days),
-                QuantidadePendente = c.Items.Sum(i => CalcularQuantidadePendente(i, dataReferencia))
+                QuantidadePendente = c.Items.Sum(i => CalcularQuantidadePendente(
+                    i,
+                    dataReferencia,
+                    devolucoesAntesPorItem.TryGetValue(i.Id, out var quantidade) ? quantidade : 0))
             })
             .Where(c => c.QuantidadePendente > 0 && c.DiasEmTransito > limiteDias)
             .OrderByDescending(c => c.DiasEmTransito)
@@ -265,15 +274,43 @@ public sealed class DashboardAlertaRepository : IDashboardAlertaRepository
             .ToDictionaryAsync(p => p.Id);
     }
 
-    private static int CalcularQuantidadePendente(CompraItem item, DateTime dataReferencia)
+    private async Task<IReadOnlyDictionary<Guid, int>> ObterDevolucoesAntesVigentesPorItemAsync(
+        IReadOnlyCollection<Guid> itemIds,
+        DateTime dataReferencia)
     {
-        return item.Quantidade
+        if (!itemIds.Any())
+        {
+            return new Dictionary<Guid, int>();
+        }
+
+        return await _db.CompraItemDevolucoes
+            .AsNoTracking()
+            .Include(d => d.Compensacao)
+            .Where(d => itemIds.Contains(d.CompraItemId)
+                && d.Momento == CompraItemDevolucaoMomento.AntesDoRecebimento
+                && d.DataDevolucao <= dataReferencia
+                && (d.Compensacao == null || d.Compensacao.DataCompensacao > dataReferencia))
+            .GroupBy(d => d.CompraItemId)
+            .Select(g => new
+            {
+                CompraItemId = g.Key,
+                Quantidade = g.Sum(d => d.Quantidade)
+            })
+            .ToDictionaryAsync(g => g.CompraItemId, g => g.Quantidade);
+    }
+
+    private static int CalcularQuantidadePendente(CompraItem item, DateTime dataReferencia, int quantidadeDevolvidaAntes)
+    {
+        var pendente = item.Quantidade
             - item.Recebimentos
                 .Where(r => r.DataRecebimento <= dataReferencia)
                 .Sum(r => r.Quantidade)
             - item.Perdas
                 .Where(p => p.DataPerda <= dataReferencia)
-                .Sum(p => p.Quantidade);
+                .Sum(p => p.Quantidade)
+            - quantidadeDevolvidaAntes;
+
+        return Math.Max(0, pendente);
     }
 
     private static string ObterNomeProduto(IReadOnlyDictionary<Guid, ProdutoResumo> produtos, Guid produtoId)

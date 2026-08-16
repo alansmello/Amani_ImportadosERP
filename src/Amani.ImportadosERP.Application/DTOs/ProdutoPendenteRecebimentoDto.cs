@@ -13,5 +13,8 @@ public sealed class ProdutoPendenteRecebimentoDto
     public int QuantidadeComprada { get; set; }
     public int QuantidadeRecebida { get; set; }
     public int QuantidadePerdida { get; set; }
+    public int QuantidadeDevolvidaAntes { get; set; }
+    public int QuantidadeDevolvidaDepois { get; set; }
+    public int QuantidadeElegivelDevolucaoAntes { get; set; }
     public int QuantidadePendente { get; set; }
 }

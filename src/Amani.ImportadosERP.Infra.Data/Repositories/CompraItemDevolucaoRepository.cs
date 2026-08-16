@@ -34,11 +34,24 @@ public class CompraItemDevolucaoRepository : ICompraItemDevolucaoRepository
         await _db.SaveChangesAsync();
     }
 
+    public async Task AdicionarCompensacaoSemSalvarAsync(CompraItemDevolucaoCompensacao compensacao)
+    {
+        ArgumentNullException.ThrowIfNull(compensacao);
+        await _db.CompraItemDevolucaoCompensacoes.AddAsync(compensacao);
+    }
+
     public async Task<CompraItemDevolucao?> ObterPorIdAsync(Guid id)
     {
         if (id == Guid.Empty) return null;
         return await QueryCompleta()
             .AsNoTracking()
+            .FirstOrDefaultAsync(d => d.Id == id);
+    }
+
+    public async Task<CompraItemDevolucao?> ObterPorIdParaAtualizarAsync(Guid id)
+    {
+        if (id == Guid.Empty) return null;
+        return await QueryCompleta()
             .FirstOrDefaultAsync(d => d.Id == id);
     }
 
@@ -106,6 +119,8 @@ public class CompraItemDevolucaoRepository : ICompraItemDevolucaoRepository
     private IQueryable<CompraItemDevolucao> QueryCompleta()
     {
         return _db.CompraItemDevolucoes
+            .Include(d => d.CompraItem)
+            .Include(d => d.CompraItemRecebimento)
             .Include(d => d.Compensacao);
     }
 

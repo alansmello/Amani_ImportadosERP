@@ -110,3 +110,79 @@ Record IDs, timestamps, screenshots, and observed responses for each scenario in
 | Technical implementation |  |  |  | Pending |  |
 | Production schema application |  |  |  | Pending | Required separately |
 | Feature flag enablement |  |  |  | Pending | Required separately |
+
+## Phase 3 Implementation Pass
+
+| Item | Status | Evidence | Notes |
+|---|---|---|---|
+| Backend build after US1 implementation | Passed | `dotnet build Amani_ImportadosERP.sln --no-restore` | 0 errors; NU1900 warnings from unreachable Azure DevOps package vulnerability feed |
+| Frontend typecheck/build | Blocked | `npm run typecheck` from `frontend` failed because `npm` is not available in PATH | No Node/npm/yarn/pnpm executable was available in this execution environment |
+| Quickstart sections 4, 5 and 13 | Blocked | Requires isolated database copy, F027 migration applied outside production, feature flag enabled only in the isolated environment, and executable frontend/backend runtime | T039 remains unchecked until scenarios are actually executed |
+| Production safety | Preserved | No production migration was applied and `DevolucoesReembolsosComprasEnabled` remains disabled in configuration | Schema/application release still requires later explicit approval |
+
+## Phase 4 Implementation Pass
+
+| Item | Status | Evidence | Notes |
+|---|---|---|---|
+| Backend build after US2 implementation | Passed | `dotnet build Amani_ImportadosERP.sln --no-restore` | 0 errors; NU1900 warnings from unreachable Azure DevOps package vulnerability feed |
+| Frontend typecheck/build | Blocked | Node/npm/yarn/pnpm are not available in PATH in this execution environment | Frontend changes were implemented by static inspection only |
+| Quickstart section 7 | Blocked | Requires isolated database copy, F027 migration applied outside production, feature flag enabled only in the isolated environment, and runtime validation of absence of stock movement | T047 remains unchecked until the scenario is actually executed |
+| Production safety | Preserved | No production migration was applied and `DevolucoesReembolsosComprasEnabled` remains disabled in configuration | Devolução anterior records are append-only and do not touch stock/financeiro |
+
+## Phase 5 Implementation Pass
+
+| Item | Status | Evidence | Notes |
+|---|---|---|---|
+| Backend build after US3 implementation | Passed | `dotnet build Amani_ImportadosERP.sln --no-restore` | 0 errors; NU1900 warnings from unreachable Azure DevOps package vulnerability feed |
+| Frontend typecheck/build | Blocked | Node/npm/yarn/pnpm are not available in PATH in this execution environment | Frontend changes were implemented by static inspection only |
+| Quickstart sections 8, 9 and 10 | Blocked | Requires isolated database copy, F027 migration applied outside production, feature flag enabled only in isolated environment, stock data, and runtime validation of physical stock movement/cost temporal behavior | T056 remains unchecked until scenarios are actually executed |
+| Production safety | Preserved | No production migration was applied and `DevolucoesReembolsosComprasEnabled` remains disabled in configuration | Devolução posterior creates append-only F027 event plus stock saída; no production data was touched |
+
+## Phase 6 Implementation Pass
+
+| Item | Status | Evidence | Notes |
+|---|---|---|---|
+| Backend build after US4 implementation | Passed | `dotnet build Amani_ImportadosERP.sln --no-restore` | 0 errors; NU1900 warnings from unreachable Azure DevOps package vulnerability feed |
+| Frontend typecheck/build | Blocked | Node/npm/yarn/pnpm are not available in PATH in this execution environment | Frontend changes were implemented by static inspection only |
+| Quickstart sections 12 and 14 | Blocked | Requires isolated database copy, F027 migration applied outside production, feature flag enabled only in isolated environment, controlled allocations, and full legacy regression | T063 remains unchecked until scenarios are actually executed |
+| Production safety | Preserved | No production migration was applied and `DevolucoesReembolsosComprasEnabled` remains disabled in configuration | Recovery indicators are read-only/additive; no production data was touched |
+
+## Phase 7 Implementation Pass
+
+| Item | Status | Evidence | Notes |
+|---|---|---|---|
+| Backend build after US5 implementation | Passed | `dotnet build Amani_ImportadosERP.sln --no-restore` | 0 errors; NU1900 warnings from unreachable Azure DevOps package vulnerability feed |
+| Frontend typecheck/build | Blocked | Node/npm/yarn/pnpm are not available in PATH in this execution environment | Frontend correction dialog and hooks were implemented by static inspection only |
+| Quickstart sections 6 and 11 | Blocked | Requires isolated database copy, F027 migration applied outside production, feature flag enabled only in isolated environment, and runtime validation of idempotency, temporal effects, stock restoration and double-correction rejection | T071 remains unchecked until scenarios are actually executed |
+| Production safety | Preserved | No production migration was applied and `DevolucoesReembolsosComprasEnabled` remains disabled in configuration | Corrections are append-only compensations/cancellations; no destructive route or production data mutation was introduced |
+
+## Phase 8 Production-Safety Pass
+
+| Item | Status | Evidence | Notes |
+|---|---|---|---|
+| Migration SQL export and static audit | Passed | `dotnet ef migrations script 20260701002458_AddProdutoApresentacoesFracionadas 20260816163250_AddDevolucoesReembolsosCompras --project src/Amani.ImportadosERP.Infra.Data/Amani.ImportadosERP.Infra.Data.csproj --startup-project src/Amani.ImportadosERP.Api/Amani.ImportadosERP.Api.csproj --no-build --output artifacts/f027-migration-generated.sql`; SHA256 `5289B8F15C762AB43E039FEF7E229FE8785BC13D6CB362075D87D05196447AF5` | Exactly 5 `CREATE TABLE`; 0 standalone `UPDATE`, `DELETE`, `TRUNCATE`, `DROP` or `ALTER`; only EF migration-history insert and `ON DELETE RESTRICT` FK clauses |
+| Isolated backup/restore/migration rehearsal | Blocked | Requires production-like isolated database copy, backup artifact, restore procedure, PostgreSQL runtime and named responsible operators | T073 remains unchecked until rehearsal is executed outside production |
+| Baseline before/after reconciliation | Blocked | Requires running `artifacts/f027-production-baseline.sql` before and after the migration rehearsal on the isolated copy and comparing outputs | T074 remains unchecked until data reconciliation is performed |
+| Backend and frontend validation | Partially passed | Backend: `dotnet build Amani_ImportadosERP.sln --no-restore` passed with 0 errors and NU1900 feed warnings; frontend: `npm --prefix frontend run lint`, `npm --prefix frontend run typecheck` and `npm --prefix frontend run build` passed outside the sandbox | `npm --prefix frontend ci` and isolated restore/runtime validation were not executed; T075 remains unchecked |
+| Legacy regression with feature disabled | Blocked | Requires migrated isolated copy with `DevolucoesReembolsosComprasEnabled=false` and executable application runtime | T076 remains unchecked |
+| Replay/concurrency, performance and responsive-user validation | Blocked | Requires isolated runtime, representative data volume, concurrent requests, browser/device validation and at least two representative users | T077, T078 and T079 remain unchecked |
+| Deployment runbook and approval gates | Passed | `specs/027-devolucoes-reembolsos-compras/quickstart.md` section 19 | Documents gradual deployment, monitoring, feature-flag disablement, logical rollback without `Down`, and required named approvals |
+| Production safety | Preserved | No production migration was applied, no production data was read/written, and the feature flag remains disabled by default | Production activation still requires explicit approval log |
+
+## Phase 9 Polish Pass
+
+| Item | Status | Evidence | Notes |
+|---|---|---|---|
+| API contract/error review | Passed | `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs`; `specs/027-devolucoes-reembolsos-compras/contracts/api-contracts.md` | Correction endpoints now return `201 Created` for newly-created compensation/cancellation and `200 OK` for idempotent replay; business errors remain mapped to `400`, `404` or `409` |
+| Structured logs without sensitive data | Passed | `src/Amani.ImportadosERP.Api/Controllers/CompraController.cs` | F027 command success/failure logs include compra/item/event/operacao IDs and result flags; free-text observations/motives are not logged |
+| F027 indexes and migration review | Passed | `src/Amani.ImportadosERP.Infra.Data/EntityConfigurations/*Devolucao*`, `*Reembolso*`; `src/Amani.ImportadosERP.Infra.Data/Migrations/20260816163250_AddDevolucoesReembolsosCompras.cs`; `artifacts/f027-migration-generated.sql` | Existing indexes cover idempotency, one-to-one compensation/cancellation, purchase/date lookups, item/moment lookups, receipt lookups, refund external reference and allocation joins; no additional index or migration was introduced |
+| Frontend accessibility/static review | Passed | `frontend/src/components/compras/refund-dialog.tsx`, `frontend/src/components/compras/return-dialog.tsx`, `frontend/src/components/compras/purchase-event-cancel-dialog.tsx`; `npm --prefix frontend run lint`; `npm --prefix frontend run typecheck`; `npm --prefix frontend run build` | Dialogs include labels, disabled submitting states and duplicate-submit prevention; correction dialog includes `role=alert`, `aria-invalid` and error association; frontend validation passed with 0 errors |
+| Full quickstart execution | Blocked | Requires isolated production-like database, migration rehearsal, frontend toolchain/runtime, browser validation, performance measurements, concurrency attempts and representative users | T085 remains unchecked; feature must remain disabled until these gates are executed and approved |
+
+## Reembolso homologado - dÃ©bito tÃ©cnico de compensaÃ§Ã£o
+
+- Data: 2026-08-16
+- Resultado informado na homologaÃ§Ã£o: registro de reembolso homologado.
+- DÃ©bito tÃ©cnico registrado: quando uma devoluÃ§Ã£o for compensada e existir reembolso relacionado/alocado, o sistema deve oferecer cancelar/estornar o reembolso ou manter o crÃ©dito financeiro com justificativa auditÃ¡vel.
+- Risco se nÃ£o tratado: a logÃ­stica pode ser neutralizada, mas o financeiro permanecer com crÃ©dito vigente, exigindo correÃ§Ã£o manual e podendo distorcer caixa/dashboard.
+- Status: documentado como T089; nÃ£o houve alteraÃ§Ã£o de cÃ³digo nesta etapa.

@@ -32,6 +32,8 @@ export type StockMovement = {
   referenciaId?: string | null;
   compraId?: string | null;
   compraItemId?: string | null;
+  compraItemDevolucaoId?: string | null;
+  compraItemRecebimentoId?: string | null;
   vendaId?: string | null;
   valorUnitario?: number | null;
 };
@@ -59,6 +61,8 @@ export type StockMovementResponse = {
   origem: string;
   compraId?: string | null;
   compraItemId?: string | null;
+  compraItemDevolucaoId?: string | null;
+  compraItemRecebimentoId?: string | null;
   vendaId?: string | null;
   valorUnitario?: number | null;
 };

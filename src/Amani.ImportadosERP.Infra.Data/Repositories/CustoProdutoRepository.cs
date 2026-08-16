@@ -29,11 +29,26 @@ public class CustoProdutoRepository : ICustoProdutoRepository
                     || (m.Tipo == TipoMovimentacao.Entrada && m.CompraItemId != null)))
             .ToListAsync();
 
-        var somaQuantidade = entradas.Sum(e => e.Quantidade);
+        var devolucoes = await _db.CompraItemDevolucoes
+            .AsNoTracking()
+            .Include(d => d.CompraItemRecebimento)
+            .Where(d => d.CompraItemRecebimento != null
+                && d.CompraItemRecebimento.ProdutoId == produtoId
+                && d.Momento == CompraItemDevolucaoMomento.DepoisDoRecebimento
+                && d.Compensacao == null)
+            .Select(d => new
+            {
+                d.Quantidade,
+                ValorUnitario = d.CompraItemRecebimento!.ValorUnitario
+            })
+            .ToListAsync();
+
+        var somaQuantidade = entradas.Sum(e => e.Quantidade) - devolucoes.Sum(d => d.Quantidade);
 
         if (somaQuantidade > 0)
         {
-            var somaValor = entradas.Sum(e => (e.ValorUnitario ?? 0m) * e.Quantidade);
+            var somaValor = entradas.Sum(e => (e.ValorUnitario ?? 0m) * e.Quantidade)
+                - devolucoes.Sum(d => d.ValorUnitario * d.Quantidade);
             return somaValor / somaQuantidade;
         }
 

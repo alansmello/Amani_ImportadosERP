@@ -11,6 +11,8 @@ public sealed class EstoqueMovimentacaoItemDto
     public string Origem { get; set; } = string.Empty;
     public Guid? CompraId { get; set; }
     public Guid? CompraItemId { get; set; }
+    public Guid? CompraItemDevolucaoId { get; set; }
+    public Guid? CompraItemRecebimentoId { get; set; }
     public Guid? VendaId { get; set; }
     public decimal? ValorUnitario { get; set; }
 }

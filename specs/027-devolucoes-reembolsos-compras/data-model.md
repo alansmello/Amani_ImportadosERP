@@ -198,10 +198,11 @@ Associa parte do reembolso a um item e, opcionalmente, a uma ocorrência física
 | Campo | Derivação na referência |
 | --- | --- |
 | `QuantidadeComprada` | Campo original |
-| `QuantidadeRecebida` | Soma de recebimentos |
+| `QuantidadeRecebida` | Soma histórica de recebimentos, sem reduzir por devolução posterior |
 | `QuantidadePerdida` | Soma de perdas |
 | `QuantidadeDevolvidaAntes` | Devoluções anteriores menos compensações |
-| `QuantidadeDevolvidaDepois` | Devoluções posteriores menos compensações |
+| `QuantidadeDevolvidaDepois` | Devoluções posteriores vigentes, líquidas de compensações |
+| `QuantidadeDevolvidaDepoisCompensada` | Quantidade de devoluções posteriores já neutralizadas por compensação |
 | `QuantidadePendente` | Comprada - recebida - perdida - devolvida antes |
 | `QuantidadeRecebidaElegivelDevolucao` | Recebida - devolvida depois, limitada pelo saldo físico global na validação |
 
@@ -259,6 +260,18 @@ Integral/Parcial ── cancelamento ──> Parcial ou SemReembolso
 ```
 
 A situação é sempre recalculada e não é armazenada.
+
+### Situação logística derivada para UI
+
+A compra e seus itens devem expor projeções derivadas para leitura operacional, sem persistir novo status:
+
+- `SemDevolucao`: não há devolução vigente nem compensada.
+- `ParcialmenteDevolvida`: há quantidade devolvida vigente menor que a quantidade comprada/recebida aplicável.
+- `Devolvida`: toda a quantidade aplicável está devolvida de forma vigente.
+- `ParcialmenteCompensada`: há devoluções compensadas e ainda resta quantidade devolvida vigente.
+- `DevolucaoCompensada`: todas as devoluções registradas foram compensadas e não há efeito logístico vigente.
+
+Essas situações não substituem `QuantidadeRecebida`: recebimento é fato histórico e continua visível mesmo quando a mercadoria foi devolvida depois.
 
 ## Índices e constraints planejados
 

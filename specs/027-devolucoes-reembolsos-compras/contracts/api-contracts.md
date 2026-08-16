@@ -307,3 +307,20 @@ Nas consultas de movimentação de estoque, acrescentar origens derivadas:
 - O frontend deve tolerar campos ausentes durante implantação gradual, usando zero, lista vazia ou `SemReembolso` como fallback de leitura.
 - A ativação do frontend que envia comandos só ocorre depois que a migration e o backend compatível estiverem implantados.
 - Nenhum endpoint autoriza exclusão física ou edição destrutiva dos eventos.
+
+### Refinamento de status logístico para devoluções pós-recebimento
+
+As respostas de lista e detalhe de compra devem expor campos aditivos derivados pelo backend para a UI não inferir estado oficial:
+
+```json
+{
+  "quantidadeRecebida": 10,
+  "quantidadeDevolvidaAntes": 0,
+  "quantidadeDevolvidaDepois": 10,
+  "quantidadeDevolvidaDepoisCompensada": 0,
+  "situacaoLogisticaDevolucao": "Devolvida",
+  "descricaoSituacaoLogisticaDevolucao": "Recebida e devolvida"
+}
+```
+
+Valores esperados para `situacaoLogisticaDevolucao`: `SemDevolucao`, `ParcialmenteDevolvida`, `Devolvida`, `ParcialmenteCompensada`, `DevolucaoCompensada`. A situação financeira de reembolso permanece em campo/tag separada.

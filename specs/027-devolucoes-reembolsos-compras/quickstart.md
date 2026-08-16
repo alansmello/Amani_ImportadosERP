@@ -123,6 +123,8 @@ Esperado:
 - Origem exibida: `DevolucaoCompra`, com navegação para compra, item, recebimento e devolução.
 - Reversão de custo: R$ 105,40, baseada no snapshot do recebimento.
 - A quantidade pendente não reabre; quantidade devolvida após recebimento aparece separadamente.
+- O detalhe do item mantém a quantidade recebida histórica e exibe a quantidade devolvida depois do recebimento como efeito logístico vigente.
+- A lista de compras exibe tag logística compatível, como `Recebida com devolução`, `Parcialmente devolvida` ou `Devolvida`, sem substituir a tag financeira de reembolso.
 - Não surge crédito financeiro automático.
 
 ## 9. Estoque insuficiente e atomicidade
@@ -162,6 +164,7 @@ Esperado:
 - Origem exibida: `CompensacaoDevolucaoCompra`.
 - Quantidade e custo são restaurados pelo mesmo snapshot do recebimento.
 - O evento original continua visível e a segunda compensação falha com conflito.
+- Após compensar uma devolução posterior, detalhe e lista indicam `Devolução compensada` ou `Parcialmente compensada`, conforme ainda exista devolução vigente.
 
 ## 12. Alocação e prejuízo líquido
 
@@ -275,3 +278,96 @@ Anexar à entrega:
 | Cenários 4 a 14 | Resultado, capturas e IDs usados |
 | Desempenho | 9/10 abaixo de 2 s por fluxo crítico |
 | Aprovação de ativação | Responsáveis técnico e de negócio |
+
+## 19. Runbook operacional obrigatorio para producao
+
+Este runbook complementa o roteiro acima e deve ser preenchido antes de qualquer ativacao produtiva. A regra de ouro da F027 permanece: schema expansivo pode existir com a feature desligada; comandos novos so podem ser liberados apos aprovacao nominal.
+
+### 19.1 Responsaveis e janelas
+
+Registrar em `artifacts/f027-validation-evidence.md`:
+
+- responsavel tecnico pela migration;
+- responsavel de negocio pela liberacao;
+- responsavel por banco/infraestrutura;
+- janela planejada, fuso horario e criterio de abortar;
+- versao/commit exato do backend e frontend;
+- valor inicial de `DevolucoesReembolsosComprasEnabled`.
+
+### 19.2 Antes da migration
+
+1. Confirmar backup restauravel e checksum.
+2. Restaurar o backup em copia isolada representativa.
+3. Executar `artifacts/f027-production-baseline.sql` na copia isolada e arquivar saida.
+4. Exportar e revisar `artifacts/f027-migration-generated.sql`.
+5. Confirmar que o SQL cria somente as cinco tabelas F027 e nao contem `UPDATE`, `DELETE`, `TRUNCATE`, `DROP`, `ALTER` destrutivo ou backfill.
+6. Confirmar que todas as FKs usam comportamento restritivo e que os indices unicos de idempotencia existem.
+7. Confirmar que a flag permanece desligada.
+
+### 19.3 Aplicacao da migration em copia isolada
+
+1. Aplicar a migration somente na copia isolada.
+2. Medir inicio, fim, duracao, versao PostgreSQL, locks observados e qualquer alerta de conexao.
+3. Executar `artifacts/f027-post-migration-check.sql`.
+4. Repetir `artifacts/f027-production-baseline.sql`.
+5. Comparar baseline antes/depois e explicar qualquer divergencia. Divergencia nao explicada bloqueia producao.
+6. Executar smoke test legado com a flag desligada: compras, recebimentos, perdas, vendas, estoque, dashboard e financeiro.
+
+### 19.4 Implantacao gradual
+
+1. Implantar backend compativel com a feature ainda desligada.
+2. Implantar frontend compativel, mantendo comandos novos indisponiveis para operacao real enquanto a flag estiver desligada.
+3. Monitorar erros HTTP 4xx/5xx, tempo de resposta das rotas de compras/estoque/dashboard e logs de conflito/idempotencia.
+4. Habilitar a flag apenas para usuarios controlados ou janela controlada aprovada.
+5. Executar smoke test F027 minimo:
+   - registrar reembolso parcial;
+   - registrar devolucao antes do recebimento;
+   - registrar devolucao depois do recebimento;
+   - compensar uma devolucao;
+   - cancelar um reembolso;
+   - conferir historico, estoque, custo, transito e caixa.
+6. Liberar para mais usuarios somente se nao houver divergencia de estoque, custo, transito ou caixa.
+
+### 19.5 Monitoramento pos-ativacao
+
+Monitorar e registrar por pelo menos um ciclo operacional:
+
+- contagem de registros nas cinco tabelas F027;
+- conflitos por `OPERACAO_ID_REUTILIZADA`;
+- rejeicoes por limite/saldo/estoque;
+- tempo de carregamento de detalhe de compra, historico, estoque e dashboards;
+- diferencas entre total original, reembolso liquido e custo financeiro liquido;
+- entradas/saidas de estoque com origem `DevolucaoCompra` e `CompensacaoDevolucaoCompra`;
+- relatos de usuario sobre clareza das acoes criticas.
+
+### 19.6 Desligamento da flag
+
+Se houver incidente funcional ou divergencia nao conciliada:
+
+1. Desligar `DevolucoesReembolsosComprasEnabled`.
+2. Manter as tabelas F027 e os eventos ja gravados.
+3. Bloquear novos comandos de devolucao/reembolso/correcao.
+4. Preservar leitura e auditoria dos eventos existentes.
+5. Coletar IDs de operacao, compras afetadas, timestamps e logs.
+6. Preparar correcao por novo deploy ou evento compensatorio quando aplicavel.
+
+### 19.7 Rollback logico sem `Down`
+
+Depois que qualquer dado F027 existir, nao executar `Down` da migration em producao. O rollback permitido e logico:
+
+- desligar a flag;
+- manter schema expansivo;
+- publicar versao que ignore com seguranca os comandos novos, se necessario;
+- preservar os registros para auditoria;
+- usar eventos compensatorios para neutralizar erros de negocio;
+- restaurar backup somente em desastre confirmado, com aprovacao operacional explicita e avaliacao de perda de operacoes posteriores.
+
+### 19.8 Aprovacoes obrigatorias
+
+Antes de producao, registrar nominalmente em `artifacts/f027-validation-evidence.md`:
+
+- aprovacao tecnica da migration e do rollback logico;
+- aprovacao de negocio para liberar a feature;
+- aprovacao de banco/infra sobre backup, restore e janela;
+- decisao explicita para habilitar a flag;
+- decisao explicita para ampliar de usuarios controlados para liberacao geral.
