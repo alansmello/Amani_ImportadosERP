@@ -186,3 +186,39 @@ Record IDs, timestamps, screenshots, and observed responses for each scenario in
 - DÃ©bito tÃ©cnico registrado: quando uma devoluÃ§Ã£o for compensada e existir reembolso relacionado/alocado, o sistema deve oferecer cancelar/estornar o reembolso ou manter o crÃ©dito financeiro com justificativa auditÃ¡vel.
 - Risco se nÃ£o tratado: a logÃ­stica pode ser neutralizada, mas o financeiro permanecer com crÃ©dito vigente, exigindo correÃ§Ã£o manual e podendo distorcer caixa/dashboard.
 - Status: documentado como T089; nÃ£o houve alteraÃ§Ã£o de cÃ³digo nesta etapa.
+
+## Neon rehearsal - baseline before migration
+
+- Data: 2026-08-16
+- Neon branch: `pre-f027-deploy-backup`
+- Parent branch: `production`
+- Momento: antes da migration F027
+- Resultado: baseline executado e exportado em JSON.
+- Arquivos:
+  - `artifacts/f027-neon-baseline-backup-before-01-context.json`
+  - `artifacts/f027-neon-baseline-backup-before-02-counts.json`
+  - `artifacts/f027-neon-baseline-backup-before-03-compras-totais.json`
+  - `artifacts/f027-neon-baseline-backup-before-04-logistica-compras.json`
+  - `artifacts/f027-neon-baseline-backup-before-05-estoque-movimentacoes.json`
+  - `artifacts/f027-neon-baseline-backup-before-06-financeiro-legacy.json`
+  - `artifacts/f027-neon-baseline-backup-before-07-legacy-table-hash.json`
+## Neon rehearsal - migration and baseline after
+
+- Data: 2026-08-16
+- Neon branch: `pre-f027-deploy-backup`
+- Migration: `artifacts/f027-migration-generated.sql` executada com sucesso no Neon SQL Editor.
+- Post-check: exportado em JSON nos arquivos `artifacts/f027-neon-post-check-backup-01-expected-tables.json` a `artifacts/f027-neon-post-check-backup-06-check-constraints.json`.
+- Baseline depois da migration: exportado em JSON nos arquivos `artifacts/f027-neon-baseline-backup-after-01-context.json` a `artifacts/f027-neon-baseline-backup-after-07-legacy-table-hash.json`.
+- Comparação before/after: result sets 02 a 07 idênticos por SHA256; somente o contexto/timestamp difere.
+- Resultado: ensaio da migration na branch backup aprovado, sem divergência em dados legados.
+## Neon production - migration and baseline after
+
+- Data: 2026-08-16
+- Neon branch: `production`
+- Baseline antes da migration: exportado em JSON nos arquivos `artifacts/f027-neon-baseline-production-before-01-context.json` a `artifacts/f027-neon-baseline-production-before-07-legacy-table-hash.json`.
+- Migration: `artifacts/f027-migration-generated.sql` executada com sucesso no Neon SQL Editor.
+- Post-check: exportado em JSON nos arquivos `artifacts/f027-neon-post-check-production-01-expected-tables.json` a `artifacts/f027-neon-post-check-production-06-check-constraints.json`.
+- Baseline depois da migration: exportado em JSON nos arquivos `artifacts/f027-neon-baseline-production-after-01-context.json` a `artifacts/f027-neon-baseline-production-after-07-legacy-table-hash.json`.
+- Comparação before/after: result sets 02 a 07 idênticos por SHA256; somente o contexto/timestamp difere.
+- Resultado: migration aplicada em produção com schema expansivo e sem divergência em dados legados.
+- Feature flag: manter `Features__DevolucoesReembolsosComprasEnabled=false` até deploy e smoke test controlado.
