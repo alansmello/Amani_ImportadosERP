@@ -647,7 +647,7 @@ Endpoints já implementados e funcionais:
 
 ## **F026 — Consistência de Compras em Trânsito e Limpeza do Dashboard Gerencial**
 
-- **Status:** Fases Specify, Plan, Tasks e Analyze concluídas em 02/07/2026; achados da análise remediados e pronta para aprovação explícita, sem autorização de implementação.
+- **Status:** Implementação incorporada à `main` pela PR #27; builds e verificações estáticas registrados, com cenários manuais e atualização final de evidências ainda pendentes.
 - **Prioridade:** Alta para confiabilidade das compras e da posição patrimonial.
 - **Problema de negócio:** Totais de compra divergem entre consultas, compras em trânsito podem aparecer sem valor e o dashboard mistura estoque disponível com uma leitura patrimonial incompleta, além de manter blocos não acionáveis.
 - **Decisão de produto:** Adotar uma regra oficial única para total e parcela pendente, separar trânsito ao custo e ao preço de venda e retirar temporariamente da home alertas e blocos de incompletude ainda sem ação operacional.
@@ -680,12 +680,51 @@ Endpoints já implementados e funcionais:
 - Tela futura de alertas acionáveis com contexto e links para produto, estoque ou compra.
 - Refinamento das regras e ações dos blocos de lacunas de custo e dados financeiros incompletos.
 
+### **Validações remanescentes**
+
+- Executar os cenários manuais pendentes de consistência, trânsito, patrimônio, responsividade e desempenho registrados no quickstart.
+- Completar a tabela de evidências da F026 e encerrar as tarefas T011, T018, T022, T027, T032 e T033.
+- Preservar os débitos técnicos já registrados para estoque mínimo e alertas acionáveis.
+
+---
+
+## **F027 — Devoluções e Reembolsos de Compras**
+
+- **Status:** Fase Specify concluída em 16/08/2026; pronta para Clarify, sem autorização de implementação ou alteração de dados.
+- **Prioridade:** Alta para recuperação financeira, integridade de estoque e segurança da operação em produção.
+- **Problema de negócio:** Perdas encerram quantidades sem estoque, mas o sistema não registra dinheiro recuperado; também não existe devolução rastreável quando falsificação, avaria, item incorreto ou erro de recebimento é identificado depois da entrada física.
+- **Decisão de produto:** Separar devolução logística de reembolso financeiro, permitir devoluções antes e depois do recebimento e preservar o total original, os eventos históricos e todos os dados já existentes em produção.
+- **Documento-base:** `specs/027-devolucoes-reembolsos-compras/spec.md`.
+
+### **Escopo incluído**
+
+- Reembolso parcial ou integral, inclusive sem devolução física, pela data efetiva do crédito.
+- Devolução ou recusa de quantidade pendente sem gerar estoque.
+- Devolução posterior ao recebimento com saída física própria, sem apagar a entrada original.
+- Separação entre estado logístico, situação de devolução e situação de reembolso.
+- Total original, total reembolsado, custo financeiro líquido, recuperação e prejuízo líquido.
+- Reflexos temporais em estoque, custo, caixa e indicadores gerenciais.
+- Cancelamento ou compensação auditável sem exclusão destrutiva.
+- Operação idempotente, consistente e responsiva em smartphone, tablet e desktop.
+- Gates obrigatórios de ensaio, recuperação, conciliação e recuo seguro para o ambiente produtivo.
+
+### **Fora desta versão**
+
+- Indenização acima do total oficial da compra.
+- Reposição automática ou geração automática de nova compra.
+- Integração automática com marketplaces.
+- Contas a pagar completas e conciliação bancária.
+- Anexos de comprovantes.
+- Reescrita de histórico ou transformação destrutiva de dados existentes.
+- Nova infraestrutura automatizada de testes sem autorização explícita.
+
 ### **Gate antes da implementação**
 
-- Inventariar os cálculos e contratos atuais de compra e dashboard.
-- Documentar a regra de rateio, arredondamento, indisponibilidade real e cenários de regressão.
-- Submeter análise, plano e tarefas à aprovação explícita do responsável pelo produto.
-- Atualizar este roadmap novamente ao término da implementação para registrar entregas, validações e eventuais débitos remanescentes.
+- Executar Clarify, Plan, Tasks e Analyze sobre a especificação aprovada.
+- Inventariar efeitos atuais de entrada, saída, custo médio, trânsito, perdas, caixa e dashboards.
+- Planejar evolução aditiva e retrocompatível, sem reinterpretação silenciosa do histórico.
+- Ensaiar a evolução em cópia representativa, validar proteção de recuperação e documentar recuo lógico.
+- Obter aprovação explícita do responsável pelo produto antes de qualquer implementação ou alteração de dados.
 
 ---
 
@@ -734,6 +773,9 @@ Ordem obrigatória para reduzir risco e facilitar validação:
 3. **F026 — Consistência de Compras em Trânsito e Limpeza do Dashboard Gerencial**
    - Motivo da posição: consolida a regra comercial das compras e corrige sua representação patrimonial sem ampliar os fluxos logísticos.
    - Gate de saída: análise técnica aprovada, total oficial único, trânsito separado do estoque, dashboard simplificado e roteiro manual validado.
+4. **F027 — Devoluções e Reembolsos de Compras**
+   - Motivo da posição: amplia o ciclo de compras somente depois da consolidação do total oficial, do trânsito e da posição patrimonial.
+   - Gate de saída: devoluções e reembolsos conciliados com estoque, custo e caixa; histórico produtivo preservado; ensaio e recuperação aprovados.
 
 ### **Fase 7 — Backlog pós-refinamento (não aprovado para execução nesta decisão)**
 
@@ -769,6 +811,9 @@ Ordem obrigatória para reduzir risco e facilitar validação:
 - **F026 sem implementação automática:** a fase Specify registra a decisão de produto; análise técnica, plano e tarefas devem ser aprovados antes de qualquer alteração funcional.
 - **Rateio da F026:** ajustes gerais integram o total oficial por rateio proporcional e o valor em trânsito usa somente a parcela das quantidades pendentes.
 - **Roadmap da F026:** este documento deve ser atualizado novamente ao final da implementação, incluindo validações concluídas e débitos técnicos remanescentes.
+- **F027 em produção:** nenhuma implementação ou alteração de dados começa antes de Clarify, Plan, Tasks, Analyze, ensaio em cópia representativa e aprovação explícita.
+- **Separação da F027:** devolução é evento logístico e reembolso é evento financeiro; um pode existir sem o outro.
+- **Histórico da F027:** recebimentos e demais registros originais permanecem; correções usam compensação rastreável.
 
 ---
 
@@ -833,6 +878,20 @@ Decisões aprovadas para orientar diretamente as próximas especificações:
 | Implementação | Exigir aprovação explícita após análise, plano e tarefas | F026 |
 | Governança documental | Atualizar o roadmap novamente ao final da implementação | F026 |
 
+## **Registro da decisão da F027 em 16/08/2026**
+
+| **Tema** | **Decisão aprovada para especificação** | **Feature** |
+| --- | --- | --- |
+| Devolução e reembolso | Manter eventos logístico e financeiro separados | F027 |
+| Antes do recebimento | Encerrar a pendência sem movimentar estoque | F027 |
+| Depois do recebimento | Preservar a entrada e registrar saída própria de devolução | F027 |
+| Reembolso | Aceitar múltiplos créditos parciais até o total oficial | F027 |
+| Financeiro | Considerar o crédito pela data efetiva sem misturá-lo com recebimento de cliente | F027 |
+| Custo | Refletir devoluções somente a partir da data do evento, sem reescrever vendas passadas | F027 |
+| Produção | Exigir evolução aditiva, ensaio, recuperação, conciliação e recuo lógico | F027 |
+| Histórico | Proibir exclusão destrutiva e exigir compensação auditável | F027 |
+| Implementação | Exigir Clarify, Plan, Tasks, Analyze e aprovação explícita | F027 |
+
 ## **Próximo passo previsto**
 
-As fases Specify, Plan, Tasks e Analyze da **F026 — Consistência de Compras em Trânsito e Limpeza do Dashboard Gerencial** estão concluídas, e os achados da análise cruzada foram remediados. O próximo passo é revisar o pacote e registrar a aprovação explícita prevista em T001. Nenhuma implementação funcional da F026 está autorizada antes desse gate. A F024 e a F025 mantêm seus fluxos e gates próprios.
+A especificação da **F027 — Devoluções e Reembolsos de Compras** está criada e validada. O próximo passo é executar Clarify para revisar decisões de domínio e limites operacionais antes do planejamento. Nenhuma implementação ou alteração de dados da F027 está autorizada nesta fase. A F026 permanece implementada na `main`, com evidências manuais pendentes no quickstart.
