@@ -728,6 +728,39 @@ Endpoints já implementados e funcionais:
 
 ---
 
+## **F028 — Consistência de Devoluções em Trânsito**
+
+- **Status:** PLAN tlc-spec-lean aguardando aprovação humana em 20/09/2026; CHECKS, BUILD e implementação bloqueados.
+- **Prioridade:** Alta. Impacto produtivo já medido: 12 itens, 10 compras, 61 unidades indevidamente em trânsito.
+- **Problema de negócio:** Recusas anteriores ao recebimento já estão persistidas, mas Dashboard, filtro "Em trânsito", valor ao custo da API de trânsito e validações de recebimento/perda ainda usam fórmulas diferentes.
+- **Decisão de produto:** Uma pendência vigente por item (`Q - recebimentos - perdas - devoluções anteriores vigentes`) em todos os consumidores; sem migration, sem datafix e sem reescrita de eventos.
+- **Documento-base:** `specs/028-consistencia-devolucoes-transito/plan.md`.
+
+### **Escopo incluído**
+
+- Centralizar/reutilizar a fórmula de pendência vigente.
+- Dashboard e cards "Mercadorias em trânsito ao custo" / "a venda".
+- Filtro e listagem de Compras, `GET /api/compras/em-transito` e produtos pendentes.
+- Lista e detalhe com a mesma pendência e a mesma identificação logística.
+- Recebimento e perda validados contra a pendência que já desconta recusas anteriores.
+- Comportamento temporal, compensação anterior e independência do reembolso.
+- Regressão das 12 linhas / 61 unidades como evidência, sem DML produtivo.
+
+### **Fora desta versão**
+
+- `UPDATE` em massa de status ou de eventos.
+- Nova migration ou coluna persistida de pendência.
+- Feature flag com duas fórmulas.
+- Rediscutir F027.
+- UI específica para saldo líquido negativo.
+
+### **Gate antes da implementação**
+
+- Aprovar o PLAN em `specs/028-consistencia-devolucoes-transito/plan.md`.
+- Só então escrever CHECKS. Não implementar código nesta fase.
+
+---
+
 # **3. Roadmap recomendado por fases**
 
 ### **Fase 1 — Operação ponta a ponta (concluída)**
@@ -776,6 +809,9 @@ Ordem obrigatória para reduzir risco e facilitar validação:
 4. **F027 — Devoluções e Reembolsos de Compras**
    - Motivo da posição: amplia o ciclo de compras somente depois da consolidação do total oficial, do trânsito e da posição patrimonial.
    - Gate de saída: devoluções e reembolsos conciliados com estoque, custo e caixa; histórico produtivo preservado; ensaio e recuperação aprovados.
+5. **F028 — Consistência de Devoluções em Trânsito**
+   - Motivo da posição: a F027 já persiste recusas anteriores; os consumidores de trânsito ainda não usam a mesma pendência vigente.
+   - Gate de saída: uma fórmula de pendência em Dashboard, lista, detalhe, APIs de trânsito, recebimento e perda; sem migration, sem datafix e sem reescrita de eventos; regressão das 12 linhas / 61 unidades.
 
 ### **Fase 7 — Backlog pós-refinamento (não aprovado para execução nesta decisão)**
 
@@ -814,6 +850,8 @@ Ordem obrigatória para reduzir risco e facilitar validação:
 - **F027 em produção:** nenhuma implementação ou alteração de dados começa antes de Clarify, Plan, Tasks, Analyze, ensaio em cópia representativa e aprovação explícita.
 - **Separação da F027:** devolução é evento logístico e reembolso é evento financeiro; um pode existir sem o outro.
 - **Histórico da F027:** recebimentos e demais registros originais permanecem; correções usam compensação rastreável.
+- **F028 sem datafix:** a consistência de trânsito é leitura unificada da pendência vigente; não autoriza `UPDATE` em massa, migration ou reescrita de `Compra.Status`.
+- **F028 e F027:** reembolso continua independente da membership logística; devolução posterior não é descontada duas vezes.
 
 ---
 
@@ -892,6 +930,19 @@ Decisões aprovadas para orientar diretamente as próximas especificações:
 | Histórico | Proibir exclusão destrutiva e exigir compensação auditável | F027 |
 | Implementação | Exigir Clarify, Plan, Tasks, Analyze e aprovação explícita | F027 |
 
+## **Registro da decisão da F028 em 20/09/2026**
+
+| **Tema** | **Decisão aprovada para especificação** | **Feature** |
+| --- | --- | --- |
+| Pendência vigente | `Q - recebimentos - perdas - devoluções anteriores vigentes` | F028 |
+| Devolução posterior | Não descontar de novo a quantidade já recebida | F028 |
+| Recusa total antes do recebimento | Pendência zero, fora de Em trânsito, tag "Devolvida antes do recebimento" | F028 |
+| Recusa parcial com resto pendente | Só o restante permanece em trânsito, tag "Parcialmente devolvida" | F028 |
+| Cards de trânsito | Usar somente a quantidade realmente pendente | F028 |
+| Reembolso | Não determina trânsito logístico | F028 |
+| Histórico | Não reescrever eventos; sem datafix e sem migration | F028 |
+| Implementação | Exigir aprovação deste PLAN antes de CHECKS, BUILD ou alteração produtiva | F028 |
+
 ## **Próximo passo previsto**
 
-A especificação da **F027 — Devoluções e Reembolsos de Compras** está criada e validada. O próximo passo é executar Clarify para revisar decisões de domínio e limites operacionais antes do planejamento. Nenhuma implementação ou alteração de dados da F027 está autorizada nesta fase. A F026 permanece implementada na `main`, com evidências manuais pendentes no quickstart.
+O PLAN da **F028 — Consistência de Devoluções em Trânsito** está em `specs/028-consistencia-devolucoes-transito/plan.md` e aguarda aprovação humana. CHECKS, BUILD, VERIFY, implementação e qualquer alteração produtiva permanecem bloqueados até essa aprovação. A F027 permanece a fonte das regras logísticas; a F028 só as aplica em todos os consumidores de trânsito.
