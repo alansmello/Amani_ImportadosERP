@@ -9,17 +9,22 @@ Provas autorizadas: `dotnet build Amani_ImportadosERP.sln`, `npm --prefix fronte
 
 Os ids `C1`…`C46` são só o heading `**Cx**`. Esta skill não tem runner que aceite `--name`. Cada `Proof:` é o comando ou o roteiro a executar como está escrito.
 
-Ambiente HTTP (PowerShell, cópia isolada): `$env:API`, `$env:TOKEN`, `$env:COMPRA_RECUSA_TOTAL_ID`, `$env:ITEM_RECUSA_TOTAL_ID`, `$env:COMPRA_RECUSA_PARCIAL_ID`, `$env:ITEM_RECUSA_PARCIAL_ID`, `$env:COMPRA_MULTI_ID`, `$env:ITEM_MULTI_A_ID`, `$env:ITEM_MULTI_B_ID`, `$env:COMPRA_POSTERIOR_ID`, `$env:COMPRA_RECUSA_EM_D_ID`, `$env:COMPRA_CANCELADA_ID`, `$env:DATA_D_MINUS_1`, `$env:DATA_D`, `$env:DATA_D_PLUS_1`, `$env:DATABASE_URL` (cópia) e, só para C43/C45, a sessão SQL de produção já usada na auditoria.
+Ambiente HTTP (PowerShell, cópia isolada): `$env:API`, `$env:TOKEN`, `$env:COMPRA_RECUSA_TOTAL_ID`, `$env:ITEM_RECUSA_TOTAL_ID`, `$env:COMPRA_RECUSA_PARCIAL_ID`, `$env:ITEM_RECUSA_PARCIAL_ID`, `$env:COMPRA_MULTI_ID`, `$env:ITEM_MULTI_A_ID`, `$env:ITEM_MULTI_B_ID`, `$env:COMPRA_POSTERIOR_ID`, `$env:ITEM_POSTERIOR_ID`, `$env:RECEBIMENTO_POSTERIOR_ID`, `$env:COMPRA_RECUSA_EM_D_ID`, `$env:ITEM_RECUSA_EM_D_ID`, `$env:DEVOLUCAO_RECUSA_EM_D_ID`, `$env:COMPRA_FINALIZADA_ID`, `$env:ITEM_FINALIZADA_ID`, `$env:DATA_D_MINUS_1`, `$env:DATA_D`, `$env:DATA_D_PLUS_1`, `$env:DATABASE_URL` (cópia) e, só para C43/C45, a sessão SQL de produção já usada na auditoria.
 
-Fixture HTTP recorrente, sem ajustes comerciais, custo unitário R$ 100,00, um produto com `PrecoVenda` R$ 150,00 salvo quando o check disser o contrário:
+Fixture HTTP recorrente, sem ajustes comerciais, custo unitário R$ 100,00, um produto com `PrecoVenda` R$ 150,00. Não existe fixture HTTP de produto sem `PrecoVenda` (C6 é prova estática).
 
 | Nome | Eventos | Pendência vigente |
 | --- | --- | ---: |
 | RecusaTotal | Q=10, DA=10, R=0, P=0 | 0 |
-| RecusaParcial | Q=10, DA=4, R=0, P=0 | 6 |
+| RecusaParcial | Q=10, DA=4, R=0, P=0 | 6 até C40; C29/C30 depois mutam |
 | MultiItem | item A Q=5 DA=5; item B Q=5 DA=0 | 5 (só B) |
-| PosteriorSemDupla | Q=10, R=4, DA=0, devolução posterior=4 | 6 |
-| RecusaEmD | RecusaTotal com `DataDevolucao` = D | 10 se t<D; 0 se t≥D |
+| PosteriorSemDupla | Q=10, receber 4, devolver posteriormente essas 4, DA=0 | 6 (posterior não entra em `DA(t)`) |
+| RecusaEmD | Q=10, R=0, P=0, DA=10 com `DataDevolucao`=D, sem compensação até depois de C38 | 10 se t<D; 0 se t≥D e vigente |
+| Finalizada | Q=1, P=1, R=0, DA=0 → `status=Finalizada` | 0 |
+
+PosteriorSemDupla não pode ser substituída por Q=6 sem devolução: o ponto é R=4 + devolução `DepoisDoRecebimento`=4 e pendência final 6.
+
+Não há API que grave `CompraStatus.Cancelada`. C35/C36 usam a compra Finalizada e o item **dessa** compra (`COMPRA_FINALIZADA_ID` / `ITEM_FINALIZADA_ID`). Não reutilizar `ITEM_RECUSA_PARCIAL_ID`.
 
 ## Checks
 
@@ -42,11 +47,13 @@ Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboa
 **C5** - Recusa parcial of C4 values the sale card at 6 × 150.00 = 900.00 (AC 2, valor a venda)
 Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional"` on isolated copy with RecusaParcial as the only extra transit fixture; `valorAoPrecoVenda` contribution is 900.00
 
-**C6** - A pending item without valid `PrecoVenda` leaves the sale-price transit value null and fills the existing reason field (AC 5)
-Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional"` on isolated copy with one pending item whose product has null `PrecoVenda`; `valorAoPrecoVenda` is null and `motivoValorAoPrecoVendaIndisponivel` is non-empty
+**C6** - A live `Produto` cannot be created or updated without a non-negative `PrecoVenda`, so the isolated copy cannot seed the HTTP fixture “pending item with null `PrecoVenda`”. AC 5 still holds: the dashboard maps a missing product join to null sale-price transit and fills `motivoValorAoPrecoVendaIndisponivel` instead of inventing a price. `PrecoVenda = 0` is valid and would contribute `0.00`, not null. (AC 5)
+Proof: `rg "public decimal PrecoVenda" -A 2 src/Amani.ImportadosERP.Domain/Entities/Produto.cs src/Amani.ImportadosERP.Application/DTOs/CriarProdutoDto.cs src/Amani.ImportadosERP.Application/DTOs/AtualizarProdutoDto.cs` — property is `decimal`, not `decimal?`
+Proof: `rg "precoVenda < 0" src/Amani.ImportadosERP.Domain/Entities/Produto.cs` — constructor/`Atualizar` reject negatives and accept 0
+Proof: `rg "PrecoVenda = produto == null" -A 1 src/Amani.ImportadosERP.Infra.Data/Repositories/DashboardOperacionalRepository.cs` plus the `motivoVenda ??=` string in the same method — null sale value only on missing product join, never a fabricated price
 
-**C7** - A posterior return of the 4 received units does not subtract those 4 from the remaining 6 pending (AC 6)
-Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional"` on isolated copy with PosteriorSemDupla as the only extra transit fixture; `quantidadePendente` contribution is 6 and `valorAoCusto` contribution is 600.00
+**C7** - PosteriorSemDupla (Q=10, R=4, devolução posterior das mesmas 4, DA=0) keeps vigente pendency 6: the posterior return is not subtracted again (AC 6)
+Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional"` on isolated copy with PosteriorSemDupla as the only extra transit fixture; `quantidadePendente` contribution is 6 and `valorAoCusto` contribution is 600.00. A Q=6 purchase with no return does not prove this.
 
 **C8** - Patrimônio realista adds the corrected cost transit; potencial adds the corrected sale transit (AC 2)
 Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/financeiro"` on isolated copy with RecusaParcial as the only extra transit fixture; `valorTotalRealista` includes 600.00 and `valorTotalPotencial` includes 900.00
@@ -99,10 +106,12 @@ Proof: the C17 and C18 curls; list `possuiPendenciaVigente` matches detail item 
 **C21** - When pendency is 0 only because of anterior returns and there is no receipt, list and detail JSON `status` is not `Recebida` (AC 17)
 Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/compras"` and `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/compras/$env:COMPRA_RECUSA_TOTAL_ID"` both return persisted `status=EmTransito`
 
-**C46** - RecusaTotal list and detail screens show "Devolvida antes do recebimento" as the operational situation and do not show "Em transito" / "Em trânsito" as the current badge or situation while `possuiPendenciaVigente=false`; the JSON `status` field may remain `EmTransito`
-Proof: roteiro isolated-copy `/compras` (unfiltered, RecusaTotal visible): operational situation text is `Devolvida antes do recebimento`; no situation/status badge on that row equals `Em transito` or `Em trânsito`
+**C46** - When a RecusaTotal purchase is present on a list or detail surface that returns it, that surface shows "Devolvida antes do recebimento" as the operational situation and does not show "Em transito" / "Em trânsito" as the current badge or situation while `possuiPendenciaVigente=false`; the JSON `status` field may remain `EmTransito`. Absence from the unfiltered `/compras` 30-day transit window is not a defect (AC 11, AC 13)
+Proof: roteiro isolated-copy `/compras` on a listing that includes RecusaTotal because it uses `GET /api/compras` (date, supplier, or any active filter other than the default transit window): operational situation text is `Devolvida antes do recebimento`; no situation/status badge on that row equals `Em transito` or `Em trânsito`
 Proof: roteiro isolated-copy `/compras/$env:COMPRA_RECUSA_TOTAL_ID`: same operational situation text; no current-status badge equals `Em transito` or `Em trânsito`
 Proof: C21 curls still return `status=EmTransito` and `possuiPendenciaVigente=false`
+
+C46 was rewritten after VERIFY round 1 on 2026-09-20. The previous fixture required RecusaTotal visible on unfiltered `/compras` (“clear the filter and it remains in the general list”). That exceeded the approved business rule and AC 7/10/11/13. The rewrite restores the visual proof on surfaces that actually return the purchase. It is not a BUILD miss of a valid requirement.
 
 **C22** - `enum CompraStatus` members stay exactly `Criada`, `EmTransito`, `ParcialmenteRecebida`, `Recebida`, `Finalizada`, `Cancelada`; no member for devolução/recusa (AC 18)
 Proof: `rg "enum CompraStatus" -A 8 src/Amani.ImportadosERP.Domain/Entities/Compra.cs` table-driven over all 6 members, no seventh name
@@ -145,22 +154,24 @@ Proof: `curl.exe -sS -o NUL -w "%{http_code}" -H "Authorization: Bearer $env:TOK
 **C34** - `POST /api/compras/{compraId}/itens/{itemId}/perdas` for an unknown item returns 404
 Proof: `curl.exe -sS -o NUL -w "%{http_code}" -H "Authorization: Bearer $env:TOKEN" -H "Content-Type: application/json" -d "{\"quantidade\":1,\"motivo\":\"Perda\"}" "$env:API/api/compras/$env:COMPRA_RECUSA_PARCIAL_ID/itens/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/perdas"` equals 404
 
-**C35** - `POST /api/compras/{compraId}/itens/{itemId}/recebimentos` on a `Cancelada` or `Finalizada` purchase returns 409
-Proof: `curl.exe -sS -o NUL -w "%{http_code}" -H "Authorization: Bearer $env:TOKEN" -H "Content-Type: application/json" -d "{\"quantidade\":1}" "$env:API/api/compras/$env:COMPRA_CANCELADA_ID/itens/$env:ITEM_RECUSA_PARCIAL_ID/recebimentos"` equals 409
+**C35** - `POST /api/compras/{compraId}/itens/{itemId}/recebimentos` on a `Cancelada` or `Finalizada` purchase returns 409. Isolated copy uses a `Finalizada` purchase (perda total); there is no write API for `Cancelada`. The item must belong to that purchase.
+Proof: `curl.exe -sS -o NUL -w "%{http_code}" -H "Authorization: Bearer $env:TOKEN" -H "Content-Type: application/json" -d "{\"quantidade\":1}" "$env:API/api/compras/$env:COMPRA_FINALIZADA_ID/itens/$env:ITEM_FINALIZADA_ID/recebimentos"` equals 409
 
-**C36** - `POST /api/compras/{compraId}/itens/{itemId}/perdas` on a `Cancelada` or `Finalizada` purchase returns 409
-Proof: `curl.exe -sS -o NUL -w "%{http_code}" -H "Authorization: Bearer $env:TOKEN" -H "Content-Type: application/json" -d "{\"quantidade\":1,\"motivo\":\"Perda\"}" "$env:API/api/compras/$env:COMPRA_CANCELADA_ID/itens/$env:ITEM_RECUSA_PARCIAL_ID/perdas"` equals 409
+**C36** - `POST /api/compras/{compraId}/itens/{itemId}/perdas` on a `Cancelada` or `Finalizada` purchase returns 409. Same Finalizada fixture as C35; this check is not part of the RecusaEmD timeline.
+Proof: `curl.exe -sS -o NUL -w "%{http_code}" -H "Authorization: Bearer $env:TOKEN" -H "Content-Type: application/json" -d "{\"quantidade\":1,\"motivo\":\"Perda\"}" "$env:API/api/compras/$env:COMPRA_FINALIZADA_ID/itens/$env:ITEM_FINALIZADA_ID/perdas"` equals 409
 
 ### S5 - Tempo, compensação e reembolso · 3 files · 28 KB · ~7k
 
-**C37** - When `t` is strictly before `DataDevolucao` of an anterior return, that return is ignored in `DA(t)` (AC 22)
+**C37** - When `t` is strictly before `DataDevolucao` of an anterior return, that return is ignored in `DA(t)` (AC 22). RecusaEmD already has DA dated D; compensação has **not** run. C36 is not this step.
 Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataFinal=$env:DATA_D_MINUS_1"` on isolated copy with RecusaEmD as the only extra transit fixture; contribution 10 units / 1000.00
 
-**C38** - When `t` is on or after `DataDevolucao` and the return is vigente, it is included in `DA(t)` (AC 23)
+**C38** - When `t` is on or after `DataDevolucao` and the return is vigente, it is included in `DA(t)` (AC 23). Same RecusaEmD row as C37; still **before** compensação.
 Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataFinal=$env:DATA_D"` on isolated copy with RecusaEmD as the only extra transit fixture; contribution 0
 
-**C39** - Compensating an anterior return at D+1 restores pendency 10 without creating stock (AC 24)
-Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataFinal=$env:DATA_D_PLUS_1"` after compensação on isolated copy RecusaEmD as the only extra transit fixture; contribution 10 units / 1000.00 and zero new `EstoqueMovimentacao`
+After C38, POST compensação of `$env:DEVOLUCAO_RECUSA_EM_D_ID` with `dataCompensacao` = `$env:DATA_D_PLUS_1` and `presencaFisicaConfirmada=true`.
+
+**C39** - Compensating that anterior return at D+1 restores pendency 10 without creating stock (AC 24)
+Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataFinal=$env:DATA_D_PLUS_1"` after the compensação above; RecusaEmD still the only extra transit fixture; contribution 10 units / 1000.00 and zero new `EstoqueMovimentacao`
 
 **C40** - Creating, omitting or cancelling a `CompraReembolso` leaves vigente pendency, membership and both cards unchanged (AC 25)
 Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional"` and `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/compras"` before and after refund on RecusaParcial; cards stay 6 / 600.00 / 900.00 and `possuiPendenciaVigente=true`
@@ -199,7 +210,8 @@ Proof: the production execution of `docs/diagnosticos/compras-devolucoes-transit
 | `CompraStatus` members (6) | C22, table-driven over all 6 | - |
 | Recusa / trânsito shapes (5) | total C3 · parcial C4 · multi-item C19 · posterior no double C7 · compensação C39 | - |
 | RecusaTotal UI (2) | list C46 · detail C46 | - |
-| Temporal `t` (3) | before DA C37 · on/after DA C38 · after compensação C39 | - |
+| Temporal `t` (3) | before DA date C37 · on/after DA date C38 · after compensação C39 | - |
+| AC 5 `PrecoVenda` (1) | C6 static (HTTP null-price fixture unreachable) | - |
 | Pendency consumers (7) | dashboard C2 · `em-transito` C10 · produtos-pendentes C11 · lista C14 · detalhe C23 · recebimento C27 · perda C28 | - |
 | Cards and patrimônio (3) | custo C4 · venda C5 · patrimônio C8 | - |
 | Audit 12×61 (1) | C43 | - |
@@ -252,10 +264,24 @@ Under the budget — one builder, no ask:
 - S1 cards ~11k (DashboardOperacional + financeiro handler) · S2 membership ~9k (lista, em-transito, produtos-pendentes, `compras/page.tsx`) · S3 tags ~8k (CompraMapper, detail, C46 UI) · S4 writes ~11k (`CompraService`) · S5 temporal ~7k (same read path) · S6 preservation ~2k (`rg`/`git diff`) = ~48k across ~154 KB of existing files, under the 150k budget
 - Mechanism: one builder
 
-- **Boundary:** C1-C40 and C41-C45 closed at `4cdd77d`; C9, C12, C13, C46 closed at `f3f47d6`
+- **Boundary:** C1-C40 and C41-C45 closed at `4cdd77d`; C9, C12, C13 closed at `f3f47d6`; C46 spec corrected after VERIFY round 1 (2026-09-20) — unfiltered-list visibility dropped because it exceeded the approved business rule, not because BUILD missed a valid requirement
 - **Corrective BUILD (performance, 2026-09-20):** `ObterMercadoriasEmTransitoAsync` restored the F026 SQL prefilter `Q - R(t) - P(t) > 0` to select candidate purchase ids before `ToListAsync`, then applies vigente `DA(t)`. Functional ACs 1–6 unchanged: RecusaTotal still enters the superset (`Q-R-P > 0`) and contributes 0 after `DA`.
 - **Settled mid-build:** none
 - **Abandoned:** unused `CompraService.ObterComprasEmTransitoAsync` was left as a compile-only fix; live GET uses `ObterComprasEmTransitoQueryHandler`
 - **Technical debt (deferred, code-review 2026-09-20):** leftover `CompraService` transit methods still `Q-R-P`; N+1 `foreach` + `ObterPorCompraAsync` on list/em-transito/produtos-pendentes; DTO `Math.Max(0, …)` vs unclamped formula assumption; unused `CalcularStatusOperacional(obterQuantidadePendente)` hook; frontend `possuiPendenciaVigente?: boolean | null`
+- **Spec correction (2026-09-20, isolated-copy runbook):** PosteriorSemDupla stays Q=10/R=4/posterior=4; RecusaEmD timeline is C37 → C38 → compensação → C39 (C36 is Finalizada 409, not temporal); C35/C36 use `COMPRA_FINALIZADA_ID`/`ITEM_FINALIZADA_ID`; C6 is static because a live product cannot have null `PrecoVenda`. Application code unchanged. Do not start BUILD from this rewrite.
+
+## Isolated-copy execution order
+
+Dashboard proofs that name “only extra transit fixture” need that purchase as the only one with vigente pendency > 0 (Finalizada may coexist; RecusaTotal may coexist only when the claim is contribution 0). Recreate the container or truncate purchase tables between those groups. Do not run C29/C30/C40 until every RecusaParcial **read** has passed. Do not compensate RecusaEmD until C38 has passed.
+
+1. Identity gate of `amani_f028` on `127.0.0.1:55432` (never 5433 / Neon).
+2. Catalog + RecusaTotal. Exclusive: C3, C2 (zeros). RecusaTotal reads that do not need RecusaParcial: C12, C17, C21, C46, C27, C28.
+3. Add RecusaParcial (leave RecusaTotal in place; it adds 0). C1, C4, C5, C8, C9–C11, C14, C18, C20, C23–C26, C31–C34. **Not** C29, C30, C40 yet.
+4. Recreate transit data. Seed **only** PosteriorSemDupla (Q=10, POST recebimento 4, POST devolução `DepoisDoRecebimento` 4). C7.
+5. Recreate transit data. Seed RecusaEmD with DA dated D, **no** compensação. C37 (`dataFinal=D-1`) then C38 (`dataFinal=D`). Then POST compensação. Then C39. C36 is not in this sequence.
+6. Seed the combined read set: RecusaTotal, RecusaParcial, MultiItem, PosteriorSemDupla, Finalizada (Q=1 + perda 1). C19, C35, C36, remaining list/detail proofs that need several fixtures at once.
+7. RecusaParcial still at vigente 6: C40 (reembolso). **Then** C29, **then** C30.
+8. C41–C45 (`git` / production READ ONLY SQL). C6 any time (static `rg`).
 
 Do not start BUILD until this checks.md is approved.

@@ -119,7 +119,7 @@ Dashboard operacional, Dashboard financeiro e patrimônio realista/potencial pas
 11. The system SHALL keep the unfiltered Compras 30-day window as a list window and SHALL NOT use it as the patrimonial reference `t`.
 12. WHEN `GET /api/compras` returns a purchase THEN `possuiPendenciaVigente` SHALL be `true` if and only if at least one item has vigente pendency greater than `0`.
 
-**Independent test:** Apply "Em trânsito" on the 10 fully refused purchases; they disappear. Clear the filter and they remain in the general list with the logistic tag. `GET /api/compras/em-transito` agrees.
+**Independent test:** Apply "Em trânsito" on the 10 fully refused purchases; they disappear. `GET /api/compras/em-transito` and produtos-pendentes agree. The unfiltered `/compras` 30-day transit window may also omit them; that window is list membership, not a requirement to keep RecusaTotal visible after clearing the filter. When a fully refused purchase is opened from a listing that returns it (for example `GET /api/compras` with a date or supplier filter) or from detail, the operational situation is "Devolvida antes do recebimento".
 
 ### S3: Identificação logística na lista e no detalhe (P1)
 
@@ -134,7 +134,7 @@ Lista e detalhe deixam de divergir sobre pendência e sobre recusa anterior.
 17. IF vigente pendency is `0` only because of anterior returns and there is no receipt THEN list and detail SHALL NOT return `status = Recebida`.
 18. The system SHALL keep `status` as the persisted `CompraStatus`, SHALL NOT add a `CompraStatus` enum member for devolução or recusa, and SHALL express “Devolvida antes do recebimento” only as derived `SituacaoLogisticaDevolucao`.
 
-**Independent test:** Open one fully refused purchase from the list and from the detail; both show "Devolvida antes do recebimento", neither shows `Recebida`, and the Em trânsito filter hides it.
+**Independent test:** Open one fully refused purchase from a listing that returns it (not the default unfiltered transit window) and from the detail; both show "Devolvida antes do recebimento", neither shows `Recebida` as `status` nor "Em trânsito" as the operational situation, and the Em trânsito filter hides it.
 
 ### S4: Recebimento e perda respeitam a pendência vigente (P1)
 
@@ -188,6 +188,7 @@ Product capabilities only.
 | Alterar total comercial, recebimentos históricos ou movimentos de estoque | Fora da leitura de trânsito |
 | Integração marketplace / contas a pagar / anexos | Já fora da F027 |
 | Nova tela de alertas acionáveis | F026 deixou a home sem alertas; endpoint legado permanece |
+| Reescrever a visão padrão unfiltered de `/compras` (lista de trânsito dos últimos 30 dias) | AC 11 já preserva essa janela; RecusaTotal visível ali após limpar o filtro não é requisito de membership da F028 |
 
 ## Assumptions
 
