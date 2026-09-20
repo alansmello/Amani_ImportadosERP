@@ -91,9 +91,12 @@ public class CompraService
         await _unitOfWork.ExecuteInTransactionAsync(async () =>
         {
             var compra = await ObterCompraComItemParaAtualizarAsync(compraId, itemId);
+            compra.GarantirQueAceitaEventosLogisticos("recebimento");
             var item = compra.Items.First(i => i.Id == itemId);
+            var quantidadeDevolvidaAntesVigente = await _devolucaoRepository
+                .ObterQuantidadeVigenteAntesRecebimentoAsync(item.Id, DateTime.UtcNow.Date);
 
-            item.ValidarRecebimento(dto.Quantidade);
+            item.ValidarRecebimento(dto.Quantidade, quantidadeDevolvidaAntesVigente);
 
             var movimentacao = new EstoqueMovimentacao(
                 item.ProdutoId,
@@ -110,7 +113,8 @@ public class CompraService
                 dto.Quantidade,
                 dto.DataRecebimento,
                 movimentacao.Id,
-                dto.Observacao);
+                dto.Observacao,
+                quantidadeDevolvidaAntesVigente);
 
             await _recebimentoRepository.AdicionarSemSalvarAsync(recebimento);
             await _estoqueRepository.AdicionarSemSalvarAsync(movimentacao);
@@ -135,10 +139,19 @@ public class CompraService
         await _unitOfWork.ExecuteInTransactionAsync(async () =>
         {
             var compra = await ObterCompraComItemParaAtualizarAsync(compraId, itemId);
+            compra.GarantirQueAceitaEventosLogisticos("perda");
             var item = compra.Items.First(i => i.Id == itemId);
+            var quantidadeDevolvidaAntesVigente = await _devolucaoRepository
+                .ObterQuantidadeVigenteAntesRecebimentoAsync(item.Id, DateTime.UtcNow.Date);
 
-            item.ValidarPerda(dto.Quantidade);
-            perda = compra.RegistrarPerdaItem(item.Id, dto.Quantidade, motivo, dto.DataPerda, dto.Observacao);
+            item.ValidarPerda(dto.Quantidade, quantidadeDevolvidaAntesVigente);
+            perda = compra.RegistrarPerdaItem(
+                item.Id,
+                dto.Quantidade,
+                motivo,
+                dto.DataPerda,
+                dto.Observacao,
+                quantidadeDevolvidaAntesVigente);
             await _perdaRepository.AdicionarSemSalvarAsync(perda);
         });
 
@@ -636,7 +649,7 @@ public class CompraService
     private static CompraEmTransitoDto MapearCompraEmTransito(Compra compra)
     {
         var calculo = CompraCalculoFinanceiro.Calcular(
-            compra.Items.Select(CompraItemCalculoFinanceiro.FromEntity),
+            compra.Items.Select(item => CompraItemCalculoFinanceiro.FromEntity(item)),
             compra.Desconto,
             compra.Acrescimo);
 
@@ -674,12 +687,18 @@ public class CompraService
     private static IReadOnlyDictionary<Guid, CompraItemResumoDevolucao> CalcularResumosDevolucaoPorItem(
         IEnumerable<CompraItemDevolucao> devolucoes)
     {
+        var referencia = DateTime.UtcNow.Date;
         return devolucoes
             .GroupBy(d => d.CompraItemId)
             .ToDictionary(
                 g => g.Key,
                 g => new CompraItemResumoDevolucao(
-                    g.Where(d => d.Compensacao == null && d.Momento == CompraItemDevolucaoMomento.AntesDoRecebimento).Sum(d => d.Quantidade),
+                    g.Where(d => CompraPendenciaLogistica.DevolucaoAntesVigenteEm(
+                            d.Momento,
+                            d.DataDevolucao,
+                            d.Compensacao?.DataCompensacao,
+                            referencia))
+                        .Sum(d => d.Quantidade),
                     g.Where(d => d.Compensacao == null && d.Momento == CompraItemDevolucaoMomento.DepoisDoRecebimento).Sum(d => d.Quantidade),
                     g.Where(d => d.Compensacao == null
                             && d.Momento == CompraItemDevolucaoMomento.DepoisDoRecebimento

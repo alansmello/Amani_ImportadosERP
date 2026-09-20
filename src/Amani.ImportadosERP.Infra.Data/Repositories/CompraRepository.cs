@@ -81,6 +81,7 @@ public class CompraRepository : ICompraRepository
                 - _db.CompraItemDevolucoes
                     .Where(d => d.CompraItemId == i.Id
                         && d.Momento == CompraItemDevolucaoMomento.AntesDoRecebimento
+                        && d.DataDevolucao <= DateTime.UtcNow.Date
                         && (d.Compensacao == null || d.Compensacao.DataCompensacao > DateTime.UtcNow.Date))
                     .Sum(d => d.Quantidade) > 0))
             .OrderBy(c => c.DataCompra)
@@ -97,6 +98,7 @@ public class CompraRepository : ICompraRepository
                 - _db.CompraItemDevolucoes
                     .Where(d => d.CompraItemId == i.Id
                         && d.Momento == CompraItemDevolucaoMomento.AntesDoRecebimento
+                        && d.DataDevolucao <= DateTime.UtcNow.Date
                         && (d.Compensacao == null || d.Compensacao.DataCompensacao > DateTime.UtcNow.Date))
                     .Sum(d => d.Quantidade) > 0))
             .OrderBy(c => c.DataCompra)

@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "promote_threshold": 2,
+  "window_days": 45,
+  "quarantine_threshold": 2,
+  "next_id": 5,
+  "lessons": [
+    {
+      "id": "L-001",
+      "key": "spec_deviation::the unfiltered compras list must not be served from get em transito if a recusa total row has to appear there with a logistic badge",
+      "text": "The unfiltered Compras list must not be served from GET em-transito if a recusa-total row has to appear there with a logistic badge.",
+      "signal": "spec_deviation",
+      "scope": "compras",
+      "status": "candidate",
+      "features": [
+        "028-consistencia-devolucoes-transito"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "frontend/src/app/compras/page.tsx:78 (compras)"
+      ],
+      "created": "2026-09-20T17:21:45Z",
+      "last_seen": "2026-09-20T17:21:45Z"
+    },
+    {
+      "id": "L-002",
+      "key": "spec_precision_gap::prove the in process pendency formula with a proof that executes application code not only a diagnostic sql file that never loads it",
+      "text": "Prove the in-process pendency formula with a proof that executes application code, not only a diagnostic SQL file that never loads it.",
+      "signal": "spec_precision_gap",
+      "scope": "pendency",
+      "status": "candidate",
+      "features": [
+        "028-consistencia-devolucoes-transito"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "C1 (pendency)"
+      ],
+      "created": "2026-09-20T17:21:45Z",
+      "last_seen": "2026-09-20T17:21:45Z"
+    },
+    {
+      "id": "L-003",
+      "key": "ac_gap::a screen check that requires a row to be visible must name the api path that actually lists that row",
+      "text": "A screen check that requires a row to be visible must name the API path that actually lists that row.",
+      "signal": "ac_gap",
+      "scope": "compras-ui",
+      "status": "candidate",
+      "features": [
+        "028-consistencia-devolucoes-transito"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "C46 (compras-ui)"
+      ],
+      "created": "2026-09-20T17:21:45Z",
+      "last_seen": "2026-09-20T17:21:45Z"
+    },
+    {
+      "id": "L-004",
+      "key": "spec_precision_gap::do not freeze independent test prose as a check when the numbered acceptance criteria do not require that surface",
+      "text": "Do not freeze independent-test prose as a check when the numbered acceptance criteria do not require that surface.",
+      "signal": "spec_precision_gap",
+      "scope": "checks",
+      "status": "candidate",
+      "features": [
+        "028-consistencia-devolucoes-transito"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "C46 (checks)"
+      ],
+      "created": "2026-09-20T17:34:21Z",
+      "last_seen": "2026-09-20T17:34:21Z"
+    }
+  ]
+}

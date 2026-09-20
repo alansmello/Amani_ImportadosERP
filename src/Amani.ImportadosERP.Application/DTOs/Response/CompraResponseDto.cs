@@ -9,6 +9,7 @@ public sealed class CompraResponseDto
     public Guid FornecedorId { get; set; }
     public DateTime DataCompra { get; set; }
     public string Status { get; set; } = string.Empty;
+    public bool PossuiPendenciaVigente { get; set; }
     public decimal Desconto { get; set; }
     public decimal Acrescimo { get; set; }
     public decimal Total { get; set; }

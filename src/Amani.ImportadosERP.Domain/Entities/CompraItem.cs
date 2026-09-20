@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Amani.ImportadosERP.Domain.Common;
+using Amani.ImportadosERP.Domain.Services;
 
 namespace Amani.ImportadosERP.Domain.Entities;
 
@@ -53,19 +54,18 @@ public sealed class CompraItem : BaseEntity
         return valorBase - Desconto + Acrescimo;
     }
 
-    public void ValidarRecebimento(int quantidade)
+    public void ValidarRecebimento(int quantidade, int quantidadeDevolvidaAntesVigente = 0)
     {
-        ValidarQuantidadePendente(quantidade, "recebimento");
+        ValidarQuantidadePendente(quantidade, "recebimento", quantidadeDevolvidaAntesVigente);
     }
 
     public int CalcularQuantidadePendente(int quantidadeDevolvidaAntesVigente)
     {
-        if (quantidadeDevolvidaAntesVigente < 0)
-        {
-            throw new ArgumentException("Quantidade devolvida vigente nao pode ser negativa", nameof(quantidadeDevolvidaAntesVigente));
-        }
-
-        return Math.Max(0, QuantidadePendente - quantidadeDevolvidaAntesVigente);
+        return CompraPendenciaLogistica.Calcular(
+            Quantidade,
+            QuantidadeRecebida,
+            QuantidadePerdida,
+            quantidadeDevolvidaAntesVigente);
     }
 
     public void ValidarDevolucaoAntesRecebimento(int quantidade, int quantidadeDevolvidaAntesVigente)
@@ -78,10 +78,11 @@ public sealed class CompraItem : BaseEntity
         int quantidade,
         DateTime? dataRecebimento = null,
         Guid? estoqueMovimentacaoId = null,
-        string? observacao = null)
+        string? observacao = null,
+        int quantidadeDevolvidaAntesVigente = 0)
     {
         ValidarCompra(compraId);
-        ValidarRecebimento(quantidade);
+        ValidarRecebimento(quantidade, quantidadeDevolvidaAntesVigente);
 
         var recebimento = new CompraItemRecebimento(
             compraId,
@@ -100,9 +101,9 @@ public sealed class CompraItem : BaseEntity
         return recebimento;
     }
 
-    public void ValidarPerda(int quantidade)
+    public void ValidarPerda(int quantidade, int quantidadeDevolvidaAntesVigente = 0)
     {
-        ValidarQuantidadePendente(quantidade, "perda");
+        ValidarQuantidadePendente(quantidade, "perda", quantidadeDevolvidaAntesVigente);
     }
 
     public CompraItemPerda RegistrarPerda(
@@ -110,10 +111,11 @@ public sealed class CompraItem : BaseEntity
         int quantidade,
         CompraItemPerdaMotivo motivo,
         DateTime? dataPerda = null,
-        string? observacao = null)
+        string? observacao = null,
+        int quantidadeDevolvidaAntesVigente = 0)
     {
         ValidarCompra(compraId);
-        ValidarPerda(quantidade);
+        ValidarPerda(quantidade, quantidadeDevolvidaAntesVigente);
 
         var perda = new CompraItemPerda(
             compraId,
