@@ -9,7 +9,7 @@ Provas autorizadas: `dotnet build Amani_ImportadosERP.sln`, `npm --prefix fronte
 
 Os ids `C1`…`C46` são só o heading `**Cx**`. Esta skill não tem runner que aceite `--name`. Cada `Proof:` é o comando ou o roteiro a executar como está escrito.
 
-Ambiente HTTP (PowerShell, cópia isolada): `$env:API`, `$env:TOKEN`, `$env:COMPRA_RECUSA_TOTAL_ID`, `$env:ITEM_RECUSA_TOTAL_ID`, `$env:COMPRA_RECUSA_PARCIAL_ID`, `$env:ITEM_RECUSA_PARCIAL_ID`, `$env:COMPRA_MULTI_ID`, `$env:ITEM_MULTI_A_ID`, `$env:ITEM_MULTI_B_ID`, `$env:COMPRA_POSTERIOR_ID`, `$env:ITEM_POSTERIOR_ID`, `$env:RECEBIMENTO_POSTERIOR_ID`, `$env:COMPRA_RECUSA_EM_D_ID`, `$env:ITEM_RECUSA_EM_D_ID`, `$env:DEVOLUCAO_RECUSA_EM_D_ID`, `$env:COMPRA_FINALIZADA_ID`, `$env:ITEM_FINALIZADA_ID`, `$env:DATA_D_MINUS_1`, `$env:DATA_D`, `$env:DATA_D_PLUS_1`, `$env:DATABASE_URL` (cópia) e, só para C43/C45, a sessão SQL de produção já usada na auditoria.
+Ambiente HTTP (PowerShell, cópia isolada): `$env:API`, `$env:TOKEN`, `$env:COMPRA_RECUSA_TOTAL_ID`, `$env:ITEM_RECUSA_TOTAL_ID`, `$env:COMPRA_RECUSA_PARCIAL_ID`, `$env:ITEM_RECUSA_PARCIAL_ID`, `$env:COMPRA_MULTI_ID`, `$env:ITEM_MULTI_A_ID`, `$env:ITEM_MULTI_B_ID`, `$env:COMPRA_POSTERIOR_ID`, `$env:ITEM_POSTERIOR_ID`, `$env:RECEBIMENTO_POSTERIOR_ID`, `$env:COMPRA_RECUSA_EM_D_ID`, `$env:ITEM_RECUSA_EM_D_ID`, `$env:DEVOLUCAO_RECUSA_EM_D_ID`, `$env:COMPRA_FINALIZADA_ID`, `$env:ITEM_FINALIZADA_ID`, `$env:DATA_COMPRA_RECUSA_EM_D`, `$env:DATA_D_MINUS_1`, `$env:DATA_D`, `$env:DATA_D_PLUS_1`, `$env:DATABASE_URL` (cópia) e, só para C43/C45, a sessão SQL de produção já usada na auditoria.
 
 Fixture HTTP recorrente, sem ajustes comerciais, custo unitário R$ 100,00, um produto com `PrecoVenda` R$ 150,00. Não existe fixture HTTP de produto sem `PrecoVenda` (C6 é prova estática).
 
@@ -162,16 +162,16 @@ Proof: `curl.exe -sS -o NUL -w "%{http_code}" -H "Authorization: Bearer $env:TOK
 
 ### S5 - Tempo, compensação e reembolso · 3 files · 28 KB · ~7k
 
-**C37** - When `t` is strictly before `DataDevolucao` of an anterior return, that return is ignored in `DA(t)` (AC 22). RecusaEmD already has DA dated D; compensação has **not** run. C36 is not this step.
-Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataFinal=$env:DATA_D_MINUS_1"` on isolated copy with RecusaEmD as the only extra transit fixture; contribution 10 units / 1000.00
+**C37** - When `t` is strictly before `DataDevolucao` of an anterior return, that return is ignored in `DA(t)` (AC 22). RecusaEmD already has DA dated D; compensação has **not** run. C36 is not this step. `DashboardFiltroService` requires `dataInicial` and `dataFinal` together; `t` is the period end. This proof pairing is a correction of an invalid single-`dataFinal` URL, not a product-requirement change.
+Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataInicial=$env:DATA_COMPRA_RECUSA_EM_D&dataFinal=$env:DATA_D_MINUS_1"` on isolated copy with RecusaEmD as the only extra transit fixture; contribution 10 units / 1000.00
 
-**C38** - When `t` is on or after `DataDevolucao` and the return is vigente, it is included in `DA(t)` (AC 23). Same RecusaEmD row as C37; still **before** compensação.
-Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataFinal=$env:DATA_D"` on isolated copy with RecusaEmD as the only extra transit fixture; contribution 0
+**C38** - When `t` is on or after `DataDevolucao` and the return is vigente, it is included in `DA(t)` (AC 23). Same RecusaEmD row as C37; still **before** compensação. Same paired-date proof as C37.
+Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataInicial=$env:DATA_COMPRA_RECUSA_EM_D&dataFinal=$env:DATA_D"` on isolated copy with RecusaEmD as the only extra transit fixture; contribution 0
 
 After C38, POST compensação of `$env:DEVOLUCAO_RECUSA_EM_D_ID` with `dataCompensacao` = `$env:DATA_D_PLUS_1` and `presencaFisicaConfirmada=true`.
 
-**C39** - Compensating that anterior return at D+1 restores pendency 10 without creating stock (AC 24)
-Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataFinal=$env:DATA_D_PLUS_1"` after the compensação above; RecusaEmD still the only extra transit fixture; contribution 10 units / 1000.00 and zero new `EstoqueMovimentacao`
+**C39** - Compensating that anterior return at D+1 restores pendency 10 without creating stock (AC 24). Same paired-date proof as C37.
+Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional?dataInicial=$env:DATA_COMPRA_RECUSA_EM_D&dataFinal=$env:DATA_D_PLUS_1"` after the compensação above; RecusaEmD still the only extra transit fixture; contribution 10 units / 1000.00 and zero new `EstoqueMovimentacao`
 
 **C40** - Creating, omitting or cancelling a `CompraReembolso` leaves vigente pendency, membership and both cards unchanged (AC 25)
 Proof: `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/dashboard-gerencial/operacional"` and `curl.exe -sS -H "Authorization: Bearer $env:TOKEN" "$env:API/api/compras"` before and after refund on RecusaParcial; cards stay 6 / 600.00 / 900.00 and `possuiPendenciaVigente=true`
@@ -270,6 +270,8 @@ Under the budget — one builder, no ask:
 - **Abandoned:** unused `CompraService.ObterComprasEmTransitoAsync` was left as a compile-only fix; live GET uses `ObterComprasEmTransitoQueryHandler`
 - **Technical debt (deferred, code-review 2026-09-20):** leftover `CompraService` transit methods still `Q-R-P`; N+1 `foreach` + `ObterPorCompraAsync` on list/em-transito/produtos-pendentes; DTO `Math.Max(0, …)` vs unclamped formula assumption; unused `CalcularStatusOperacional(obterQuantidadePendente)` hook; frontend `possuiPendenciaVigente?: boolean | null`
 - **Spec correction (2026-09-20, isolated-copy runbook):** PosteriorSemDupla stays Q=10/R=4/posterior=4; RecusaEmD timeline is C37 → C38 → compensação → C39 (C36 is Finalizada 409, not temporal); C35/C36 use `COMPRA_FINALIZADA_ID`/`ITEM_FINALIZADA_ID`; C6 is static because a live product cannot have null `PrecoVenda`. Application code unchanged. Do not start BUILD from this rewrite.
+- **Corrective BUILD (C35/C36, 2026-09-20):** `RegistrarRecebimentoItemAsync` / `RegistrarPerdaItemAsync` call `Compra.GarantirQueAceitaEventosLogisticos` before pendency validation, so Finalizada/Cancelada return 409 instead of the 400 `exceder` path.
+- **Proof correction (C37–C39, 2026-09-20):** temporal GETs now send `dataInicial=$env:DATA_COMPRA_RECUSA_EM_D` with `dataFinal` as `t`. This fixes an invalid proof URL against existing `DashboardFiltroService` pairing. Product requirement and filter service are unchanged.
 
 ## Isolated-copy execution order
 
@@ -279,7 +281,7 @@ Dashboard proofs that name “only extra transit fixture” need that purchase a
 2. Catalog + RecusaTotal. Exclusive: C3, C2 (zeros). RecusaTotal reads that do not need RecusaParcial: C12, C17, C21, C46, C27, C28.
 3. Add RecusaParcial (leave RecusaTotal in place; it adds 0). C1, C4, C5, C8, C9–C11, C14, C18, C20, C23–C26, C31–C34. **Not** C29, C30, C40 yet.
 4. Recreate transit data. Seed **only** PosteriorSemDupla (Q=10, POST recebimento 4, POST devolução `DepoisDoRecebimento` 4). C7.
-5. Recreate transit data. Seed RecusaEmD with DA dated D, **no** compensação. C37 (`dataFinal=D-1`) then C38 (`dataFinal=D`). Then POST compensação. Then C39. C36 is not in this sequence.
+5. Recreate transit data. Seed RecusaEmD with DA dated D, **no** compensação. Set `$env:DATA_COMPRA_RECUSA_EM_D` to that purchase `DataCompra`. C37 (`dataInicial=DATA_COMPRA_RECUSA_EM_D`, `dataFinal=D-1`) then C38 (`dataInicial` same, `dataFinal=D`). Then POST compensação. Then C39 (`dataInicial` same, `dataFinal=D+1`). C36 is not in this sequence.
 6. Seed the combined read set: RecusaTotal, RecusaParcial, MultiItem, PosteriorSemDupla, Finalizada (Q=1 + perda 1). C19, C35, C36, remaining list/detail proofs that need several fixtures at once.
 7. RecusaParcial still at vigente 6: C40 (reembolso). **Then** C29, **then** C30.
 8. C41–C45 (`git` / production READ ONLY SQL). C6 any time (static `rg`).
