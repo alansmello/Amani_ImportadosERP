@@ -2,133 +2,143 @@
 
 **Verdict**: FAIL
 **Profile**: standard
-**Diff range**: `3708128..bdac465` (`f80a3f6` status-before-pendency; `bdac465` paired-date proofs)
-**Round**: 5 - scoped after C35/C36 BUILD + C37-C39 proof correction; human UI roteiro recorded 2026-09-20 for C9/C12/C13/C46
+**Diff range**: `9c0bcb3..669e9fc` (includes `d65623d`, `f80a3f6`, `bdac465`; HEAD `669e9fc`)
+**Round**: 6 - full VERIFY at HEAD
 **Verifier**: independent sub-agent (author != verifier)
 
-Identity was re-confirmed before writes: `amani_f028 | 127.0.0.1/32 | 5433 | PostgreSQL 16.3`. All fixture writes were confined to `amani_f028`; fault data used `amani_f028_r5mut`. No production connection string was available or invented, and no production write was attempted.
+Identity was re-confirmed before writes: `amani_f028 | 127.0.0.1/32 | 5433 | PostgreSQL 16.3`. All fixture writes were confined to `amani_f028`; fault data used `amani_f028_r6mut` and API port 5012. No production `DATABASE_URL` existed, no Neon/neondb/old-poetry value was used, and no production write was attempted.
 
 ## Binding sources
 
-Step 1 is carried from `3708128` / round 4 because the scoped diff changed no interface or binding source.
-
 | Source | Opened | Contradiction | Uncovered |
 | --- | --- | --- | --- |
-| `specs/028-consistencia-devolucoes-transito/plan.md` Surface/Landing/Observable | carried from `3708128` / round 4 | none | `GET /api/compras/produtos-pendentes` names `401`, but checks contain no unauthenticated proof |
-| `docs/diagnosticos/compras-devolucoes-transito.md` | carried from `3708128` / round 4 | none | production 12×61 remains unmeasured |
-| `CONTEXT.md:8-38` | carried from `3708128` / round 4 | none | - |
-| `specs/027-devolucoes-reembolsos-compras/spec.md:164-199` | carried from `3708128` / round 4 | none | - |
+| `specs/028-consistencia-devolucoes-transito/plan.md` Surface/Landing/Observable | yes, at `669e9fc` | none | `GET /api/compras/produtos-pendentes` names `401`, but no check proves it |
+| `docs/diagnosticos/compras-devolucoes-transito.md` | yes, at `669e9fc` | none | - |
+| `CONTEXT.md:8-38` | yes, at `669e9fc` | none | - |
+| `specs/027-devolucoes-reembolsos-compras/spec.md:164-199` | yes, at `669e9fc` | none | - |
 
 ## Checks
 
 | Check | Claim | Proof run | Evidence | Result |
 | --- | --- | --- | --- | --- |
-| C1 | vigente = `Q-R-P-DA` | carried from `3708128` / round 4 | audit SQL; RecusaParcial `pendencia_liquida_bruta=6` | PASS |
-| C2 | dashboard counts only vigente > 0 | carried from `3708128` / round 4 | dashboard GETs: RecusaTotal quantity/cost/sale `0` | PASS |
-| C3 | RecusaTotal contributes zero | carried from `3708128` / round 4 | operacional quantity/cost/sale `0` | PASS |
-| C4 | RecusaParcial cost = 600 | carried from `3708128` / round 4 | operacional quantity `6`, cost `600` | PASS |
-| C5 | RecusaParcial sale = 900 | carried from `3708128` / round 4 | operacional sale `900` | PASS |
-| C6 | `PrecoVenda` contract and missing join | carried from `3708128` / round 4 | `Produto.cs:10,20,36`; `DashboardOperacionalRepository.cs:89,184` | PASS |
-| C7 | posterior return not double-subtracted | carried from `3708128` / round 4 | quantity `6`, cost `600` after receipt 4 + posterior return 4 | PASS |
-| C8 | patrimônio uses corrected transit values | carried from `3708128` / round 4 | financeiro transit cost `600`, sale `900` | PASS |
-| C9 | UI Em trânsito filter uses vigente membership | human roteiro 2026-09-20 on isolated-copy `http://127.0.0.1:3000/compras` | operator applied status filter Em transito: RecusaTotal absent, RecusaParcial present; `purchase-situation.ts:19-20` `possuiPendenciaVigente === true`; `page.tsx:74` uses that matcher; typecheck already green | PASS |
-| C10 | em-transito membership/value | carried from `3708128` / round 4 | total absent; partial pending `6`, cost `600` | PASS |
-| C11 | produtos-pendentes only vigente > 0 | carried from `3708128` / round 4 | total absent; partial pending `6` | PASS |
-| C12 | RecusaTotal absent on all three surfaces | C10/C11 HTTP carried from round 4 plus human C9 roteiro 2026-09-20 | em-transito `[]` for RecusaTotal; produtos-pendentes omits that item; UI Em transito filter omits RecusaTotal | PASS |
-| C13 | unfiltered 30-day UI window differs from patrimonial `t` | human roteiro 2026-09-20 unfiltered `/compras` vs dashboard period | unfiltered list is last-30-days em-transito (`page.tsx:35-41,71-79`); dashboard `t` remains period end, not that window | PASS |
-| C14 | list `possuiPendenciaVigente` iff pending | carried from `3708128` / round 4 | total `false`, partial `true`; release build passed | PASS |
-| C15 | list unauthenticated = 401 | carried from `3708128` / round 4 | observed `401` | PASS |
-| C16 | em-transito unauthenticated = 401 | carried from `3708128` / round 4 | observed `401` | PASS |
-| C17 | total refusal tag on list/detail | carried from `3708128` / round 4 | both returned `DevolvidaAntesDoRecebimento` | PASS |
-| C18 | partial refusal tag on list/detail | carried from `3708128` / round 4 | both returned `ParcialmenteDevolvida` | PASS |
-| C19 | multi-item keeps only B in transit | carried from `3708128` / round 4 | detail A `0`, B `5`; transit contained only B | PASS |
-| C20 | list/detail agree | carried from `3708128` / round 4 | membership and logistic codes agreed | PASS |
-| C21 | status remains persisted, not Recebida | carried from `3708128` / round 4 | total returned `status=EmTransito`, vigente `false` | PASS |
-| C46 | UI operational situation has no Em trânsito badge | human roteiro 2026-09-20 list with date/supplier filter plus detail | RecusaTotal situation text `Devolvida antes do recebimento`; no current badge `Em transito`/`Em trânsito` on list (`purchase-list.tsx:154-168`) or detail (`purchase-detail.tsx:144-158`); `shouldHidePersistedTransitBadge` at `purchase-situation.ts:5`; C21 JSON still `status=EmTransito` and `possuiPendenciaVigente=false` | PASS |
-| C22 | exact six-member `CompraStatus` | carried from `3708128` / round 4 | `Compra.cs:169-176`, exactly six members | PASS |
-| C23 | existing detail = 200 | carried from `3708128` / round 4 | observed `200` | PASS |
-| C24 | empty detail id = 400 | carried from `3708128` / round 4 | observed `400` | PASS |
-| C25 | detail unauthenticated = 401 | carried from `3708128` / round 4 | observed `401` | PASS |
-| C26 | unknown detail = 404 | carried from `3708128` / round 4 | observed `404` | PASS |
-| C27 | over-receipt rejected without persistence | rerun at `bdac465`: POST + SQL counts | `checks.md:133-134`; observed `400`, error contains `exceder`; receipts/stock remained `0/0`; status check precedes quantity check at `CompraService.cs:94-99` | PASS |
-| C28 | over-loss rejected without persistence | rerun at `bdac465`: POST + SQL counts | `checks.md:136-137`; observed `400`, error contains `exceder`; only the fixture's prior Finalizada loss existed; no new loss; `CompraService.cs:142-147` | PASS |
-| C29 | valid receipt = 201 | carried from `3708128` / round 4 | observed `201` | PASS |
-| C30 | valid loss = 201 | carried from `3708128` / round 4 | observed `201` | PASS |
-| C31 | receipt unauthenticated = 401 | carried from `3708128` / round 4 | observed `401` | PASS |
-| C32 | loss unauthenticated = 401 | carried from `3708128` / round 4 | observed `401` | PASS |
-| C33 | receipt unknown item = 404 | carried from `3708128` / round 4 | observed `404` | PASS |
-| C34 | loss unknown item = 404 | carried from `3708128` / round 4 | observed `404` | PASS |
-| C35 | receipt on Finalizada = 409 | rerun at `bdac465` with Finalizada purchase's own item | `checks.md:157-158`; expected `409`, observed `409` and `Compra Finalizada nao aceita registro de recebimento`; `CompraService.cs:94`, mapped by `CompraController.cs:327` | PASS |
-| C36 | loss on Finalizada = 409 | rerun at `bdac465` with same Finalizada fixture | `checks.md:160-161`; expected `409`, observed `409` and `Compra Finalizada nao aceita registro de perda`; `CompraService.cs:142`, mapped by `CompraController.cs:327` | PASS |
-| C37 | before DA date shows 10/1000 | rerun at `bdac465` with paired dates | `checks.md:165-166`; `dataInicial=2026-09-17&dataFinal=2026-09-18` returned `200`, quantity `10`, cost `1000`, sale `1500` | PASS |
-| C38 | on DA date shows zero | rerun at `bdac465` before compensation | `checks.md:168-169`; paired-date GET returned `200`, quantity/cost/sale `0` | PASS |
-| C39 | after compensation restores 10 without stock | rerun at `bdac465` after compensation | `checks.md:171-174`; compensation `201`; paired-date GET returned `200`, quantity `10`, cost `1000`, sale `1500`; stock count `0` | PASS |
-| C40 | refund leaves logistics/cards unchanged | carried from `3708128` / round 4 | dashboard and list unchanged before/after refund | PASS |
-| C41 | no destructive event-table DML | carried from `3708128` / round 4 | full feature `9c0bcb3..3708128` had no named-table DML; scoped diff adds none | PASS |
-| C42 | no migration/persisted pendency/status rewrite | carried from `3708128` / round 4 | no migration; enum unchanged | PASS |
-| C43 | production 12/10/61 plus isolated shape | carried from `3708128` / round 4 | isolated shape passed; no production `DATABASE_URL`, so production counts were not remeasured | BLOCKED |
-| C44 | revert leaves events unchanged | carried from `3708128` / round 4 | no feature migration; scoped diff adds none | PASS |
-| C45 | production validation makes no writes | carried from `3708128` / round 4 | audit script is READ ONLY and rolls back; no production write issued | PASS |
+| C1 | vigente = `Q-R-P-DA` | isolated audit SQL | `checks.md:33-34`; RecusaParcial `pendencia_liquida_bruta=6` | PASS |
+| C2 | dashboard includes only vigente > 0 | both authenticated dashboard GETs | `checks.md:36-39`; RecusaTotal-only quantity/cost/sale all `0`; financeiro transit values `0` | PASS |
+| C3 | RecusaTotal contributes zero | operacional GET | `checks.md:41-42`; quantity/cost/sale `0/0/0` | PASS |
+| C4 | RecusaParcial cost = 600 | operacional GET | `checks.md:44-45`; quantity `6`, cost `600` | PASS |
+| C5 | RecusaParcial sale = 900 | operacional GET | `checks.md:47-48`; sale `900` | PASS |
+| C6 | live `PrecoVenda` is required/non-negative; missing join remains unavailable | all three static searches | `Produto.cs:10,20,36`; DTOs `:8`; `DashboardOperacionalRepository.cs:89,184` | PASS |
+| C7 | posterior return is not double-subtracted | receipt 4 + posterior return 4, then operacional/detail GETs | `checks.md:55-56`; quantity `6`, cost `600`; detail received `4`, posterior `4`, pending `6` | PASS |
+| C8 | patrimônio uses corrected transit values | financeiro GET | `checks.md:58-59`; transit cost `600`, sale `900`; realistic `-1400`, potential `-1100` | PASS |
+| C9 | UI Em trânsito uses vigente membership | committed operator roteiro, 2026-09-20, `http://127.0.0.1:3000/compras`; typecheck at HEAD | operator observed RecusaTotal absent and RecusaParcial present; `purchase-situation.ts:19-20`, `page.tsx:74`; `checks.md:63-65` | PASS |
+| C10 | em-transito membership/value | authenticated GET | `checks.md:67-68`; total absent; partial pending `6`, cost `600` | PASS |
+| C11 | produtos-pendentes only vigente > 0 | authenticated GET | `checks.md:70-71`; total absent; partial pending `6` | PASS |
+| C12 | RecusaTotal absent on all three surfaces | C9 operator roteiro plus C10/C11 HTTP | `checks.md:73-74`; UI absent, em-transito `[]`, produtos-pendentes `[]` | PASS |
+| C13 | unfiltered 30-day UI window is not patrimonial `t` | committed operator roteiro, 2026-09-20, `http://127.0.0.1:3000/compras` | operator observed last-30-days window; selectors `page.tsx:35-41,71-79`; `checks.md:76-77` | PASS |
+| C14 | list `possuiPendenciaVigente` iff pending | authenticated GET + release build | `checks.md:79-81`; total `false`, partial `true`; build exit 0 | PASS |
+| C15 | list unauthenticated = 401 | GET | `checks.md:83-84`; observed `401` | PASS |
+| C16 | em-transito unauthenticated = 401 | GET | `checks.md:86-87`; observed `401` | PASS |
+| C17 | total refusal tag on list/detail | list + detail GETs | `checks.md:91-93`; both returned `DevolvidaAntesDoRecebimento` / `Devolvida antes do recebimento` | PASS |
+| C18 | partial refusal tag on list/detail | list + detail GETs | `checks.md:95-97`; both returned `ParcialmenteDevolvida` | PASS |
+| C19 | multi-item keeps only B in transit | detail + em-transito GETs | `checks.md:99-101`; A pending `0`, B `5`, purchase partial; transit included only B | PASS |
+| C20 | list/detail agree | total and partial list/detail GETs | `checks.md:103-104`; membership and logistic codes agreed | PASS |
+| C21 | status remains persisted, not Recebida | list + detail GETs | `checks.md:106-107`; RecusaTotal `status=EmTransito`, `possuiPendenciaVigente=false` | PASS |
+| C46 | UI operational situation suppresses Em trânsito badge | committed operator roteiro, 2026-09-20, list with active filter and detail at `http://127.0.0.1:3000` | operator observed `Devolvida antes do recebimento`, no current Em trânsito badge; `purchase-situation.ts:5,34`, `purchase-list.tsx:154-168`, `purchase-detail.tsx:144-158`; C21 JSON as above | PASS |
+| C22 | exact six-member `CompraStatus` | enum search | `Compra.cs:169-176`; exactly six named members | PASS |
+| C23 | existing detail = 200 | GET | `checks.md:119-120`; observed `200` | PASS |
+| C24 | empty detail id = 400 | GET | `checks.md:122-123`; observed `400`, `Id da compra e obrigatorio` | PASS |
+| C25 | detail unauthenticated = 401 | GET | `checks.md:125-126`; observed `401` | PASS |
+| C26 | unknown detail = 404 | GET | `checks.md:128-129`; observed `404` | PASS |
+| C27 | over-receipt rejected without persistence | POST + SQL counts | `checks.md:133-134`; `400`, error contained `exceder`; receipt/loss/stock counts stayed `0/0/0` | PASS |
+| C28 | over-loss rejected without persistence | POST + SQL counts | `checks.md:136-137`; `400`, error contained `exceder`; counts stayed `0/0/0` | PASS |
+| C29 | valid receipt = 201 | POST after C40 | `checks.md:139-140`; observed `201` | PASS |
+| C30 | valid loss = 201 | POST after C29 | `checks.md:142-143`; observed `201` | PASS |
+| C31 | receipt unauthenticated = 401 | POST | `checks.md:145-146`; observed `401` | PASS |
+| C32 | loss unauthenticated = 401 | POST | `checks.md:148-149`; observed `401` | PASS |
+| C33 | receipt unknown item = 404 | POST | `checks.md:151-152`; observed `404` | PASS |
+| C34 | loss unknown item = 404 | POST | `checks.md:154-155`; observed `404` | PASS |
+| C35 | receipt on Finalizada = 409 | POST using Finalizada purchase's own item | `checks.md:157-158`; observed `409`, `Compra Finalizada nao aceita registro de recebimento`; guard at `CompraService.cs:94` | PASS |
+| C36 | loss on Finalizada = 409 | POST using same Finalizada fixture | `checks.md:160-161`; observed `409`, `Compra Finalizada nao aceita registro de perda`; guard at `CompraService.cs:142` | PASS |
+| C37 | before DA date shows 10/1000 | paired-date GET | `checks.md:165-166`; `dataInicial=2026-09-17&dataFinal=2026-09-18` returned `200`, quantity `10`, cost `1000` | PASS |
+| C38 | on DA date shows zero | paired-date GET before compensation | `checks.md:168-169`; returned `200`, quantity/cost/sale `0` | PASS |
+| C39 | compensation restores 10 without stock | compensation POST + paired-date GET + SQL count | `checks.md:171-174`; POST `201`; quantity `10`, cost `1000`; stock count `0` | PASS |
+| C40 | refund leaves logistics/cards unchanged | before/after dashboard and list, then valid writes | `checks.md:176-177`; stayed `6/600/900`, membership `true`; refund POST `201` | PASS |
+| C41 | no destructive event-table DML | feature diff + SQL/migration search | `checks.md:181-183`; no named-table DML in `9c0bcb3..669e9fc` | PASS |
+| C42 | no migration/persisted pendency/status rewrite | migration diff + enum search | `checks.md:185-187`; migration diff empty; enum unchanged | PASS |
+| C43 | production 12/10/61 plus isolated same-shape evidence | isolated RecusaTotal proofs ran; production SQL did not | `checks.md:189-192`; isolated dashboard zero, transit/filter omission and detail pending zero passed; production `DATABASE_URL` absent | BLOCKED |
+| C44 | revert leaves events unchanged | migration diff | `checks.md:194-195`; no feature migration | PASS |
+| C45 | production validation makes no writes | session audit + script inspection | `checks.md:197-198`; no production write; audit starts READ ONLY at `auditoria.sql:7` and rolls back at `:71` | PASS |
 
-Counts: **45 PASS · 0 FAIL · 1 BLOCKED**.
+Counts: **45 PASS · 0 FAIL · 1 BLOCKED**. C43 is the only BLOCKED check.
 
 ## Coverage
 
-Receipt/loss statuses and temporal `t` were recomputed at `bdac465`; unrelated rows are carried from `3708128` / round 4.
+Recomputed at `669e9fc` from plan Surface/Landing/Observable, code enumerations, and check claims.
 
 | Set (size) | Recomputed from | Member -> proof | Unproven |
 | --- | --- | --- | --- |
-| `GET /api/compras` statuses (2) | carried: plan Surface | 200 C14 · 401 C15 | - |
-| `GET /api/compras/{id}` statuses (4) | carried: plan Surface | 200 C23 · 400 C24 · 401 C25 · 404 C26 | - |
-| `GET /api/compras/em-transito` statuses (2) | carried: plan Surface | 200 C10 · 401 C16 | - |
-| receipt POST statuses (5) | plan Surface + controller mapping, recomputed at `bdac465` | 201 C29 · 400 C27 · 401 C31 · 404 C33 · 409 C35 | - |
-| loss POST statuses (5) | plan Surface + controller mapping, recomputed at `bdac465` | 201 C30 · 400 C28 · 401 C32 · 404 C34 · 409 C36 | - |
-| dashboard GET success (2) | carried: C2 claim | operacional C2 · financeiro C2 | - |
-| produtos-pendentes statuses (2) | carried: plan Observable | 200 C11 · 401 has no check | `401` |
-| Landing doors (3) | carried: plan Landing | formula C1 · derived tag C17 · membership bool C14 | - |
-| `CompraStatus` members (6) | carried: `Compra.cs:169-176` | C22 all six | - |
-| transit shapes (5) | checks fixtures; compensation rerun at `bdac465` | total C3 · partial C4 · multi C19 · posterior C7 · compensation C39 | - |
-| temporal positions (3) | plan AC 22-24 + `CompraPendenciaLogistica.cs:32-40`, recomputed at `bdac465` | before C37 · on/after C38 · after compensation C39 | - |
-| RecusaTotal UI (2) | plan Observable/C46; human roteiro 2026-09-20 | list C46 · detail C46 | - |
-| pendency consumers (7) | carried: plan Flow; writes rerun | dashboard C2 · transit C10 · pending C11 · list C14 · detail C23 · receipt C27 · loss C28 | - |
-| cards/patrimônio (3) | carried: plan AC 2-5 | cost C4 · sale C5/C6 · patrimônio C8 | - |
-| production audit shape (1) | carried: plan AC 28 | C43 | production 12×61 BLOCKED |
+| `GET /api/compras` statuses (2) | plan Surface | 200 C14 · 401 C15 | - |
+| `GET /api/compras/{id}` statuses (4) | plan Surface | 200 C23 · 400 C24 · 401 C25 · 404 C26 | - |
+| `GET /api/compras/em-transito` statuses (2) | plan Surface | 200 C10 · 401 C16 | - |
+| receipt POST statuses (5) | plan Surface/controller | 201 C29 · 400 C27 · 401 C31 · 404 C33 · 409 C35 | - |
+| loss POST statuses (5) | plan Surface/controller | 201 C30 · 400 C28 · 401 C32 · 404 C34 · 409 C36 | - |
+| dashboard GET success (2) | C2 claim | operacional C2 · financeiro C2 | - |
+| produtos-pendentes statuses (2) | plan Observable/controller route | 200 C11 · 401 has no check | `401` |
+| Landing doors (3) | plan Landing | formula C1 · derived tag C17 · membership bool C14 | - |
+| `CompraStatus` members (6) | `Compra.cs:169-176` | C22 all six | - |
+| transit shapes (5) | fixture authority | total C3 · partial C4 · multi C19 · posterior C7 · compensation C39 | - |
+| temporal positions (3) | plan AC 22-24 + `CompraPendenciaLogisticaConsulta.cs:25-26` | before C37 · on/after C38 · after compensation C39 | - |
+| RecusaTotal UI (2) | plan Observable/C46 + committed operator evidence | list C46 · detail C46 | - |
+| pendency consumers (7) | plan Flow | dashboard C2 · transit C10 · pending C11 · list C14 · detail C23 · receipt C27 · loss C28 | - |
+| cards/patrimônio (3) | plan AC 2-5 | cost C4 · sale C5/C6 · patrimônio C8 | - |
+| production audit shape (1) | plan AC 28 | C43 | production 12×61 BLOCKED |
 
 ## Test policy rows
 
-The touched `CompraService` decision surface was re-judged at `bdac465`; unchanged surfaces retain round-4 judgments.
-
 | Row | Files it classifies | Required proof | Expectation met |
 | --- | --- | --- | --- |
-| Decides, reached across a boundary — scoped service path | `CompraService.cs:94-99,142-147` | boundary plus own-layer/static evidence of status-before-pendency | yes — C27/C28 preserve 400 `exceder`; C35/C36 now prove 409, and source ordering is explicit |
-| Decides, reached across a boundary — unchanged surfaces | dashboard/transit/list/mapper/frontend decision surfaces | boundary plus SQL/rg of same claim | yes for C9/C12/C13/C46 after human roteiro 2026-09-20; remaining mapper 5+ codes still not all boundary-asserted |
-| Decides, not reached across a boundary | four-term formula, `PrecoVenda`, enum, mapper decision table | own-layer SQL/rg, one case per decision row | no — carried from round 4: mapper's advertised 5+ codes are not all boundary-asserted |
-| Entry point that decides nothing | controller 400/404/409 mapping | accepted and every rejected/error path | yes — receipt/loss status sets now include passing 409 members; `CompraController.cs:326-327,341` |
-| Instrumentation/pass-throughs | controller forwarding | consumer proof | yes for executed backend consumers |
+| Decides, reached across a boundary | dashboard/transit/list/mapper/service/frontend decision surfaces | boundary plus SQL/rg of same claim | no — named checks cover F028 cases, but the mapper's advertised 5+ logistic-code decision table is not fully asserted at the boundary |
+| Decides, not reached across a boundary | formula, `PrecoVenda`, enum, mapper table | own-layer SQL/rg, one case per row | no — formula/price/enum pass; mapper rows `ParcialmenteCompensada` and `DevolucaoCompensada` lack check-defined own-layer cases |
+| Entry point that decides nothing | controller 200/201/400/401/404/409 paths | accepted input and every rejected/error path | yes — all Surface status members executed and passed |
+| Instrumentation/pass-throughs | controller forwarding | consumer proof | yes for all executed F028 consumers |
 
 ## Faults injected
 
-The real-tree baseline was `M specs/028-consistencia-devolucoes-transito/verification.md`. The fault ran in detached worktree `Amani_ImportadosERP.verify-f028-r5` against cloned database `amani_f028_r5mut` and API port 5011. No stash, live API 5001, or `amani_f028` was used for the fault. The mutant database and registered worktree were discarded; real-tree porcelain returned to the same baseline.
+Real-tree baseline was clean. Faults ran only in detached worktree `Amani_ImportadosERP.verify-f028-r6`; the behavior mutant used cloned database `amani_f028_r6mut` and port 5012. No stash, live API 5001, or `amani_f028` was used for mutants. The API, clone and worktree were discarded; real-tree porcelain returned to the clean baseline.
 
 | Mutation | Location | Killed |
 | --- | --- | --- |
-| remove the new receipt `GarantirQueAceitaEventosLogisticos` call so pendency validation runs first | scratch `CompraService.cs:94` | yes — narrow C35 proof changed from expected `409` to `400 exceder` |
+| `PrecoVenda` non-nullable -> nullable | scratch `Produto.cs:10` | yes — C6 exact search lost its required hit |
+| add seventh `CompraStatus.Devolvida` | scratch `Compra.cs:176` | yes — C22 enumeration exposed seven members |
+| add `DELETE FROM compras` to audit SQL | scratch `auditoria.sql` | yes — C41 DML search found it |
+| add an EF migration file | scratch migrations directory | yes — C42 migration-path proof found it |
+| four-term formula `- DA` -> `+ DA` | scratch `CompraPendenciaLogistica.cs:21-25` | yes — cloned-database dashboard changed from expected `200`/valid totals to `400`, `Quantidade pendente deve estar entre zero e a quantidade comprada` |
 
-Remaining faults were capped: the scoped BUILD introduced one new assertion surface (status-before-pendency); the C37-C39 change corrected proof URLs without changing application behavior.
+## Swept existing
+
+- validation/failure persistence: C27/C28 passed with unchanged SQL counts
+- idempotency: F027 `OperacaoId` uniqueness remains existing; no new command
+- authorization: C15/C16/C25/C31/C32 passed; produtos-pendentes `401` remains an uncovered set member
+- concurrency: C35/C36 passed terminal-state conflict paths
+- data lifecycle: C41/C42/C44/C45 passed; no migration or production write
+- dependency failure: n/a - no new external service
+- state transitions: C21/C22/C46 passed
+- observability: n/a - no new log or metric requirement
 
 ## Ranked gaps
 
-1. C43 remains BLOCKED: no production `DATABASE_URL` was available; no Neon/neondb/old-poetry value was invented. This is the only remaining BLOCKED check.
-2. Coverage gap: `GET /api/compras/produtos-pendentes` status `401` is named by plan Observable but has no check.
-3. Test-policy gap: the mapper's advertised 5+ logistic codes are not all asserted at the boundary.
+1. C43 is BLOCKED: no production READ ONLY `DATABASE_URL`; the isolated RecusaTotal-shaped half passed, but production 12 items / 10 purchases / 61 units was not remeasured.
+2. Coverage gap: `GET /api/compras/produtos-pendentes` `401` is named by plan Observable but has no check.
+3. Test-policy gap: `CompraMapper.CalcularSituacaoLogisticaDevolucao` advertises 5+ codes, but its compensated rows are not each proven by a check-defined case.
 
 ## Gate
 
-- identity — PASS: local PostgreSQL 16.3, `amani_f028`, loopback, port 5433
-- scoped proofs — C27, C28, C35, C36, C37, C38, C39 all PASS at `bdac465`
-- C35-C39 outcomes — **C35 PASS · C36 PASS · C37 PASS · C38 PASS · C39 PASS**
+- identity — PASS: PostgreSQL 16.3, `amani_f028`, loopback, port 5433
+- `dotnet build Amani_ImportadosERP.sln --no-restore --configuration Release` — exit 0
+- `npm --prefix frontend run lint` — exit 0
+- `npm --prefix frontend run typecheck` — exit 0
+- `npm --prefix frontend run build` — exit 0
+- named HTTP/SQL/static proofs — 45 PASS, C43 production half BLOCKED
+- faults — 5 injected, 5 killed
 - production writes — none
-- real-tree status after fault — matched baseline
-- human UI roteiro 2026-09-20 — C9, C12, C13, C46 PASS
-- `python .codex/skills/tlc-spec-lean/scripts/validate_verification.py specs/028-consistencia-devolucoes-transito` — exit 1, expected because the report verdict is FAIL while C43 is BLOCKED
-- overall verdict remains FAIL because C43 (production READ ONLY audit) is BLOCKED; it is the only remaining BLOCKED check
+- real-tree status after faults — matched clean baseline before this report write
+- overall — FAIL because C43 is BLOCKED; Coverage and Test policy also contain independent unmet rows
