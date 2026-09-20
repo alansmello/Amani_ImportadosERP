@@ -252,4 +252,8 @@ Under the budget — one builder, no ask:
 - S1 cards ~11k (DashboardOperacional + financeiro handler) · S2 membership ~9k (lista, em-transito, produtos-pendentes, `compras/page.tsx`) · S3 tags ~8k (CompraMapper, detail, C46 UI) · S4 writes ~11k (`CompraService`) · S5 temporal ~7k (same read path) · S6 preservation ~2k (`rg`/`git diff`) = ~48k across ~154 KB of existing files, under the 150k budget
 - Mechanism: one builder
 
+- **Boundary:** C1-C40 and C41-C45 closed at `4cdd77d`; C9, C12, C13, C46 closed at `f3f47d6`
+- **Settled mid-build:** none
+- **Abandoned:** unused `CompraService.ObterComprasEmTransitoAsync` was left as a compile-only fix; live GET uses `ObterComprasEmTransitoQueryHandler`
+
 Do not start BUILD until this checks.md is approved.
