@@ -8,6 +8,7 @@ using Amani.ImportadosERP.Application.DTOs;
 using Amani.ImportadosERP.Application.Interfaces;
 using Amani.ImportadosERP.Application.Mappers;
 using Amani.ImportadosERP.Domain.Entities;
+using Amani.ImportadosERP.Domain.Services;
 
 namespace Amani.ImportadosERP.Application.Queries.Handlers;
 
@@ -28,11 +29,13 @@ public sealed class ObterProdutosPendentesRecebimentoQueryHandler : IRequestHand
     {
         var compras = await _compraRepository.ObterComprasComProdutosPendentesAsync();
         var devolucoesPorCompra = new Dictionary<Guid, IReadOnlyDictionary<Guid, CompraItemResumoDevolucao>>();
+        var hoje = DateTime.UtcNow.Date;
         foreach (var compra in compras)
         {
             var devolucoes = await _devolucaoRepository.ObterPorCompraAsync(compra.Id);
             devolucoesPorCompra[compra.Id] = devolucoes
-                .Where(d => d.Compensacao == null)
+                .Where(d => d.DataDevolucao <= hoje)
+                .Where(d => d.Compensacao == null || d.Compensacao.DataCompensacao > hoje)
                 .GroupBy(d => d.CompraItemId)
                 .ToDictionary(
                     g => g.Key,
@@ -43,7 +46,8 @@ public sealed class ObterProdutosPendentesRecebimentoQueryHandler : IRequestHand
 
         return compras
             .SelectMany(c => c.Items
-                .Where(i => i.CalcularQuantidadePendente(ObterResumo(devolucoesPorCompra[c.Id], i.Id).QuantidadeDevolvidaAntes) > 0)
+                .Where(i => CompraPendenciaLogistica.PossuiPendenciaVigente(
+                    i.CalcularQuantidadePendente(ObterResumo(devolucoesPorCompra[c.Id], i.Id).QuantidadeDevolvidaAntes)))
                 .Select(i =>
                 {
                     var resumo = ObterResumo(devolucoesPorCompra[c.Id], i.Id);
@@ -55,16 +59,14 @@ public sealed class ObterProdutosPendentesRecebimentoQueryHandler : IRequestHand
                         ProdutoId = i.ProdutoId,
                         FornecedorId = c.FornecedorId,
                         DataCompra = c.DataCompra,
-                        StatusCompra = Compra.CalcularStatusOperacional(
-                            c.Items,
-                            item => item.CalcularQuantidadePendente(ObterResumo(devolucoesPorCompra[c.Id], item.Id).QuantidadeDevolvidaAntes)).ToString(),
+                        StatusCompra = c.Status.ToString(),
                         QuantidadeComprada = i.Quantidade,
                         QuantidadeRecebida = i.QuantidadeRecebida,
                         QuantidadePerdida = i.QuantidadePerdida,
                         QuantidadeDevolvidaAntes = resumo.QuantidadeDevolvidaAntes,
                         QuantidadeDevolvidaDepois = resumo.QuantidadeDevolvidaDepois,
-                        QuantidadeElegivelDevolucaoAntes = pendente,
-                        QuantidadePendente = pendente
+                        QuantidadeElegivelDevolucaoAntes = Math.Max(0, pendente),
+                        QuantidadePendente = Math.Max(0, pendente)
                     };
                 }))
             .ToList();

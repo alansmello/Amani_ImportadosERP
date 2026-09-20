@@ -31,19 +31,25 @@ public static class CompraMapper
         var quantidadeDevolvidaDepois = resumosDevolucao.Values.Sum(r => r.QuantidadeDevolvidaDepois);
         var quantidadeDevolvidaDepoisCompensada = resumosDevolucao.Values.Sum(r => r.QuantidadeDevolvidaDepoisCompensada);
         var quantidadeReferenciaDevolucao = compra.Items.Sum(i => i.QuantidadeRecebida);
+        var quantidadePendenteVigente = compra.Items.Sum(i =>
+            i.CalcularQuantidadePendente(ObterResumo(resumosDevolucao, i.Id).QuantidadeDevolvidaAntes));
         var situacaoLogistica = CalcularSituacaoLogisticaDevolucao(
             quantidadeDevolvidaDepois,
             quantidadeDevolvidaDepoisCompensada,
-            quantidadeReferenciaDevolucao);
+            quantidadeReferenciaDevolucao,
+            quantidadeDevolvidaAntes,
+            compra.Items.Sum(i => i.Quantidade),
+            quantidadeReferenciaDevolucao,
+            compra.Items.Sum(i => i.QuantidadePerdida),
+            quantidadePendenteVigente);
 
         return new CompraResponseDto
         {
             Id = compra.Id,
             FornecedorId = compra.FornecedorId,
             DataCompra = compra.DataCompra,
-            Status = Compra.CalcularStatusOperacional(
-                compra.Items,
-                item => item.CalcularQuantidadePendente(ObterResumo(resumosDevolucao, item.Id).QuantidadeDevolvidaAntes)).ToString(),
+            Status = compra.Status.ToString(),
+            PossuiPendenciaVigente = CompraPendenciaLogistica.PossuiPendenciaVigente(quantidadePendenteVigente),
             Desconto = compra.Desconto,
             Acrescimo = compra.Acrescimo,
             Total = compra.Total(),
@@ -60,10 +66,16 @@ public static class CompraMapper
             Items = compra.Items.Select(i =>
             {
                 var resumoDevolucao = ObterResumo(resumosDevolucao, i.Id);
+                var quantidadePendente = i.CalcularQuantidadePendente(resumoDevolucao.QuantidadeDevolvidaAntes);
                 var itemSituacaoLogistica = CalcularSituacaoLogisticaDevolucao(
                     resumoDevolucao.QuantidadeDevolvidaDepois,
                     resumoDevolucao.QuantidadeDevolvidaDepoisCompensada,
-                    i.QuantidadeRecebida);
+                    i.QuantidadeRecebida,
+                    resumoDevolucao.QuantidadeDevolvidaAntes,
+                    i.Quantidade,
+                    i.QuantidadeRecebida,
+                    i.QuantidadePerdida,
+                    quantidadePendente);
 
                 return new CompraItemResponseDto
                 {
@@ -78,8 +90,8 @@ public static class CompraMapper
                     QuantidadeDevolvidaDepoisCompensada = resumoDevolucao.QuantidadeDevolvidaDepoisCompensada,
                     SituacaoLogisticaDevolucao = itemSituacaoLogistica.Codigo,
                     DescricaoSituacaoLogisticaDevolucao = itemSituacaoLogistica.Descricao,
-                    QuantidadeElegivelDevolucaoAntes = i.CalcularQuantidadePendente(resumoDevolucao.QuantidadeDevolvidaAntes),
-                    QuantidadePendente = i.CalcularQuantidadePendente(resumoDevolucao.QuantidadeDevolvidaAntes),
+                    QuantidadeElegivelDevolucaoAntes = Math.Max(0, quantidadePendente),
+                    QuantidadePendente = Math.Max(0, quantidadePendente),
                     RecebimentosElegiveisDevolucao = i.Recebimentos
                         .Select(r =>
                         {
@@ -113,7 +125,12 @@ public static class CompraMapper
     public static SituacaoLogisticaDevolucaoDto CalcularSituacaoLogisticaDevolucao(
         int quantidadeDevolvidaDepois,
         int quantidadeDevolvidaDepoisCompensada,
-        int quantidadeReferenciaDevolucao)
+        int quantidadeReferenciaDevolucao,
+        int quantidadeDevolvidaAntes = 0,
+        int quantidadeComprada = 0,
+        int quantidadeRecebida = 0,
+        int quantidadePerdida = 0,
+        int quantidadePendente = 0)
     {
         if (quantidadeDevolvidaDepois > 0 && quantidadeDevolvidaDepoisCompensada > 0)
         {
@@ -130,6 +147,23 @@ public static class CompraMapper
         if (quantidadeDevolvidaDepoisCompensada > 0)
         {
             return new SituacaoLogisticaDevolucaoDto("DevolucaoCompensada", "Devolucao compensada");
+        }
+
+        if (quantidadeDevolvidaAntes > 0
+            && quantidadeRecebida == 0
+            && quantidadePerdida == 0
+            && quantidadeComprada > 0
+            && quantidadeDevolvidaAntes >= quantidadeComprada
+            && !CompraPendenciaLogistica.PossuiPendenciaVigente(quantidadePendente))
+        {
+            return new SituacaoLogisticaDevolucaoDto(
+                "DevolvidaAntesDoRecebimento",
+                "Devolvida antes do recebimento");
+        }
+
+        if (quantidadeDevolvidaAntes > 0)
+        {
+            return new SituacaoLogisticaDevolucaoDto("ParcialmenteDevolvida", "Parcialmente devolvida");
         }
 
         return new SituacaoLogisticaDevolucaoDto("SemDevolucao", "Sem devolucao");

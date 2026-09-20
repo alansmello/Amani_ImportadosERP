@@ -33,21 +33,16 @@ public sealed class ObterComprasEmTransitoQueryHandler : IRequestHandler<ObterCo
         foreach (var compra in compras)
         {
             var devolucoes = await _devolucaoRepository.ObterPorCompraAsync(compra.Id);
-            devolucoesPorCompra[compra.Id] = devolucoes
-                .Where(d => d.Compensacao == null || d.Compensacao.DataCompensacao > hoje)
-                .GroupBy(d => d.CompraItemId)
-                .ToDictionary(
-                    g => g.Key,
-                    g => new CompraItemResumoDevolucao(
-                        g.Where(d => d.Momento == CompraItemDevolucaoMomento.AntesDoRecebimento).Sum(d => d.Quantidade),
-                        g.Where(d => d.Momento == CompraItemDevolucaoMomento.DepoisDoRecebimento).Sum(d => d.Quantidade)));
+            devolucoesPorCompra[compra.Id] = AgruparResumosVigentes(devolucoes, hoje);
         }
 
         return compras.Select(c =>
         {
             var resumos = devolucoesPorCompra[c.Id];
             var calculo = CompraCalculoFinanceiro.Calcular(
-                c.Items.Select(CompraItemCalculoFinanceiro.FromEntity),
+                c.Items.Select(i => CompraItemCalculoFinanceiro.FromEntity(
+                    i,
+                    ObterResumo(resumos, i.Id).QuantidadeDevolvidaAntes)),
                 c.Desconto,
                 c.Acrescimo);
 
@@ -61,7 +56,8 @@ public sealed class ObterComprasEmTransitoQueryHandler : IRequestHandler<ObterCo
                 ValorPendenteCusto = calculo.ValorPendenteCusto,
                 MotivoValorPendenteIndisponivel = calculo.MotivoValorPendenteIndisponivel,
                 Itens = c.Items
-                    .Where(i => i.CalcularQuantidadePendente(ObterResumo(resumos, i.Id).QuantidadeDevolvidaAntes) > 0)
+                    .Where(i => CompraPendenciaLogistica.PossuiPendenciaVigente(
+                        i.CalcularQuantidadePendente(ObterResumo(resumos, i.Id).QuantidadeDevolvidaAntes)))
                     .Select(i =>
                     {
                         var resumo = ObterResumo(resumos, i.Id);
@@ -75,14 +71,31 @@ public sealed class ObterComprasEmTransitoQueryHandler : IRequestHandler<ObterCo
                             QuantidadePerdida = i.QuantidadePerdida,
                             QuantidadeDevolvidaAntes = resumo.QuantidadeDevolvidaAntes,
                             QuantidadeDevolvidaDepois = resumo.QuantidadeDevolvidaDepois,
-                            QuantidadeElegivelDevolucaoAntes = pendente,
-                            QuantidadePendente = pendente
+                            QuantidadeElegivelDevolucaoAntes = Math.Max(0, pendente),
+                            QuantidadePendente = Math.Max(0, pendente)
                         };
                     })
                     .ToList()
                     .AsReadOnly()
             };
-        }).ToList();
+        })
+        .Where(c => c.Itens.Count > 0)
+        .ToList();
+    }
+
+    private static IReadOnlyDictionary<Guid, CompraItemResumoDevolucao> AgruparResumosVigentes(
+        IEnumerable<CompraItemDevolucao> devolucoes,
+        DateTime referencia)
+    {
+        return devolucoes
+            .Where(d => d.Compensacao == null || d.Compensacao.DataCompensacao > referencia)
+            .Where(d => d.DataDevolucao <= referencia)
+            .GroupBy(d => d.CompraItemId)
+            .ToDictionary(
+                g => g.Key,
+                g => new CompraItemResumoDevolucao(
+                    g.Where(d => d.Momento == CompraItemDevolucaoMomento.AntesDoRecebimento).Sum(d => d.Quantidade),
+                    g.Where(d => d.Momento == CompraItemDevolucaoMomento.DepoisDoRecebimento).Sum(d => d.Quantidade)));
     }
 
     private static CompraItemResumoDevolucao ObterResumo(

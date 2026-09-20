@@ -15,12 +15,23 @@ public sealed record CompraItemCalculoFinanceiro(
 
     public static CompraItemCalculoFinanceiro FromEntity(CompraItem item)
     {
+        return FromEntity(item, 0);
+    }
+
+    public static CompraItemCalculoFinanceiro FromEntity(
+        CompraItem item,
+        int quantidadeDevolvidaAntesVigente)
+    {
         ArgumentNullException.ThrowIfNull(item);
+
+        var quantidadePendente = item.CalcularQuantidadePendente(quantidadeDevolvidaAntesVigente);
 
         return new CompraItemCalculoFinanceiro(
             item.Id,
             item.Quantidade,
-            item.QuantidadePendente,
+            CompraPendenciaLogistica.PossuiPendenciaVigente(quantidadePendente)
+                ? quantidadePendente
+                : 0,
             item.CustoUnitario,
             item.Desconto,
             item.Acrescimo);

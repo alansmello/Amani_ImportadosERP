@@ -3,6 +3,7 @@ using Amani.ImportadosERP.Application.DTOs.Dashboards;
 using Amani.ImportadosERP.Domain.Entities;
 using Amani.ImportadosERP.Domain.Services;
 using Amani.ImportadosERP.Infra.Data.Context;
+using Amani.ImportadosERP.Infra.Data.Queries;
 using Microsoft.EntityFrameworkCore;
 
 namespace Amani.ImportadosERP.Infra.Data.Repositories;
@@ -43,32 +44,13 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
 
     public async Task<ResumoMercadoriasEmTransitoDto> ObterMercadoriasEmTransitoAsync(DateTime dataReferencia)
     {
-        var compraIdsComPendencia = await _db.CompraItems
-            .AsNoTracking()
-            .Where(i => i.Compra.Status != CompraStatus.Cancelada
-                && i.Compra.DataCompra <= dataReferencia
-                && i.Quantidade
-                    - i.Recebimentos.Where(r => r.DataRecebimento <= dataReferencia).Sum(r => r.Quantidade)
-                    - i.Perdas.Where(p => p.DataPerda <= dataReferencia).Sum(p => p.Quantidade) > 0)
-            .Select(i => i.CompraId)
-            .Distinct()
-            .ToListAsync();
-
-        if (compraIdsComPendencia.Count == 0)
-        {
-            return new ResumoMercadoriasEmTransitoDto
-            {
-                ValorAoCusto = 0m,
-                ValorAoPrecoVenda = 0m
-            };
-        }
-
-        var itens = await (
+        var itensCandidatos = await (
                 from item in _db.CompraItems.AsNoTracking()
                 join produto in _db.Produtos.AsNoTracking()
                     on item.ProdutoId equals produto.Id into produtos
                 from produto in produtos.DefaultIfEmpty()
-                where compraIdsComPendencia.Contains(item.CompraId)
+                where item.Compra.Status != CompraStatus.Cancelada
+                    && item.Compra.DataCompra <= dataReferencia
                 select new
                 {
                     item.Id,
@@ -79,14 +61,65 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
                     item.Acrescimo,
                     DescontoGeral = item.Compra.Desconto,
                     AcrescimoGeral = item.Compra.Acrescimo,
-                    QuantidadePendente = item.Quantidade
-                        - item.Recebimentos.Where(r => r.DataRecebimento <= dataReferencia).Sum(r => r.Quantidade)
-                        - item.Perdas.Where(p => p.DataPerda <= dataReferencia).Sum(p => p.Quantidade),
+                    QuantidadeRecebida = item.Recebimentos
+                        .Where(r => r.DataRecebimento <= dataReferencia)
+                        .Sum(r => r.Quantidade),
+                    QuantidadePerdida = item.Perdas
+                        .Where(p => p.DataPerda <= dataReferencia)
+                        .Sum(p => p.Quantidade),
                     PrecoVenda = produto == null ? (decimal?)null : produto.PrecoVenda
                 })
             .ToListAsync();
 
-        var quantidadePendente = itens.Where(i => i.QuantidadePendente > 0).Sum(i => i.QuantidadePendente);
+        var devolucoesAntesPorItem = await CompraPendenciaLogisticaConsulta.ObterDevolucoesAntesVigentesPorItemAsync(
+            _db,
+            itensCandidatos.Select(i => i.Id).ToList(),
+            dataReferencia);
+
+        var itens = itensCandidatos
+            .Select(item =>
+            {
+                var quantidadeDevolvidaAntes = devolucoesAntesPorItem.TryGetValue(item.Id, out var da) ? da : 0;
+                return new
+                {
+                    item.Id,
+                    item.CompraId,
+                    item.Quantidade,
+                    item.CustoUnitario,
+                    item.Desconto,
+                    item.Acrescimo,
+                    item.DescontoGeral,
+                    item.AcrescimoGeral,
+                    QuantidadePendente = CompraPendenciaLogistica.Calcular(
+                        item.Quantidade,
+                        item.QuantidadeRecebida,
+                        item.QuantidadePerdida,
+                        quantidadeDevolvidaAntes),
+                    item.PrecoVenda
+                };
+            })
+            .ToList();
+
+        var compraIdsComPendencia = itens
+            .Where(i => CompraPendenciaLogistica.PossuiPendenciaVigente(i.QuantidadePendente))
+            .Select(i => i.CompraId)
+            .Distinct()
+            .ToHashSet();
+
+        itens = itens.Where(i => compraIdsComPendencia.Contains(i.CompraId)).ToList();
+
+        if (itens.Count == 0)
+        {
+            return new ResumoMercadoriasEmTransitoDto
+            {
+                ValorAoCusto = 0m,
+                ValorAoPrecoVenda = 0m
+            };
+        }
+
+        var quantidadePendente = itens
+            .Where(i => CompraPendenciaLogistica.PossuiPendenciaVigente(i.QuantidadePendente))
+            .Sum(i => i.QuantidadePendente);
         decimal subtotalCalculavelAoCusto = 0m;
         decimal valorAoPrecoVenda = 0m;
         var custoCompleto = true;
@@ -101,7 +134,9 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
                 compra.Select(i => new CompraItemCalculoFinanceiro(
                     i.Id,
                     i.Quantidade,
-                    i.QuantidadePendente,
+                    CompraPendenciaLogistica.PossuiPendenciaVigente(i.QuantidadePendente)
+                        ? i.QuantidadePendente
+                        : 0,
                     i.CustoUnitario,
                     i.Desconto,
                     i.Acrescimo)),
@@ -118,7 +153,7 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
                 motivoCusto ??= calculo.MotivoValorPendenteIndisponivel;
             }
 
-            foreach (var item in compra.Where(i => i.QuantidadePendente > 0))
+            foreach (var item in compra.Where(i => CompraPendenciaLogistica.PossuiPendenciaVigente(i.QuantidadePendente)))
             {
                 if (item.PrecoVenda.HasValue)
                 {
@@ -157,15 +192,27 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
                 && c.DataCompra <= dataReferencia)
             .ToListAsync();
 
-        return compras.Count(c => c.Items.Any(i => CalcularQuantidadePendente(i, dataReferencia) > 0));
+        var devolucoesAntesPorItem = await CompraPendenciaLogisticaConsulta.ObterDevolucoesAntesVigentesPorItemAsync(
+            _db,
+            compras.SelectMany(c => c.Items).Select(i => i.Id).ToList(),
+            dataReferencia);
+
+        return compras.Count(c => c.Items.Any(i => CompraPendenciaLogistica.PossuiPendenciaVigente(
+            CalcularQuantidadePendente(i, dataReferencia, devolucoesAntesPorItem))));
     }
 
     public async Task<int> ObterProdutosPendentesRecebimentoAsync(DateTime dataReferencia)
     {
         var itens = await ObterItensDeComprasAteDataReferenciaAsync(dataReferencia);
 
+        var devolucoesAntesPorItem = await CompraPendenciaLogisticaConsulta.ObterDevolucoesAntesVigentesPorItemAsync(
+            _db,
+            itens.Select(i => i.Id).ToList(),
+            dataReferencia);
+
         return itens
-            .Where(i => CalcularQuantidadePendente(i, dataReferencia) > 0)
+            .Where(i => CompraPendenciaLogistica.PossuiPendenciaVigente(
+                CalcularQuantidadePendente(i, dataReferencia, devolucoesAntesPorItem)))
             .Select(i => i.ProdutoId)
             .Distinct()
             .Count();
@@ -277,15 +324,16 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
             .ToListAsync();
     }
 
-    private static int CalcularQuantidadePendente(CompraItem item, DateTime dataReferencia)
+    private static int CalcularQuantidadePendente(
+        CompraItem item,
+        DateTime dataReferencia,
+        IReadOnlyDictionary<Guid, int> devolucoesAntesPorItem)
     {
-        return item.Quantidade
-            - item.Recebimentos
-                .Where(r => r.DataRecebimento <= dataReferencia)
-                .Sum(r => r.Quantidade)
-            - item.Perdas
-                .Where(p => p.DataPerda <= dataReferencia)
-                .Sum(p => p.Quantidade);
+        var quantidadeDevolvidaAntes = devolucoesAntesPorItem.TryGetValue(item.Id, out var da) ? da : 0;
+        return CompraPendenciaLogisticaConsulta.CalcularQuantidadePendente(
+            item,
+            dataReferencia,
+            quantidadeDevolvidaAntes);
     }
 
     private static decimal ObterValorUnitarioCompra(CompraItem item)

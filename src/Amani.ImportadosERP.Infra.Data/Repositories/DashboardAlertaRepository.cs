@@ -1,7 +1,9 @@
 using Amani.ImportadosERP.Application.DTOs.Dashboards;
 using Amani.ImportadosERP.Application.Interfaces;
 using Amani.ImportadosERP.Domain.Entities;
+using Amani.ImportadosERP.Domain.Services;
 using Amani.ImportadosERP.Infra.Data.Context;
+using Amani.ImportadosERP.Infra.Data.Queries;
 using Microsoft.EntityFrameworkCore;
 
 namespace Amani.ImportadosERP.Infra.Data.Repositories;
@@ -129,19 +131,22 @@ public sealed class DashboardAlertaRepository : IDashboardAlertaRepository
             .SelectMany(c => c.Items)
             .Select(i => i.Id)
             .ToList();
-        var devolucoesAntesPorItem = await ObterDevolucoesAntesVigentesPorItemAsync(itemIds, dataReferencia);
+        var devolucoesAntesPorItem = await CompraPendenciaLogisticaConsulta.ObterDevolucoesAntesVigentesPorItemAsync(
+            _db,
+            itemIds,
+            dataReferencia);
 
         return compras
             .Select(c => new
             {
                 Compra = c,
                 DiasEmTransito = Math.Max(0, (dataReferencia.Date - c.DataCompra.Date).Days),
-                QuantidadePendente = c.Items.Sum(i => CalcularQuantidadePendente(
+                QuantidadePendente = c.Items.Sum(i => CompraPendenciaLogisticaConsulta.CalcularQuantidadePendente(
                     i,
                     dataReferencia,
                     devolucoesAntesPorItem.TryGetValue(i.Id, out var quantidade) ? quantidade : 0))
             })
-            .Where(c => c.QuantidadePendente > 0 && c.DiasEmTransito > limiteDias)
+            .Where(c => CompraPendenciaLogistica.PossuiPendenciaVigente(c.QuantidadePendente) && c.DiasEmTransito > limiteDias)
             .OrderByDescending(c => c.DiasEmTransito)
             .ThenBy(c => c.Compra.DataCompra)
             .ThenBy(c => c.Compra.Id)
@@ -272,45 +277,6 @@ public sealed class DashboardAlertaRepository : IDashboardAlertaRepository
             .Where(p => produtoIds.Contains(p.Id))
             .Select(p => new ProdutoResumo(p.Id, p.Nome, default))
             .ToDictionaryAsync(p => p.Id);
-    }
-
-    private async Task<IReadOnlyDictionary<Guid, int>> ObterDevolucoesAntesVigentesPorItemAsync(
-        IReadOnlyCollection<Guid> itemIds,
-        DateTime dataReferencia)
-    {
-        if (!itemIds.Any())
-        {
-            return new Dictionary<Guid, int>();
-        }
-
-        return await _db.CompraItemDevolucoes
-            .AsNoTracking()
-            .Include(d => d.Compensacao)
-            .Where(d => itemIds.Contains(d.CompraItemId)
-                && d.Momento == CompraItemDevolucaoMomento.AntesDoRecebimento
-                && d.DataDevolucao <= dataReferencia
-                && (d.Compensacao == null || d.Compensacao.DataCompensacao > dataReferencia))
-            .GroupBy(d => d.CompraItemId)
-            .Select(g => new
-            {
-                CompraItemId = g.Key,
-                Quantidade = g.Sum(d => d.Quantidade)
-            })
-            .ToDictionaryAsync(g => g.CompraItemId, g => g.Quantidade);
-    }
-
-    private static int CalcularQuantidadePendente(CompraItem item, DateTime dataReferencia, int quantidadeDevolvidaAntes)
-    {
-        var pendente = item.Quantidade
-            - item.Recebimentos
-                .Where(r => r.DataRecebimento <= dataReferencia)
-                .Sum(r => r.Quantidade)
-            - item.Perdas
-                .Where(p => p.DataPerda <= dataReferencia)
-                .Sum(p => p.Quantidade)
-            - quantidadeDevolvidaAntes;
-
-        return Math.Max(0, pendente);
     }
 
     private static string ObterNomeProduto(IReadOnlyDictionary<Guid, ProdutoResumo> produtos, Guid produtoId)

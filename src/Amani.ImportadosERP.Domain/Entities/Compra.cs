@@ -59,7 +59,8 @@ public sealed class Compra : BaseEntity
         int quantidade,
         DateTime? dataRecebimento = null,
         Guid? estoqueMovimentacaoId = null,
-        string? observacao = null)
+        string? observacao = null,
+        int quantidadeDevolvidaAntesVigente = 0)
     {
         GarantirQueAceitaEventosLogisticos("recebimento");
 
@@ -69,7 +70,8 @@ public sealed class Compra : BaseEntity
             quantidade,
             dataRecebimento,
             estoqueMovimentacaoId,
-            observacao);
+            observacao,
+            quantidadeDevolvidaAntesVigente);
 
         _recebimentos.Add(recebimento);
         RecalcularStatusOperacional();
@@ -83,12 +85,19 @@ public sealed class Compra : BaseEntity
         int quantidade,
         CompraItemPerdaMotivo motivo,
         DateTime? dataPerda = null,
-        string? observacao = null)
+        string? observacao = null,
+        int quantidadeDevolvidaAntesVigente = 0)
     {
         GarantirQueAceitaEventosLogisticos("perda");
 
         var item = ObterItem(compraItemId);
-        var perda = item.RegistrarPerda(Id, quantidade, motivo, dataPerda, observacao);
+        var perda = item.RegistrarPerda(
+            Id,
+            quantidade,
+            motivo,
+            dataPerda,
+            observacao,
+            quantidadeDevolvidaAntesVigente);
 
         _perdas.Add(perda);
         RecalcularStatusOperacional();
@@ -100,7 +109,7 @@ public sealed class Compra : BaseEntity
     public decimal Total()
     {
         return CompraCalculoFinanceiro.CalcularTotal(
-            _items.Select(CompraItemCalculoFinanceiro.FromEntity),
+            _items.Select(item => CompraItemCalculoFinanceiro.FromEntity(item)),
             Desconto,
             Acrescimo);
     }
