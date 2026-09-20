@@ -76,7 +76,7 @@
 - [X] T036 [US1] Integrar resumo, histórico e ação de reembolso no detalhe sem calcular valores oficiais no cliente em `frontend/src/components/compras/purchase-detail.tsx` e `frontend/src/components/compras/purchase-summary.tsx`
 - [X] T037 [P] [US1] Exibir badges separados de situação logística e reembolso na lista em `frontend/src/components/compras/purchase-list.tsx`
 - [X] T038 [US1] Exibir reembolsos e entradas totais mantendo recebimentos de clientes separados em `frontend/src/services/dashboard.ts`, `frontend/src/hooks/use-dashboard.ts` e `frontend/src/components/dashboard/dashboard-kpi-grid.tsx`
-- [ ] T039 [US1] Executar os cenários de reembolso parcial, múltiplo, integral, limite, referência externa e caixa das seções 4, 5 e 13 de `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar evidências em `artifacts/f027-validation-evidence.md`
+- [X] T039 [US1] Executar os cenários de reembolso parcial, múltiplo, integral, limite, referência externa e caixa das seções 4, 5 e 13 de `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar evidências em `artifacts/f027-validation-evidence.md`
 
 **Checkpoint**: reembolsos funcionam independentemente de devoluções e jamais alteram estoque
 
@@ -165,10 +165,10 @@
 **Independent Test**: ensaiar migration e aplicação numa cópia representativa, comparar baseline antes/depois e obter zero divergência não explicada em histórico, estoque, custo, trânsito e caixa
 
 - [X] T072 [P] [US6] Exportar e revisar o SQL da migration, comprovando exatamente cinco tabelas novas e ausência de `UPDATE`, `DELETE`, `TRUNCATE`, backfill ou `ALTER` destrutivo em `artifacts/f027-migration-generated.sql`
-- [ ] T073 [US6] Ensaiar backup, restauração e migration somente em cópia isolada representativa e registrar versão, checksum, duração, locks e responsáveis em `artifacts/f027-validation-evidence.md`
-- [ ] T074 [US6] Executar `artifacts/f027-production-baseline.sql` antes/depois do ensaio e documentar conciliação de compras, recebimentos, perdas, vendas, movimentos, pagamentos e financeiro em `artifacts/f027-validation-evidence.md`
+- [X] T073 [US6] Ensaiar backup, restauração e migration somente em cópia isolada representativa e registrar versão, checksum, duração, locks e responsáveis em `artifacts/f027-validation-evidence.md`
+- [X] T074 [US6] Executar `artifacts/f027-production-baseline.sql` antes/depois do ensaio e documentar conciliação de compras, recebimentos, perdas, vendas, movimentos, pagamentos e financeiro em `artifacts/f027-validation-evidence.md`
 - [X] T075 [P] [US6] Executar restore/build do backend e lint/typecheck/build do frontend conforme `specs/027-devolucoes-reembolsos-compras/quickstart.md` e registrar resultados em `artifacts/f027-validation-evidence.md`
-- [ ] T076 [US6] Executar a regressão completa dos fluxos legados, incluindo alertas de trânsito e pendências, com a feature desligada e registrar ausência de mudança sem registros F027 em `artifacts/f027-validation-evidence.md`
+- [X] T076 [US6] Executar a regressão completa dos fluxos legados, incluindo alertas de trânsito e pendências, com a feature desligada e registrar ausência de mudança sem registros F027 em `artifacts/f027-validation-evidence.md`
 - [ ] T077 [P] [US6] Executar dez tentativas controladas de replay e concorrência para reembolso, devolução e compensação e registrar no máximo um efeito válido em `artifacts/f027-validation-evidence.md`
 - [ ] T078 [P] [US6] Medir dez carregamentos de detalhe, histórico, estoque e dashboards com massa representativa e registrar o critério 9/10 abaixo de dois segundos em `artifacts/f027-validation-evidence.md`
 - [ ] T079 [P] [US6] Validar os fluxos completos em 360 px, 768 px e 1440 px, incluindo Dark Theme e ausência de rolagem horizontal, e executar com ao menos dois usuários representativos a medição de operação em até 2 minutos e identificação das informações em até 30 segundos, registrando resultados em `artifacts/f027-validation-evidence.md`
@@ -196,7 +196,7 @@
 
 - [X] T086 [US3] Ajustar projeções oficiais de detalhe/lista para manter recebimento histórico e expor devolução posterior vigente, quantidade compensada e situação logística derivada em `src/Amani.ImportadosERP.Infra.Data/Repositories/CompraRepository.cs`, `src/Amani.ImportadosERP.Application/DTOs/CompraListDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraItemResponseDto.cs`, `src/Amani.ImportadosERP.Application/DTOs/Response/CompraResponseDto.cs` e `src/Amani.ImportadosERP.Application/Mappers/CompraMapper.cs`
 - [X] T087 [US3] Atualizar tags e tabela de itens no frontend para exibir compra recebida com devolução, devolvida, parcialmente devolvida, parcialmente compensada ou devolução compensada sem misturar com reembolso em `frontend/src/components/compras/purchase-list.tsx`, `frontend/src/components/compras/purchase-detail.tsx`, `frontend/src/components/compras/purchase-summary.tsx` e `frontend/src/types/purchase.ts`
-- [ ] T088 [US3] Validar em homologação compra recebida e depois devolvida, compra devolvida integralmente e devolução posterior compensada, registrando evidências de detalhe, lista, estoque e histórico em `artifacts/f027-validation-evidence.md`
+- [X] T088 [US3] Validar em homologação compra recebida e depois devolvida, compra devolvida integralmente e devolução posterior compensada, registrando evidências de detalhe, lista, estoque e histórico em `artifacts/f027-validation-evidence.md`
 - [ ] T089 [US5] DÉBITO TÉCNICO: evoluir a compensação de devolução para oferecer cancelamento/estorno do reembolso relacionado ou manutenção justificada do crédito financeiro, com reflexo em financeiro/dashboard e histórico auditável. Descoberto após reembolso homologado; não bloqueia a validação do registro de reembolso isolado, mas deve bloquear liberação produtiva de compensação de devolução com reembolso relacionado sem decisão operacional clara.
 
 ---
