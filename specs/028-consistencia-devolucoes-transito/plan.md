@@ -43,7 +43,7 @@ flowchart TD
 ```
 
 1. in: item with `Q`, recebimentos até `t`, perdas até `t`, devoluções `AntesDoRecebimento` vigentes em `t` -> `CompraItem.CalcularQuantidadePendente` (exists) - returns `Q - R(t) - P(t) - DA(t)` without treating posterior returns as a second discount
-2. `DashboardOperacionalRepository` (exists) - same four-term formula in the aggregated SQL that selects items and that feeds `CompraCalculoFinanceiro` for custo and `pendente × PrecoVenda` for venda
+2. `DashboardOperacionalRepository` (exists) - SQL prefilter keeps purchases with at least one item where `Q - R(t) - P(t) > 0` (superset of vigente), loads those purchases' items, then applies `DA(t)` so cards use `Q - R(t) - P(t) - DA(t)` for custo rateio and `pendente × PrecoVenda` for venda
 3. `ObterComprasEmTransitoQueryHandler` (exists) - membership already uses `DA`; `ValorPendenteCusto` stops using `CompraItemCalculoFinanceiro.FromEntity` (which reads `QuantidadePendente` without `DA`) and uses the vigente quantity
 4. `ObterListaComprasQueryHandler` (exists) - adds `PossuiPendenciaVigente` from the same formula; `SituacaoLogisticaDevolucao` sees anterior returns; `Status` stays the persisted `CompraStatus`
 5. `CompraMapper` (exists) - detail `QuantidadePendente` and logistic tag match the list; detail `Status` stops mapping "pendency 0 because of `DA`" to `Recebida`

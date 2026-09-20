@@ -253,7 +253,9 @@ Under the budget — one builder, no ask:
 - Mechanism: one builder
 
 - **Boundary:** C1-C40 and C41-C45 closed at `4cdd77d`; C9, C12, C13, C46 closed at `f3f47d6`
+- **Corrective BUILD (performance, 2026-09-20):** `ObterMercadoriasEmTransitoAsync` restored the F026 SQL prefilter `Q - R(t) - P(t) > 0` to select candidate purchase ids before `ToListAsync`, then applies vigente `DA(t)`. Functional ACs 1–6 unchanged: RecusaTotal still enters the superset (`Q-R-P > 0`) and contributes 0 after `DA`.
 - **Settled mid-build:** none
 - **Abandoned:** unused `CompraService.ObterComprasEmTransitoAsync` was left as a compile-only fix; live GET uses `ObterComprasEmTransitoQueryHandler`
+- **Technical debt (deferred, code-review 2026-09-20):** leftover `CompraService` transit methods still `Q-R-P`; N+1 `foreach` + `ObterPorCompraAsync` on list/em-transito/produtos-pendentes; DTO `Math.Max(0, …)` vs unclamped formula assumption; unused `CalcularStatusOperacional(obterQuantidadePendente)` hook; frontend `possuiPendenciaVigente?: boolean | null`
 
 Do not start BUILD until this checks.md is approved.

@@ -44,13 +44,32 @@ public sealed class DashboardOperacionalRepository : IDashboardOperacionalReposi
 
     public async Task<ResumoMercadoriasEmTransitoDto> ObterMercadoriasEmTransitoAsync(DateTime dataReferencia)
     {
+        var compraIdsCandidatas = await _db.CompraItems
+            .AsNoTracking()
+            .Where(i => i.Compra.Status != CompraStatus.Cancelada
+                && i.Compra.DataCompra <= dataReferencia
+                && i.Quantidade
+                    - i.Recebimentos.Where(r => r.DataRecebimento <= dataReferencia).Sum(r => r.Quantidade)
+                    - i.Perdas.Where(p => p.DataPerda <= dataReferencia).Sum(p => p.Quantidade) > 0)
+            .Select(i => i.CompraId)
+            .Distinct()
+            .ToListAsync();
+
+        if (compraIdsCandidatas.Count == 0)
+        {
+            return new ResumoMercadoriasEmTransitoDto
+            {
+                ValorAoCusto = 0m,
+                ValorAoPrecoVenda = 0m
+            };
+        }
+
         var itensCandidatos = await (
                 from item in _db.CompraItems.AsNoTracking()
                 join produto in _db.Produtos.AsNoTracking()
                     on item.ProdutoId equals produto.Id into produtos
                 from produto in produtos.DefaultIfEmpty()
-                where item.Compra.Status != CompraStatus.Cancelada
-                    && item.Compra.DataCompra <= dataReferencia
+                where compraIdsCandidatas.Contains(item.CompraId)
                 select new
                 {
                     item.Id,
