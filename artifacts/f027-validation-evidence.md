@@ -222,3 +222,15 @@ Record IDs, timestamps, screenshots, and observed responses for each scenario in
 - Comparação before/after: result sets 02 a 07 idênticos por SHA256; somente o contexto/timestamp difere.
 - Resultado: migration aplicada em produção com schema expansivo e sem divergência em dados legados.
 - Feature flag: manter `Features__DevolucoesReembolsosComprasEnabled=false` até deploy e smoke test controlado.
+## Production activation - F027 enabled
+
+- Data: 2026-08-16
+- GitHub main commit: `9b53959` (`merge: f027 devolucoes e reembolsos de compras`).
+- Neon production: migration F027 aplicada e baseline before/after sem divergência em dados legados.
+- Render backend: deploy do commit `9b53959` concluído.
+- Vercel frontend: deploy concluído e front validado.
+- Feature flag: `Features__DevolucoesReembolsosComprasEnabled=true` após smoke legado com flag desligada.
+- Smoke legado: aprovado pelo usuário.
+- Smoke F027: aprovado pelo usuário.
+- Observação operacional: evitar compensação de devolução com reembolso relacionado/alocado até resolver T089.
+- Resultado: F027 habilitada em produção com monitoramento recomendado.
