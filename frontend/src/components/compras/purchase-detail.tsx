@@ -24,6 +24,11 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { usePurchaseRefunds, usePurchaseReturns } from "@/hooks/use-purchases";
+import {
+  getReturnLogisticsStatusLabel,
+  getReturnLogisticsStatusVariant,
+  shouldHidePersistedTransitBadge
+} from "@/lib/purchase-situation";
 import type {
   Purchase,
   PurchaseLoss,
@@ -106,36 +111,6 @@ function getRefundStatusVariant(status?: string | null) {
 
   return "neutral" as const;
 }
-function getReturnLogisticsStatusLabel(
-  status?: string | null,
-  description?: string | null
-) {
-  const labels: Record<string, string> = {
-    SemDevolucao: "Sem devolucao",
-    ParcialmenteDevolvida: "Parcialmente devolvida",
-    Devolvida: "Recebida e devolvida",
-    ParcialmenteCompensada: "Parcialmente compensada",
-    DevolucaoCompensada: "Devolucao compensada"
-  };
-
-  return description || (status ? labels[status] ?? status : "Sem devolucao");
-}
-
-function getReturnLogisticsStatusVariant(status?: string | null) {
-  if (status === "Devolvida" || status === "ParcialmenteDevolvida") {
-    return "warning" as const;
-  }
-
-  if (status === "ParcialmenteCompensada") {
-    return "info" as const;
-  }
-
-  if (status === "DevolucaoCompensada") {
-    return "success" as const;
-  }
-
-  return "neutral" as const;
-}
 
 export function PurchaseDetail({
   purchase,
@@ -166,10 +141,24 @@ export function PurchaseDetail({
               </CardDescription>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge variant={getStatusVariant(purchase.status)}>
-                {getStatusLabel(purchase.status)}
-              </Badge>
-              {purchase.possuiDevolucao ? (
+              {shouldHidePersistedTransitBadge(purchase) ? (
+                <Badge
+                  variant={getReturnLogisticsStatusVariant(
+                    purchase.situacaoLogisticaDevolucao
+                  )}
+                >
+                  {getReturnLogisticsStatusLabel(
+                    purchase.situacaoLogisticaDevolucao,
+                    purchase.descricaoSituacaoLogisticaDevolucao
+                  )}
+                </Badge>
+              ) : (
+                <Badge variant={getStatusVariant(purchase.status)}>
+                  {getStatusLabel(purchase.status)}
+                </Badge>
+              )}
+              {purchase.possuiDevolucao &&
+              !shouldHidePersistedTransitBadge(purchase) ? (
                 <Badge
                   variant={getReturnLogisticsStatusVariant(
                     purchase.situacaoLogisticaDevolucao

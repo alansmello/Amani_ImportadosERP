@@ -19,6 +19,7 @@ import {
   usePurchasesInTransit
 } from "@/hooks/use-purchases";
 import { useSuppliers } from "@/hooks/use-suppliers";
+import { matchesComprasStatusFilter } from "@/lib/purchase-situation";
 import type {
   PendingPurchaseProduct,
   PurchaseFilters as PurchaseFiltersType
@@ -70,7 +71,7 @@ export default function ComprasPage() {
   const purchases = useMemo(() => {
     if (usingFilters) {
       return (purchasesQuery.data ?? []).filter((purchase) =>
-        filters.status ? purchase.status === filters.status : true
+        matchesComprasStatusFilter(purchase, filters.status)
       );
     }
 

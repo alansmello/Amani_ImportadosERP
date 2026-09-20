@@ -24,6 +24,7 @@ export type PurchaseListItem = {
   fornecedorId: string;
   dataCompra: string;
   status: PurchaseStatus;
+  possuiPendenciaVigente?: boolean | null;
   totalCompra: number;
   totalReembolsadoLiquido?: number | null;
   custoFinanceiroLiquido?: number | null;
@@ -109,6 +110,7 @@ export type Purchase = {
   fornecedorId: string;
   dataCompra: string;
   status: PurchaseStatus;
+  possuiPendenciaVigente?: boolean | null;
   desconto: number;
   acrescimo: number;
   total: number;
@@ -196,6 +198,7 @@ export type PurchaseReturnLogisticsStatus =
   | "SemDevolucao"
   | "ParcialmenteDevolvida"
   | "Devolvida"
+  | "DevolvidaAntesDoRecebimento"
   | "ParcialmenteCompensada"
   | "DevolucaoCompensada"
   | string;
