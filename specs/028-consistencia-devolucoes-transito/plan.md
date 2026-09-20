@@ -47,7 +47,7 @@ flowchart TD
 3. `ObterComprasEmTransitoQueryHandler` (exists) - membership already uses `DA`; `ValorPendenteCusto` stops using `CompraItemCalculoFinanceiro.FromEntity` (which reads `QuantidadePendente` without `DA`) and uses the vigente quantity
 4. `ObterListaComprasQueryHandler` (exists) - adds `PossuiPendenciaVigente` from the same formula; `SituacaoLogisticaDevolucao` sees anterior returns; `Status` stays the persisted `CompraStatus`
 5. `CompraMapper` (exists) - detail `QuantidadePendente` and logistic tag match the list; detail `Status` stops mapping "pendency 0 because of `DA`" to `Recebida`
-6. `CompraService` (exists) - `ValidarRecebimento` / `ValidarPerda` receive vigente `DA` inside the existing Serializable transaction
+6. `CompraService` (exists) - `GarantirQueAceitaEventosLogisticos` runs before `ValidarRecebimento` / `ValidarPerda`; those validators receive vigente `DA` inside the existing Serializable transaction
 7. out: screens consume backend fields; frontend filter "Em trânsito" uses `PossuiPendenciaVigente`, not `status === EmTransito`
 
 ## Impact

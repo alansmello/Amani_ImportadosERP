@@ -91,6 +91,7 @@ public class CompraService
         await _unitOfWork.ExecuteInTransactionAsync(async () =>
         {
             var compra = await ObterCompraComItemParaAtualizarAsync(compraId, itemId);
+            compra.GarantirQueAceitaEventosLogisticos("recebimento");
             var item = compra.Items.First(i => i.Id == itemId);
             var quantidadeDevolvidaAntesVigente = await _devolucaoRepository
                 .ObterQuantidadeVigenteAntesRecebimentoAsync(item.Id, DateTime.UtcNow.Date);
@@ -138,6 +139,7 @@ public class CompraService
         await _unitOfWork.ExecuteInTransactionAsync(async () =>
         {
             var compra = await ObterCompraComItemParaAtualizarAsync(compraId, itemId);
+            compra.GarantirQueAceitaEventosLogisticos("perda");
             var item = compra.Items.First(i => i.Id == itemId);
             var quantidadeDevolvidaAntesVigente = await _devolucaoRepository
                 .ObterQuantidadeVigenteAntesRecebimentoAsync(item.Id, DateTime.UtcNow.Date);

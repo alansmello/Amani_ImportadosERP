@@ -152,7 +152,7 @@ public sealed class Compra : BaseEntity
             ?? throw new InvalidOperationException("Item nao pertence a compra informada");
     }
 
-    private void GarantirQueAceitaEventosLogisticos(string evento)
+    public void GarantirQueAceitaEventosLogisticos(string evento)
     {
         if (Status == CompraStatus.Cancelada || Status == CompraStatus.Finalizada)
         {
