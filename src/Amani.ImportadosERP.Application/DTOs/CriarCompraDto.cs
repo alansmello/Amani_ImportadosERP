@@ -7,6 +7,7 @@ public sealed class CriarCompraDto
 {
     public Guid FornecedorId { get; set; }
     public DateTime? DataCompra { get; set; }
+    public bool ImplantacaoInicial { get; set; }
     public decimal Desconto { get; set; } = 0m;
     public decimal Acrescimo { get; set; } = 0m;
     public List<CriarCompraItemDto> Items { get; set; } = new();

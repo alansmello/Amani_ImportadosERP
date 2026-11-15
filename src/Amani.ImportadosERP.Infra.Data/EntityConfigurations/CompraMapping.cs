@@ -12,6 +12,7 @@ public class CompraMapping : IEntityTypeConfiguration<Compra>
         builder.HasKey(c => c.Id);
         builder.Property(c => c.FornecedorId).IsRequired();
         builder.Property(c => c.DataCompra).IsRequired();
+        builder.Property(c => c.ImplantacaoInicial).IsRequired().HasDefaultValue(false);
         builder.Property(c => c.Desconto).IsRequired().HasPrecision(18,2).HasDefaultValue(0m);
         builder.Property(c => c.Acrescimo).IsRequired().HasPrecision(18,2).HasDefaultValue(0m);
         builder.Property(c => c.Status)

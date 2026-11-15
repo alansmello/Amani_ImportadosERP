@@ -99,6 +99,7 @@ public sealed class DashboardGraficoRepository : IDashboardGraficoRepository
         var compras = await _db.Compras
             .AsNoTracking()
             .Where(c => c.Status != CompraStatus.Cancelada
+                && !c.ImplantacaoInicial
                 && c.DataCompra >= dataInicial
                 && c.DataCompra <= dataFinal)
             .Select(c => new

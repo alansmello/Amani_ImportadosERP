@@ -10,6 +10,8 @@ public sealed class Compra : BaseEntity
 {
     public Guid FornecedorId { get; private set; }
     public DateTime DataCompra { get; private set; }
+    // Compra já paga antes do recomeço: mantém logística e custo, sem nova saída de caixa.
+    public bool ImplantacaoInicial { get; private set; }
     public decimal Desconto { get; private set; }
     public decimal Acrescimo { get; private set; }
     public CompraStatus Status { get; private set; }
@@ -23,7 +25,7 @@ public sealed class Compra : BaseEntity
     private readonly List<CompraItemPerda> _perdas = new();
     public IReadOnlyCollection<CompraItemPerda> Perdas => _perdas.AsReadOnly();
 
-    public Compra(Guid fornecedorId, DateTime dataCompra, decimal desconto = 0m, decimal acrescimo = 0m)
+    public Compra(Guid fornecedorId, DateTime dataCompra, decimal desconto = 0m, decimal acrescimo = 0m, bool implantacaoInicial = false)
     {
         if (fornecedorId == Guid.Empty)
             throw new ArgumentException("FornecedorId é obrigatório", nameof(fornecedorId));
@@ -32,6 +34,7 @@ public sealed class Compra : BaseEntity
 
         FornecedorId = fornecedorId;
         DataCompra = dataCompra == default ? DateTime.UtcNow : dataCompra;
+        ImplantacaoInicial = implantacaoInicial;
         Desconto = desconto;
         Acrescimo = acrescimo;
         Status = CompraStatus.EmTransito;

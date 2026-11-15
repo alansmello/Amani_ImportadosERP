@@ -23,6 +23,7 @@ export type PurchaseListItem = {
   id: string;
   fornecedorId: string;
   dataCompra: string;
+  implantacaoInicial?: boolean;
   status: PurchaseStatus;
   possuiPendenciaVigente?: boolean | null;
   totalCompra: number;
@@ -58,6 +59,7 @@ export type PurchaseInTransit = {
   compraId: string;
   fornecedorId: string;
   dataCompra: string;
+  implantacaoInicial?: boolean;
   status: PurchaseStatus;
   totalCompra: number;
   valorPendenteCusto: number | null;
@@ -109,6 +111,7 @@ export type Purchase = {
   id: string;
   fornecedorId: string;
   dataCompra: string;
+  implantacaoInicial?: boolean;
   status: PurchaseStatus;
   possuiPendenciaVigente?: boolean | null;
   desconto: number;

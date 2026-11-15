@@ -75,7 +75,7 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
 
     public async Task<decimal> ObterTotalComprasAsync(DateTime dataInicial, DateTime dataFinal)
     {
-        return await ComprasNaoCanceladas()
+        return await ComprasComSaidaDeCaixa()
             .Where(c => c.DataCompra >= dataInicial && c.DataCompra <= dataFinal)
             .Select(c => c.Items.Sum(i => i.Quantidade * i.CustoUnitario - i.Desconto + i.Acrescimo)
                 - c.Desconto
@@ -211,16 +211,16 @@ public sealed class DashboardFinanceiroRepository : IDashboardFinanceiroReposito
                 && v.DataVenda <= dataFinal);
     }
 
-    private IQueryable<Compra> ComprasNaoCanceladas()
+    private IQueryable<Compra> ComprasComSaidaDeCaixa()
     {
         return _db.Compras
             .AsNoTracking()
-            .Where(c => c.Status != CompraStatus.Cancelada);
+            .Where(c => c.Status != CompraStatus.Cancelada && !c.ImplantacaoInicial);
     }
 
     private async Task<decimal> ObterTotalComprasAntesAsync(DateTime dataInicial)
     {
-        return await ComprasNaoCanceladas()
+        return await ComprasComSaidaDeCaixa()
             .Where(c => c.DataCompra < dataInicial)
             .Select(c => c.Items.Sum(i => i.Quantidade * i.CustoUnitario - i.Desconto + i.Acrescimo)
                 - c.Desconto

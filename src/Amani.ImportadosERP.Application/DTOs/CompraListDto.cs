@@ -7,6 +7,7 @@ public sealed class CompraListDto
     public Guid Id { get; set; }
     public Guid FornecedorId { get; set; }
     public DateTime DataCompra { get; set; }
+    public bool ImplantacaoInicial { get; set; }
     public string Status { get; set; } = string.Empty;
     public bool PossuiPendenciaVigente { get; set; }
     public decimal TotalCompra { get; set; }

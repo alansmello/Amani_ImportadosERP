@@ -84,6 +84,7 @@ public sealed class ObterListaComprasQueryHandler : IRequestHandler<ObterListaCo
                 Id = compra.Id,
                 FornecedorId = compra.FornecedorId,
                 DataCompra = compra.DataCompra,
+                ImplantacaoInicial = compra.ImplantacaoInicial,
                 Status = compra.Status.ToString(),
                 PossuiPendenciaVigente = CompraPendenciaLogistica.PossuiPendenciaVigente(quantidadePendenteVigente),
                 TotalCompra = compra.Total(),

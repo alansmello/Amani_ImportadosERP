@@ -51,7 +51,7 @@ public class CompraService
     {
         if (dto == null) throw new ArgumentNullException(nameof(dto));
 
-        var compra = new Compra(dto.FornecedorId, dto.DataCompra ?? DateTime.UtcNow, dto.Desconto, dto.Acrescimo);
+        var compra = new Compra(dto.FornecedorId, dto.DataCompra ?? DateTime.UtcNow, dto.Desconto, dto.Acrescimo, dto.ImplantacaoInicial);
 
         foreach (var item in dto.Items)
         {

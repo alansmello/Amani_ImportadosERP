@@ -8,6 +8,7 @@ public sealed class CompraEmTransitoDto
     public Guid CompraId { get; set; }
     public Guid FornecedorId { get; set; }
     public DateTime DataCompra { get; set; }
+    public bool ImplantacaoInicial { get; set; }
     public string Status { get; set; } = string.Empty;
     public decimal TotalCompra { get; set; }
     public decimal? ValorPendenteCusto { get; set; }

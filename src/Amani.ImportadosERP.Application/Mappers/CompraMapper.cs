@@ -48,6 +48,7 @@ public static class CompraMapper
             Id = compra.Id,
             FornecedorId = compra.FornecedorId,
             DataCompra = compra.DataCompra,
+            ImplantacaoInicial = compra.ImplantacaoInicial,
             Status = compra.Status.ToString(),
             PossuiPendenciaVigente = CompraPendenciaLogistica.PossuiPendenciaVigente(quantidadePendenteVigente),
             Desconto = compra.Desconto,

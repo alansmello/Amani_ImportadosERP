@@ -81,6 +81,7 @@ export default function ComprasPage() {
         id: purchase.compraId,
         fornecedorId: purchase.fornecedorId,
         dataCompra: purchase.dataCompra,
+        implantacaoInicial: purchase.implantacaoInicial,
         status: purchase.status,
         totalCompra: purchase.totalCompra,
         valorPendenteCusto: purchase.valorPendenteCusto,

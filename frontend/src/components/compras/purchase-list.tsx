@@ -151,6 +151,9 @@ export function PurchaseList({
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-2">
+                      {purchase.implantacaoInicial ? (
+                        <Badge variant="info">Compra inicial</Badge>
+                      ) : null}
                       {shouldHidePersistedTransitBadge(purchase) ? (
                         <Badge
                           variant={getReturnLogisticsStatusVariant(

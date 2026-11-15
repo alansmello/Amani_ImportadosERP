@@ -145,6 +145,11 @@ namespace Amani.ImportadosERP.Infra.Data.Migrations
                     b.Property<Guid>("FornecedorId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("ImplantacaoInicial")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .ValueGeneratedOnAdd()

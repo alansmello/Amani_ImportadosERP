@@ -51,6 +51,7 @@ public sealed class ObterComprasEmTransitoQueryHandler : IRequestHandler<ObterCo
                 CompraId = c.Id,
                 FornecedorId = c.FornecedorId,
                 DataCompra = c.DataCompra,
+                ImplantacaoInicial = c.ImplantacaoInicial,
                 Status = c.Status.ToString(),
                 TotalCompra = calculo.TotalCompra,
                 ValorPendenteCusto = calculo.ValorPendenteCusto,

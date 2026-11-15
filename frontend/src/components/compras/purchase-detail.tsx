@@ -141,6 +141,9 @@ export function PurchaseDetail({
               </CardDescription>
             </div>
             <div className="flex flex-wrap gap-2">
+              {purchase.implantacaoInicial ? (
+                <Badge variant="info">Inicial - paga antes do recomeço</Badge>
+              ) : null}
               {shouldHidePersistedTransitBadge(purchase) ? (
                 <Badge
                   variant={getReturnLogisticsStatusVariant(
