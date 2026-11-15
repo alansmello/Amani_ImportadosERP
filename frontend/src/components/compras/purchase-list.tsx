@@ -38,7 +38,8 @@ type PurchaseListProps = {
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("pt-BR", {
-    dateStyle: "short"
+    dateStyle: "short",
+    timeZone: "UTC"
   }).format(new Date(value));
 }
 
